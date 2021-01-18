@@ -54,6 +54,9 @@ public final class SingleEntryView implements View {
 	/** The frame that the GUI is displayed on. */
 	private final JFrame frame;
 	
+	/** The presenter that handles the view's input */
+	private final Presenter presenter;
+	
 	/** The text box that handles both input and output. */
 	private final JTextArea textBox;
 	
@@ -63,9 +66,9 @@ public final class SingleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public SingleEntryView() {
-		// create frame
 		this.frame = new JFrame("Tab2XML");
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.presenter = new Presenter(this);
 		
 		// create components
 		final JPanel masterPanel = new JPanel();
@@ -77,6 +80,7 @@ public final class SingleEntryView implements View {
 		masterPanel.add(loadFileButton, gridBag(0, 1));
 		
 		final JButton convertButton = new JButton("Convert");
+		convertButton.addActionListener(e -> this.presenter.convert());
 		masterPanel.add(convertButton, gridBag(1, 1));
 		
 		final JButton saveFileButton = new JButton("Save to File");

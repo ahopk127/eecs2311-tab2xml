@@ -56,6 +56,9 @@ public final class DoubleEntryView implements View {
 	/** The frame that the GUI is displayed on. */
 	private final JFrame frame;
 	
+	/** The presenter that handles the view's input */
+	private final Presenter presenter;
+	
 	/** The text box that contains the input text. */
 	private final JTextArea input;
 	/** The text box that will contain the output text. */
@@ -67,9 +70,9 @@ public final class DoubleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public DoubleEntryView() {
-		// create frame
 		this.frame = new JFrame("Tab2XML");
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.presenter = new Presenter(this);
 		
 		// create components
 		final JPanel masterPanel = new JPanel();
@@ -88,6 +91,7 @@ public final class DoubleEntryView implements View {
 		
 		// buttons
 		final JButton convertButton = new JButton("Convert");
+		convertButton.addActionListener(e -> this.presenter.convert());
 		masterPanel.add(convertButton, gridBag(1, 2));
 		
 		final JButton loadFileButton = new JButton("Load From File");
