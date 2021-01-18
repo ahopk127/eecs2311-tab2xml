@@ -49,8 +49,9 @@ public final class DoubleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public static void main(String[] args) {
+		// The side effects of the constructor are all we need
+		@SuppressWarnings("unused")
 		final View view = new DoubleEntryView();
-		view.init();
 	}
 	
 	/** The frame that the GUI is displayed on. */
@@ -111,16 +112,14 @@ public final class DoubleEntryView implements View {
 		
 		// give everything the correct size
 		this.frame.pack();
+		
+		// open the window
+		this.frame.setVisible(true);
 	}
 	
 	@Override
 	public String getInputText() {
 		return this.input.getText();
-	}
-	
-	@Override
-	public void init() {
-		this.frame.setVisible(true);
 	}
 	
 	@Override

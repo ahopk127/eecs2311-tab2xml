@@ -42,6 +42,7 @@ public final class Presenter {
 	 * @since 2021-01-18
 	 */
 	public void convert() {
+		@SuppressWarnings("unused") // will be fixed once the backend API is made
 		final String textTabInput = this.view.getInputText();
 		final String musicXMLOutput = "Sample Output";
 		// String musicXMLOutput = backend.convert(textTabInput);
