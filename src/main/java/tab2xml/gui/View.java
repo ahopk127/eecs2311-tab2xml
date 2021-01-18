@@ -16,6 +16,13 @@ public interface View {
 	String getInputText();
 	
 	/**
+	 * Initializes the view, opening the window if it is a GUI.
+	 * 
+	 * @since 2021-01-18
+	 */
+	void init();
+	
+	/**
 	 * Sets the output text to {@code text}.
 	 *
 	 * @since 2021-01-18

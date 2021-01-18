@@ -1,7 +1,6 @@
 package tab2xml.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -9,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
@@ -49,7 +49,7 @@ public final class DoubleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public static void main(String[] args) {
-		final DoubleEntryView view = new DoubleEntryView();
+		final View view = new DoubleEntryView();
 		view.init();
 	}
 	
@@ -97,15 +97,13 @@ public final class DoubleEntryView implements View {
 		masterPanel.add(saveFileButton, gridBag(2, 4));
 		
 		// text boxes
-		this.input = new JTextArea();
-		this.input.setPreferredSize(new Dimension(240, 360));
+		this.input = new JTextArea(15, 30);
 		this.input.setBorder(new LineBorder(Color.BLACK));
-		masterPanel.add(this.input, gridBag(0, 1, 1, 2));
+		masterPanel.add(new JScrollPane(this.input), gridBag(0, 1, 1, 2));
 		
-		this.output = new JTextArea();
-		this.output.setPreferredSize(new Dimension(240, 360));
+		this.output = new JTextArea(15, 30);
 		this.output.setBorder(new LineBorder(Color.BLACK));
-		masterPanel.add(this.output, gridBag(2, 1, 1, 2));
+		masterPanel.add(new JScrollPane(this.output), gridBag(2, 1, 1, 2));
 		
 		// give everything the correct size
 		this.frame.pack();
@@ -116,11 +114,7 @@ public final class DoubleEntryView implements View {
 		return this.input.getText();
 	}
 	
-	/**
-	 * Initializes the view.
-	 * 
-	 * @since 2021-01-18
-	 */
+	@Override
 	public void init() {
 		this.frame.setVisible(true);
 	}
