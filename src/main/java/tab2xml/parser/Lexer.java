@@ -18,7 +18,10 @@ public class Lexer {
 	
 	/**
 	 * @author amir
-	 *
+	 * 
+	 * work with basic's(NOTE + FRET's first) 
+	 * 
+	 * 
 	 */
 	public static enum TokenType {
 		NOTE("[A-G]"), FRET("[0-21]"), HARMONIC("\\[[1-7]\\]"), PULLOFF("p"), HAMMERON("h"), SLIDE("s"), SLIDEUP("/");
@@ -31,6 +34,8 @@ public class Lexer {
 	}
 	
 	/**
+	 * Token class describes the properties of a Token in the tablature
+	 * 
 	 * @author amir
 	 *
 	 */
@@ -49,12 +54,17 @@ public class Lexer {
 	 * @param input
 	 * @return
 	 */
-	public static ArrayList<Token> tokenizeGuitar(String input){ 
-		ArrayList<Token> tokens = new ArrayList<>();
+	public static ArrayList<ArrayList<Token>> tokenizeGuitar(String input){ 
+		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
+		
+		/*
+		 * scanner to tokenize input line by line
+		 * 
+		 * 
+		 * 
+		 */
 		
 		// logic to tokenize guitar tablature
-		
-		
 		
 		return tokens;
 	}
