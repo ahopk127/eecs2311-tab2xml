@@ -1,6 +1,7 @@
 package tab2xml.parser;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * @author amir
@@ -26,10 +27,25 @@ public class Lexer {
 	public static enum TokenType {
 		NOTE("[A-G]"), FRET("[0-21]"), HARMONIC("\\[[1-7]\\]"), PULLOFF("p"), HAMMERON("h"), SLIDE("s"), SLIDEUP("/");
 		
-		public final String pattern;
+		public final Pattern pattern;
 		
 		private TokenType(String pattern) {
-			this.pattern = pattern;
+			this.pattern = Pattern.compile(pattern);
+		}
+		
+		/**
+		 * Matches the input to every token type, and returns the first type that matches.  Returns null if the provided token does not match any of the types.
+		 * @param token token to test
+		 * @return type of token
+		 * @since 2021-01-20
+		 */
+		public TokenType getType(String token) {
+			for (TokenType type : TokenType.values()) {
+				if (type.pattern.matcher(token).matches()) {
+					return type;
+				}
+			}
+			return null;
 		}
 	}
 	
