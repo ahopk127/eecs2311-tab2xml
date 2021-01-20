@@ -6,6 +6,7 @@ public class Main {
 		System.out.println("Hello, World!");
 		System.out.println("Sayed, World!");
 		// edwards commit
+		// amir's commit
 	}
 	
 }
