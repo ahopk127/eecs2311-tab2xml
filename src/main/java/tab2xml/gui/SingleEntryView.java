@@ -1,5 +1,6 @@
 package tab2xml.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -73,24 +74,28 @@ public final class SingleEntryView implements View {
 		
 		// create components
 		final JPanel masterPanel = new JPanel();
-		masterPanel.setLayout(new GridBagLayout());
+		masterPanel.setLayout(new BorderLayout());
 		this.frame.add(masterPanel);
 		
 		// buttons
+		final JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridBagLayout());
+		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
+		
 		final JButton loadFileButton = new JButton("Load From File");
-		masterPanel.add(loadFileButton, gridBag(0, 1));
+		buttonPanel.add(loadFileButton, gridBag(0, 0));
 		
 		final JButton convertButton = new JButton("Convert");
 		convertButton.addActionListener(e -> this.presenter.convert());
-		masterPanel.add(convertButton, gridBag(1, 1));
+		buttonPanel.add(convertButton, gridBag(1, 0));
 		
 		final JButton saveFileButton = new JButton("Save to File");
-		masterPanel.add(saveFileButton, gridBag(2, 1));
+		buttonPanel.add(saveFileButton, gridBag(2, 0));
 		
 		// text box
-		this.textBox = new JTextArea(12, 80);
+		this.textBox = new JTextArea(18, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
-		masterPanel.add(new JScrollPane(this.textBox), gridBag(0, 0, 3, 1));
+		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// give everything the correct size
 		this.frame.pack();
