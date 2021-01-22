@@ -66,38 +66,37 @@ public class Lexer {
 	 */
 	public static ArrayList<ArrayList<Token>> tokenizeGuitar(String input) {
 		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
-		Scanner sc = new Scanner(input);
-		StringBuffer sb = new StringBuffer();
+		try (Scanner sc = new Scanner(input)) {
+			StringBuffer sb = new StringBuffer();
 
-		// g-0() | g-1() | g-2() | ... g-n()
-		// named capturing group: (name + pattern of a token)
-		for (TokenType type : TokenType.values())
-			sb.append(String.format("|(?<%s>%s)", type.name(), type.pattern));
+			// g-0() | g-1() | g-2() | ... g-n()
+			// named capturing group: (name + pattern of a token)
+			for (TokenType type : TokenType.values())
+				sb.append(String.format("|(?<%s>%s)", type.name(), type.pattern));
 
-		Pattern p = Pattern.compile(new String(sb.substring(1)));
+			Pattern p = Pattern.compile(new String(sb.substring(1)));
 
-		while (sc.hasNextLine()) {
-			String currentLine = sc.nextLine();
-			Matcher m = p.matcher(currentLine);
+			while (sc.hasNextLine()) {
+				String currentLine = sc.nextLine();
+				Matcher m = p.matcher(currentLine);
 
-			ArrayList<Token> newTokens = new ArrayList<>();
+				ArrayList<Token> newTokens = new ArrayList<>();
 
-			while (m.find()) {
-				for (TokenType type : TokenType.values()) {
-					String name = type.name();
-					if (m.group(name) != null) {
-						try {
-							newTokens.add(new Token(type, m.group(name)));
-						} catch (InvalidTokenException e) {
-							e.printStackTrace();
+				while (m.find()) {
+					for (TokenType type : TokenType.values()) {
+						String name = type.name();
+						if (m.group(name) != null) {
+							try {
+								newTokens.add(new Token(type, m.group(name)));
+							} catch (InvalidTokenException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
+				tokens.add(newTokens);
 			}
-			tokens.add(newTokens);
 		}
-		sc.close();
-
 		return tokens;
 	}
 
