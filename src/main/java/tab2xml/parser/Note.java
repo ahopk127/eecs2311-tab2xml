@@ -21,10 +21,16 @@ public class Note {
 		this.note = type;
 	}
 
+	/**
+	 * @return the type of this note
+	 */
 	public NoteType getNoteType() {
 		return note;
 	}
 
+	/**
+	 * @return the name of this note
+	 */
 	public String getName() {
 		return note.getValue();
 	}

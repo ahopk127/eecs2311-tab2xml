@@ -7,6 +7,7 @@ import tab2xml.parser.Lexer.Token;
 
 /**
  * The parser is responsible for getting note,  information from ASCII tablature.
+ * 
  * @author amir
  */
 public class Parser {
@@ -26,8 +27,8 @@ public class Parser {
 	ArrayList<ArrayList<Token>> tokens;
 
 	public Parser(String input, Instrument instrument) {
-		//lexer = new Lexer(input, Instrument.GUITAR);
-		//tokens = lexer.tokenize();
+		lexer = new Lexer(input, Instrument.GUITAR);
+		tokens = lexer.tokenize();
 	}
 	
 	
@@ -48,7 +49,4 @@ public class Parser {
 
 		return "";
 	}
-	
-	
-
 }
