@@ -1,3 +1,4 @@
+  
 package tab2xml.parser;
 
 import java.util.ArrayList;
@@ -14,6 +15,22 @@ public class Lexer {
 
 	private String input;
 	private Instrument instrument;
+
+	public static void main(String args[]) {
+		// sample simple test case
+		String input = "E|--0-----------------------|-------------------------|\n"
+				+ "B|------------------3-----5-|-2-----------------------|\n"
+				+ "G|------------------3-------|-2-----------------------|\n"
+				+ "D|------------------5-------|-2-----------------------|\n"
+				+ "A|--------------------------|-0-----------------------|\n"
+				+ "D|--------------------------|-------------------------|\n";
+
+		Lexer lx = new Lexer(input, Instrument.GUITAR);
+		ArrayList<ArrayList<Token>> res = lx.tokenize();
+
+		System.out.println(res.toString());
+
+	}
 
 	/**
 	 * Instantiate a Lexer object for an input string and instrument.
@@ -32,7 +49,6 @@ public class Lexer {
 	 * @return a list of list of tokens representing the ASCII tablature
 	 */
 	public ArrayList<ArrayList<Token>> tokenize() {
-		// expandable
 		switch (this.instrument) {
 		case GUITAR:
 			return tokenizeGuitar(input);
@@ -51,10 +67,6 @@ public class Lexer {
 	 */
 	public static ArrayList<ArrayList<Token>> tokenizeGuitar(String input) {
 		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
-
-		if (input == null || input.length() == 0)
-			return tokens;
-
 		try (Scanner sc = new Scanner(input)) {
 			StringBuffer sb = new StringBuffer();
 
@@ -86,7 +98,6 @@ public class Lexer {
 				tokens.add(newTokens);
 			}
 		}
-
 		return tokens;
 	}
 
@@ -101,6 +112,16 @@ public class Lexer {
 		// TO-DO
 
 		return tokens;
+	}
+
+	/**
+	 * List of supported instruments.
+	 * 
+	 * @author amir
+	 *
+	 */
+	public static enum Instrument {
+		GUITAR, DRUM;
 	}
 
 	/**

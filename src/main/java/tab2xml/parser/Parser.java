@@ -26,8 +26,8 @@ public class Parser {
 	ArrayList<ArrayList<Token>> tokens;
 
 	public Parser(String input, Instrument instrument) {
-		lexer = new Lexer(input, Instrument.GUITAR);
-		tokens = lexer.tokenize();
+		//lexer = new Lexer(input, Instrument.GUITAR);
+		//tokens = lexer.tokenize();
 	}
 	
 	
