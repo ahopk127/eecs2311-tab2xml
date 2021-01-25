@@ -1,5 +1,8 @@
 package tab2xml.gui;
 
+import tab2xml.parser.Instrument;
+import tab2xml.parser.Parser;
+
 /**
  * The Tab2XML presenter, which handles event code. It acts as an intermediate
  * between the front-end (View) and back-end.
@@ -26,10 +29,11 @@ public final class Presenter {
 	 * @since 2021-01-18
 	 */
 	public void convert() {
-		@SuppressWarnings("unused") // will be fixed once the backend API is made
 		final String textTabInput = this.view.getInputText();
-		final String musicXMLOutput = "Sample Output";
-		// String musicXMLOutput = backend.convert(textTabInput);
+		
+		final Parser parser = new Parser(textTabInput, Instrument.GUITAR);
+		final String musicXMLOutput = parser.parse();
+		
 		this.view.setOutputText(musicXMLOutput);
 	}
 }
