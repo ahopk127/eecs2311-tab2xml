@@ -1,20 +1,7 @@
-/**
- * Copyright (C) 2021 Adrien Hopkins
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 package tab2xml.gui;
+
+import tab2xml.parser.Instrument;
+import tab2xml.parser.Parser;
 
 /**
  * The Tab2XML presenter, which handles event code. It acts as an intermediate
@@ -42,10 +29,11 @@ public final class Presenter {
 	 * @since 2021-01-18
 	 */
 	public void convert() {
-		@SuppressWarnings("unused") // will be fixed once the backend API is made
 		final String textTabInput = this.view.getInputText();
-		final String musicXMLOutput = "Sample Output";
-		// String musicXMLOutput = backend.convert(textTabInput);
+		
+		final Parser parser = new Parser(textTabInput, Instrument.GUITAR);
+		final String musicXMLOutput = parser.parse();
+		
 		this.view.setOutputText(musicXMLOutput);
 	}
 }
