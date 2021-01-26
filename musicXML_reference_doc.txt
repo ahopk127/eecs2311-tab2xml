@@ -1,0 +1,91 @@
+Most of the beginning stuff is going to be copy and paste. 
+
+
+key/ fifths = represents the key. EDIT not important for tabs. do this
+ <key>
+          <fifths>0</fifths>
+          </key>
+time / beats / beat type = what the time signature is aka how many of those vertical lines there are. usually 4/4 however in capricho we counted 3 so its likely beats is 3 and beat type is 4 so 3/4. time signatures are almost always 4/4 and when theyre not theyre usually 3/4 or 6/8
+ex. 
+ <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+          </time>
+CLEF-
+<clef>
+          <sign>TAB</sign>
+          <line>2</line>
+        </clef>
+EDIT - this represents the clef which isnt really important for tabs so dont worry just copy this
+
+<staff-details>
+          <staff-lines>6</staff-lines>
+          <staff-tuning line="1">
+            <tuning-step>E</tuning-step>
+            <tuning-octave>2</tuning-octave>
+          </staff-tuning>
+          <staff-tuning line="2">
+            <tuning-step>A</tuning-step>
+            <tuning-octave>2</tuning-octave>
+          </staff-tuning>
+
+- straightforward. sets what note each string is. do this 6 or however many times. its the very first column of letters in the text tab.
+
+<measure number="(whichever measure it is)">
+-adds a measure. starting from 1 at the beginning of the tab. REMINDER a measure is the block of time that is split up by the dotted vertical lines. 
+
+ATTRIBUTES OF NOTES
+
+<note>
+-starts a note
+
+<chord/>
+-if this note is part of a chord with the last note add this to the start of the note
+
+-<pitch> 
+	<step>(whatever note you want)</step>
+-selects the note so like C or A or something
+
+<alter>
+--1 is a flat, 1 is a sharp
+
+<octave>(whatever octave)</octave>
+-basically whatever octave so for example the low E on the guitar is an E in the 2 octave and the high E is a 4 or 5 or something
+
+<duration></duration>
+-how LONG(in beats) the note is played for. see type
+
+<type>
+-what type of note. MUST correspond to the duration. in the form duration=type: 0.25=sixteenth, 0.5=eighth, 1=quarter, 2=half, 4=whole. this scales with the divisions number at the beginning of the document.
+
+<stem>none</stem>
+- write none for no stem or down for a stem idk this is SUPER useless but semi needed for some reason?
+
+SPECIFYING THE STRING AND FRET THE NOTE IS ON
+ <technical>
+            <string>3</string>
+            <fret>5</fret>
+          </technical>
+-straightforward just add this after the other stuff in the note to show which string and fret
+
+HAMMER ONS AND PULLOFFS 
+-SUPER confusing but basically the first note of the hammer on will look something like this
+<hammer-on number="1" type="start">H</hammer-on>
+            <string>3</string>
+            <fret>5</fret>
+          </technical>
+          <slur number="1" placement="above" type="start"/>
+
+and then the second note of the hammer on will look something like this 
+
+<technical>
+            <string>3</string>
+            <fret>7</fret>
+            <hammer-on number="1" type="stop"/>
+          </technical>
+          <slur number="1" type="stop"/>
+
+FINALLY 
+just like other languages that start and end things with {}, musicxml does it by rewriting the <(whatever)> things. so for example when creating a note itll begin with <note> and end with </note>. the / is the closing part
+
+This doc doesnt have drums but i'll add that later
