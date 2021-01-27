@@ -22,6 +22,13 @@ import tab2xml.parser.Instrument;
  */
 public final class SingleEntryView implements View {
 	/**
+	 * The current state of the text box.
+	 */
+	private static enum State {
+		INPUT, OUTPUT;
+	}
+	
+	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
 	 * @since 2021-01-18
@@ -67,6 +74,8 @@ public final class SingleEntryView implements View {
 	/** The dropdown box to select the instrument. */
 	private final JComboBox<Instrument> instrumentSelection;
 	
+	private String previousInputText;
+	
 	/**
 	 * Creates the {@code SingleEntryView}.
 	 * 
@@ -86,6 +95,11 @@ public final class SingleEntryView implements View {
 		buttonPanel.setLayout(new GridBagLayout());
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
+		// text box
+		this.textBox = new JTextArea(18, 80);
+		this.textBox.setBorder(new LineBorder(Color.BLACK));
+		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
+		
 		// buttons
 		final JButton loadFileButton = new JButton("Load From File");
 		buttonPanel.add(loadFileButton, gridBag(1, 0));
@@ -94,13 +108,13 @@ public final class SingleEntryView implements View {
 		convertButton.addActionListener(e -> this.presenter.convert());
 		buttonPanel.add(convertButton, gridBag(2, 0));
 		
-		final JButton saveFileButton = new JButton("Save to File");
-		buttonPanel.add(saveFileButton, gridBag(3, 0));
+		final JButton revertButton = new JButton("Undo Conversion");
+		revertButton.addActionListener(
+				e -> this.textBox.setText(this.previousInputText));
+		buttonPanel.add(revertButton, gridBag(3, 0));
 		
-		// text box
-		this.textBox = new JTextArea(18, 80);
-		this.textBox.setBorder(new LineBorder(Color.BLACK));
-		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
+		final JButton saveFileButton = new JButton("Save to File");
+		buttonPanel.add(saveFileButton, gridBag(4, 0));
 		
 		// combo boxes
 		this.instrumentSelection = new JComboBox<>(Instrument.values());
@@ -127,6 +141,7 @@ public final class SingleEntryView implements View {
 	
 	@Override
 	public void setOutputText(String text) {
+		this.previousInputText = this.textBox.getText();
 		this.textBox.setText(text);
 	}
 	
