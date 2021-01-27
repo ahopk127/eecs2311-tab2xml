@@ -1,5 +1,7 @@
 package tab2xml.gui;
 
+import tab2xml.parser.Instrument;
+
 /**
  * An automated View, whose actions are controlled by the program. Can be used
  * for testing the View and/or Presenter.
@@ -19,6 +21,10 @@ public final class ViewBot implements View {
 	 * gives to the user)
 	 */
 	private String outputText;
+	/**
+	 * The instrument selected by the bot.
+	 */
+	private Instrument selectedInstrument;
 	
 	/**
 	 * Creates the view test.
@@ -55,6 +61,15 @@ public final class ViewBot implements View {
 	}
 	
 	/**
+	 * @return the selectedInstrument
+	 * @since 2021-01-25
+	 */
+	@Override
+	public final Instrument getSelectedInstrument() {
+		return this.selectedInstrument;
+	}
+	
+	/**
 	 * @param inputText the inputText to set
 	 * @since 2021-01-20
 	 */
@@ -69,5 +84,13 @@ public final class ViewBot implements View {
 	@Override
 	public final void setOutputText(String outputText) {
 		this.outputText = outputText;
+	}
+	
+	/**
+	 * @param selectedInstrument the selectedInstrument to set
+	 * @since 2021-01-25
+	 */
+	public final void setSelectedInstrument(Instrument selectedInstrument) {
+		this.selectedInstrument = selectedInstrument;
 	}
 }

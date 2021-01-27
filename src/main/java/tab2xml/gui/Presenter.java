@@ -30,8 +30,9 @@ public final class Presenter {
 	 */
 	public void convert() {
 		final String textTabInput = this.view.getInputText();
+		final Instrument selectedInstrument = this.view.getSelectedInstrument();
 		
-		final Parser parser = new Parser(textTabInput, Instrument.GUITAR);
+		final Parser parser = new Parser(textTabInput, selectedInstrument);
 		final String musicXMLOutput = parser.parse();
 		
 		this.view.setOutputText(musicXMLOutput);

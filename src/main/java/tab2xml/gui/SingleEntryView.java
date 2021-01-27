@@ -12,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
+import tab2xml.parser.Instrument;
+
 /**
  * A view with a single text box, handling both input and output.
  *
@@ -107,6 +109,12 @@ public final class SingleEntryView implements View {
 	@Override
 	public String getInputText() {
 		return this.textBox.getText();
+	}
+	
+	@Override
+	public Instrument getSelectedInstrument() {
+		// temporary default
+		return Instrument.GUITAR;
 	}
 	
 	@Override

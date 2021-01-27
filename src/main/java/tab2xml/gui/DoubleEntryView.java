@@ -12,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
+import tab2xml.parser.Instrument;
+
 /**
  * The view of Tab2XML. This class handles the GUI, and all interaction
  * (input/output) with the user.
@@ -120,6 +122,11 @@ public final class DoubleEntryView implements View {
 	@Override
 	public String getInputText() {
 		return this.input.getText();
+	}
+	
+	@Override
+	public Instrument getSelectedInstrument() {
+		return Instrument.GUITAR;
 	}
 	
 	@Override
