@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -63,6 +64,8 @@ public final class SingleEntryView implements View {
 	
 	/** The text box that handles both input and output. */
 	private final JTextArea textBox;
+	/** The dropdown box to select the instrument. */
+	private final JComboBox<Instrument> instrumentSelection;
 	
 	/**
 	 * Creates the {@code SingleEntryView}.
@@ -79,25 +82,29 @@ public final class SingleEntryView implements View {
 		masterPanel.setLayout(new BorderLayout());
 		this.frame.add(masterPanel);
 		
-		// buttons
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
+		// buttons
 		final JButton loadFileButton = new JButton("Load From File");
-		buttonPanel.add(loadFileButton, gridBag(0, 0));
+		buttonPanel.add(loadFileButton, gridBag(1, 0));
 		
 		final JButton convertButton = new JButton("Convert");
 		convertButton.addActionListener(e -> this.presenter.convert());
-		buttonPanel.add(convertButton, gridBag(1, 0));
+		buttonPanel.add(convertButton, gridBag(2, 0));
 		
 		final JButton saveFileButton = new JButton("Save to File");
-		buttonPanel.add(saveFileButton, gridBag(2, 0));
+		buttonPanel.add(saveFileButton, gridBag(3, 0));
 		
 		// text box
 		this.textBox = new JTextArea(18, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
+		
+		// combo boxes
+		this.instrumentSelection = new JComboBox<>(Instrument.values());
+		buttonPanel.add(this.instrumentSelection, gridBag(0, 0));
 		
 		// give everything the correct size
 		this.frame.pack();
@@ -113,8 +120,9 @@ public final class SingleEntryView implements View {
 	
 	@Override
 	public Instrument getSelectedInstrument() {
-		// temporary default
-		return Instrument.GUITAR;
+		// The only objects in this list are Instrument instances, so the cast
+		// should work.
+		return (Instrument) this.instrumentSelection.getSelectedItem();
 	}
 	
 	@Override

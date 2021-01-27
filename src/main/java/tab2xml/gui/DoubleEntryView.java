@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -66,6 +67,8 @@ public final class DoubleEntryView implements View {
 	private final JTextArea input;
 	/** The text box that will contain the output text. */
 	private final JTextArea output;
+	/** The dropdown box to select the instrument. */
+	private final JComboBox<Instrument> instrumentSelection;
 	
 	/**
 	 * Creates the view.
@@ -112,6 +115,10 @@ public final class DoubleEntryView implements View {
 		this.output.setBorder(new LineBorder(Color.BLACK));
 		masterPanel.add(new JScrollPane(this.output), gridBag(2, 1, 1, 2));
 		
+		// combo boxes
+		this.instrumentSelection = new JComboBox<>(Instrument.values());
+		masterPanel.add(this.instrumentSelection, gridBag(1, 4));
+		
 		// give everything the correct size
 		this.frame.pack();
 		
@@ -126,7 +133,9 @@ public final class DoubleEntryView implements View {
 	
 	@Override
 	public Instrument getSelectedInstrument() {
-		return Instrument.GUITAR;
+		// The only objects in this list are Instrument instances, so the cast
+		// should work.
+		return (Instrument) this.instrumentSelection.getSelectedItem();
 	}
 	
 	@Override
