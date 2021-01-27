@@ -16,7 +16,7 @@ public class Convert {
 
 		try {
 			// sample xml creation process
-			
+			// task: build xml dom using musicxml
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.newDocument();
