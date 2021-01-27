@@ -22,13 +22,6 @@ import tab2xml.parser.Instrument;
  */
 public final class SingleEntryView implements View {
 	/**
-	 * The current state of the text box.
-	 */
-	private static enum State {
-		INPUT, OUTPUT;
-	}
-	
-	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
 	 * @since 2021-01-18
