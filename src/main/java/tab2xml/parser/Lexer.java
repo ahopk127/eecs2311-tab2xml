@@ -175,7 +175,15 @@ public class Lexer {
 			else
 				throw new InvalidTokenException("Token mismatch.");
 		}
-
+		
+		public String getData() {
+			return this.data;
+		}
+		
+		public TokenType getType() {
+			return this.type;
+		}
+		
 		@Override
 		public String toString() {
 			return String.format("(%s %s)", type.name(), data);
