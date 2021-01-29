@@ -3,11 +3,15 @@ package tab2xml.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.IOException;
+import java.nio.file.Path;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -101,9 +105,11 @@ public final class DoubleEntryView implements View {
 		masterPanel.add(convertButton, gridBag(1, 2));
 		
 		final JButton loadFileButton = new JButton("Load From File");
+		loadFileButton.addActionListener(e -> this.loadFromFile());
 		masterPanel.add(loadFileButton, gridBag(0, 4));
 		
 		final JButton saveFileButton = new JButton("Save to File");
+		saveFileButton.addActionListener(e -> this.saveToFile());
 		masterPanel.add(saveFileButton, gridBag(2, 4));
 		
 		// text boxes
@@ -132,10 +138,62 @@ public final class DoubleEntryView implements View {
 	}
 	
 	@Override
+	public String getOutputText() {
+		return this.output.getText();
+	}
+	
+	@Override
 	public Instrument getSelectedInstrument() {
 		// The only objects in this list are Instrument instances, so the cast
 		// should work.
 		return (Instrument) this.instrumentSelection.getSelectedItem();
+	}
+	
+	/**
+	 * Allows the user to choose a file, then loads input text from that file.
+	 * 
+	 * @since 2021-01-29
+	 */
+	private void loadFromFile() {
+		final JFileChooser fc = new JFileChooser();
+		
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
+			final Path path = fc.getSelectedFile().toPath();
+			try {
+				this.presenter.loadFromFile(path);
+			} catch (final IOException e) {
+				JOptionPane.showMessageDialog(this.frame,
+						"An error happened while reading the file: "
+								+ e.getLocalizedMessage(),
+						"File Read Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	/**
+	 * Prompts the user to choose a file, then saves output text to that file.
+	 * 
+	 * @since 2021-01-29
+	 */
+	private void saveToFile() {
+		final JFileChooser fc = new JFileChooser();
+		
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
+			final Path path = fc.getSelectedFile().toPath();
+			try {
+				this.presenter.saveToFile(path);
+			} catch (final IOException e) {
+				JOptionPane.showMessageDialog(this.frame,
+						"An error happened while writing to the file: "
+								+ e.getLocalizedMessage(),
+						"File Write Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	@Override
+	public void setInputText(String text) {
+		this.input.setText(text);
 	}
 	
 	@Override
