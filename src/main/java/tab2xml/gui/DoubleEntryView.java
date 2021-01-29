@@ -25,7 +25,7 @@ import tab2xml.parser.Instrument;
  *
  * @since 2021-01-18
  */
-public final class DoubleEntryView implements View {
+final class DoubleEntryView implements View {
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -56,9 +56,7 @@ public final class DoubleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public static void main(String[] args) {
-		// The side effects of the constructor are all we need
-		@SuppressWarnings("unused")
-		final View view = new DoubleEntryView();
+		View.createView(View.ViewType.DOUBLE_ENTRY);
 	}
 	
 	/** The frame that the GUI is displayed on. */
@@ -199,5 +197,10 @@ public final class DoubleEntryView implements View {
 	@Override
 	public void setOutputText(String text) {
 		this.output.setText(text);
+	}
+	
+	@Override
+	public void setSelectedInstrument(Instrument instrument) {
+		this.instrumentSelection.setSelectedItem(instrument);
 	}
 }

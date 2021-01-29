@@ -9,8 +9,6 @@ import tab2xml.parser.Instrument;
  * @since 2021-01-20
  */
 public final class ViewBot implements View {
-	/** The presenter linked with this View. */
-	private final Presenter presenter;
 	/**
 	 * The text inputted by the user. (represents whatever text area the user is
 	 * using to input text)
@@ -27,12 +25,15 @@ public final class ViewBot implements View {
 	private Instrument selectedInstrument;
 	
 	/**
-	 * Creates the view test.
+	 * Creates a {@code ViewBot}. The initial input and output text will be the
+	 * empty string, while the initial selected instrument will be {@code null}.
 	 * 
-	 * @since 2021-01-20
+	 * @since 2021-01-29
 	 */
-	public ViewBot() {
-		this.presenter = new Presenter(this);
+	ViewBot() {
+		this.inputText = "";
+		this.outputText = "";
+		this.selectedInstrument = null;
 	}
 	
 	@Override
@@ -43,14 +44,6 @@ public final class ViewBot implements View {
 	@Override
 	public final String getOutputText() {
 		return this.outputText;
-	}
-	
-	/**
-	 * @return the presenter associated with this view
-	 * @since 2021-01-20
-	 */
-	public final Presenter getPresenter() {
-		return this.presenter;
 	}
 	
 	@Override
@@ -68,10 +61,7 @@ public final class ViewBot implements View {
 		this.outputText = outputText;
 	}
 	
-	/**
-	 * @param selectedInstrument the selectedInstrument to set
-	 * @since 2021-01-25
-	 */
+	@Override
 	public final void setSelectedInstrument(Instrument selectedInstrument) {
 		this.selectedInstrument = selectedInstrument;
 	}

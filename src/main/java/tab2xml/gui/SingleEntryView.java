@@ -86,9 +86,7 @@ final class SingleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public static void main(String[] args) {
-		// The side effects of the constructor are all we need
-		@SuppressWarnings("unused")
-		final View view = new SingleEntryView();
+		View.createView(View.ViewType.SINGLE_ENTRY);
 	}
 	
 	/** The frame that the GUI is displayed on. */
@@ -244,5 +242,10 @@ final class SingleEntryView implements View {
 		this.previousInputText = this.textBox.getText();
 		this.textBox.setText(text);
 		State.OUTPUT.enable(this);
+	}
+	
+	@Override
+	public void setSelectedInstrument(Instrument instrument) {
+		this.instrumentSelection.setSelectedItem(instrument);
 	}
 }

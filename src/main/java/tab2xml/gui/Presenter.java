@@ -53,6 +53,7 @@ public final class Presenter {
 	 * @since 2021-01-29
 	 */
 	public void loadFromFile(Path path) throws IOException {
+		// only works in Java 11 or later
 		this.view.setInputText(Files.readString(path));
 	}
 	
@@ -67,6 +68,7 @@ public final class Presenter {
 	 * @since 2021-01-29
 	 */
 	public void saveToFile(Path path) throws IOException {
+		// only works in Java 11 or later
 		Files.writeString(path, this.view.getOutputText());
 	}
 }
