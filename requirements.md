@@ -6,4 +6,4 @@
  - Should be able to work with lots of variation in the format of the text tab
  - Should be able to account for drop tunings
  - Should be able to account for an unusual amount of strings
- - Should be able to "undo" a conversion (SingleEntryView)
+ - Should be able to access and edit the original text tab after conversion
