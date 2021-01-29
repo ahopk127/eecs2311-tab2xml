@@ -9,8 +9,6 @@ import tab2xml.parser.Instrument;
  * @since 2021-01-20
  */
 public final class ViewBot implements View {
-	/** The presenter linked with this View. */
-	private final Presenter presenter;
 	/**
 	 * The text inputted by the user. (represents whatever text area the user is
 	 * using to input text)
@@ -27,69 +25,43 @@ public final class ViewBot implements View {
 	private Instrument selectedInstrument;
 	
 	/**
-	 * Creates the view test.
+	 * Creates a {@code ViewBot}. The initial input and output text will be the
+	 * empty string, while the initial selected instrument will be {@code null}.
 	 * 
-	 * @since 2021-01-20
+	 * @since 2021-01-29
 	 */
-	public ViewBot() {
-		this.presenter = new Presenter(this);
+	ViewBot() {
+		this.inputText = "";
+		this.outputText = "";
+		this.selectedInstrument = null;
 	}
 	
-	/**
-	 * @return input text
-	 * @since 2021-01-20
-	 */
 	@Override
 	public final String getInputText() {
 		return this.inputText;
 	}
 	
-	/**
-	 * @return output text
-	 * @since 2021-01-20
-	 */
+	@Override
 	public final String getOutputText() {
 		return this.outputText;
 	}
 	
-	/**
-	 * @return the presenter associated with this view
-	 * @since 2021-01-20
-	 */
-	public final Presenter getPresenter() {
-		return this.presenter;
-	}
-	
-	/**
-	 * @return the selectedInstrument
-	 * @since 2021-01-25
-	 */
 	@Override
 	public final Instrument getSelectedInstrument() {
 		return this.selectedInstrument;
 	}
 	
-	/**
-	 * @param inputText the inputText to set
-	 * @since 2021-01-20
-	 */
+	@Override
 	public final void setInputText(String inputText) {
 		this.inputText = inputText;
 	}
 	
-	/**
-	 * @param outputText the outputText to set
-	 * @since 2021-01-20
-	 */
 	@Override
 	public final void setOutputText(String outputText) {
 		this.outputText = outputText;
 	}
 	
-	/**
-	 * @param selectedInstrument the selectedInstrument to set
-	 * @since 2021-01-25
-	 */
+	@Override
 	public final void setSelectedInstrument(Instrument selectedInstrument) {
 		this.selectedInstrument = selectedInstrument;
 	}
