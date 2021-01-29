@@ -35,19 +35,12 @@ public final class ViewBot implements View {
 		this.presenter = new Presenter(this);
 	}
 	
-	/**
-	 * @return input text
-	 * @since 2021-01-20
-	 */
 	@Override
 	public final String getInputText() {
 		return this.inputText;
 	}
 	
-	/**
-	 * @return output text
-	 * @since 2021-01-20
-	 */
+	@Override
 	public final String getOutputText() {
 		return this.outputText;
 	}
@@ -60,27 +53,16 @@ public final class ViewBot implements View {
 		return this.presenter;
 	}
 	
-	/**
-	 * @return the selectedInstrument
-	 * @since 2021-01-25
-	 */
 	@Override
 	public final Instrument getSelectedInstrument() {
 		return this.selectedInstrument;
 	}
 	
-	/**
-	 * @param inputText the inputText to set
-	 * @since 2021-01-20
-	 */
+	@Override
 	public final void setInputText(String inputText) {
 		this.inputText = inputText;
 	}
 	
-	/**
-	 * @param outputText the outputText to set
-	 * @since 2021-01-20
-	 */
 	@Override
 	public final void setOutputText(String outputText) {
 		this.outputText = outputText;

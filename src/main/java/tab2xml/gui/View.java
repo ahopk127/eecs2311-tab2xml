@@ -18,11 +18,32 @@ public interface View {
 	String getInputText();
 	
 	/**
+	 * Gets the text outputted to the user. This method is optional.
+	 * 
+	 * @implNote This method is only used by the file-writing mechanism.
+	 * @since 2021-01-29
+	 * @throws UnsupportedOperationException if the implementation does not
+	 *                                       support this method
+	 */
+	String getOutputText();
+	
+	/**
 	 * Gets the instrument of the tab, as selected by the user.
 	 *
 	 * @since 2021-01-25
 	 */
 	Instrument getSelectedInstrument();
+	
+	/**
+	 * Sets the view's input text to {@code text}. This method is optional.
+	 * 
+	 * @implNote This method is only used by the file-reading mechanism.
+	 *
+	 * @since 2021-01-29
+	 * @throws UnsupportedOperationException if the implementation does not
+	 *                                       support this method
+	 */
+	void setInputText(String text);
 	
 	/**
 	 * Sets the output text to {@code text}.
