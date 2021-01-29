@@ -24,7 +24,7 @@ import tab2xml.parser.Instrument;
  *
  * @since 2021-01-18
  */
-public final class SingleEntryView implements View {
+final class SingleEntryView implements View {
 	/**
 	 * Whether the text box is storing input text or output text.
 	 *
@@ -33,19 +33,20 @@ public final class SingleEntryView implements View {
 	private static enum State {
 		INPUT {
 			@Override
-			public void enable(SingleEntryView v) {
-				v.textBoxState = INPUT;
-				v.convertButton.setEnabled(true);
-				v.revertButton.setEnabled(false);
+			public void enable(SingleEntryView view) {
+				view.textBoxState = INPUT;
+				view.convertButton.setEnabled(true);
+				view.revertButton.setEnabled(false);
+				view.saveFileButton.setEnabled(false);
 			}
 		},
 		OUTPUT {
 			@Override
-			public void enable(SingleEntryView v) {
-				v.textBoxState = OUTPUT;
-				v.convertButton.setEnabled(false);
-				v.revertButton.setEnabled(true);
-				
+			public void enable(SingleEntryView view) {
+				view.textBoxState = OUTPUT;
+				view.convertButton.setEnabled(false);
+				view.revertButton.setEnabled(true);
+				view.saveFileButton.setEnabled(true);
 			}
 		};
 		
@@ -104,6 +105,8 @@ public final class SingleEntryView implements View {
 	private final JButton convertButton;
 	/** The undo button for conversion. */
 	private final JButton revertButton;
+	/** The button that saves output text to files. */
+	private final JButton saveFileButton;
 	
 	/** What kind of text is stored in the text box */
 	private State textBoxState;
@@ -122,7 +125,6 @@ public final class SingleEntryView implements View {
 		this.frame = new JFrame("Tab2XML");
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.presenter = new Presenter(this);
-		this.textBoxState = State.OUTPUT;
 		
 		// create components
 		final JPanel masterPanel = new JPanel();
@@ -150,16 +152,18 @@ public final class SingleEntryView implements View {
 		this.revertButton = new JButton("Undo Conversion");
 		this.revertButton
 				.addActionListener(e -> this.setInputText(this.previousInputText));
-		this.revertButton.setEnabled(false);
 		buttonPanel.add(this.revertButton, gridBag(3, 0));
 		
-		final JButton saveFileButton = new JButton("Save to File");
-		saveFileButton.addActionListener(e -> this.saveToFile());
-		buttonPanel.add(saveFileButton, gridBag(4, 0));
+		this.saveFileButton = new JButton("Save to File");
+		this.saveFileButton.addActionListener(e -> this.saveToFile());
+		buttonPanel.add(this.saveFileButton, gridBag(4, 0));
 		
 		// combo boxes
 		this.instrumentSelection = new JComboBox<>(Instrument.values());
 		buttonPanel.add(this.instrumentSelection, gridBag(0, 0));
+		
+		// set the frame to INPUT state.
+		State.INPUT.enable(this);
 		
 		// give everything the correct size
 		this.frame.pack();
