@@ -1,6 +1,7 @@
 package tab2xml.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
@@ -113,10 +114,12 @@ final class DoubleEntryView implements View {
 		// text boxes
 		this.input = new JTextArea(15, 30);
 		this.input.setBorder(new LineBorder(Color.BLACK));
+		this.input.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		masterPanel.add(new JScrollPane(this.input), gridBag(0, 1, 1, 2));
 		
 		this.output = new JTextArea(15, 30);
 		this.output.setBorder(new LineBorder(Color.BLACK));
+		this.output.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		masterPanel.add(new JScrollPane(this.output), gridBag(2, 1, 1, 2));
 		
 		// combo boxes
