@@ -16,6 +16,7 @@
 
 ## Reliability
  - Must be able to work with lots of variation in the format of the text tab
+ -The converted MusicXML tablature should be error free.
 
 ## Performance
  - Must parse the text tab in a reasonable amount of time.
@@ -26,5 +27,5 @@
 
 # Non-Functional Requirements
  - Must have an API that can be used by other programs
- - Should be available 24/7
+
 
