@@ -13,16 +13,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import java.io.StringWriter;
 
-public class Convert {
+public class MusicSheet {
 	private ArrayList<ArrayList<Object>> sheet;
 	private String xmlString;
 
-	public Convert(ArrayList<ArrayList<Object>> sheet) {
+	public MusicSheet(ArrayList<ArrayList<Object>> sheet) {
 		this.sheet = sheet;
 	}
 
-	public String getXmlString() {
+	public String toXmlString() {
 		try {
+			// sample pass.
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.newDocument();
@@ -42,14 +43,15 @@ public class Convert {
 			xmlString = output;
 			
 		} catch (Exception e) {
-			xmlString = "error";
+			xmlString = "error converting input.";
+			e.printStackTrace();
 		}
 		return xmlString;
 	}
 
 	private void generate(Document doc) {
 		// root element
-		Element rootElement = doc.createElement("");
+		Element rootElement = doc.createElement("cars");
 		
 		doc.appendChild(rootElement);
 		
