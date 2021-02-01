@@ -16,7 +16,7 @@
 
 ## Reliability
  - Must be able to work with lots of variation in the format of the text tab
- -The converted MusicXML tablature should be error free.
+ - The converted MusicXML tablature must be error free.
 
 ## Performance
  - Must parse the text tab in a reasonable amount of time.
@@ -26,6 +26,4 @@
  - Must be testable via automated testing
 
 # Non-Functional Requirements
- - Must have an API that can be used by other programs
-
-
+ - Should have an API that can be used by other programs
