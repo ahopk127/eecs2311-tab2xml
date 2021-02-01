@@ -3,14 +3,21 @@ package tab2xml.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.IOException;
+import java.nio.file.Path;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
+
+import tab2xml.parser.Instrument;
 
 /**
  * The view of Tab2XML. This class handles the GUI, and all interaction
@@ -18,7 +25,7 @@ import javax.swing.border.LineBorder;
  *
  * @since 2021-01-18
  */
-public final class DoubleEntryView implements View {
+final class DoubleEntryView implements View {
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -49,9 +56,7 @@ public final class DoubleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public static void main(String[] args) {
-		// The side effects of the constructor are all we need
-		@SuppressWarnings("unused")
-		final View view = new DoubleEntryView();
+		View.createView(View.ViewType.DOUBLE_ENTRY);
 	}
 	
 	/** The frame that the GUI is displayed on. */
@@ -64,6 +69,8 @@ public final class DoubleEntryView implements View {
 	private final JTextArea input;
 	/** The text box that will contain the output text. */
 	private final JTextArea output;
+	/** The dropdown box to select the instrument. */
+	private final JComboBox<Instrument> instrumentSelection;
 	
 	/**
 	 * Creates the view.
@@ -96,9 +103,11 @@ public final class DoubleEntryView implements View {
 		masterPanel.add(convertButton, gridBag(1, 2));
 		
 		final JButton loadFileButton = new JButton("Load From File");
+		loadFileButton.addActionListener(e -> this.loadFromFile());
 		masterPanel.add(loadFileButton, gridBag(0, 4));
 		
 		final JButton saveFileButton = new JButton("Save to File");
+		saveFileButton.addActionListener(e -> this.saveToFile());
 		masterPanel.add(saveFileButton, gridBag(2, 4));
 		
 		// text boxes
@@ -109,6 +118,10 @@ public final class DoubleEntryView implements View {
 		this.output = new JTextArea(15, 30);
 		this.output.setBorder(new LineBorder(Color.BLACK));
 		masterPanel.add(new JScrollPane(this.output), gridBag(2, 1, 1, 2));
+		
+		// combo boxes
+		this.instrumentSelection = new JComboBox<>(Instrument.values());
+		masterPanel.add(this.instrumentSelection, gridBag(1, 4));
 		
 		// give everything the correct size
 		this.frame.pack();
@@ -123,7 +136,71 @@ public final class DoubleEntryView implements View {
 	}
 	
 	@Override
+	public String getOutputText() {
+		return this.output.getText();
+	}
+	
+	@Override
+	public Instrument getSelectedInstrument() {
+		// The only objects in this list are Instrument instances, so the cast
+		// should work.
+		return (Instrument) this.instrumentSelection.getSelectedItem();
+	}
+	
+	/**
+	 * Allows the user to choose a file, then loads input text from that file.
+	 * 
+	 * @since 2021-01-29
+	 */
+	private void loadFromFile() {
+		final JFileChooser fc = new JFileChooser();
+		
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
+			final Path path = fc.getSelectedFile().toPath();
+			try {
+				this.presenter.loadFromFile(path);
+			} catch (final IOException e) {
+				JOptionPane.showMessageDialog(this.frame,
+						"An error happened while reading the file: "
+								+ e.getLocalizedMessage(),
+						"File Read Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	/**
+	 * Prompts the user to choose a file, then saves output text to that file.
+	 * 
+	 * @since 2021-01-29
+	 */
+	private void saveToFile() {
+		final JFileChooser fc = new JFileChooser();
+		
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
+			final Path path = fc.getSelectedFile().toPath();
+			try {
+				this.presenter.saveToFile(path);
+			} catch (final IOException e) {
+				JOptionPane.showMessageDialog(this.frame,
+						"An error happened while writing to the file: "
+								+ e.getLocalizedMessage(),
+						"File Write Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+	
+	@Override
+	public void setInputText(String text) {
+		this.input.setText(text);
+	}
+	
+	@Override
 	public void setOutputText(String text) {
 		this.output.setText(text);
+	}
+	
+	@Override
+	public void setSelectedInstrument(Instrument instrument) {
+		this.instrumentSelection.setSelectedItem(instrument);
 	}
 }

@@ -1,5 +1,9 @@
 package tab2xml.gui;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import tab2xml.parser.Instrument;
 import tab2xml.parser.Parser;
 
@@ -30,10 +34,41 @@ public final class Presenter {
 	 */
 	public void convert() {
 		final String textTabInput = this.view.getInputText();
+		final Instrument selectedInstrument = this.view.getSelectedInstrument();
 		
-		final Parser parser = new Parser(textTabInput, Instrument.GUITAR);
+		final Parser parser = new Parser(textTabInput, selectedInstrument);
 		final String musicXMLOutput = parser.parse();
 		
 		this.view.setOutputText(musicXMLOutput);
+	}
+	
+	/**
+	 * Gets the text from a file and writes it to the view's input field.
+	 * 
+	 * @param path file to read from
+	 * @throws IOException                   if the file reading creates an
+	 *                                       {@code IOException}
+	 * @throws UnsupportedOperationException if the view does not support
+	 *                                       {@link View#setInputText}
+	 * @since 2021-01-29
+	 */
+	public void loadFromFile(Path path) throws IOException {
+		// only works in Java 11 or later
+		this.view.setInputText(Files.readString(path));
+	}
+	
+	/**
+	 * Writes the view's output text to a file.
+	 *
+	 * @param path
+	 * @throws IOException                   if the file writing causes an
+	 *                                       {@code IOException}
+	 * @throws UnsupportedOperationException if the view does not support
+	 *                                       {@link View#getOutputText}
+	 * @since 2021-01-29
+	 */
+	public void saveToFile(Path path) throws IOException {
+		// only works in Java 11 or later
+		Files.writeString(path, this.view.getOutputText());
 	}
 }

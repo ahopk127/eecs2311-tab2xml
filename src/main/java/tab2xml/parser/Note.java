@@ -50,7 +50,7 @@ public class Note {
 	 * @return a note based on the properties of the input
 	 */
 	public static Note toNote(String input) {
-		Pattern p = Pattern.compile("[A-G]\\d+");
+		Pattern p = Pattern.compile("^[A-G]\\d+$");
 
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException();
