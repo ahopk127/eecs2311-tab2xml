@@ -3,6 +3,7 @@ package tab2xml.parser;
 import java.util.ArrayList;
 
 import tab2xml.parser.Lexer.Token;
+import tab2xml.xmlconversion.Convert;
 
 /**
  * The parser is responsible for getting note, information from ASCII tablature.
@@ -39,7 +40,7 @@ public class Parser {
 		if (tokens == null || tokens.size() == 0)
 			return "";
 
-		String xmlOutput = "sample xml output";
+		String xmlString = "sample xml output";
 
 		// contains note and token objects
 		ArrayList<ArrayList<Object>> data = new ArrayList<>();
@@ -63,8 +64,9 @@ public class Parser {
 			data.add(temp);
 		}
 
-		// xmlOutput = toXml(data);
+		Convert convert = new Convert(data);
+		xmlString = convert.getXmlString();
 
-		return xmlOutput;
+		return xmlString;
 	}
 }
