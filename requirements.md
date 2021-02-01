@@ -7,3 +7,7 @@
  - Should be able to account for drop tunings
  - Should be able to account for an unusual amount of strings
  - Should be able to access and edit the original text tab after conversion
+
+ 
+# Non-functional Requirements
+ - Should be available 24/7
