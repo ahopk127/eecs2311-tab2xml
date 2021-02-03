@@ -27,3 +27,28 @@
 
 # Non-Functional Requirements
  - Should have an API that can be used by other programs
+
+# Use Cases
+## Convert Text Tab
+Primary Actor: Musician
+Goal: The musician has a text tab, and they want a MusicXML file
+Success Scenario:
+1. Musician starts program
+2. Musician inputs the text tab
+3. System identifies what instrument it is for
+4. Musician tells system to convert text tab
+5. System converts text tab to MusicXML
+6. Musician saves output
+7. Musician closes program
+
+### Extensions
+3a. If system cannot identify instrument, user can choose instrument manually.
+5a. If text tab is unparseable, notify user and restart at step 2
+
+## Change Settings
+Primary Actior: Musician
+Success Scenario:
+1. Musician starts program (if it isn't already started)
+2. Musician changes settings
+3. System updates settings internally
+4. Musician stops program or continues using program for something else
