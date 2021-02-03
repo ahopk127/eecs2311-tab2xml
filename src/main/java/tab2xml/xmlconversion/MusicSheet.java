@@ -1,35 +1,49 @@
 package tab2xml.xmlconversion;
 
-import java.util.ArrayList;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringWriter;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Attr;
+
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import java.io.StringWriter;
 
 public class MusicSheet {
-	private ArrayList<ArrayList<Object>> sheet;
-	private String xmlString;
+	// attributes of a music sheet:
+	private Document doc;
+	private DocumentBuilder dBuilder;
+	private DocumentBuilderFactory dbFactory;
 
-	public MusicSheet(ArrayList<ArrayList<Object>> sheet) {
-		this.sheet = sheet;
+	public MusicSheet(Document doc, DocumentBuilder db, DocumentBuilderFactory dbf) {
+		this.dbFactory = DocumentBuilderFactory.newInstance();
+		
+		try {
+			this.dBuilder = dbFactory.newDocumentBuilder();
+			this.doc = dBuilder.newDocument();			
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public String toXmlString() {
+	public void append(XMLElement e) {
+		this.doc.appendChild(e.getElement());
+	}
+	
+	public void appendToDoc(XMLElement e) {
+		this.doc.appendChild(e.getElement());
+	}
+	
+	public Document getDoc() {
+		return this.doc;
+	}
+	
+	public String toXML() {
+		String xml;
 		try {
-			// sample pass.
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.newDocument();
-
-			generate(doc);
-		
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
@@ -40,44 +54,13 @@ public class MusicSheet {
 			transformer.transform(new DOMSource(doc), new StreamResult(sw));
 			
 			String output = sw.getBuffer().toString().replace("\n|\r", "");
-			xmlString = output;
+			xml = output;
 			
 		} catch (Exception e) {
-			xmlString = "error converting input.";
+			xml = "error converting input.";
 			e.printStackTrace();
 		}
-		return xmlString;
-	}
-
-	private void generate(Document doc) {
-		// root element
-		Element rootElement = doc.createElement("cars");
-		
-		doc.appendChild(rootElement);
-		
-		// supercars element
-		Element supercar = doc.createElement("supercars");
-		rootElement.appendChild(supercar);
-
-		// setting attribute to element
-		Attr attr = doc.createAttribute("company");
-		attr.setValue("Ferrari");
-		supercar.setAttributeNode(attr);
-
-		// carname element
-		Element carname = doc.createElement("carname");
-		Attr attrType = doc.createAttribute("type");
-		attrType.setValue("formula one");
-		carname.setAttributeNode(attrType);
-		carname.appendChild(doc.createTextNode("Ferrari 101"));
-		supercar.appendChild(carname);
-
-		Element carname1 = doc.createElement("carname");
-		Attr attrType1 = doc.createAttribute("type");
-		attrType1.setValue("sports");
-		carname1.setAttributeNode(attrType1);
-		carname1.appendChild(doc.createTextNode("Ferrari 202"));
-		supercar.appendChild(carname1);
+		return xml;
 	}
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import tab2xml.parser.Lexer.Token;
 import tab2xml.parser.Lexer.TokenType;
-import tab2xml.xmlconversion.MusicSheet;
+import tab2xml.xmlconversion.Transform;
 
 /**
  * The parser is responsible for getting note, information from ASCII tablature.
@@ -25,18 +25,20 @@ public class Parser {
 	 *
 	 */
 	private Lexer lexer;
-	ArrayList<ArrayList<Token>> tokens;
-
+	private ArrayList<ArrayList<Token>> tokens;
+	private Instrument instrument;
+	
 	public Parser(String input, Instrument instrument) {
 		lexer = new Lexer(input, instrument);
 		tokens = lexer.tokenize();
+		this.instrument = instrument;
 	}
 
 	public String parse() {
 		if (tokens == null || tokens.size() == 0)
 			return "invalid input.";
 
-		String xmlString;
+		String xmlOutput;
 		String tune;
 		ArrayList<ArrayList<Object>> data = new ArrayList<>();
 
@@ -64,9 +66,9 @@ public class Parser {
 			}
 		}
 
-		MusicSheet musicsheet = new MusicSheet(data);
-		xmlString = musicsheet.toXmlString();
+		Transform tf = new Transform(data, instrument);
+		xmlOutput = tf.toXML();
 
-		return xmlString;
+		return xmlOutput;
 	}
 }
