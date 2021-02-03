@@ -46,7 +46,7 @@ Success Scenario:
 5a. If text tab is unparseable, notify user and restart at step 2
 
 ## Change Settings
-Primary Actior: Musician
+Primary Actor: Musician
 Success Scenario:
 1. Musician starts program (if it isn't already started)
 2. Musician changes settings
