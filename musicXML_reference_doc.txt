@@ -39,6 +39,9 @@ ATTRIBUTES OF NOTES
 <note>
 -starts a note
 
+<rest/>
+- if there is no note then a rest needs to be added to fill up the remaining time in the measure
+
 <chord/>
 -if this note is part of a chord with the last note add this to the start of the note
 
