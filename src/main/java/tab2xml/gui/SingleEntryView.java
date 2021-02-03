@@ -2,6 +2,7 @@ package tab2xml.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
@@ -136,6 +137,7 @@ final class SingleEntryView implements View {
 		// text box
 		this.textBox = new JTextArea(18, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
+		this.textBox.setFont(new Font("Monospaced", Font.PLAIN, 12));
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
