@@ -62,8 +62,10 @@ public final class PromptingTextArea extends JTextArea {
 	/** For serialization. */
 	private static final long serialVersionUID = 1238525148916870118L;
 	
-	private static final Color PROMPT_TEXT = Color.GRAY;
-	private static final Color REGULAR_TEXT = Color.BLACK;
+	/** The colour of prompt text. */
+	public static final Color PROMPT_TEXT_COLOR = Color.GRAY;
+	/** The colour of non-prompt text. */
+	public static final Color REGULAR_TEXT_COLOR = Color.BLACK;
 	
 	/** The text that is prompted. */
 	private String promptText;
@@ -96,7 +98,7 @@ public final class PromptingTextArea extends JTextArea {
 	private final void disablePrompt() {
 		this.prompting = false;
 		super.setText("");
-		this.setForeground(REGULAR_TEXT);
+		this.setForeground(REGULAR_TEXT_COLOR);
 		this.setFont(
 				this.regularFont == null ? this.getFont() : this.regularFont);
 	}
@@ -109,7 +111,7 @@ public final class PromptingTextArea extends JTextArea {
 	private final void enablePrompt() {
 		this.prompting = true;
 		super.setText(this.getPromptText());
-		this.setForeground(PROMPT_TEXT);
+		this.setForeground(PROMPT_TEXT_COLOR);
 		
 		if (this.promptFont == null) {
 			this.promptFont = this.getFont().deriveFont(Font.ITALIC);
@@ -142,7 +144,16 @@ public final class PromptingTextArea extends JTextArea {
 	}
 	
 	/**
-	 * @param promptFont the promptFont to set
+	 * @return whether the prompt text is active or not
+	 * @since 2021-02-05
+	 */
+	public boolean isPrompting() {
+		return this.prompting;
+	}
+	
+	/**
+	 * @param promptFont the font to use as prompting, if null, uses an italic
+	 *                   version of regular font
 	 * @since 2021-02-05
 	 */
 	public void setPromptFont(Font promptFont) {
@@ -155,7 +166,22 @@ public final class PromptingTextArea extends JTextArea {
 	}
 	
 	/**
-	 * @param promptText the promptText to set
+	 * Forcibly enables or disables the prompt. Enabling the prompt clears any
+	 * existing text in the text area.
+	 *
+	 * @param prompting
+	 * @since 2021-02-05
+	 */
+	public void setPrompting(boolean prompting) {
+		if (prompting) {
+			this.enablePrompt();
+		} else {
+			this.disablePrompt();
+		}
+	}
+	
+	/**
+	 * @param promptText the text to use as a prompt
 	 * @since 2021-02-03
 	 */
 	public void setPromptText(String promptText) {
@@ -166,7 +192,7 @@ public final class PromptingTextArea extends JTextArea {
 	}
 	
 	/**
-	 * @param regularFont the regularFont to set
+	 * @param regularFont the font to use when not prompting
 	 * @since 2021-02-05
 	 */
 	public void setRegularFont(Font regularFont) {
@@ -178,7 +204,9 @@ public final class PromptingTextArea extends JTextArea {
 	
 	@Override
 	public void setText(String t) {
-		this.disablePrompt();
+		if (this.prompting) {
+			this.disablePrompt();
+		}
 		super.setText(t);
 	}
 }
