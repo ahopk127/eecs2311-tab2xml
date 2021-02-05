@@ -152,6 +152,30 @@ public final class PromptingTextArea extends JTextArea {
 	}
 	
 	/**
+	 * Sets both the prompt font and the regular font.
+	 * <p>
+	 * The resulting fonts depend on the current state (this means that the
+	 * currently-used font will always be the provided font):
+	 * <p>
+	 * If the prompt text is active, the prompt font will be the inputted font
+	 * and the regular font will be the inputted font with the style set to
+	 * {@link Font#PLAIN}.<br>
+	 * If the prompt text is inactive, the regular font will be the inputted font
+	 * and the prompt font will be the inputted font with the style set to
+	 * {@link Font#ITALIC}.
+	 */
+	@Override
+	public void setFont(Font f) {
+		if (this.prompting) {
+			this.setPromptFont(f);
+			this.setRegularFont(f.deriveFont(Font.PLAIN));
+		} else {
+			this.setPromptFont(f.deriveFont(Font.ITALIC));
+			this.setRegularFont(f);
+		}
+	}
+	
+	/**
 	 * @param promptFont the font to use as prompting, if null, uses an italic
 	 *                   version of regular font
 	 * @since 2021-02-05
@@ -161,7 +185,7 @@ public final class PromptingTextArea extends JTextArea {
 				? this.regularFont.deriveFont(Font.ITALIC)
 				: promptFont;
 		if (this.prompting) {
-			this.setFont(this.promptFont);
+			super.setFont(this.promptFont);
 		}
 	}
 	
@@ -198,7 +222,7 @@ public final class PromptingTextArea extends JTextArea {
 	public void setRegularFont(Font regularFont) {
 		this.regularFont = regularFont;
 		if (!this.prompting) {
-			this.setFont(this.regularFont);
+			super.setFont(this.regularFont);
 		}
 	}
 	

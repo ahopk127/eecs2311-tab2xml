@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
 
 import tab2xml.parser.Instrument;
@@ -96,7 +97,7 @@ final class SingleEntryView implements View {
 	private final Presenter presenter;
 	
 	/** The text box that handles both input and output. */
-	private final PromptingTextArea textBox;
+	private final JTextArea textBox;
 	/** The dropdown box to select the instrument. */
 	private final JComboBox<Instrument> instrumentSelection;
 	/** The button that converts tab to XML. */
@@ -135,10 +136,9 @@ final class SingleEntryView implements View {
 		
 		// text box
 		this.textBox = new PromptingTextArea(
-				"Enter text tab or load it from a file...", 18, 80);
+				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
-		this.textBox.setRegularFont(new Font("Monospaced", Font.PLAIN, 12));
-		this.textBox.setPromptFont(null);
+		this.textBox.setFont(new Font("Monospaced", Font.ITALIC, 12));
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
