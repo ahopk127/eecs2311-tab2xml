@@ -6,7 +6,7 @@
 ## PromptingTextAreaTest
  - testPrompt1(): Tests that the text box reacts properly to focus changes.
  - testPrompt2(): Tests that the text box reacts properly to typing and when methods are run on it.
- - testPromptColour(): Tests that the text box's colour is set properly.
+ - testPromptColourFont(): Tests that the text box's colour and font is set properly.
  
 ## ViewTest
 Any test in this section that requires use of an unimplemented optional method is skipped.
