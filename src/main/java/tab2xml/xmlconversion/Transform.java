@@ -42,6 +42,7 @@ public class Transform {
 			break;
 		case DRUM:
 			generateDrum();
+			break;
 		default:
 			throw new IllegalArgumentException("Unsupported instrument: " + instrument);
 		}
