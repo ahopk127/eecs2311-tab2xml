@@ -74,20 +74,21 @@ class PromptingTextAreaTest {
 	}
 	
 	/**
-	 * Ensure that the PromptingTextArea sets its colour properly
+	 * Ensure that the PromptingTextArea sets its colour and font properly
 	 * 
 	 * @since 2021-02-05
 	 */
 	@Test
-	final void testPromptColour() {
+	final void testPromptColourFont() {
 		final String PROMPT_TEXT = "PROMPT";
 		final PromptingTextArea area = new PromptingTextArea(PROMPT_TEXT);
 		
 		area.setPrompting(false);
 		assertEquals(PromptingTextArea.REGULAR_TEXT_COLOR, area.getForeground());
+		assertEquals(area.getRegularFont(), area.getFont());
 		
 		area.setPrompting(true);
 		assertEquals(PromptingTextArea.PROMPT_TEXT_COLOR, area.getForeground());
-		
+		assertEquals(area.getPromptFont(), area.getFont());
 	}
 }
