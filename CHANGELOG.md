@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+### Added
+ - Text boxes in both Views now give a prompt the user telling them to enter text or load from a file.
+
+### Changed
+ - Text boxes in both Views now use a monospace font.
+
 ## [0.1.0-alpha.3] - 2021-02-01 (Week 3)
 ### Added
  - The parser can now parse tokens and convert them to data.
