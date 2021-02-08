@@ -1,11 +1,16 @@
 # Changelog
 
-## Unreleased
+## [0.1.0-alpha.4] - 2021-02-08 (Week 4)
 ### Added
+ - Added use cases to requirements document
  - Text boxes in both Views now give a prompt the user telling them to enter text or load from a file.
+ - Created base API for XML parsing and connected it to frontend.
+ - Created unit tests for frontend
 
 ### Changed
+ - Updated requirements
  - Text boxes in both Views now use a monospace font.
+ - Main.java can now be used to start the program.
 
 ## [0.1.0-alpha.3] - 2021-02-01 (Week 3)
 ### Added
