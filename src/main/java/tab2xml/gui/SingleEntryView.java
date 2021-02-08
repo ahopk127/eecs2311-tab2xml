@@ -139,6 +139,7 @@ final class SingleEntryView implements View {
 				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
 		this.textBox.setFont(new Font("Monospaced", Font.ITALIC, 12));
+		FileDragDropTarget.enableDragAndDrop(this.textBox);
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
