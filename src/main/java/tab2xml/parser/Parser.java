@@ -3,6 +3,8 @@ package tab2xml.parser;
 import java.util.ArrayList;
 
 import tab2xml.parser.Lexer.Token;
+import tab2xml.parser.Lexer.TokenType;
+import tab2xml.xmlconversion.Transform;
 
 /**
  * The parser is responsible for getting note, information from ASCII tablature.
@@ -23,47 +25,49 @@ public class Parser {
 	 *
 	 */
 	private Lexer lexer;
-	ArrayList<ArrayList<Token>> tokens;
-
+	private ArrayList<ArrayList<Token>> tokens;
+	private Instrument instrument;
+	
 	public Parser(String input, Instrument instrument) {
 		lexer = new Lexer(input, instrument);
 		tokens = lexer.tokenize();
+		this.instrument = instrument;
 	}
 
 	public String parse() {
-		/*
-		 * prerequisites: we need to understand how a note is formated in musicXML our
-		 * design could change based on the way notes are represented in XML.
-		 */
-
 		if (tokens == null || tokens.size() == 0)
-			return "";
+			return "invalid input.";
 
-		String xmlOutput = "sample xml output";
-
-		// contains note and token objects
+		String xmlOutput;
+		String tune;
 		ArrayList<ArrayList<Object>> data = new ArrayList<>();
 
 		for (ArrayList<Token> line : tokens) {
-			String tune = line.get(0).getData();
 			ArrayList<Object> temp = new ArrayList<>();
 
-			for (Token token : line) {
-				switch (token.getType()) {
-				case FRET:
-					// check if the token is a fret: tune + fret -> note
-					Note note = Note.toNote(tune + Integer.parseInt(token.getData()));
-					temp.add(note);
-					break;
-				default:
-					temp.add(token);
-					break;
+			if (!line.isEmpty()) {
+				if (TokenType.NOTE.matches(line.get(0).getData())) {
+					tune = line.get(0).getData();
+
+					for (Token token : line) {
+						switch (token.getType()) {
+						case FRET:
+							// tune + fret -> note
+							Note note = Note.toNote(tune + Integer.parseInt(token.getData()));
+							temp.add(note);
+							break;
+						default:
+							temp.add(token);
+							break;
+						}
+					}
+					data.add(temp);
 				}
 			}
-			data.add(temp);
 		}
 
-		// xmlOutput = toXml(data);
+		Transform tf = new Transform(data, instrument);
+		xmlOutput = tf.toXML();
 
 		return xmlOutput;
 	}

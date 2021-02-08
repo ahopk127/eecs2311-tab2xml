@@ -83,7 +83,8 @@ public class Lexer {
 						}
 					}
 				}
-				tokens.add(newTokens);
+				if (!newTokens.isEmpty())
+					tokens.add(newTokens);
 			}
 		}
 		return tokens;

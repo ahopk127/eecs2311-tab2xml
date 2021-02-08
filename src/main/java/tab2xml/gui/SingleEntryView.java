@@ -2,6 +2,7 @@ package tab2xml.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
@@ -134,8 +135,10 @@ final class SingleEntryView implements View {
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
 		// text box
-		this.textBox = new JTextArea(18, 80);
+		this.textBox = new PromptingTextArea(
+				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
+		this.textBox.setFont(new Font("Monospaced", Font.ITALIC, 12));
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
@@ -165,6 +168,8 @@ final class SingleEntryView implements View {
 		
 		// give everything the correct size
 		this.frame.pack();
+		
+		loadFileButton.requestFocusInWindow();
 		
 		// open the window
 		this.frame.setVisible(true);
