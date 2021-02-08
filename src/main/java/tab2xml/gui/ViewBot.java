@@ -65,4 +65,9 @@ public final class ViewBot implements View {
 	public final void setSelectedInstrument(Instrument selectedInstrument) {
 		this.selectedInstrument = selectedInstrument;
 	}
+	
+	@Override
+	public void showErrorMessage(String message, Object... formatArgs) {
+		throw new RuntimeException(String.format(message, formatArgs));
+	}
 }

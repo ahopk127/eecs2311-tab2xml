@@ -125,4 +125,13 @@ public interface View {
 	 *                                       support this method
 	 */
 	void setSelectedInstrument(Instrument instrument);
+	
+	/**
+	 * Shows an error message.
+	 *
+	 * @param message    error message; may use printf format (%s, %d, etc.)
+	 * @param formatArgs format arguments for error message
+	 * @since 2021-02-08
+	 */
+	void showErrorMessage(String message, Object... formatArgs);
 }

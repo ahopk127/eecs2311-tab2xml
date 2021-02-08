@@ -27,6 +27,9 @@ import tab2xml.parser.Instrument;
  * @since 2021-01-18
  */
 final class DoubleEntryView implements View {
+	/** The dialog title for error messages. */
+	private static final String DEFAULT_ERROR_TITLE = "Error";
+	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -65,11 +68,11 @@ final class DoubleEntryView implements View {
 	
 	/** The presenter that handles the view's input */
 	private final Presenter presenter;
-	
 	/** The text box that contains the input text. */
 	private final JTextArea input;
 	/** The text box that will contain the output text. */
 	private final JTextArea output;
+	
 	/** The dropdown box to select the instrument. */
 	private final JComboBox<Instrument> instrumentSelection;
 	
@@ -207,5 +210,11 @@ final class DoubleEntryView implements View {
 	@Override
 	public void setSelectedInstrument(Instrument instrument) {
 		this.instrumentSelection.setSelectedItem(instrument);
+	}
+	
+	@Override
+	public void showErrorMessage(String message, Object... formatArgs) {
+		JOptionPane.showMessageDialog(this.frame, DEFAULT_ERROR_TITLE,
+				String.format(message, formatArgs), JOptionPane.ERROR_MESSAGE);
 	}
 }
