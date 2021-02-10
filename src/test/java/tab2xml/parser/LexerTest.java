@@ -9,7 +9,10 @@ import java.lang.reflect.Modifier;
 import org.junit.jupiter.api.Test;
 
 class LexerTest {
-
+	/**
+	 * @author Edward and Sayed
+	 * this tests the constructor method in the Lexer class
+	 */
 	@Test
 	void testLexer() {
 		Field[] fields = Lexer.class.getDeclaredFields();
