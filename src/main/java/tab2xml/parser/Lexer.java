@@ -1,4 +1,4 @@
-  
+
 package tab2xml.parser;
 
 import java.util.ArrayList;
@@ -51,10 +51,10 @@ public class Lexer {
 	 */
 	public static ArrayList<ArrayList<Token>> tokenizeGuitar(String input) {
 		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
-		
+
 		if (input == null || input.length() == 0)
 			return tokens;
-		
+
 		try (Scanner sc = new Scanner(input)) {
 			StringBuffer sb = new StringBuffer();
 
@@ -83,8 +83,7 @@ public class Lexer {
 						}
 					}
 				}
-				if (!newTokens.isEmpty())
-					tokens.add(newTokens);
+				tokens.add(newTokens);
 			}
 		}
 		return tokens;
@@ -101,94 +100,6 @@ public class Lexer {
 		// TO-DO
 
 		return tokens;
-	}
-
-	/**
-	 * List of token types and their regular expressions.
-	 * 
-	 * @author amir
-	 */
-	public static enum TokenType {
-		BAR("\\|"), NOTE("[A-G]"), FRET("[1-2]?\\d"), HARMONIC("\\[[1-7]\\]"), PULLOFF("p"), HAMMERON("h"), SLIDE("s");
-
-		public final Pattern pattern;
-
-		/**
-		 * Set pattern for the respective token type.
-		 * 
-		 * @param pattern a pattern for a token type
-		 */
-		private TokenType(String pattern) {
-			this.pattern = Pattern.compile(pattern);
-		}
-
-		/**
-		 * Matches the input to every token type, and returns the first type that
-		 * matches.
-		 * 
-		 * @param token token to test
-		 * @return type of token
-		 * @throws InvalidTokenException
-		 * @since 2021-01-20
-		 */
-		public static TokenType getType(String token) throws InvalidTokenException {
-			for (TokenType type : TokenType.values()) {
-				if (type.matches(token)) {
-					return type;
-				}
-			}
-			throw new InvalidTokenException("Invalid token.");
-		}
-
-		/**
-		 * Checks if a token is an instance of its type.
-		 * 
-		 * @param token token as a string
-		 * @return returns true if the specified token matches the token type
-		 */
-		public boolean matches(String token) {
-			return this.pattern.matcher(token).matches();
-		}
-	}
-
-	/**
-	 * An atomic token in the ASCII tablature
-	 * 
-	 * @author amir
-	 *
-	 */
-	public static class Token {
-		private TokenType type;
-		private String data;
-
-		/**
-		 * Instantiate a token with a token type and its data.
-		 * 
-		 * @param type the type of token
-		 * @param data the contents of the token
-		 * @throws InvalidTokenException thrown if there is a mismatch between data and
-		 *                               the token type
-		 */
-		public Token(TokenType type, String data) throws InvalidTokenException {
-			this.type = type;
-			if (type.matches(data))
-				this.data = data;
-			else
-				throw new InvalidTokenException("Token mismatch.");
-		}
-		
-		public String getData() {
-			return this.data;
-		}
-		
-		public TokenType getType() {
-			return this.type;
-		}
-		
-		@Override
-		public String toString() {
-			return String.format("(%s %s)", type.name(), data);
-		}
 	}
 
 	/**

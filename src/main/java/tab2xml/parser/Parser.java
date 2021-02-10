@@ -2,8 +2,7 @@ package tab2xml.parser;
 
 import java.util.ArrayList;
 
-import tab2xml.parser.Lexer.Token;
-import tab2xml.parser.Lexer.TokenType;
+import tab2xml.parser.Lexer.InvalidTokenException;
 import tab2xml.xmlconversion.Transform;
 
 /**
@@ -12,63 +11,79 @@ import tab2xml.xmlconversion.Transform;
  * @author amir
  */
 public class Parser {
-	/*
-	 * Pre: we know Adrien will pass a string from a file or pasted by the user.
-	 * 
-	 * API design: 
-	 * -------------------------------------------------------------- 
-	 * 1. get parsed notes and other information in the Parser class. 
-	 * 2. pass the data from step 1 to another process and convert to XML using XML DOM. 
-	 * 		2.1. we need a really good understanding of musicXML format. 
-	 * 3. pass the XML as a file or string to the presenter to be displayed or download. 3.1. will have access
-	 * points for this.
-	 *
-	 */
 	private Lexer lexer;
 	private ArrayList<ArrayList<Token>> tokens;
 	private Instrument instrument;
-	
+
 	public Parser(String input, Instrument instrument) {
 		lexer = new Lexer(input, instrument);
 		tokens = lexer.tokenize();
 		this.instrument = instrument;
 	}
 
-	public String parse() {
+	public String parse() throws InvalidInputException, InvalidTokenException {
+		switch (instrument) {
+		case GUITAR:
+			return parseGuitar();
+		case DRUM:
+			return parseDrum();
+		default:
+			return "";
+		}
+	}
+
+	private String parseGuitar() throws InvalidInputException, InvalidTokenException {
 		if (tokens == null || tokens.size() == 0)
-			return "invalid input.";
+			throw new InvalidInputException("Could not parse input.");
 
 		String xmlOutput;
-		String tune;
 		ArrayList<ArrayList<Object>> data = new ArrayList<>();
-
+		int currentString = 0;
 		for (ArrayList<Token> line : tokens) {
 			ArrayList<Object> temp = new ArrayList<>();
 
-			if (!line.isEmpty()) {
-				if (TokenType.NOTE.matches(line.get(0).getData())) {
-					tune = line.get(0).getData();
+			if (line.isEmpty()) {
+				currentString = 0;
+				continue;
+			}
 
-					for (Token token : line) {
-						switch (token.getType()) {
-						case FRET:
-							// tune + fret -> note
-							Note note = Note.toNote(tune + Integer.parseInt(token.getData()));
-							temp.add(note);
-							break;
-						default:
-							temp.add(token);
-							break;
-						}
-					}
-					data.add(temp);
+			String tune = line.get(0).getData();
+
+			if (!TokenType.NOTE.matches(tune) && !TokenType.BAR.matches(tune))
+				throw new InvalidInputException("The string does not have a proper tune.");
+
+			if (TokenType.BAR.matches(tune) && instrument == Instrument.GUITAR)
+				tune = Instrument.standardTuning[currentString];
+
+			for (Token token : line) {
+				switch (token.type()) {
+				case FRET:
+					int fret = Integer.parseInt(token.getData());
+					Note note = Note.toNote(tune + fret);
+					note.setFret(fret);
+					note.setString(currentString + 1);
+					note.setType(0);
+					note.setOctave(0);
+					note.setDuration(0);
+					note.setHasStem(false);
+					temp.add(note);
+					break;
+				default:
+					temp.add(token);
+					break;
 				}
 			}
+			currentString++;
+			data.add(temp);
 		}
 
 		Transform tf = new Transform(data, instrument);
 		xmlOutput = tf.toXML();
 
 		return xmlOutput;
+	}
+
+	private String parseDrum() {
+		return "Supported not yet added for drums.";
 	}
 }

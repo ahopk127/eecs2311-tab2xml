@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import tab2xml.parser.Instrument;
+import tab2xml.parser.InvalidInputException;
+import tab2xml.parser.Lexer.InvalidTokenException;
 import tab2xml.parser.Parser;
 
 /**
@@ -37,7 +39,19 @@ public final class Presenter {
 		final Instrument selectedInstrument = this.view.getSelectedInstrument();
 		
 		final Parser parser = new Parser(textTabInput, selectedInstrument);
-		final String musicXMLOutput = parser.parse();
+		String musicXMLOutput;
+		
+		try {
+			musicXMLOutput = parser.parse();
+		} catch (InvalidInputException e) {
+			// TODO if input is invalid.
+			musicXMLOutput = "invalid input.";
+			e.printStackTrace();
+		} catch (InvalidTokenException e) {
+			// TODO if input contains invalid token.
+			musicXMLOutput = "invlid token parsed.";
+			e.printStackTrace();
+		}
 		
 		this.view.setOutputText(musicXMLOutput);
 	}
