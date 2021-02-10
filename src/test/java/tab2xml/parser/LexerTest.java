@@ -1,6 +1,10 @@
 package tab2xml.parser;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +12,14 @@ class LexerTest {
 
 	@Test
 	void testLexer() {
-		fail("Not yet implemented");
+		Field[] fields = Lexer.class.getDeclaredFields();
+        for (Field f: fields){
+            assertTrue("SparseList contains a public field", 
+                    !Modifier.isPublic(f.getModifiers()));
+        }
+
+        assertTrue ("Number of constructors != 1", 
+                Lexer.class.getDeclaredConstructors().length == 1);
 	}
 
 	@Test
