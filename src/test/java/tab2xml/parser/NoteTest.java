@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier;
 
 import org.junit.jupiter.api.Test;
 
-import tab2xml.parser.Note.NoteType;
+import tab2xml.parser.Lexer.InvalidTokenException;
 
 class NoteTest {
 
@@ -49,7 +49,7 @@ class NoteTest {
 		Note note= new Note(NoteType.AS);
 		String expected = "A#";
 		
-		assertEquals(expected, note.getName());
+		assertEquals(expected, note.getNoteType().getValue());
 	}
 	/**
 	 * @author Edward and Sayed
@@ -60,7 +60,7 @@ class NoteTest {
 		Note note= new Note(NoteType.A);
 		String expected = "A";
 		
-		assertEquals(expected, note.getName());
+		assertEquals(expected, note.getNoteType().getValue());
 	}
 	/**
 	 * @author Edward and Sayed
@@ -89,7 +89,13 @@ class NoteTest {
 	@Test
 		void testToNote() {
 		NoteType expected = NoteType.A;
-		assertEquals(expected, Note.toNote("A0").getNoteType());
+		try {
+			assertEquals(expected, Note.toNote("A0").getNoteType());
+		} catch (InvalidTokenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("InvalidTokenException occured.");
+		}
 		
 		}
 
