@@ -234,6 +234,7 @@ public class Transform {
 						count++;
 					else
 						return count;
+					break;
 				default:
 					break;
 				}

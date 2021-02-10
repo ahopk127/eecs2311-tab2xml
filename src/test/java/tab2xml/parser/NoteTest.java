@@ -47,6 +47,8 @@ class NoteTest {
 		String expected = "A#";
 
 		assertEquals(expected, note.getData());
+
+		assertEquals(expected, note.getNoteType().getValue());
 	}
 
 	/**
@@ -59,6 +61,8 @@ class NoteTest {
 		String expected = "A";
 
 		assertEquals(expected, note.getData());
+
+		assertEquals(expected, note.getNoteType().getValue());
 	}
 
 	/**
@@ -91,7 +95,13 @@ class NoteTest {
 	void testToNote() throws InvalidTokenException {
 		NoteType expected = NoteType.A;
 		assertEquals(expected, Note.toNote("A0").getNoteType());
-
+		try {
+			assertEquals(expected, Note.toNote("A0").getNoteType());
+		} catch (InvalidTokenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail("InvalidTokenException occured.");
+		}
 	}
 
 }
