@@ -21,9 +21,7 @@ class NoteTest {
 		for (Field f : fields) {
 			assertTrue("SparseList contains a public field", !Modifier.isPublic(f.getModifiers()));
 		}
-
-		assertTrue("Number of constructors != 1", Note.class.getDeclaredConstructors().length == 1);
-
+		assertTrue("Number of constructors != 1", Note.class.getDeclaredConstructors().length == 2);
 	}
 
 	/**
@@ -33,21 +31,19 @@ class NoteTest {
 	void getNoteTypeTester() {
 		Note note = new Note(NoteType.A);
 		NoteType expected = NoteType.A;
-
 		assertEquals(expected, note.getNoteType());
 	}
 
 	/**
 	 * @author Edward and Sayed this tests the getName method for A sharp in the
 	 *         Note class
+	 * @throws InvalidTokenException 
 	 */
 	@Test
-	void getNameTester() {
-		Note note = new Note(NoteType.AS);
+	void getNameTester() throws InvalidTokenException {
+		Note note = new Note(NoteType.AS, "A#");
 		String expected = "A#";
-
 		assertEquals(expected, note.getData());
-
 		assertEquals(expected, note.getNoteType().getValue());
 	}
 
@@ -59,9 +55,6 @@ class NoteTest {
 	void getNameTester2() {
 		Note note = new Note(NoteType.A);
 		String expected = "A";
-
-		assertEquals(expected, note.getData());
-
 		assertEquals(expected, note.getNoteType().getValue());
 	}
 

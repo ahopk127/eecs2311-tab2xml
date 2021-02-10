@@ -12,12 +12,11 @@ import java.util.regex.Pattern;
  * @author amir
  */
 public class Lexer {
-
 	private String input;
 	private Instrument instrument;
 
 	/**
-	 * Instantiate a Lexer object for an input string and instrument.
+	 * Construct a lexer object for an input string and instrument.
 	 * 
 	 * @param input      string representing ASCII tablature
 	 * @param instrument the type of instrument for the tablature
@@ -38,8 +37,10 @@ public class Lexer {
 			return tokenizeGuitar(input);
 		case DRUM:
 			return tokenizeDrum(input);
+		case BASS:
+			return tokenizeBass(input);
 		default:
-			throw new  UnsupportedOperationException("This instrument is not supported.");
+			throw new UnsupportedOperationException("This instrument is not supported.");
 		}
 	}
 
@@ -97,21 +98,29 @@ public class Lexer {
 	 */
 	public static ArrayList<ArrayList<Token>> tokenizeDrum(String input) {
 		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
-		// TO-DO
+		//TO-DO
+		return tokens;
+	}
 
+	/**
+	 * This method will extract tokens from the bass tablature.
+	 * 
+	 * @param input bass ASCII tablature
+	 * @return a list of list of tokens representing the bass tablature
+	 */
+	public static ArrayList<ArrayList<Token>> tokenizeBass(String input) {
+		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
+		//TO-DO
 		return tokens;
 	}
 
 	/**
 	 * Thrown if invalid token occurs.
-	 * 
 	 */
+	@SuppressWarnings("serial")
 	public static class InvalidTokenException extends Exception {
-		private static final long serialVersionUID = 1L;
-
 		public InvalidTokenException(String message) {
 			super(message);
 		}
 	}
-
 }

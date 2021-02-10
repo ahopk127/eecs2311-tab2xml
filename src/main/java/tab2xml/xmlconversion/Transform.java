@@ -12,6 +12,11 @@ import tab2xml.parser.Instrument;
 import tab2xml.parser.Note;
 import tab2xml.parser.Token;
 
+/**
+ * The transformer which generates the XML output as a string.
+ * 
+ * @author amir
+ */
 public class Transform {
 	private ArrayList<ArrayList<Object>> data;
 	MusicSheet musicSheet;
@@ -19,6 +24,12 @@ public class Transform {
 	private DocumentBuilder dBuilder;
 	private DocumentBuilderFactory dbFactory;
 
+	/**
+	 * Construct a transformer that accepts specified data and an instrument.
+	 * 
+	 * @param data       the data retrieved by the parser
+	 * @param instrument the type of instrument corresponding to this data
+	 */
 	public Transform(ArrayList<ArrayList<Object>> data, Instrument instrument) {
 		this.data = data;
 		this.dbFactory = DocumentBuilderFactory.newInstance();
@@ -43,6 +54,18 @@ public class Transform {
 		}
 	}
 
+	/**
+	 * A string of the music sheet in musicXML format.
+	 * 
+	 * @return a string format of the converted XML
+	 */
+	public String toXML() {
+		return musicSheet.toXML();
+	}
+
+	/**
+	 * Generate XML form data for selected instrument, Guitar.
+	 */
 	private void generateGuitar() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
 		XMLElement part1 = setDefaults(root);
@@ -107,6 +130,18 @@ public class Transform {
 			part1.append(measure);
 	}
 
+	/**
+	 * Generate XML from data for selected instrument, Drum.
+	 */
+	private void generateDrum() {
+		generateSamplePlaceHolder();
+	}
+
+	/**
+	 * Set the lengths array to the number of notes in each string per measure.
+	 * 
+	 * @param lengths the array containing the number of notes left in each string
+	 */
 	private void setNumNotesInMeasure(int[] lengths) {
 		int len = 0;
 		int currMeasure = 0;
@@ -132,6 +167,13 @@ public class Transform {
 		}
 	}
 
+	/**
+	 * Append a note element to its correct measure.
+	 * 
+	 * @param currNote    the note to be added to specified measure
+	 * @param currMeasure the index of the measure to append to
+	 * @param measures    the list of all the measures
+	 */
 	private void addNoteToMeasure(Note currNote, int currMeasure, ArrayList<XMLElement> measures) {
 		if (measures.get(currMeasure) != null) {
 			XMLElement note = new XMLElement("note", musicSheet);
@@ -173,18 +215,32 @@ public class Transform {
 		}
 	}
 
+	/**
+	 * Return whether an object is a note.
+	 * 
+	 * @param obj the object to test if its a note
+	 * @return true if <b>obj</b> is a note
+	 */
 	private boolean isNote(Object obj) {
 		return obj.getClass().equals(Note.class);
 	}
 
+	/**
+	 * Return whether an object is a token.
+	 * 
+	 * @param obj the object to test if its a token
+	 * @return true if <b>obj</b> is a token
+	 */
 	private boolean isToken(Object obj) {
 		return obj.getClass().equals(Token.class);
 	}
 
-	private void generateDrum() {
-		generateSamplePlaceHolder();
-	}
-
+	/**
+	 * Set the default values that every music sheet has.
+	 * 
+	 * @param root the root element of the music sheet
+	 * @return an XML element for part 1
+	 */
 	private XMLElement setDefaults(XMLElement root) {
 		root.setAttribute("version", "3.1");
 		musicSheet.append(root);
@@ -205,23 +261,11 @@ public class Transform {
 		return part1;
 	}
 
-	private void generateSamplePlaceHolder() {
-		XMLElement root = new XMLElement("score-partwise", musicSheet);
-		musicSheet.append(root);
-
-		int measureCount = 10;
-
-		for (int i = 0; i < measureCount; i++) {
-			XMLElement measure = new XMLElement("measure", musicSheet);
-			root.append(measure);
-
-			XMLElement note = new XMLElement("note", musicSheet);
-			note.setText("sample attributes of note " + i);
-			measure.append(note);
-
-		}
-	}
-
+	/**
+	 * Return the number of measures in the music sheet.
+	 * 
+	 * @return the number of measures in the data
+	 */
 	private int countMeaures() {
 		int count = 0;
 		for (ArrayList<Object> line : data) {
@@ -243,6 +287,19 @@ public class Transform {
 		return count;
 	}
 
+	private void generateSamplePlaceHolder() {
+		XMLElement root = new XMLElement("score-partwise", musicSheet);
+		musicSheet.append(root);
+		int measureCount = 10;
+		for (int i = 0; i < measureCount; i++) {
+			XMLElement measure = new XMLElement("measure", musicSheet);
+			root.append(measure);
+			XMLElement note = new XMLElement("note", musicSheet);
+			note.setText("sample attributes of note " + i);
+			measure.append(note);
+		}
+	}
+
 	private void printData() {
 		StringBuilder sb = new StringBuilder();
 		for (ArrayList<Object> line : data) {
@@ -254,9 +311,4 @@ public class Transform {
 		}
 		System.out.println(sb.toString());
 	}
-
-	public String toXML() {
-		return musicSheet.toXML();
-	}
-
 }

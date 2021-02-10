@@ -13,6 +13,7 @@ import tab2xml.parser.Lexer.InvalidTokenException;
 public class Note extends Token {
 	private final NoteType note;
 	private static final TokenType tokenType = TokenType.NOTE;
+
 	/*
 	 * Pitch attributes.
 	 */
@@ -42,10 +43,11 @@ public class Note extends Token {
 	}
 
 	/**
-	 * Construct a note object based on type.
+	 * Construct a note object based on type and a given step.
 	 * 
 	 * @param type the type of note
-	 * @throws InvalidTokenException
+	 * @param step the data of the note
+	 * @throws InvalidTokenException if the data doesn't match the note type
 	 */
 	public Note(NoteType type, String step) throws InvalidTokenException {
 		super(tokenType, step);
@@ -53,79 +55,175 @@ public class Note extends Token {
 		this.step = step;
 	}
 
-	public NoteType getNoteType() {
-		return note;
-	}
-
+	/**
+	 * The position of this note within all the 12 notes.
+	 * 
+	 * @return the index of this note within the NoteType enum
+	 */
 	public int getIndex() {
 		return note.ordinal();
 	}
 
+	/**
+	 * Return the stem attribute of this note.
+	 * 
+	 * @return the stem attribute of this note
+	 */
 	public boolean hasStem() {
 		return hasStem;
 	}
 
+	/**
+	 * Set the stem attribute to the specified note.
+	 * 
+	 * @param hasStem the value to set the stem attribute
+	 */
 	public void setHasStem(boolean hasStem) {
 		this.hasStem = hasStem;
 	}
 
+	/**
+	 * Return the duration attribute of this note.
+	 * 
+	 * @return the duration attribute of this note
+	 */
 	public int getDuration() {
 		return duration;
 	}
 
+	/**
+	 * Set the duration attribute to the specified value.
+	 * 
+	 * @param duration the value to set the octave attribute
+	 */
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
 
+	/**
+	 * Return the octave attribute of this note.
+	 * 
+	 * @return the octave attribute of this note
+	 */
 	public int getOctave() {
 		return octave;
 	}
 
+	/**
+	 * Set the octave attribute to the specified value.
+	 * 
+	 * @param octave the value to set the octave attribute
+	 */
 	public void setOctave(int octave) {
 		this.octave = octave;
 	}
 
+	/**
+	 * Return the string attribute to the specified value.
+	 * 
+	 * @return the string attribute of this note
+	 */
 	public int getString() {
 		return string;
 	}
 
+	/**
+	 * Set the string attribute to the specified value.
+	 * 
+	 * @param string the value to set the string attribute
+	 */
 	public void setString(int string) {
 		this.string = string;
 	}
 
+	/**
+	 * Return the fret attribute of this note.
+	 * 
+	 * @return the fret attribute of this note
+	 */
 	public int getFret() {
 		return fret;
 	}
 
+	/**
+	 * Set the fret attribute to the specified value.
+	 * 
+	 * @param fret the value to set the fret attribute
+	 */
 	public void setFret(int fret) {
 		this.fret = fret;
 	}
 
-	public void setVoice() {
+	/**
+	 * Set the voice attribute to the specified value.
+	 * 
+	 * @param voice the value to set the voice attribute
+	 */
+	public void setVoice(int voice) {
+		this.voice = voice;
 	}
 
+	/**
+	 * Return the voice attribute of this note.
+	 * 
+	 * @return the voice attribute of this note
+	 */
 	public int getVoice() {
 		return voice;
 	}
 
+	/**
+	 * Return the type attribute of this note.
+	 * 
+	 * @return the type attribute of this note
+	 */
 	public int getType() {
 		return type;
 	}
 
+	/**
+	 * Return the type of this note.
+	 * 
+	 * @param type the type of this note(A,B,..AS..) as defined by the NoteType enum
+	 */
 	public void setType(int type) {
 		this.type = type;
 	}
 
+	/**
+	 * Return the note type of this note.
+	 * 
+	 * @return the note type of this note
+	 */
+	public NoteType getNoteType() {
+		return note;
+	}
+
+	/**
+	 * Return the token type of this note(NOTE).
+	 * 
+	 * @return a NOTE type
+	 */
 	@Override
 	public TokenType type() {
 		return tokenType;
 	}
 
+	/**
+	 * Return the value of this note.
+	 * 
+	 * @return the step of this note
+	 */
 	@Override
 	public String getData() {
 		return step;
 	}
 
+	/**
+	 * Return the string representation of this note.
+	 * 
+	 * @return the string of this note's value
+	 */
 	@Override
 	public String toString() {
 		return String.format("%s", step);
@@ -136,7 +234,8 @@ public class Note extends Token {
 	 * 
 	 * @param input string input containing: tuning+fret number
 	 * @return a note based on the properties of the input
-	 * @throws InvalidTokenException
+	 * @throws InvalidTokenException if the parsed note type doesn't match the
+	 *                               parsed step
 	 */
 	public static Note toNote(String input) throws InvalidTokenException {
 		Pattern p = Pattern.compile("^[A-G]\\d+$");

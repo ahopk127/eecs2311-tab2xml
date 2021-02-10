@@ -3,10 +3,21 @@ package tab2xml.xmlconversion;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * An XML element wrapper.
+ * 
+ * @author amir
+ */
 public class XMLElement {
 	private Document doc;
 	private Element element;
 
+	/**
+	 * Construct an element with a specified tag and its corresponding document.
+	 * 
+	 * @param tag the name of the element tag
+	 * @param doc the doc which this tag belongs to
+	 */
 	public XMLElement(String tag, Document doc) {
 		this.doc = doc;
 		this.element = doc.createElement(tag);

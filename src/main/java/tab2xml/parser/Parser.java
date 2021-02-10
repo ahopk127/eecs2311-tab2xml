@@ -15,23 +15,45 @@ public class Parser {
 	private ArrayList<ArrayList<Token>> tokens;
 	private Instrument instrument;
 
+	/**
+	 * Construct a parser with specified tablature and instrument.
+	 * 
+	 * @param input      the tablature to be parsed
+	 * @param instrument the corresponding instrument
+	 */
 	public Parser(String input, Instrument instrument) {
 		lexer = new Lexer(input, instrument);
 		tokens = lexer.tokenize();
 		this.instrument = instrument;
 	}
 
+	/**
+	 * Parse the data by instrument.
+	 * 
+	 * @return an XML conversion of the input
+	 * @throws InvalidInputException if invalid input is parsed
+	 * @throws InvalidTokenException if invalid token is parsed
+	 */
 	public String parse() throws InvalidInputException, InvalidTokenException {
 		switch (instrument) {
 		case GUITAR:
 			return parseGuitar();
 		case DRUM:
 			return parseDrum();
+		case BASS:
+			return parseBass();
 		default:
 			return "";
 		}
 	}
 
+	/**
+	 * Parse the input as Guitar tab.
+	 * 
+	 * @return an XML conversion for a Guitar
+	 * @throws InvalidInputException if invalid input is parsed.
+	 * @throws InvalidTokenException if invalid token is parsed.
+	 */
 	private String parseGuitar() throws InvalidInputException, InvalidTokenException {
 		if (tokens == null || tokens.size() == 0)
 			throw new InvalidInputException("Could not parse input.");
@@ -83,7 +105,25 @@ public class Parser {
 		return xmlOutput;
 	}
 
+	/**
+	 * Parse the input as Drum tab.
+	 * 
+	 * @return an XML conversion for a Drum
+	 * @throws InvalidInputException if invalid input is parsed.
+	 * @throws InvalidTokenException if invalid token is parsed.
+	 */
 	private String parseDrum() {
-		return "Supported not yet added for drums.";
+		return "Supporte not yet added for drums.";
+	}
+
+	/**
+	 * Parse the input as Bass tab.
+	 * 
+	 * @return an XML conversion for a Bass
+	 * @throws InvalidInputException if invalid input is parsed.
+	 * @throws InvalidTokenException if invalid token is parsed.
+	 */
+	private String parseBass() {
+		return "Supporte not yet added for bass.";
 	}
 }

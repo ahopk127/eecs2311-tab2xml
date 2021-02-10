@@ -6,7 +6,6 @@ package tab2xml.parser;
  * @author amir
  */
 public enum Instrument {
-	// expandable
 	GUITAR, DRUM, BASS;
 	
 	public static final String[] standardTuning = new String[] {"E", "B", "G", "D", "A", "E"};

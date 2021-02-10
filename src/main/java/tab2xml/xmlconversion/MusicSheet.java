@@ -12,11 +12,21 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 
+/**
+ * A representation of a music sheet in musicXML format.
+ * 
+ * @author amir
+ */
 public class MusicSheet {
 	private Document doc;
 	private DocumentBuilder dBuilder;
 	private DocumentBuilderFactory dbFactory;
 
+	/**
+	 * @param doc the document of the music sheet
+	 * @param db  an instance of a document builder
+	 * @param dbf an instance of a document builder factory
+	 */
 	public MusicSheet(Document doc, DocumentBuilder db, DocumentBuilderFactory dbf) {
 		this.dbFactory = DocumentBuilderFactory.newInstance();
 
@@ -28,14 +38,29 @@ public class MusicSheet {
 		}
 	}
 
+	/**
+	 * Appends an XML element to the music sheet.
+	 * 
+	 * @param e element to append to the document
+	 */
 	public void append(XMLElement e) {
 		this.doc.appendChild(e.getElement());
 	}
 
+	/**
+	 * Returns a reference to this musicsheet's document.
+	 * 
+	 * @return the XML document
+	 */
 	public Document getDoc() {
 		return this.doc;
 	}
 
+	/**
+	 * This method transforms the current music sheet to XML as a string.
+	 * 
+	 * @return XML representation of the music sheet as a string
+	 */
 	public String toXML() {
 		String xml;
 		try {
@@ -58,5 +83,4 @@ public class MusicSheet {
 		}
 		return xml;
 	}
-
 }

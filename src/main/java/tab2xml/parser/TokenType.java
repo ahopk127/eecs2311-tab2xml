@@ -13,11 +13,6 @@ public enum TokenType {
 
 	public final Pattern pattern;
 
-	/**
-	 * Set pattern for the respective token type.
-	 * 
-	 * @param pattern a pattern for a token type
-	 */
 	private TokenType(String pattern) {
 		this.pattern = Pattern.compile(pattern);
 	}
