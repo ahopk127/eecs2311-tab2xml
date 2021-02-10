@@ -39,7 +39,7 @@ public class Lexer {
 		case DRUM:
 			return tokenizeDrum(input);
 		default:
-			return null;
+			throw new  UnsupportedOperationException("This instrument is not supported.");
 		}
 	}
 
