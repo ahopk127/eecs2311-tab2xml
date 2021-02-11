@@ -1,6 +1,5 @@
 package tab2xml.parser;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
@@ -8,8 +7,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
-
-import tab2xml.parser.Lexer.InvalidTokenException;
 
 class LexerTest {
 	/**
@@ -19,10 +16,10 @@ class LexerTest {
 	void testLexer() {
 		Field[] fields = Lexer.class.getDeclaredFields();
 		for (Field f : fields) {
-			assertTrue("SparseList contains a public field", !Modifier.isPublic(f.getModifiers()));
+			assertTrue(!Modifier.isPublic(f.getModifiers()), "SparseList contains a public field");
 		}
 
-		assertTrue("Number of constructors != 1", Lexer.class.getDeclaredConstructors().length == 1);
+		assertTrue(Lexer.class.getDeclaredConstructors().length == 1, "Number of constructors != 1");
 	}
 
 	@Test
