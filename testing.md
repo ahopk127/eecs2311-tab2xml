@@ -17,7 +17,7 @@ Any test in this section that requires use of an unimplemented optional method i
  # Back-End Tests
 ## ParserTest
  - `testTokenizeGuitar()`: Tests that Guitar tablature is split into proper toknens.
- - `testInvalidTuneException()`: Tests if a the Guitar tablature tune is invalid.
+ - `testInvalidTuneException()`: Tests if the Guitar tablature tune is invalid.
  - `testTokenizeDrum()`: [To-Do]
  
 ## NoteTest
