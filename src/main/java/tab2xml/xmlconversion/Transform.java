@@ -64,7 +64,7 @@ public class Transform {
 	}
 
 	/**
-	 * Generate XML form data for selected instrument, Guitar.
+	 * Generate XML from data for selected instrument, Guitar.
 	 */
 	private void generateGuitar() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
