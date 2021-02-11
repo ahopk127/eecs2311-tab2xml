@@ -33,11 +33,6 @@ class LexerTest {
 		
 		String expected = "| 0 | 0 | \n" + "| 0 0 | 0 | \n" +  "| 1 1 | 1 | \n" + "| 2 | 2 | \n" + "| 2 | 2 | \n" + "| 0 | 0 | \n";
 		
-		Lexer lx = new Lexer(sample, Instrument.BASS);
-		UnsupportedOperationException thrown = assertThrows(UnsupportedOperationException.class, () -> lx.tokenize(),
-				"This instrument is not supported.");
-		assertTrue(thrown.getMessage().contains("This instrument is not supported."));
-		
 		Lexer lx2 = new Lexer(sample, Instrument.GUITAR);
 		ArrayList<ArrayList<Token>> tokens = lx2.tokenize();
 		
