@@ -1,6 +1,5 @@
 package tab2xml.parser;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Field;
@@ -19,9 +18,11 @@ class NoteTest {
 	void constructorTest() {
 		Field[] fields = Note.class.getDeclaredFields();
 		for (Field f : fields) {
-			assertTrue("SparseList contains a public field", !Modifier.isPublic(f.getModifiers()));
+			assertTrue(!Modifier.isPublic(f.getModifiers()), "SparseList contains a public field");
 		}
-		assertTrue("Number of constructors != 1", Note.class.getDeclaredConstructors().length == 2);
+
+		assertTrue(Note.class.getDeclaredConstructors().length == 1, "Number of constructors != 1");
+
 	}
 
 	/**
