@@ -23,6 +23,8 @@ public class MusicSheet {
 	private DocumentBuilderFactory dbFactory;
 
 	/**
+	 * Construct a music sheet with a specified document.
+	 * 
 	 * @param doc the document of the music sheet
 	 * @param db  an instance of a document builder
 	 * @param dbf an instance of a document builder factory
@@ -50,7 +52,7 @@ public class MusicSheet {
 	/**
 	 * Returns a reference to this musicsheet's document.
 	 * 
-	 * @return the XML document
+	 * @return the XML document of this music sheet
 	 */
 	public Document getDoc() {
 		return this.doc;
@@ -59,7 +61,7 @@ public class MusicSheet {
 	/**
 	 * This method transforms the current music sheet to XML as a string.
 	 * 
-	 * @return XML representation of the music sheet as a string
+	 * @return XML representation of the XML document as a string
 	 */
 	public String toXML() {
 		String xml;

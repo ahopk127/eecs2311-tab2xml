@@ -1,7 +1,5 @@
 package tab2xml.parser;
 
-
-
 /**
  * An exception which to thrown when invalid input occurs.
  * 

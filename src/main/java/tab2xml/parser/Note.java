@@ -58,7 +58,7 @@ public class Note extends Token {
 	/**
 	 * The position of this note within all the 12 notes.
 	 * 
-	 * @return the index of this note within the NoteType enum
+	 * @return the index of this note within {@code NoteType}
 	 */
 	public int getIndex() {
 		return note.ordinal();
@@ -184,7 +184,7 @@ public class Note extends Token {
 	/**
 	 * Return the type of this note.
 	 * 
-	 * @param type the type of this note(A,B,..AS..) as defined by the NoteType enum
+	 * @param type the type of this note (<em>A, B, C,..</em>) as defined by {@code NoteType}
 	 */
 	public void setType(int type) {
 		this.type = type;
@@ -200,9 +200,9 @@ public class Note extends Token {
 	}
 
 	/**
-	 * Return the token type of this note(NOTE).
+	 * Return the token type of this note({@code NoteType.NOTE}).
 	 * 
-	 * @return a NOTE type
+	 * @return a {@code NOTE} type as defined by {@code NoteType}
 	 */
 	@Override
 	public TokenType type() {
@@ -232,7 +232,7 @@ public class Note extends Token {
 	/**
 	 * Construct a note from the ASCII tablature.
 	 * 
-	 * @param input string input containing: tuning+fret number
+	 * @param input string input(<em>"tune + fret"</em>)
 	 * @return a note based on the properties of the input
 	 * @throws InvalidTokenException if the parsed note type doesn't match the
 	 *                               parsed step

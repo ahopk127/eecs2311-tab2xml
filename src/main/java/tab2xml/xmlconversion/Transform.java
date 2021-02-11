@@ -68,10 +68,13 @@ public class Transform {
 	 */
 	private void generateGuitar() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
-		XMLElement part1 = setDefaults(root);
+		setDefaults(root);
+		XMLElement part1 = new XMLElement("part", musicSheet);
+		part1.setAttribute("id", "P1");
 		root.append(part1);
+		
 		printData();
-
+		
 		int measureCount = countMeaures();
 		int currMeasure = 0;
 		int numOfStrings = 6;
@@ -239,9 +242,8 @@ public class Transform {
 	 * Set the default values that every music sheet has.
 	 * 
 	 * @param root the root element of the music sheet
-	 * @return an XML element for part 1
 	 */
-	private XMLElement setDefaults(XMLElement root) {
+	private void setDefaults(XMLElement root) {
 		root.setAttribute("version", "3.1");
 		musicSheet.append(root);
 
@@ -253,12 +255,8 @@ public class Transform {
 
 		scorePart.append(partName);
 		partList.append(scorePart);
+
 		root.append(partList);
-
-		XMLElement part1 = new XMLElement("part", musicSheet);
-		part1.setAttribute("id", "P1");
-
-		return part1;
 	}
 
 	/**

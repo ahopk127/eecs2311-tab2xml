@@ -2,14 +2,12 @@ package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
 import org.junit.jupiter.api.Test;
 
 import tab2xml.parser.Lexer.InvalidTokenException;
 
 class NoteTest {
+	
 	/**
 	 * @author Edward and Sayed this tests the getNoteType method in the Note class
 	 */

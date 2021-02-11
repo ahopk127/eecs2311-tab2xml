@@ -2,13 +2,11 @@ package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
-class LexerTest {
+class ParserTest {
 	
 	@Test
 	void testTokenizeGuitar() {
