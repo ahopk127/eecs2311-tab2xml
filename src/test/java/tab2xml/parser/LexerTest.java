@@ -9,19 +9,7 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 class LexerTest {
-	/**
-	 * @author Edward and Sayed this tests the constructor method in the Lexer class
-	 */
-	@Test
-	void testLexer() {
-		Field[] fields = Lexer.class.getDeclaredFields();
-		for (Field f : fields) {
-			assertTrue(!Modifier.isPublic(f.getModifiers()), "SparseList contains a public field");
-		}
-
-		assertTrue(Lexer.class.getDeclaredConstructors().length == 1, "Number of constructors != 1");
-	}
-
+	
 	@Test
 	void testTokenizeGuitar() {
 		String sample = "|-----------0-----|-0---------------|\n" + "|---------0---0---|-0---------------|\n"

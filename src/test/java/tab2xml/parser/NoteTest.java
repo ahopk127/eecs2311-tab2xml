@@ -10,21 +10,6 @@ import org.junit.jupiter.api.Test;
 import tab2xml.parser.Lexer.InvalidTokenException;
 
 class NoteTest {
-
-	/**
-	 * @author Edward and Sayed this tests the constructor method in the Note class
-	 */
-	@Test
-	void constructorTest() {
-		Field[] fields = Note.class.getDeclaredFields();
-		for (Field f : fields) {
-			assertTrue(!Modifier.isPublic(f.getModifiers()), "SparseList contains a public field");
-		}
-
-		assertTrue(Note.class.getDeclaredConstructors().length == 1, "Number of constructors != 1");
-
-	}
-
 	/**
 	 * @author Edward and Sayed this tests the getNoteType method in the Note class
 	 */
