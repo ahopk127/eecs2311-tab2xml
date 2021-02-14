@@ -45,11 +45,11 @@ public final class Presenter {
 			musicXMLOutput = parser.parse();
 		} catch (InvalidInputException e) {
 			// TODO if input is invalid.
-			musicXMLOutput = "invalid input.";
+			musicXMLOutput = e.getMessage();
 			e.printStackTrace();
 		} catch (InvalidTokenException e) {
 			// TODO if input contains invalid token.
-			musicXMLOutput = "invlid token parsed.";
+			musicXMLOutput = e.getMessage();
 			e.printStackTrace();
 		}
 		

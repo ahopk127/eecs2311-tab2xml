@@ -1,6 +1,7 @@
 package tab2xml.parser;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import tab2xml.parser.Lexer.InvalidTokenException;
 import tab2xml.xmlconversion.Transform;
@@ -43,7 +44,7 @@ public class Parser {
 		case BASS:
 			return parseBass();
 		default:
-			return "";
+			return "Instrument not supported.";
 		}
 	}
 
@@ -57,22 +58,28 @@ public class Parser {
 	private String parseGuitar() throws InvalidInputException, InvalidTokenException {
 		if (tokens == null || tokens.size() == 0)
 			throw new InvalidInputException("Could not parse input.");
-
+		
+		if (tokens.size() != 6)
+			throw new InvalidInputException("Must have 6 strings for prototype.");
+		
 		String xmlOutput;
 		ArrayList<ArrayList<Object>> data = new ArrayList<>();
+		Stack<Token> oracle = new Stack<>();
 		int currentString = 0;
+
 		for (ArrayList<Token> line : tokens) {
 			ArrayList<Object> temp = new ArrayList<>();
 
 			if (line.isEmpty()) {
 				currentString = 0;
+				data.add(temp);
 				continue;
 			}
 
 			String tune = line.get(0).getData();
 
 			if (!TokenType.NOTE.matches(tune) && !TokenType.BAR.matches(tune))
-				throw new InvalidInputException("The string does not have a proper tune.");
+				throw new InvalidInputException(String.format("String %d does not have a proper tune.", currentString + 1));
 
 			if (TokenType.BAR.matches(tune) && instrument == Instrument.GUITAR)
 				tune = Instrument.standardTuning[currentString];
@@ -90,15 +97,30 @@ public class Parser {
 					note.setHasStem(false);
 					temp.add(note);
 					break;
-				default:
+				case BAR:
+					if (oracle.isEmpty())
+						oracle.push(token);
+					else {
+						oracle.pop();
+
+						if (line.indexOf(token) != line.size() - 1)
+							oracle.push(token);
+					}
 					temp.add(token);
+					break;
+				default:
+					//TODO: add support for pull off, hammer on
+					//temp.add(token);
 					break;
 				}
 			}
+			if (!oracle.isEmpty())
+				throw new InvalidInputException(String.format("Measure incomplete on string %d.", (currentString + 1)));
 			currentString++;
 			data.add(temp);
 		}
-
+		
+		
 		Transform tf = new Transform(data, instrument);
 		xmlOutput = tf.toXML();
 
@@ -113,7 +135,7 @@ public class Parser {
 	 * @throws InvalidTokenException if invalid token is parsed.
 	 */
 	private String parseDrum() {
-		return "Supporte not yet added for drums.";
+		return "Support not yet added for drums.";
 	}
 
 	/**
@@ -124,6 +146,6 @@ public class Parser {
 	 * @throws InvalidTokenException if invalid token is parsed.
 	 */
 	private String parseBass() {
-		return "Supporte not yet added for bass.";
+		return "Support not yet added for bass.";
 	}
 }

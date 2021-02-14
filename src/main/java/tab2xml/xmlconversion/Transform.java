@@ -72,9 +72,12 @@ public class Transform {
 		XMLElement part1 = new XMLElement("part", musicSheet);
 		part1.setAttribute("id", "P1");
 		root.append(part1);
-		
+
 		printData();
-		
+
+		// parse a single staff with x measures
+		// TODO: modularize so we can have measures on multiple staffs
+		// and potentially each staff will contain n strings.
 		int measureCount = countMeaures();
 		int currMeasure = 0;
 		int numOfStrings = 6;
@@ -92,12 +95,12 @@ public class Transform {
 		Arrays.fill(lengths, -1);
 		int count = 0;
 		int measuresNotSeen = measureCount + 1;
+		int factor = -1;
+		int y = data.size() - 1;
+		boolean skipRight = false;
 
 		while (measuresNotSeen != 0) {
-			for (int y = data.size() - 1; y >= 0; y--) {
-				if (Arrays.stream(lengths).sum() == 0)
-					Arrays.fill(lengths, -1);
-
+			for (; (factor > 0 ? y < data.size() : y >= 0); y += factor) {
 				if (lengths[y] == 0)
 					continue;
 
@@ -109,13 +112,14 @@ public class Transform {
 						data.get(y).remove(obj);
 						break;
 					case BAR:
+						data.get(y).remove(obj);
 						if (++count % numOfStrings == 0) {
 							setNumNotesInMeasure(lengths);
 							measuresNotSeen--;
 							currMeasure++;
 							count = 0;
+							skipRight = true;
 						}
-						data.get(y).remove(obj);
 						break;
 					default:
 						break;
@@ -127,8 +131,25 @@ public class Transform {
 					addNoteToMeasure(note, currMeasure - 1, measures);
 				}
 			}
+			if (skipRight == true) {
+				skipRight = false;
+				y = data.size() - 1;
+			}
+			if (y == -1) {
+				factor = 1;
+				y = 0;
+			}
+
+			if (y == data.size()) {
+				factor = -1;
+				y = data.size() - 1;
+			}
+			if (Arrays.stream(lengths).sum() == 0)
+				Arrays.fill(lengths, -1);
+
 			data.removeIf(l -> l.isEmpty());
 		}
+
 		for (XMLElement measure : measures)
 			part1.append(measure);
 	}

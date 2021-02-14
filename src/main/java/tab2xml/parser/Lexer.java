@@ -53,7 +53,7 @@ public class Lexer {
 	public static ArrayList<ArrayList<Token>> tokenizeGuitar(String input) {
 		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
 
-		if (input == null || input.length() == 0)
+		if (input == null || input.length() == 0 || input.equals("Enter text tab or load it from a file..."))
 			return tokens;
 
 		try (Scanner sc = new Scanner(input)) {
@@ -84,7 +84,8 @@ public class Lexer {
 						}
 					}
 				}
-				tokens.add(newTokens);
+				if (!newTokens.isEmpty())
+					tokens.add(newTokens);
 			}
 		}
 		return tokens;
