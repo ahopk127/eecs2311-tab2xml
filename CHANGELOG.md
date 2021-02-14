@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+### Added
+ - Set up Gradle building
+ - Created README and instruction manual
+ - You can drag and drop text tab files into the input box
+ - Created tests for backend
+ 
+### Changed
+ - Tweaked requirements from PeerScholar feedback
+
 ## [0.1.0-alpha.4] - 2021-02-08 (Week 4)
 ### Added
  - Added use cases to requirements document
