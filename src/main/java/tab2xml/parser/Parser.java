@@ -58,14 +58,15 @@ public class Parser {
 	private String parseGuitar() throws InvalidInputException, InvalidTokenException {
 		if (tokens == null || tokens.size() == 0)
 			throw new InvalidInputException("Could not parse input.");
-		
+
 		if (tokens.size() != 6)
 			throw new InvalidInputException("Must have 6 strings for prototype.");
-		
+
 		String xmlOutput;
 		ArrayList<ArrayList<Object>> data = new ArrayList<>();
 		Stack<Token> oracle = new Stack<>();
 		int currentString = 0;
+		int hyphenCount = 0;
 
 		for (ArrayList<Token> line : tokens) {
 			ArrayList<Object> temp = new ArrayList<>();
@@ -79,25 +80,36 @@ public class Parser {
 			String tune = line.get(0).getData();
 
 			if (!TokenType.NOTE.matches(tune) && !TokenType.BAR.matches(tune))
-				throw new InvalidInputException(String.format("String %d does not have a proper tune.", currentString + 1));
+				throw new InvalidInputException(
+						String.format("String %d does not have a proper tune.", currentString + 1));
 
-			if (TokenType.BAR.matches(tune) && instrument == Instrument.GUITAR)
-				tune = Instrument.standardTuning[currentString];
+			if (TokenType.BAR.matches(tune) && instrument == Instrument.GUITAR) {
+				tune = Instrument.standardTuningGuitar[currentString];
+				Instrument.isStandardTuningGuitar = true;
+			}
 
 			for (Token token : line) {
 				switch (token.type()) {
+				case HYPHEN:
+					hyphenCount++;
+					break;
 				case FRET:
 					int fret = Integer.parseInt(token.getData());
 					Note note = Note.toNote(tune + fret);
 					note.setFret(fret);
 					note.setString(currentString + 1);
-					note.setType(0);
-					note.setOctave(0);
-					note.setDuration(0);
+
+					if (Instrument.isStandardTuningGuitar)
+						note.setOctave(Instrument.tuningOctaveGuitar[currentString]);
+					else
+						note.setOctave(Integer.toString((int) Math.ceil(fret / 12)));
 					note.setHasStem(false);
+					note.setPosition(hyphenCount);
 					temp.add(note);
+					hyphenCount = 0;
 					break;
 				case BAR:
+					hyphenCount = 0;
 					if (oracle.isEmpty())
 						oracle.push(token);
 					else {
@@ -115,12 +127,11 @@ public class Parser {
 				}
 			}
 			if (!oracle.isEmpty())
-				throw new InvalidInputException(String.format("Measure incomplete on string %d.", (currentString + 1)));
+				throw new InvalidInputException(String.format("Measure incomplete on string %d.", currentString + 1));
 			currentString++;
 			data.add(temp);
 		}
-		
-		
+
 		Transform tf = new Transform(data, instrument);
 		xmlOutput = tf.toXML();
 

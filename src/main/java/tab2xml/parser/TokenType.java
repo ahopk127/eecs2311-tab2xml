@@ -9,7 +9,7 @@ import tab2xml.parser.Lexer.InvalidTokenException;
  * @author amir
  */
 public enum TokenType {
-	BAR("\\|"), NOTE("[A-G]#?"), FRET("[1-2]?\\d"), HARMONIC("\\[[1-7]\\]"), PULLOFF("p"), HAMMERON("h"), SLIDE("s");
+	HYPHEN("-"), BAR("\\|"), NOTE("[A-G]#?"), FRET("[1-2]?\\d"), HARMONIC("\\[[1-7]\\]"), PULLOFF("p"), HAMMERON("h"), SLIDE("s");
 
 	public final Pattern pattern;
 

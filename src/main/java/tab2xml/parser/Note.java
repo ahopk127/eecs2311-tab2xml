@@ -18,7 +18,7 @@ public class Note extends Token {
 	 * Pitch attributes.
 	 */
 	private String step;
-	private int octave;
+	private String octave;
 
 	private boolean hasStem;
 	private int duration;
@@ -30,6 +30,11 @@ public class Note extends Token {
 	private int string;
 	private int fret;
 	private int type;
+
+	/*
+	 * Hyphen position.
+	 */
+	private int position;
 
 	/**
 	 * Construct a note object based on type.
@@ -105,7 +110,7 @@ public class Note extends Token {
 	 * 
 	 * @return the octave attribute of this note
 	 */
-	public int getOctave() {
+	public String getOctave() {
 		return octave;
 	}
 
@@ -114,7 +119,7 @@ public class Note extends Token {
 	 * 
 	 * @param octave the value to set the octave attribute
 	 */
-	public void setOctave(int octave) {
+	public void setOctave(String octave) {
 		this.octave = octave;
 	}
 
@@ -177,14 +182,26 @@ public class Note extends Token {
 	 * 
 	 * @return the type attribute of this note
 	 */
-	public int getType() {
-		return type;
+	public String getType() {
+		switch (type) {
+		case 16:
+			return "sixteenth";
+		case 8:
+			return "eighth";
+		case 4:
+			return "quarter";
+		case 2:
+			return "half";
+		default:
+			return "whole";
+		}
 	}
 
 	/**
 	 * Return the type of this note.
 	 * 
-	 * @param type the type of this note (<em>A, B, C,..</em>) as defined by {@code NoteType}
+	 * @param type the type of this note (<em>A, B, C,..</em>) as defined by
+	 *             {@code NoteType}
 	 */
 	public void setType(int type) {
 		this.type = type;
@@ -197,6 +214,24 @@ public class Note extends Token {
 	 */
 	public NoteType getNoteType() {
 		return note;
+	}
+
+	/**
+	 * Return the position of the note in its measure.
+	 * 
+	 * @return the position of the note
+	 */
+	public int getPosition() {
+		return position;
+	}
+
+	/**
+	 * Set the position of this note in within its measure.
+	 * 
+	 * @param position the value to set the position of this note.
+	 */
+	public void setPosition(int position) {
+		this.position = position;
 	}
 
 	/**

@@ -89,6 +89,10 @@ public class Transform {
 			XMLElement measure = new XMLElement("measure", musicSheet);
 			measure.setAttribute("number", Integer.toString(i + 1));
 			measures.add(measure);
+
+			if (i == 0 && Instrument.isStandardTuningGuitar) {
+				setStaffDefaults(measure);
+			}
 		}
 
 		int lengths[] = new int[numOfStrings];
@@ -97,7 +101,10 @@ public class Transform {
 		int measuresNotSeen = measureCount + 1;
 		int factor = -1;
 		int y = data.size() - 1;
+		int prevNotePos = 0;
+		int totalNotes = 0;
 		boolean skipRight = false;
+		boolean isChord = false;
 
 		while (measuresNotSeen != 0) {
 			for (; (factor > 0 ? y < data.size() : y >= 0); y += factor) {
@@ -115,6 +122,7 @@ public class Transform {
 						data.get(y).remove(obj);
 						if (++count % numOfStrings == 0) {
 							setNumNotesInMeasure(lengths);
+							totalNotes = Arrays.stream(lengths).sum();
 							measuresNotSeen--;
 							currMeasure++;
 							count = 0;
@@ -126,9 +134,20 @@ public class Transform {
 					}
 				} else {
 					Note note = (Note) obj;
+					note.setType(totalNotes);
+					note.setDuration(1);
+					// TODO: compare accumulating position instead of from the last note.
+					if (y != data.size() - 1 && note.getPosition() == prevNotePos) {
+						isChord = true;
+						note.setType(1);
+						note.setDuration(8);
+					}
+
+					prevNotePos = note.getPosition();
 					data.get(y).remove(obj);
 					lengths[y]--;
-					addNoteToMeasure(note, currMeasure - 1, measures);
+					addNoteToMeasure(note, currMeasure - 1, measures, isChord);
+					isChord = false;
 				}
 			}
 			if (skipRight == true) {
@@ -198,9 +217,14 @@ public class Transform {
 	 * @param currMeasure the index of the measure to append to
 	 * @param measures    the list of all the measures
 	 */
-	private void addNoteToMeasure(Note currNote, int currMeasure, ArrayList<XMLElement> measures) {
+	private void addNoteToMeasure(Note currNote, int currMeasure, ArrayList<XMLElement> measures, boolean isChord) {
 		if (measures.get(currMeasure) != null) {
 			XMLElement note = new XMLElement("note", musicSheet);
+
+			if (isChord) {
+				XMLElement chord = new XMLElement("chord", musicSheet);
+				note.append(chord);
+			}
 
 			XMLElement pitch = new XMLElement("pitch", musicSheet);
 			XMLElement step = new XMLElement("step", musicSheet);
@@ -215,7 +239,7 @@ public class Transform {
 			}
 
 			XMLElement octave = new XMLElement("octave", musicSheet);
-			octave.setText(Integer.toString(currNote.getOctave()));
+			octave.setText(currNote.getOctave());
 			pitch.append(step, octave);
 
 			XMLElement duration = new XMLElement("duration", musicSheet);
@@ -223,7 +247,7 @@ public class Transform {
 			XMLElement voice = new XMLElement("voice", musicSheet);
 			voice.setText(Integer.toString(currNote.getVoice()));
 			XMLElement type = new XMLElement("type", musicSheet);
-			type.setText(Integer.toHexString(currNote.getType()));
+			type.setText(currNote.getType());
 
 			XMLElement notations = new XMLElement("notations", musicSheet);
 			XMLElement technical = new XMLElement("technical", musicSheet);
@@ -272,12 +296,61 @@ public class Transform {
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");
 		XMLElement partName = new XMLElement("part-name", musicSheet);
-		partName.setText("Clasical Guitar");
+		partName.setText("Classical Guitar");
 
 		scorePart.append(partName);
 		partList.append(scorePart);
 
 		root.append(partList);
+	}
+
+	/**
+	 * Set the default staff attributes if the Guitar is in standard tuning.
+	 * 
+	 * @param measure first measure to append the staff attributes to
+	 */
+	private void setStaffDefaults(XMLElement measure) {
+		XMLElement attributes = new XMLElement("attributes", musicSheet);
+
+		XMLElement divisions = new XMLElement("divisions", musicSheet);
+		divisions.setText("2");
+
+		XMLElement key = new XMLElement("key", musicSheet);
+		XMLElement fifths = new XMLElement("fifths", musicSheet);
+		fifths.setText("0");
+		key.append(fifths);
+
+		XMLElement time = new XMLElement("time", musicSheet);
+		XMLElement beats = new XMLElement("beats", musicSheet);
+		beats.setText("4");
+		XMLElement beatType = new XMLElement("beat-type", musicSheet);
+		beatType.setText("4");
+		time.append(beats, beatType);
+
+		XMLElement clef = new XMLElement("clef", musicSheet);
+		XMLElement sign = new XMLElement("sign", musicSheet);
+		sign.setText("TAB");
+		XMLElement line = new XMLElement("line", musicSheet);
+		line.setText("5");
+		clef.append(sign, line);
+
+		XMLElement staffDetails = new XMLElement("staff-details", musicSheet);
+		XMLElement staffLines = new XMLElement("staff-lines", musicSheet);
+		staffLines.setText("6");
+		staffDetails.append(staffLines);
+
+		for (int i = 0; i < 6; i++) {
+			XMLElement staffTuning = new XMLElement("staff-tuning", musicSheet);
+			staffTuning.setAttribute("line", Integer.toString(i + 1));
+			XMLElement tuningStep = new XMLElement("tuning-step", musicSheet);
+			tuningStep.setText(Instrument.standardTuningGuitar[i]);
+			XMLElement tuningOctave = new XMLElement("tuning-octave", musicSheet);
+			tuningOctave.setText(Instrument.tuningOctaveGuitar[i]);
+			staffTuning.append(tuningStep, tuningOctave);
+			staffDetails.append(staffTuning);
+		}
+		attributes.append(divisions, key, time, clef, staffDetails);
+		measure.append(attributes);
 	}
 
 	/**
