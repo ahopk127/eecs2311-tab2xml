@@ -86,11 +86,16 @@ public class Parser {
 			if (TokenType.BAR.matches(tune) && instrument == Instrument.GUITAR) {
 				tune = Instrument.standardTuningGuitar[currentString];
 				Instrument.isStandardTuningGuitar = true;
-			}
+			} else 
+				Instrument.isStandardTuningGuitar = false;
+			
 
-			for (Token token : line) {
+			for (int i = 0; i < line.size(); i++) {
+				Token token = line.get(i);
 				switch (token.type()) {
 				case HYPHEN:
+					if (!Instrument.isStandardTuningGuitar && i == 1)
+						throw new InvalidInputException(String.format("String %d does not have a proper start of measure.", currentString + 1));
 					hyphenCount++;
 					break;
 				case FRET:
