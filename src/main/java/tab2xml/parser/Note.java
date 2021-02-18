@@ -276,7 +276,7 @@ public class Note extends Token {
 		Pattern p = Pattern.compile("^[A-G]\\d+$");
 
 		if (!p.matcher(input).matches())
-			throw new InputMismatchException();
+			throw new InputMismatchException("The Note is invalid.");
 
 		String tune = input.substring(0, 1);
 		int fret = Integer.parseInt(input.substring(1));

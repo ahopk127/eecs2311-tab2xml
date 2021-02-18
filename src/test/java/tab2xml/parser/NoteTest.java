@@ -1,7 +1,12 @@
 package tab2xml.parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.InputMismatchException;
 
 import org.junit.jupiter.api.Test;
 
@@ -323,5 +328,19 @@ class NoteTest {
 			fail("InvalidTokenException occured.");
 		}
 	}
+	
+	/**
+	 * @author Edward, Sayed and amir Tests that trying to convert an invalid string to a note is invalid
+	 * @throws InvalidTokenException
+	 */
+	@Test
+	void testToNoteInvalid() throws InvalidTokenException {
+		String invalidNote = "R0R";
+		InputMismatchException thrown = assertThrows(InputMismatchException.class, () -> Note.toNote(invalidNote),"The Note is invalid.");
+		assertTrue(thrown.getMessage().contains("The Note is invalid."));
+		}
+		
+	}
+	
 
-}
+
