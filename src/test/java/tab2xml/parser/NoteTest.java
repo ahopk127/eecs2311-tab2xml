@@ -175,29 +175,138 @@ class NoteTest {
 		assertEquals(expected, note.getNoteType().getValue());
 	}
 	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note A in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester1() {
+		Note note = new Note(NoteType.A);
+		int expected = 0;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note A sharp in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester2() {
+		Note note = new Note(NoteType.AS);
+		int expected = 1;
+		assertEquals(expected, note.getIndex());
+	}
 	
 	/**
 	 * @author Edward and Sayed this tests the getIndex method for note B in the
 	 *         Note class
 	 */
 	@Test
-	void getIndexTester() {
+	void getIndexTester3() {
 		Note note = new Note(NoteType.B);
 		int expected = 2;
 		assertEquals(expected, note.getIndex());
 	}
-
+	
 	/**
-	 * @author Edward and Sayed this tests the getIndex method for note A in the
+	 * @author Edward and Sayed this tests the getIndex method for note C in the
 	 *         Note class
 	 */
 	@Test
-	void getIndexTester2() {
-		Note note = new Note(NoteType.A);
-		int expected = 0;
+	void getIndexTester4() {
+		Note note = new Note(NoteType.C);
+		int expected = 3;
 		assertEquals(expected, note.getIndex());
 	}
-
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note C sharp in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester5() {
+		Note note = new Note(NoteType.CS);
+		int expected = 4;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note D in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester6() {
+		Note note = new Note(NoteType.D);
+		int expected = 5;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note D sharp in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester7() {
+		Note note = new Note(NoteType.DS);
+		int expected = 6;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note E in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester8() {
+		Note note = new Note(NoteType.E);
+		int expected = 7;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note F in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester9() {
+		Note note = new Note(NoteType.F);
+		int expected = 8;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note F Sharp in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester10() {
+		Note note = new Note(NoteType.FS);
+		int expected = 9;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note G in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester11() {
+		Note note = new Note(NoteType.G);
+		int expected = 10;
+		assertEquals(expected, note.getIndex());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getIndex method for note G Sharp in the
+	 *         Note class
+	 */
+	@Test
+	void getIndexTester12() {
+		Note note = new Note(NoteType.GS);
+		int expected = 11;
+		assertEquals(expected, note.getIndex());
+	}
+	
 	/**
 	 * @author Edward and Sayed this tests the Tonote method in the Note class
 	 * @throws InvalidTokenException
