@@ -1,10 +1,12 @@
 # Changelog
 
-## Unreleased
+## [0.1.0] - 2021-02-17 (First Prototype)
 ### Added
  - Set up Gradle building
  - Created README and instruction manual
  - You can drag and drop text tab files into the input box
+ - The outputted MusicXML now fully conforms to the standard.
+ - Added input validation
  - Created tests for backend
  
 ### Changed
