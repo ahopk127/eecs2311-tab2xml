@@ -20,29 +20,162 @@ class NoteTest {
 	}
 
 	/**
+	 * @author Edward and Sayed this tests the getName method for A  in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester1() throws InvalidTokenException {
+		Note note = new Note(NoteType.A, "A");
+		String expected = "A";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
 	 * @author Edward and Sayed this tests the getName method for A sharp in the
 	 *         Note class
 	 * @throws InvalidTokenException 
 	 */
 	@Test
-	void getNameTester() throws InvalidTokenException {
+	void getNameTester2() throws InvalidTokenException {
 		Note note = new Note(NoteType.AS, "A#");
 		String expected = "A#";
 		assertEquals(expected, note.getData());
 		assertEquals(expected, note.getNoteType().getValue());
 	}
-
+	
 	/**
-	 * @author Edward and Sayed this tests the getName method for note A in the Note
-	 *         class
+	 * @author Edward and Sayed this tests the getName method for B in the
+	 *         Note class
+	 * @throws InvalidTokenException 
 	 */
 	@Test
-	void getNameTester2() {
-		Note note = new Note(NoteType.A);
-		String expected = "A";
+	void getNameTester3() throws InvalidTokenException {
+		Note note = new Note(NoteType.B, "B");
+		String expected = "B";
+		assertEquals(expected, note.getData());
 		assertEquals(expected, note.getNoteType().getValue());
 	}
-
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for C in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester4() throws InvalidTokenException {
+		Note note = new Note(NoteType.C, "C");
+		String expected = "C";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for C Sharp in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester5() throws InvalidTokenException {
+		Note note = new Note(NoteType.CS, "C#");
+		String expected = "C#";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for D in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester6() throws InvalidTokenException {
+		Note note = new Note(NoteType.D, "D");
+		String expected = "D";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for D Sharp in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester7() throws InvalidTokenException {
+		Note note = new Note(NoteType.DS, "D#");
+		String expected = "D#";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for E in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester8() throws InvalidTokenException {
+		Note note = new Note(NoteType.E, "E");
+		String expected = "E";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for F in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester9() throws InvalidTokenException {
+		Note note = new Note(NoteType.F, "F");
+		String expected = "F";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for F Sharp in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester10() throws InvalidTokenException {
+		Note note = new Note(NoteType.FS, "F#");
+		String expected = "F#";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for G in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester11() throws InvalidTokenException {
+		Note note = new Note(NoteType.G, "G");
+		String expected = "G";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	/**
+	 * @author Edward and Sayed this tests the getName method for G Sharp in the
+	 *         Note class
+	 * @throws InvalidTokenException 
+	 */
+	@Test
+	void getNameTester12() throws InvalidTokenException {
+		Note note = new Note(NoteType.GS, "G#");
+		String expected = "G#";
+		assertEquals(expected, note.getData());
+		assertEquals(expected, note.getNoteType().getValue());
+	}
+	
+	
 	/**
 	 * @author Edward and Sayed this tests the getIndex method for note B in the
 	 *         Note class
