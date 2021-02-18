@@ -57,6 +57,9 @@ final class SingleEntryView implements View {
 		public abstract void enable(SingleEntryView v);
 	}
 	
+	/** The dialog title for error messages. */
+	private static final String DEFAULT_ERROR_TITLE = "Error";
+	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -139,6 +142,7 @@ final class SingleEntryView implements View {
 				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
 		this.textBox.setFont(new Font("Monospaced", Font.ITALIC, 12));
+		FileDragDropTarget.enableDragAndDrop(this.textBox);
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
@@ -252,5 +256,11 @@ final class SingleEntryView implements View {
 	@Override
 	public void setSelectedInstrument(Instrument instrument) {
 		this.instrumentSelection.setSelectedItem(instrument);
+	}
+	
+	@Override
+	public void showErrorMessage(String message, Object... formatArgs) {
+		JOptionPane.showMessageDialog(this.frame, DEFAULT_ERROR_TITLE,
+				String.format(message, formatArgs), JOptionPane.ERROR_MESSAGE);
 	}
 }

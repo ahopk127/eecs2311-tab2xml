@@ -1,4 +1,4 @@
-  
+
 package tab2xml.parser;
 
 import java.util.ArrayList;
@@ -12,12 +12,11 @@ import java.util.regex.Pattern;
  * @author amir
  */
 public class Lexer {
-
 	private String input;
 	private Instrument instrument;
 
 	/**
-	 * Instantiate a Lexer object for an input string and instrument.
+	 * Construct a lexer object for an input string and instrument.
 	 * 
 	 * @param input      string representing ASCII tablature
 	 * @param instrument the type of instrument for the tablature
@@ -38,8 +37,10 @@ public class Lexer {
 			return tokenizeGuitar(input);
 		case DRUM:
 			return tokenizeDrum(input);
+		case BASS:
+			return tokenizeBass(input);
 		default:
-			return null;
+			throw new UnsupportedOperationException("This instrument is not supported.");
 		}
 	}
 
@@ -51,10 +52,10 @@ public class Lexer {
 	 */
 	public static ArrayList<ArrayList<Token>> tokenizeGuitar(String input) {
 		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
-		
-		if (input == null || input.length() == 0)
+
+		if (input == null || input.length() == 0 || input.equals("Enter text tab or load it from a file..."))
 			return tokens;
-		
+
 		try (Scanner sc = new Scanner(input)) {
 			StringBuffer sb = new StringBuffer();
 
@@ -98,109 +99,29 @@ public class Lexer {
 	 */
 	public static ArrayList<ArrayList<Token>> tokenizeDrum(String input) {
 		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
-		// TO-DO
-
+		//TO-DO
 		return tokens;
 	}
 
 	/**
-	 * List of token types and their regular expressions.
+	 * This method will extract tokens from the bass tablature.
 	 * 
-	 * @author amir
+	 * @param input bass ASCII tablature
+	 * @return a list of list of tokens representing the bass tablature
 	 */
-	public static enum TokenType {
-		BAR("\\|"), NOTE("[A-G]"), FRET("[1-2]?\\d"), HARMONIC("\\[[1-7]\\]"), PULLOFF("p"), HAMMERON("h"), SLIDE("s");
-
-		public final Pattern pattern;
-
-		/**
-		 * Set pattern for the respective token type.
-		 * 
-		 * @param pattern a pattern for a token type
-		 */
-		private TokenType(String pattern) {
-			this.pattern = Pattern.compile(pattern);
-		}
-
-		/**
-		 * Matches the input to every token type, and returns the first type that
-		 * matches.
-		 * 
-		 * @param token token to test
-		 * @return type of token
-		 * @throws InvalidTokenException
-		 * @since 2021-01-20
-		 */
-		public static TokenType getType(String token) throws InvalidTokenException {
-			for (TokenType type : TokenType.values()) {
-				if (type.matches(token)) {
-					return type;
-				}
-			}
-			throw new InvalidTokenException("Invalid token.");
-		}
-
-		/**
-		 * Checks if a token is an instance of its type.
-		 * 
-		 * @param token token as a string
-		 * @return returns true if the specified token matches the token type
-		 */
-		public boolean matches(String token) {
-			return this.pattern.matcher(token).matches();
-		}
-	}
-
-	/**
-	 * An atomic token in the ASCII tablature
-	 * 
-	 * @author amir
-	 *
-	 */
-	public static class Token {
-		private TokenType type;
-		private String data;
-
-		/**
-		 * Instantiate a token with a token type and its data.
-		 * 
-		 * @param type the type of token
-		 * @param data the contents of the token
-		 * @throws InvalidTokenException thrown if there is a mismatch between data and
-		 *                               the token type
-		 */
-		public Token(TokenType type, String data) throws InvalidTokenException {
-			this.type = type;
-			if (type.matches(data))
-				this.data = data;
-			else
-				throw new InvalidTokenException("Token mismatch.");
-		}
-		
-		public String getData() {
-			return this.data;
-		}
-		
-		public TokenType getType() {
-			return this.type;
-		}
-		
-		@Override
-		public String toString() {
-			return String.format("(%s %s)", type.name(), data);
-		}
+	public static ArrayList<ArrayList<Token>> tokenizeBass(String input) {
+		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
+		//TO-DO
+		return tokens;
 	}
 
 	/**
 	 * Thrown if invalid token occurs.
-	 * 
 	 */
+	@SuppressWarnings("serial")
 	public static class InvalidTokenException extends Exception {
-		private static final long serialVersionUID = 1L;
-
 		public InvalidTokenException(String message) {
 			super(message);
 		}
 	}
-
 }
