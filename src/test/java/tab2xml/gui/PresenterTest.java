@@ -9,6 +9,9 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
+import tab2xml.parser.Instrument;
+import tab2xml.parser.Parser;
+
 /**
  * Tests related to the Presenter.
  *
@@ -19,6 +22,44 @@ import org.junit.jupiter.api.Test;
 class PresenterTest {
 	private static final String TEST_STRING = "Testing text.";
 	private static final Path TEST_FILES = Path.of("src", "test", "resources");
+	
+	/**
+	 * Tests that the convert() method correctly reads text from the View's
+	 * input, converts it, and returns it to the View's output.
+	 * <p>
+	 * This method does <b>NOT</b> that the converted tab is correct - that is
+	 * the job of the backend tests. The purpose of this test is to test the
+	 * integration between the frontend and backend (i.e. that input is recieved
+	 * properly, the correct method is triggered, and the output is set
+	 * properly).
+	 * 
+	 * @since 2021-02-22
+	 */
+	@Test
+	final void testConvert() {
+		// SETUP - get input and expected output text
+		final String input, expectedOutput;
+		final Instrument instrument = Instrument.GUITAR;
+		try {
+			final Path TEST_INPUT_FILE = TEST_FILES.resolve("example-e-major.txt");
+			input = Files.readString(TEST_INPUT_FILE);
+			expectedOutput = new Parser(input, instrument).parse();
+		} catch (final Exception e) {
+			e.printStackTrace();
+			assumeTrue(false,
+					e.getClass() + " occured during setup of testLoadFromFile().");
+			return;
+		}
+		
+		// the body of the test
+		final View view = View.createViewBot();
+		final Presenter presenter = new Presenter(view);
+		
+		view.setInputText(input);
+		view.setSelectedInstrument(instrument);
+		presenter.convert();
+		assertEquals(expectedOutput, view.getOutputText());
+	}
 	
 	/**
 	 * Asserts that text is read from a file and put in the view's input.
