@@ -27,9 +27,6 @@ import tab2xml.parser.Instrument;
  * @since 2021-01-18
  */
 final class DoubleEntryView implements View {
-	/** The dialog title for error messages. */
-	private static final String DEFAULT_ERROR_TITLE = "Error";
-	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -213,8 +210,8 @@ final class DoubleEntryView implements View {
 	}
 	
 	@Override
-	public void showErrorMessage(String message, Object... formatArgs) {
-		JOptionPane.showMessageDialog(this.frame, DEFAULT_ERROR_TITLE,
-				String.format(message, formatArgs), JOptionPane.ERROR_MESSAGE);
+	public void showErrorMessage(String title, String message) {
+		JOptionPane.showMessageDialog(this.frame, message, title,
+				JOptionPane.ERROR_MESSAGE);
 	}
 }

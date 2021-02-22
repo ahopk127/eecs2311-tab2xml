@@ -129,9 +129,10 @@ public interface View {
 	/**
 	 * Shows an error message.
 	 *
-	 * @param message    error message; may use printf format (%s, %d, etc.)
-	 * @param formatArgs format arguments for error message
+	 * @param title   title of error message; on any view that uses an error
+	 *                dialog, this should be the title of the error dialog.
+	 * @param message error message
 	 * @since 2021-02-08
 	 */
-	void showErrorMessage(String message, Object... formatArgs);
+	void showErrorMessage(String title, String message);
 }

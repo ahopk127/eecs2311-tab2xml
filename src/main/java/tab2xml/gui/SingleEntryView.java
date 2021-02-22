@@ -57,9 +57,6 @@ final class SingleEntryView implements View {
 		public abstract void enable(SingleEntryView v);
 	}
 	
-	/** The dialog title for error messages. */
-	private static final String DEFAULT_ERROR_TITLE = "Error";
-	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -259,8 +256,8 @@ final class SingleEntryView implements View {
 	}
 	
 	@Override
-	public void showErrorMessage(String message, Object... formatArgs) {
-		JOptionPane.showMessageDialog(this.frame, DEFAULT_ERROR_TITLE,
-				String.format(message, formatArgs), JOptionPane.ERROR_MESSAGE);
+	public void showErrorMessage(String title, String message) {
+		JOptionPane.showMessageDialog(this.frame, message, title,
+				JOptionPane.ERROR_MESSAGE);
 	}
 }
