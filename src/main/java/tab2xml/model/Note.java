@@ -53,6 +53,15 @@ public class Note extends StringItem {
 		this.string = Integer.toString(GuitarString.getStringNum());
 	}
 
+	public Note(NoteType note) {
+		this.note = note;
+	}
+
+	public Note(NoteType note, String step) {
+		this.note = note;
+		this.step = step;
+	}
+
 	/**
 	 * The position of this note within all the 12 notes.
 	 * 
@@ -285,5 +294,32 @@ public class Note extends StringItem {
 		setStep(noteType.getValue());
 
 		return noteType;
+	}
+
+	/**
+	 * Construct a note from the ASCII tablature.
+	 * 
+	 * @param input string input(<em>"tune + fret"</em>)
+	 * @return a note based on the properties of the input
+	 * @throws InvalidTokenException if the parsed note type doesn't match the
+	 *                               parsed step
+	 */
+	public static Note toNote(String input) throws InvalidTokenException {
+		Pattern p = Pattern.compile("^[A-G]\\d+$");
+
+		if (!p.matcher(input).matches())
+			throw new InputMismatchException("The Note is invalid.");
+
+		String tune = input.substring(0, 1);
+		int fret = Integer.parseInt(input.substring(1));
+
+		Note note = new Note(Note.getNoteType(tune));
+		int index = (note.getIndex() + fret) % 12;
+
+		NoteType noteType = NoteType.values()[index];
+		String step = noteType.getValue();
+
+		Note value = new Note(noteType, step);
+		return value;
 	}
 }

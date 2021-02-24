@@ -27,9 +27,6 @@ import tab2xml.parser.Instrument;
  * @since 2021-01-18
  */
 final class DoubleEntryView implements View {
-	/** The dialog title for error messages. */
-	private static final String DEFAULT_ERROR_TITLE = "Error";
-	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -118,13 +115,13 @@ final class DoubleEntryView implements View {
 		this.input = new PromptingTextArea(
 				"Enter the text tab or load from a file...", 15, 50);
 		this.input.setBorder(new LineBorder(Color.BLACK));
-		this.input.setFont(new Font("Monospaced", Font.ITALIC, 12));
+		this.input.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
 		FileDragDropTarget.enableDragAndDrop(this.input);
 		masterPanel.add(new JScrollPane(this.input), gridBag(0, 1, 1, 2));
 		
 		this.output = new JTextArea(15, 50);
 		this.output.setBorder(new LineBorder(Color.BLACK));
-		this.output.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		this.output.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		masterPanel.add(new JScrollPane(this.output), gridBag(2, 1, 1, 2));
 		
 		// combo boxes
@@ -213,8 +210,8 @@ final class DoubleEntryView implements View {
 	}
 	
 	@Override
-	public void showErrorMessage(String message, Object... formatArgs) {
-		JOptionPane.showMessageDialog(this.frame, DEFAULT_ERROR_TITLE,
-				String.format(message, formatArgs), JOptionPane.ERROR_MESSAGE);
+	public void showErrorMessage(String title, String message) {
+		JOptionPane.showMessageDialog(this.frame, message, title,
+				JOptionPane.ERROR_MESSAGE);
 	}
 }

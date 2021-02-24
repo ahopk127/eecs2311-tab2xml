@@ -27,10 +27,11 @@ class ViewTest {
 	 * @since 2021-02-06
 	 */
 	static final View[] getViews() {
-		final View[] views = new View[ViewType.values().length];
+		final View[] views = new View[ViewType.values().length + 1];
 		for (final ViewType viewType : ViewType.values()) {
 			views[viewType.ordinal()] = viewType.create();
 		}
+		views[ViewType.values().length] = new ViewBot();
 		return views;
 	}
 	

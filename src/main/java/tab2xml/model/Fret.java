@@ -4,7 +4,8 @@ public class Fret extends StringItem{
 	private String value;
 	private int position;
 	
-	public Fret() {
+	public Fret(String value) {
+		this.value = value;
 	}
 	
 	public Fret(String value, int position) {

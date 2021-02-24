@@ -43,14 +43,16 @@ public final class Presenter {
 			final Parser parser = new Parser(textTabInput, selectedInstrument);
 
 			musicXMLOutput = parser.parse();
-		} catch (InvalidInputException e) {
-			// TODO if input is invalid.
-			musicXMLOutput = e.getMessage();
+		} catch (final InvalidInputException e) {
+			this.view.showErrorMessage("Error: Invalid Input",
+					e.getLocalizedMessage());
 			e.printStackTrace();
-		} catch (InvalidTokenException e) {
-			// TODO if input contains invalid token.
-			musicXMLOutput = e.getMessage();
+			return;
+		} catch (final InvalidTokenException e) {
+			this.view.showErrorMessage("Error: Invalid Token",
+					e.getLocalizedMessage());
 			e.printStackTrace();
+			return;
 		}
 
 		this.view.setOutputText(musicXMLOutput);
