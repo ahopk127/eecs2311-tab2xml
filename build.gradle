@@ -1,37 +1,11 @@
-buildscript {
-    repositories {
-        maven {
-            name 'JFrog OSS snapshot repo'
-            url  'https://oss.jfrog.org/oss-snapshot-local/'
-        }
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'me.champeau.gradle:antlr4-gradle-plugin:0.1'
-    }
-}
-
 plugins {
 	id 'application'
+	id 'antlr'
 }
 
 repositories {
-	jcenter()
+	mavenLocal()
     mavenCentral()
-}
-
-apply plugin: 'me.champeau.gradle.antlr4'
-
-// make the Java compile task depend on the antlr4 task
-compileJava.dependsOn antlr4
-
-// add the generated source files to the list of java sources
-sourceSets.main.java.srcDirs += antlr4.output
-
-// add antlr4 to classpath
-configurations {
-   compile.extendsFrom antlr4
 }
 
 dependencies {
@@ -40,6 +14,23 @@ dependencies {
     // add the 'params' API for more functionality
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+	implementation "org.antlr:antlr4:4.9.1"
+	compile "org.antlr:antlr4-runtime:4.9.1"
+}
+
+generateGrammarSource {
+	maxHeapSize = "64ms"
+	doLast {
+		println "copy grammar files to main directory"
+		copy {
+			from "${buildDir}/antlr"
+			into "generated/main/java/antlr"
+		}
+	}
+}
+
+clean.doLast {
+	file('generated').deleteDir()
 }
 
 test {

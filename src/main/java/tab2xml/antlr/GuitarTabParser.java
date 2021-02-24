@@ -116,6 +116,11 @@ public class GuitarTabParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitSheet(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitSheet(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final SheetContext sheet() throws RecognitionException {
@@ -176,6 +181,11 @@ public class GuitarTabParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitStaff(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitStaff(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -274,6 +284,11 @@ public class GuitarTabParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitString(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitString(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StringContext string() throws RecognitionException {
@@ -330,6 +345,11 @@ public class GuitarTabParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitTune(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitTune(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -421,6 +441,11 @@ public class GuitarTabParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitStringItems(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitStringItems(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -562,6 +587,11 @@ public class GuitarTabParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitSlide(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitSlide(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final SlideContext slide() throws RecognitionException {
@@ -621,6 +651,11 @@ public class GuitarTabParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitPulloff(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitPulloff(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final PulloffContext pulloff() throws RecognitionException {
@@ -679,6 +714,11 @@ public class GuitarTabParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitHammeron(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitHammeron(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -747,6 +787,11 @@ public class GuitarTabParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitHammerPull(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitHammerPull(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final HampullchainContext hampullchain() throws RecognitionException {
@@ -812,6 +857,11 @@ public class GuitarTabParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitHarmonic(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitHarmonic(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final HarmonicContext harmonic() throws RecognitionException {
@@ -852,6 +902,11 @@ public class GuitarTabParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GuitarTabListener ) ((GuitarTabListener)listener).exitFret(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GuitarTabVisitor ) return ((GuitarTabVisitor<? extends T>)visitor).visitFret(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
