@@ -1,7 +1,7 @@
-package tab2xml.parser;
+package tab2xml.model;
 
 import java.util.regex.Pattern;
-import tab2xml.parser.Lexer.InvalidTokenException;
+import tab2xml.exceptions.InvalidTokenException;
 
 /**
  * List of token types and their regular expressions.

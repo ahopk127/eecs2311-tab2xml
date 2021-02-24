@@ -1,13 +1,13 @@
-package tab2xml.parser;
+package tab2xml.model;
 
-import tab2xml.parser.Lexer.InvalidTokenException;
+import tab2xml.exceptions.InvalidTokenException;
 
 /**
  * An atomic token in the ASCII tablature
  * 
  * @author amir
  */
-public class Token {
+public class GToken {
 	private TokenType type;
 	private String data;
 
@@ -16,7 +16,7 @@ public class Token {
 	 * 
 	 * @param type the type of this token
 	 */
-	public Token(TokenType type) {
+	public GToken(TokenType type) {
 		this.type = type;
 	}
 
@@ -28,12 +28,10 @@ public class Token {
 	 * @throws InvalidTokenException thrown if there is a mismatch between data and
 	 *                               the token type
 	 */
-	public Token(TokenType type, String data) throws InvalidTokenException {
+	public GToken(TokenType type, String data){
 		this.type = type;
 		if (type.matches(data))
 			this.data = data;
-		else
-			throw new InvalidTokenException("Token mismatch.");
 	}
 
 	/**

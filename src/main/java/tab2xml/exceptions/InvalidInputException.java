@@ -1,4 +1,4 @@
-package tab2xml.parser;
+package tab2xml.exceptions;
 
 /**
  * An exception which to thrown when invalid input occurs.

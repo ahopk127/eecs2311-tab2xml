@@ -5,9 +5,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import tab2xml.parser.Instrument;
-import tab2xml.parser.InvalidInputException;
-import tab2xml.parser.Lexer.InvalidTokenException;
 import tab2xml.parser.Parser;
+
+import tab2xml.exceptions.InvalidInputException;
+import tab2xml.exceptions.InvalidTokenException;
 
 /**
  * The Tab2XML presenter, which handles event code. It acts as an intermediate
@@ -18,7 +19,7 @@ import tab2xml.parser.Parser;
 public final class Presenter {
 	/** The view that this presenter takes input from and sends output to. */
 	private final View view;
-	
+
 	/**
 	 * Creates the presenter. Should be called from the view's constructor.
 	 *
@@ -28,7 +29,7 @@ public final class Presenter {
 	public Presenter(View view) {
 		this.view = view;
 	}
-	
+
 	/**
 	 * Converts the inputted text tab to MusicXML
 	 * 
@@ -37,11 +38,10 @@ public final class Presenter {
 	public void convert() {
 		final String textTabInput = this.view.getInputText();
 		final Instrument selectedInstrument = this.view.getSelectedInstrument();
-		
-		final Parser parser = new Parser(textTabInput, selectedInstrument);
 		String musicXMLOutput;
-		
 		try {
+			final Parser parser = new Parser(textTabInput, selectedInstrument);
+
 			musicXMLOutput = parser.parse();
 		} catch (InvalidInputException e) {
 			// TODO if input is invalid.
@@ -52,10 +52,10 @@ public final class Presenter {
 			musicXMLOutput = e.getMessage();
 			e.printStackTrace();
 		}
-		
+
 		this.view.setOutputText(musicXMLOutput);
 	}
-	
+
 	/**
 	 * Gets the text from a file and writes it to the view's input field.
 	 * 
@@ -70,7 +70,7 @@ public final class Presenter {
 		// only works in Java 11 or later
 		this.view.setInputText(Files.readString(path));
 	}
-	
+
 	/**
 	 * Writes the view's output text to a file.
 	 *

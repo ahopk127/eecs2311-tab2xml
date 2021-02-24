@@ -3,8 +3,11 @@ package tab2xml.parser;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import tab2xml.parser.Lexer.InvalidTokenException;
 import tab2xml.xmlconversion.Transform;
+import tab2xml.exceptions.InvalidInputException;
+import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.model.GToken;
+import tab2xml.model.TokenType;
 
 /**
  * The parser is responsible for getting note, information from ASCII tablature.
@@ -13,7 +16,7 @@ import tab2xml.xmlconversion.Transform;
  */
 public class Parser {
 	private Lexer lexer;
-	private ArrayList<ArrayList<Token>> tokens;
+	private ArrayList<ArrayList<GToken>> tokens;
 	private Instrument instrument;
 
 	/**
@@ -21,8 +24,10 @@ public class Parser {
 	 * 
 	 * @param input      the tablature to be parsed
 	 * @param instrument the corresponding instrument
+	 * @throws InvalidTokenException 
 	 */
-	public Parser(String input, Instrument instrument) {
+	public Parser(String input, Instrument instrument) throws InvalidTokenException {
+		//TODO we don't need the lexer.
 		lexer = new Lexer(input, instrument);
 		tokens = lexer.tokenize();
 		this.instrument = instrument;
@@ -59,16 +64,16 @@ public class Parser {
 		if (tokens == null || tokens.size() == 0)
 			throw new InvalidInputException("Could not parse input.");
 
-		if (tokens.size() != 6)
-			throw new InvalidInputException("Must have 6 strings for prototype.");
+		// TODO: we don't need to limit strings to 6
+		//if (tokens.size() != 6)
+		//throw new InvalidInputException("Must have 6 strings for prototype.");
 
 		String xmlOutput;
 		ArrayList<ArrayList<Object>> data = new ArrayList<>();
-		Stack<Token> oracle = new Stack<>();
+		Stack<GToken> oracle = new Stack<>();
 		int currentString = 0;
-		int hyphenCount = 0;
 
-		for (ArrayList<Token> line : tokens) {
+		for (ArrayList<GToken> line : tokens) {
 			ArrayList<Object> temp = new ArrayList<>();
 
 			if (line.isEmpty()) {
@@ -86,35 +91,21 @@ public class Parser {
 			if (TokenType.BAR.matches(tune) && instrument == Instrument.GUITAR) {
 				tune = Instrument.standardTuningGuitar[currentString];
 				Instrument.isStandardTuningGuitar = true;
-			} else 
+			} else
 				Instrument.isStandardTuningGuitar = false;
-			
 
 			for (int i = 0; i < line.size(); i++) {
-				Token token = line.get(i);
+				GToken token = line.get(i);
 				switch (token.type()) {
 				case HYPHEN:
 					if (!Instrument.isStandardTuningGuitar && i == 1)
-						throw new InvalidInputException(String.format("String %d does not have a proper start of measure.", currentString + 1));
-					hyphenCount++;
+						throw new InvalidInputException(
+								String.format("String %d does not have a proper start of measure.", currentString + 1));
 					break;
 				case FRET:
-					int fret = Integer.parseInt(token.getData());
-					Note note = Note.toNote(tune + fret);
-					note.setFret(fret);
-					note.setString(currentString + 1);
-
-					if (Instrument.isStandardTuningGuitar)
-						note.setOctave(Instrument.tuningOctaveGuitar[currentString]);
-					else
-						note.setOctave(Integer.toString((int) Math.ceil(fret / 12)));
-					note.setHasStem(false);
-					note.setPosition(hyphenCount);
-					temp.add(note);
-					hyphenCount = 0;
+					
 					break;
 				case BAR:
-					hyphenCount = 0;
 					if (oracle.isEmpty())
 						oracle.push(token);
 					else {
@@ -126,8 +117,6 @@ public class Parser {
 					temp.add(token);
 					break;
 				default:
-					//TODO: add support for pull off, hammer on
-					//temp.add(token);
 					break;
 				}
 			}

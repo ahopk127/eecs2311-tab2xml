@@ -6,6 +6,10 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.model.GToken;
+import tab2xml.model.TokenType;
+
 /**
  * A lexer for tokenizing ASCII tablature for a specified instrument.
  * 
@@ -30,8 +34,9 @@ public class Lexer {
 	 * Delegate tokenization based on instrument.
 	 *
 	 * @return a list of list of tokens representing the ASCII tablature
+	 * @throws InvalidTokenException 
 	 */
-	public ArrayList<ArrayList<Token>> tokenize() {
+	public ArrayList<ArrayList<GToken>> tokenize() throws InvalidTokenException {
 		switch (this.instrument) {
 		case GUITAR:
 			return tokenizeGuitar(input);
@@ -50,8 +55,8 @@ public class Lexer {
 	 * @param input guitar ASCII tablature
 	 * @return a list of list of tokens representing the guitar tablature
 	 */
-	public static ArrayList<ArrayList<Token>> tokenizeGuitar(String input) {
-		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
+	public static ArrayList<ArrayList<GToken>> tokenizeGuitar(String input) throws InvalidTokenException {
+		ArrayList<ArrayList<GToken>> tokens = new ArrayList<>();
 
 		if (input == null || input.length() == 0 || input.equals("Enter text tab or load it from a file..."))
 			return tokens;
@@ -70,17 +75,13 @@ public class Lexer {
 				String currentLine = sc.nextLine();
 				Matcher m = p.matcher(currentLine);
 
-				ArrayList<Token> newTokens = new ArrayList<>();
+				ArrayList<GToken> newTokens = new ArrayList<>();
 
 				while (m.find()) {
 					for (TokenType type : TokenType.values()) {
 						String name = type.name();
 						if (m.group(name) != null) {
-							try {
-								newTokens.add(new Token(type, m.group(name)));
-							} catch (InvalidTokenException e) {
-								e.printStackTrace();
-							}
+							newTokens.add(new GToken(type, m.group(name)));
 						}
 					}
 				}
@@ -97,8 +98,8 @@ public class Lexer {
 	 * @param input drum ASCII tablature
 	 * @return a list of list of tokens representing the drum tablature
 	 */
-	public static ArrayList<ArrayList<Token>> tokenizeDrum(String input) {
-		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
+	public static ArrayList<ArrayList<GToken>> tokenizeDrum(String input) {
+		ArrayList<ArrayList<GToken>> tokens = new ArrayList<>();
 		//TO-DO
 		return tokens;
 	}
@@ -109,19 +110,9 @@ public class Lexer {
 	 * @param input bass ASCII tablature
 	 * @return a list of list of tokens representing the bass tablature
 	 */
-	public static ArrayList<ArrayList<Token>> tokenizeBass(String input) {
-		ArrayList<ArrayList<Token>> tokens = new ArrayList<>();
+	public static ArrayList<ArrayList<GToken>> tokenizeBass(String input) {
+		ArrayList<ArrayList<GToken>> tokens = new ArrayList<>();
 		//TO-DO
 		return tokens;
-	}
-
-	/**
-	 * Thrown if invalid token occurs.
-	 */
-	@SuppressWarnings("serial")
-	public static class InvalidTokenException extends Exception {
-		public InvalidTokenException(String message) {
-			super(message);
-		}
 	}
 }

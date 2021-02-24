@@ -6,10 +6,14 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
+import tab2xml.exceptions.InvalidInputException;
+import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.model.GToken;
+
 class ParserTest {
 	
 	@Test
-	void testTokenizeGuitar() {
+	void testTokenizeGuitar() throws InvalidTokenException {
 		String sample = "|-----------0-----|-0--------rrrrrrrrrrrrrr-------|\n" + "|---------0---0---|-0---------------|\n"
 				+ "|-------1-------1-|-1---------------|\n" + "|-----2-----------|-2---------------|\n"
 				+ "|---2-------rrrrrrrrrrrrrrr------|-2---------------|\n" + "|-0--------rrrrrrrrrrrrrrrrrrr-------|-0---------------|\n";
@@ -19,12 +23,12 @@ class ParserTest {
 				+ "|---2-------------|-2---------------|\n" + "|-0---------------|-0---------------|\n";
 		
 		Lexer lx2 = new Lexer(sample, Instrument.GUITAR);
-		ArrayList<ArrayList<Token>> tokens = lx2.tokenize();
+		ArrayList<ArrayList<GToken>> tokens = lx2.tokenize();
 
 		StringBuilder sb = new StringBuilder();
 		
-		for (ArrayList<Token> line: tokens) {
-			for (Token t: line) {
+		for (ArrayList<GToken> line: tokens) {
+			for (GToken t: line) {
 				sb.append(t.getData());
 			}
 			sb.append("\n");
@@ -33,14 +37,14 @@ class ParserTest {
 	}
 
 	@Test
-	void testTokenizeDrum() {
+	void testTokenizeDrum() throws InvalidTokenException {
 		Lexer lx = new Lexer("", Instrument.DRUM);
-		ArrayList<ArrayList<Token>> tokens = lx.tokenize();
+		ArrayList<ArrayList<GToken>> tokens = lx.tokenize();
 		assertTrue(tokens.size() == 0);
 	}
 	
 	@Test
-	void testInvalidTuneException() {
+	void testInvalidTuneException() throws InvalidTokenException {
 		String sample = "-----------0-----|-0---------------|\n" + "|---------0---0---|-0---------------|\n"
 				+ "|-------1-------1-|-1---------------|\n" + "|-----2-----------|-2---------------|\n"
 				+ "|---2-------------|-2---------------|\n" + "|-0---------------|-0---------------|";
