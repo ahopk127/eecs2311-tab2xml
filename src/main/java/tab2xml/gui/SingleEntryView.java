@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -159,7 +160,7 @@ final class SingleEntryView implements View {
 		final Insets buttonInsets = new Insets(3, 8, 3, 8);
 		
 		final JButton loadFileButton = new JButton("Load From File");
-		loadFileButton.addActionListener(e -> this.loadFromFile());
+		loadFileButton.addActionListener(e -> this.presenter.loadFromFile());
 		buttonPanel.add(loadFileButton, gridBag(1, 0, 1, 1, buttonInsets));
 		
 		this.convertButton = new JButton("Convert");
@@ -174,9 +175,10 @@ final class SingleEntryView implements View {
 		this.saveFileButton = new JButton("Save to File");
 		this.saveFileButton.addActionListener(e -> {
 			if (this.textBoxState == State.INPUT) {
-				this.presenter.convert();
+				this.presenter.convertAndSave(false);
+			} else {
+				this.presenter.saveToFile();
 			}
-			this.saveToFile();
 		});
 		buttonPanel.add(this.saveFileButton, gridBag(4, 0, 1, 1, buttonInsets));
 		
@@ -215,25 +217,16 @@ final class SingleEntryView implements View {
 		return (Instrument) this.instrumentSelection.getSelectedItem();
 	}
 	
-	/**
-	 * Allows the user to choose a file, then loads input text from that file.
-	 * 
-	 * @since 2021-01-29
-	 */
-	private void loadFromFile() {
+	@Override
+	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
 		final JFileChooser fc = new JFileChooser();
+		fc.addChoosableFileFilter(preferredType);
+		fc.setFileFilter(preferredType);
 		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
-			final Path path = fc.getSelectedFile().toPath();
-			try {
-				this.presenter.loadFromFile(path);
-			} catch (final IOException e) {
-				JOptionPane.showMessageDialog(this.frame,
-						"An error happened while reading the file: "
-								+ e.getLocalizedMessage(),
-						"File Read Error", JOptionPane.ERROR_MESSAGE);
-			}
-		}
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION)
+			return Optional.of(fc.getSelectedFile().toPath());
+		else
+			return Optional.empty();
 	}
 	
 	/**

@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tab2xml.parser.Instrument;
 
@@ -171,6 +173,18 @@ final class DoubleEntryView implements View {
 						"File Read Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+	
+	@Override
+	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
+		final JFileChooser fc = new JFileChooser();
+		fc.addChoosableFileFilter(preferredType);
+		fc.setFileFilter(preferredType);
+		
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION)
+			return Optional.of(fc.getSelectedFile().toPath());
+		else
+			return Optional.empty();
 	}
 	
 	/**
