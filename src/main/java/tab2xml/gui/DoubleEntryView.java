@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -106,11 +105,11 @@ final class DoubleEntryView implements View {
 		masterPanel.add(convertButton, gridBag(1, 2));
 		
 		final JButton loadFileButton = new JButton("Load From File");
-		loadFileButton.addActionListener(e -> this.loadFromFile());
+		loadFileButton.addActionListener(e -> this.presenter.loadFromFile());
 		masterPanel.add(loadFileButton, gridBag(0, 4));
 		
 		final JButton saveFileButton = new JButton("Save to File");
-		saveFileButton.addActionListener(e -> this.saveToFile());
+		saveFileButton.addActionListener(e -> this.presenter.saveToFile());
 		masterPanel.add(saveFileButton, gridBag(2, 4));
 		
 		// text boxes
@@ -154,27 +153,6 @@ final class DoubleEntryView implements View {
 		return (Instrument) this.instrumentSelection.getSelectedItem();
 	}
 	
-	/**
-	 * Allows the user to choose a file, then loads input text from that file.
-	 * 
-	 * @since 2021-01-29
-	 */
-	private void loadFromFile() {
-		final JFileChooser fc = new JFileChooser();
-		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
-			final Path path = fc.getSelectedFile().toPath();
-			try {
-				this.presenter.loadFromFile(path);
-			} catch (final IOException e) {
-				JOptionPane.showMessageDialog(this.frame,
-						"An error happened while reading the file: "
-								+ e.getLocalizedMessage(),
-						"File Read Error", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-	}
-	
 	@Override
 	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
 		final JFileChooser fc = new JFileChooser();
@@ -185,27 +163,6 @@ final class DoubleEntryView implements View {
 			return Optional.of(fc.getSelectedFile().toPath());
 		else
 			return Optional.empty();
-	}
-	
-	/**
-	 * Prompts the user to choose a file, then saves output text to that file.
-	 * 
-	 * @since 2021-01-29
-	 */
-	private void saveToFile() {
-		final JFileChooser fc = new JFileChooser();
-		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
-			final Path path = fc.getSelectedFile().toPath();
-			try {
-				this.presenter.saveToFile(path);
-			} catch (final IOException e) {
-				JOptionPane.showMessageDialog(this.frame,
-						"An error happened while writing to the file: "
-								+ e.getLocalizedMessage(),
-						"File Write Error", JOptionPane.ERROR_MESSAGE);
-			}
-		}
 	}
 	
 	@Override

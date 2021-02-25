@@ -113,7 +113,7 @@ public final class Presenter {
 	 * 
 	 * @param showInView whether the converted MusicXML should be shown in the
 	 *                   View and saved, or just saved
-	 * 						
+	 * 
 	 * @since 2021-02-25
 	 */
 	public void convertAndSave(boolean showInView) {
@@ -155,7 +155,7 @@ public final class Presenter {
 	 * 
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
-	 * 													
+	 * 
 	 * @since 2021-02-25
 	 */
 	public void loadFromFile() {
@@ -170,21 +170,6 @@ public final class Presenter {
 					"An error occured while reading from the selected file: "
 							+ e.getMessage());
 		}
-	}
-	
-	/**
-	 * Gets the text from a file and writes it to the view's input field.
-	 * 
-	 * @param path file to read from
-	 * @throws IOException                   if the file reading creates an
-	 *                                       {@code IOException}
-	 * @throws UnsupportedOperationException if the view does not support
-	 *                                       {@link View#setInputText}
-	 * @since 2021-01-29
-	 */
-	void loadFromFile(Path path) throws IOException {
-		// only works in Java 11 or later
-		this.view.setInputText(Files.readString(path));
 	}
 	
 	/**
@@ -208,20 +193,5 @@ public final class Presenter {
 					"An error occured while saving to the selected file: "
 							+ e.getMessage());
 		}
-	}
-	
-	/**
-	 * Writes the view's output text to a file.
-	 *
-	 * @param path
-	 * @throws IOException                   if the file writing causes an
-	 *                                       {@code IOException}
-	 * @throws UnsupportedOperationException if the view does not support
-	 *                                       {@link View#getOutputText}
-	 * @since 2021-01-29
-	 */
-	void saveToFile(Path path) throws IOException {
-		// only works in Java 11 or later
-		Files.writeString(path, this.view.getOutputText());
 	}
 }

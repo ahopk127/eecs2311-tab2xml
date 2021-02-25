@@ -68,14 +68,15 @@ class PresenterTest {
 	 */
 	@Test
 	final void testLoadFromFile() {
-		final View view = View.createViewBot();
+		final ViewBot view = View.createViewBot();
 		final Presenter presenter = new Presenter(view);
 		final Path TEST_FILE = TEST_FILES.resolve("test-read.txt");
 		
 		try {
 			assumeTrue(TEST_STRING.equals(Files.readString(TEST_FILE)));
 			
-			presenter.loadFromFile(TEST_FILE);
+			view.setSelectedFile(TEST_FILE);
+			presenter.loadFromFile();
 			
 			assertEquals(TEST_STRING, view.getInputText());
 		} catch (final Exception e) {
@@ -93,7 +94,7 @@ class PresenterTest {
 	 */
 	@Test
 	final void testSaveToFile() {
-		final View view = View.createViewBot();
+		final ViewBot view = View.createViewBot();
 		final Presenter presenter = new Presenter(view);
 		final Path TEST_FILE = TEST_FILES.resolve("test-write.txt");
 		
@@ -101,7 +102,8 @@ class PresenterTest {
 			Files.writeString(TEST_FILE, "");
 			
 			view.setOutputText(TEST_STRING);
-			presenter.saveToFile(TEST_FILE);
+			view.setSelectedFile(TEST_FILE);
+			presenter.saveToFile();
 			
 			assertEquals(TEST_STRING, Files.readString(TEST_FILE));
 		} catch (final Exception e) {

@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -65,7 +64,10 @@ final class SingleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	private static GridBagConstraints gridBag(int x, int y) {
-		return gridBag(x, y, 1, 1);
+		final GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = x;
+		gbc.gridy = y;
+		return gbc;
 	}
 	
 	/**
@@ -75,9 +77,7 @@ final class SingleEntryView implements View {
 	 */
 	private static GridBagConstraints gridBag(int x, int y, int width,
 			int height) {
-		final GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = x;
-		gbc.gridy = y;
+		final GridBagConstraints gbc = gridBag(x, y);
 		gbc.gridwidth = width;
 		gbc.gridheight = height;
 		return gbc;
@@ -227,36 +227,6 @@ final class SingleEntryView implements View {
 			return Optional.of(fc.getSelectedFile().toPath());
 		else
 			return Optional.empty();
-	}
-	
-	/**
-	 * Prompts the user to choose a file, then saves output text to that file.
-	 * 
-	 * @since 2021-01-29
-	 */
-	private void saveToFile() {
-		final JFileChooser fc = new JFileChooser();
-		
-		final FileNameExtensionFilter xmlFilter = new FileNameExtensionFilter(
-				"XML Files (.xml)", "xml");
-		fc.addChoosableFileFilter(xmlFilter);
-		fc.setFileFilter(xmlFilter);
-		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
-			Path path = fc.getSelectedFile().toPath();
-			final String fileName = path.getFileName().toString();
-			path = path.getParent().resolve(
-					fileName.endsWith(".xml") ? fileName : fileName + ".xml");
-			System.out.println(path);
-			try {
-				this.presenter.saveToFile(path);
-			} catch (final IOException e) {
-				JOptionPane.showMessageDialog(this.frame,
-						"An error happened while writing to the file: "
-								+ e.getLocalizedMessage(),
-						"File Write Error", JOptionPane.ERROR_MESSAGE);
-			}
-		}
 	}
 	
 	@Override
