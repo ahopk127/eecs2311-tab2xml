@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -15,8 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tab2xml.parser.Instrument;
 
@@ -38,7 +39,7 @@ final class SingleEntryView implements View {
 				view.textBoxState = INPUT;
 				view.convertButton.setEnabled(true);
 				view.revertButton.setEnabled(false);
-				view.saveFileButton.setEnabled(false);
+				view.saveFileButton.setText("Convert and Save");
 			}
 		},
 		OUTPUT {
@@ -47,7 +48,7 @@ final class SingleEntryView implements View {
 				view.textBoxState = OUTPUT;
 				view.convertButton.setEnabled(false);
 				view.revertButton.setEnabled(true);
-				view.saveFileButton.setEnabled(true);
+				view.saveFileButton.setText("     Save to File     ");
 			}
 		};
 		
@@ -82,6 +83,18 @@ final class SingleEntryView implements View {
 	}
 	
 	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-02-25
+	 */
+	private static GridBagConstraints gridBag(int x, int y, int width,
+			int height, Insets insets) {
+		final GridBagConstraints gbc = gridBag(x, y, width, height);
+		gbc.insets = insets;
+		return gbc;
+	}
+	
+	/**
 	 * Creates and opens a View.
 	 *
 	 * @since 2021-01-18
@@ -97,7 +110,7 @@ final class SingleEntryView implements View {
 	private final Presenter presenter;
 	
 	/** The text box that handles both input and output. */
-	private final JTextArea textBox;
+	private final PromptingTextArea textBox;
 	/** The dropdown box to select the instrument. */
 	private final JComboBox<Instrument> instrumentSelection;
 	/** The button that converts tab to XML. */
@@ -143,26 +156,34 @@ final class SingleEntryView implements View {
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
+		final Insets buttonInsets = new Insets(3, 8, 3, 8);
+		
 		final JButton loadFileButton = new JButton("Load From File");
 		loadFileButton.addActionListener(e -> this.loadFromFile());
-		buttonPanel.add(loadFileButton, gridBag(1, 0));
+		buttonPanel.add(loadFileButton, gridBag(1, 0, 1, 1, buttonInsets));
 		
 		this.convertButton = new JButton("Convert");
 		this.convertButton.addActionListener(e -> this.presenter.convert());
-		buttonPanel.add(this.convertButton, gridBag(2, 0));
+		buttonPanel.add(this.convertButton, gridBag(2, 0, 1, 1, buttonInsets));
 		
 		this.revertButton = new JButton("Undo Conversion");
 		this.revertButton
 				.addActionListener(e -> this.setInputText(this.previousInputText));
-		buttonPanel.add(this.revertButton, gridBag(3, 0));
+		buttonPanel.add(this.revertButton, gridBag(3, 0, 1, 1, buttonInsets));
 		
 		this.saveFileButton = new JButton("Save to File");
-		this.saveFileButton.addActionListener(e -> this.saveToFile());
-		buttonPanel.add(this.saveFileButton, gridBag(4, 0));
+		this.saveFileButton.addActionListener(e -> {
+			if (this.textBoxState == State.INPUT) {
+				this.presenter.convert();
+			}
+			this.saveToFile();
+		});
+		buttonPanel.add(this.saveFileButton, gridBag(4, 0, 1, 1, buttonInsets));
 		
 		// combo boxes
 		this.instrumentSelection = new JComboBox<>(Instrument.values());
-		buttonPanel.add(this.instrumentSelection, gridBag(0, 0));
+		buttonPanel.add(this.instrumentSelection,
+				gridBag(0, 0, 1, 1, buttonInsets));
 		
 		// set the frame to INPUT state.
 		State.INPUT.enable(this);
@@ -223,8 +244,17 @@ final class SingleEntryView implements View {
 	private void saveToFile() {
 		final JFileChooser fc = new JFileChooser();
 		
+		final FileNameExtensionFilter xmlFilter = new FileNameExtensionFilter(
+				"XML Files (.xml)", "xml");
+		fc.addChoosableFileFilter(xmlFilter);
+		fc.setFileFilter(xmlFilter);
+		
 		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
-			final Path path = fc.getSelectedFile().toPath();
+			Path path = fc.getSelectedFile().toPath();
+			final String fileName = path.getFileName().toString();
+			path = path.getParent().resolve(
+					fileName.endsWith(".xml") ? fileName : fileName + ".xml");
+			System.out.println(path);
 			try {
 				this.presenter.saveToFile(path);
 			} catch (final IOException e) {
@@ -239,13 +269,18 @@ final class SingleEntryView implements View {
 	@Override
 	public void setInputText(String text) {
 		this.previousInputText = null;
-		this.textBox.setText(text);
+		if (text.isBlank()) {
+			this.textBox.setPrompting(true);
+		} else {
+			this.textBox.setText(text);
+		}
 		State.INPUT.enable(this);
 	}
 	
 	@Override
 	public void setOutputText(String text) {
-		this.previousInputText = this.textBox.getText();
+		this.previousInputText = this.textBox.isPrompting() ? ""
+				: this.textBox.getText();
 		this.textBox.setText(text);
 		State.OUTPUT.enable(this);
 	}

@@ -27,11 +27,11 @@ Notes:
  - You will need to handle the checked exceptions thrown by `Parser.parse()`
 
 # Screenshots
-*The main interface*
+*The main interface*  
 ![Screendump of program](./screendump-main-interface.png)
 
-*Entering a text tab*
+*Entering a text tab*  
 ![Entering a text tab](./screendump-text-tab.png)
 
-*Text tab converted (as of Version 0.1.0)*
+*Text tab converted (as of Version 0.1.0)*  
 ![Text tab Converted](./screendump-converted-20210217.png)
