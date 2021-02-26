@@ -1,16 +1,19 @@
 package tab2xml.xmlconversion;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
-import org.w3c.dom.Document;
 
 import tab2xml.parser.Instrument;
 import tab2xml.model.Note;
-import tab2xml.model.GToken;
+import tab2xml.model.Score;
+import tab2xml.model.Staff;
+import tab2xml.model.StringItem;
 
 /**
  * The transformer which generates the XML output as a string.
@@ -18,22 +21,27 @@ import tab2xml.model.GToken;
  * @author amir
  */
 public class Transform {
-	private ArrayList<ArrayList<Object>> data;
+	private Score sheet;
 	MusicSheet musicSheet;
 	private Document doc;
 	private DocumentBuilder dBuilder;
 	private DocumentBuilderFactory dbFactory;
 
-	/**
-	 * Construct a transformer that accepts specified data and an instrument.
-	 * 
-	 * @param data       the data retrieved by the parser
-	 * @param instrument the type of instrument corresponding to this data
-	 */
-	public Transform(ArrayList<ArrayList<Object>> data, Instrument instrument) {
-		this.data = data;
-		this.dbFactory = DocumentBuilderFactory.newInstance();
+	private static int hammerOnCount = 1;
+	private static int pullOffCount = 1;
+	private static int chainCount = 1;
+	private static int slideCount = 1;
+	private static int slurCount = 1;
 
+	/**
+	 * Construct a transformer that accepts a specified score and an instrument.
+	 * 
+	 * @param sheet      the score retrieved by the parser
+	 * @param instrument the type of instrument corresponding to this score
+	 */
+	public Transform(Score sheet, Instrument instrument) {
+		this.sheet = sheet;
+		this.dbFactory = DocumentBuilderFactory.newInstance();
 		try {
 			this.dBuilder = dbFactory.newDocumentBuilder();
 			this.doc = dBuilder.newDocument();
@@ -48,6 +56,9 @@ public class Transform {
 			break;
 		case DRUM:
 			generateDrum();
+			break;
+		case BASS:
+			generateBass();
 			break;
 		default:
 			throw new IllegalArgumentException("Unsupported instrument: " + instrument);
@@ -73,12 +84,7 @@ public class Transform {
 		part1.setAttribute("id", "P1");
 		root.append(part1);
 
-		printData();
-		
-		String upperBeat = null;
-		String lowerBeat = null;
-		String numOfStrings = "6";
-		int measureCount = countMeaures();
+		int measureCount = sheet.numberOfMeasures();
 		ArrayList<XMLElement> measures = new ArrayList<>();
 		measures.ensureCapacity(measureCount);
 
@@ -86,91 +92,22 @@ public class Transform {
 			XMLElement measure = new XMLElement("measure", musicSheet);
 			measure.setAttribute("number", Integer.toString(i + 1));
 			measures.add(measure);
-
-			if (i == 0 && Instrument.isStandardTuningGuitar) {
-				
-				setStaffDefaults(measure, upperBeat, lowerBeat, numOfStrings);
-			}
 		}
-		
-		int currMeasure = 0;
-		int numStrings = Integer.parseInt(numOfStrings);
-		int lengths[] = new int[numStrings];
-		Arrays.fill(lengths, -1);
-		int count = 0;
-		int totalNotesInCurrMeasure = 0;
-		int measuresNotSeen = measureCount + 1;
-		int factor = -1;
-		int y = data.size() - 1;
-		int prevNotePos = 0;
-		int totalNotes = 0;
-		boolean skipRight = false;
-		boolean isChord = false;
 
-		while (measuresNotSeen != 0) {
-			for (; (factor > 0 ? y < data.size() : y >= 0); y += factor) {
-				if (lengths[y] == 0)
+		Staff staff = sheet.getStaffs().get(0);
+		staff.setUpperBeat("4");
+		staff.setLowerBeat("4");
+		setStaffDefaults(staff, measures.get(0));
+
+		for (int i = 0; i < sheet.size(); i++) {
+			Iterator<StringItem> itr = sheet.staffIterator(i);
+
+			while (itr.hasNext()) {
+				Note note = (Note) itr.next();
+				if (note == null)
 					continue;
-
-				Object obj = data.get(y).get(0);
-				if (isToken(obj)) {
-					GToken token = (GToken) obj;
-					switch (token.type()) {
-					case NOTE:
-						data.get(y).remove(obj);
-						break;
-					case BAR:
-						data.get(y).remove(obj);
-						if (++count % numStrings == 0) {
-							totalNotesInCurrMeasure = setNotesPerString(lengths);
-							totalNotes = Arrays.stream(lengths).sum();
-							measuresNotSeen--;
-							currMeasure++;
-							count = 0;
-							skipRight = true;
-						}
-						break;
-					default:
-						break;
-					}
-				} else {
-					// at this point its a note, its been pre-processed 
-					// it has a position
-					Note note = (Note) obj;
-					note.setType(Integer.toBinaryString(totalNotes));
-					note.setDuration("1");
-					
-					// TODO: compare accumulating position instead of from the last note.
-					if (y != data.size() - 1 && note.getPosition() == prevNotePos) {
-						isChord = true;
-						note.setType("1");
-						note.setDuration("8");
-					}
-
-					prevNotePos = note.getPosition();
-					data.get(y).remove(obj);
-					lengths[y]--;
-					addNoteToMeasure(note, currMeasure - 1, measures, isChord);
-					isChord = false;
-				}
+				addNoteToMeasure(note, note.getMeasure(), measures);
 			}
-			if (skipRight == true) {
-				skipRight = false;
-				y = data.size() - 1;
-			}
-			if (y == -1) {
-				factor = 1;
-				y = 0;
-			}
-
-			if (y == data.size()) {
-				factor = -1;
-				y = data.size() - 1;
-			}
-			if (Arrays.stream(lengths).sum() == 0)
-				Arrays.fill(lengths, -1);
-
-			data.removeIf(l -> l.isEmpty());
 		}
 
 		for (XMLElement measure : measures)
@@ -184,11 +121,12 @@ public class Transform {
 	 * @param currMeasure the index of the measure to append to
 	 * @param measures    the list of all the measures
 	 */
-	private void addNoteToMeasure(Note currNote, int currMeasure, ArrayList<XMLElement> measures, boolean isChord) {
+	private void addNoteToMeasure(Note currNote, int currMeasure, ArrayList<XMLElement> measures) {
+		System.out.println(currMeasure);
 		if (measures.get(currMeasure) != null) {
 			XMLElement note = new XMLElement("note", musicSheet);
 
-			if (isChord) {
+			if (currNote.isChord()) {
 				XMLElement chord = new XMLElement("chord", musicSheet);
 				note.append(chord);
 			}
@@ -218,6 +156,54 @@ public class Transform {
 
 			XMLElement notations = new XMLElement("notations", musicSheet);
 			XMLElement technical = new XMLElement("technical", musicSheet);
+
+			if (currNote.isStartHammer()) {
+				XMLElement hammeron = new XMLElement("hammer-on", musicSheet);
+				setNotationAttr(hammeron, currNote, "start", "H");
+				technical.append(hammeron);
+				notations.append(slur(currNote, "start", "above"));
+
+			} else if (currNote.isStopHammer()) {
+				XMLElement hammeron = new XMLElement("hammer-on", musicSheet);
+				setNotationAttr(hammeron, currNote, "stop", "");
+				technical.append(hammeron);
+				notations.append(slur(currNote, "stop", "above"));
+
+			} else if (currNote.isStartPull()) {
+				XMLElement pulloff = new XMLElement("pull-off", musicSheet);
+				setNotationAttr(pulloff, currNote, "start", "P");
+				technical.append(pulloff);
+				notations.append(slur(currNote, "start", "above"));
+
+			} else if (currNote.isStopPull()) {
+				XMLElement pulloff = new XMLElement("pull-off", musicSheet);
+				setNotationAttr(pulloff, currNote, "stop", "");
+				technical.append(pulloff);
+				notations.append(slur(currNote, "stop", "above"));
+
+			} else if (currNote.isStartChain()) {
+				XMLElement chain = new XMLElement("hammer-on-pull-off", musicSheet);
+				setNotationAttr(chain, currNote, "start", "HP");
+				technical.append(chain);
+				notations.append(slur(currNote, "start", "above"));
+
+			} else if (currNote.isStopChain()) {
+				XMLElement chain = new XMLElement("hammer-on-pull-off", musicSheet);
+				setNotationAttr(chain, currNote, "stop", "");
+				technical.append(chain);
+				notations.append(slur(currNote, "stop", "above"));
+			} else if (currNote.isStartSlide()) {
+				XMLElement slide = new XMLElement("slide", musicSheet);
+				setNotationAttr(slide, currNote, "start", "S");
+				technical.append(slide);
+				notations.append(slur(currNote, "start", "above"));
+			} else if (currNote.isStopSlide()) {
+				XMLElement slide = new XMLElement("slide", musicSheet);
+				setNotationAttr(slide, currNote, "stop", "");
+				technical.append(slide);
+				notations.append(slur(currNote, "stop", "above"));
+			}
+
 			XMLElement string = new XMLElement("string", musicSheet);
 			string.setText(currNote.getString());
 			XMLElement fret = new XMLElement("fret", musicSheet);
@@ -230,24 +216,19 @@ public class Transform {
 		}
 	}
 
-	/**
-	 * Return whether an object is a note.
-	 * 
-	 * @param obj the object to test if its a note
-	 * @return true if <b>obj</b> is a note
-	 */
-	private boolean isNote(Object obj) {
-		return obj.getClass().equals(Note.class);
+	private XMLElement slur(Note note, String type, String placement) {
+		XMLElement slur = new XMLElement("slur", musicSheet);
+		slur.setAttribute("number", Integer.toString(note.getStringNum()));
+		slur.setAttribute("type", type);
+		slur.setAttribute("placement", placement);
+		return slur;
 	}
 
-	/**
-	 * Return whether an object is a token.
-	 * 
-	 * @param obj the object to test if its a token
-	 * @return true if <b>obj</b> is a token
-	 */
-	private boolean isToken(Object obj) {
-		return obj.getClass().equals(GToken.class);
+	private void setNotationAttr(XMLElement item, Note note, String type, String text) {
+		item.setAttribute("number", Integer.toString(note.getStringNum()));
+		item.setAttribute("type", type);
+		item.setAttribute("default-y", "-11");
+		item.setText(text);
 	}
 
 	/**
@@ -274,9 +255,10 @@ public class Transform {
 	/**
 	 * Set the default staff attributes if the Guitar is in standard tuning.
 	 * 
+	 * @param staff   the first staff of the score
 	 * @param measure first measure to append the staff attributes to
 	 */
-	private void setStaffDefaults(XMLElement measure, String upperBeat, String lowerBeat, String numOfStrings) {
+	private void setStaffDefaults(Staff staff, XMLElement measure) {
 		XMLElement attributes = new XMLElement("attributes", musicSheet);
 
 		XMLElement divisions = new XMLElement("divisions", musicSheet);
@@ -289,9 +271,9 @@ public class Transform {
 
 		XMLElement time = new XMLElement("time", musicSheet);
 		XMLElement beats = new XMLElement("beats", musicSheet);
-		beats.setText(upperBeat);
+		beats.setText(staff.getUpperBeat());
 		XMLElement beatType = new XMLElement("beat-type", musicSheet);
-		beatType.setText(lowerBeat);
+		beatType.setText(staff.getLowerBeat());
 		time.append(beats, beatType);
 
 		XMLElement clef = new XMLElement("clef", musicSheet);
@@ -303,9 +285,9 @@ public class Transform {
 
 		XMLElement staffDetails = new XMLElement("staff-details", musicSheet);
 		XMLElement staffLines = new XMLElement("staff-lines", musicSheet);
-		staffLines.setText(numOfStrings);
+		staffLines.setText(staff.stringCount());
 		staffDetails.append(staffLines);
-		int numStrings = Integer.parseInt(numOfStrings);
+		int numStrings = staff.size();
 
 		for (int i = 0; i < numStrings; i++) {
 			XMLElement staffTuning = new XMLElement("staff-tuning", musicSheet);
@@ -322,63 +304,20 @@ public class Transform {
 	}
 
 	/**
-	 * Return the number of measures in the music sheet.
-	 * 
-	 * @return the number of measures in the data
+	 * Generate XML from score for selected instrument, Drum.
 	 */
-	private int countMeaures() {
-		// TODO: count all measures of every section
-		int count = 0;
-		for (ArrayList<Object> line : data) {
-			for (int i = 0; i < line.size(); i++) {
-				Object obj = line.get(i);
-				GToken token = (GToken) obj;
-				switch (token.type()) {
-				case BAR:
-					if (i != line.size() - 1)
-						count++;
-					else
-						return count;
-					break;
-				default:
-					break;
-				}
-			}
-		}
-		return count;
+	private void generateDrum() {
+		generateSamplePlaceHolder();
 	}
 
 	/**
-	 * Set the lengths array to the number of notes in each string per measure.
-	 * 
-	 * @param lengths the array containing the number of notes left in each string
+	 * Generate XML from score for selected instrument, Bass.
 	 */
-	private int setNotesPerString(int[] lengths) {
-		int len = 0;
-		int currMeasure = 0;
-		for (int i = data.size() - 1; i >= 0; i--) {
-			ArrayList<Object> line = data.get(i);
-			for (int j = 0; j < line.size(); j++) {
-				Object obj = line.get(j);
-				if (isToken(obj)) {
-					GToken token = (GToken) obj;
-					switch (token.type()) {
-					case BAR:
-						currMeasure++;
-						break;
-					default:
-						break;
-					}
-				} else if (currMeasure != 1 && isNote(obj))
-					len++;
-			}
-			lengths[i] = len;
-			currMeasure = 0;
-			len = 0;
-		}
-		return Arrays.stream(lengths).sum();
+	private void generateBass() {
+		generateSamplePlaceHolder();
 	}
 
+	/* template xml placeholder */
 	private void generateSamplePlaceHolder() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
 		musicSheet.append(root);
@@ -390,24 +329,5 @@ public class Transform {
 			note.setText("sample attributes of note " + i);
 			measure.append(note);
 		}
-	}
-	
-	/**
-	 * Generate XML from data for selected instrument, Drum.
-	 */
-	private void generateDrum() {
-		generateSamplePlaceHolder();
-	}
-
-	private void printData() {
-		StringBuilder sb = new StringBuilder();
-		for (ArrayList<Object> line : data) {
-			for (Object obj : line) {
-				sb.append(obj.toString());
-				sb.append(" ");
-			}
-			sb.append("\n");
-		}
-		System.out.println(sb.toString());
 	}
 }

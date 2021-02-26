@@ -1,6 +1,7 @@
 package tab2xml.model;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import tab2xml.exceptions.InvalidTokenException;
@@ -11,6 +12,11 @@ import tab2xml.exceptions.InvalidTokenException;
  * @author amir
  */
 public class Note extends StringItem {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7423778159486375067L;
+
 	private final NoteType note;
 
 	/*
@@ -31,13 +37,27 @@ public class Note extends StringItem {
 	 */
 	private String string;
 	private Fret fret;
-	private String type;
+	private int type;
 
 	/*
 	 * Position of the note.
 	 */
 	private int position;
+	private int measure;
 	private GuitarString s;
+	private boolean isChord;
+	private boolean isStartHammer;
+	private boolean isStopHammer;
+
+	private boolean isStartPull;
+	private boolean isStopPull;
+
+	private boolean isStartChain;
+	private boolean isStopChain;
+	private List<Note> middle;
+
+	private boolean isStartSlide;
+	private boolean isStopSlide;
 
 	/**
 	 * Construct a note object based on type and a given step.
@@ -50,7 +70,7 @@ public class Note extends StringItem {
 		this.s = s;
 		this.note = setNoteType();
 		this.position = fret.getPosition();
-		this.string = Integer.toString(GuitarString.getStringNum());
+		this.string = Integer.toString(s.getStringNum());
 	}
 
 	public Note(NoteType note) {
@@ -186,13 +206,13 @@ public class Note extends StringItem {
 	 */
 	public String getType() {
 		switch (type) {
-		case "16":
+		case 16:
 			return "sixteenth";
-		case "8":
+		case 8:
 			return "eighth";
-		case "4":
+		case 4:
 			return "quarter";
-		case "2":
+		case 2:
 			return "half";
 		default:
 			return "whole";
@@ -205,7 +225,7 @@ public class Note extends StringItem {
 	 * @param type the type of this note (<em>A, B, C,..</em>) as defined by
 	 *             {@code NoteType}
 	 */
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 
@@ -216,15 +236,6 @@ public class Note extends StringItem {
 	 */
 	public NoteType getNoteType() {
 		return note;
-	}
-
-	/**
-	 * Return the position of the note in its measure.
-	 * 
-	 * @return the position of the note
-	 */
-	public int getPosition() {
-		return position;
 	}
 
 	/**
@@ -244,6 +255,129 @@ public class Note extends StringItem {
 		this.step = step;
 	}
 
+	public boolean isChord() {
+		return isChord;
+	}
+
+	public void setChord(boolean isChord) {
+		this.isChord = isChord;
+	}
+
+	public int getMeasure() {
+		return measure;
+	}
+
+	public void setMeasure(int measure) {
+		this.measure = measure;
+	}
+
+	public boolean isStart() {
+		return isStartHammer;
+	}
+
+	public void setStart(boolean isStart) {
+		this.isStartHammer = isStart;
+	}
+
+	public boolean isStop() {
+		return isStopHammer;
+	}
+
+	public void setStop(boolean isStop) {
+		this.isStopHammer = isStop;
+	}
+
+	public boolean isStartHammer() {
+		return isStartHammer;
+	}
+
+	public void setStartHammer(boolean isStartHammer) {
+		this.isStartHammer = isStartHammer;
+	}
+
+	public boolean isStopHammer() {
+		return isStopHammer;
+	}
+
+	public void setStopHammer(boolean isStopHammer) {
+		this.isStopHammer = isStopHammer;
+	}
+
+	public boolean isStartPull() {
+		return isStartPull;
+	}
+
+	public void setStartPull(boolean isStartPull) {
+		this.isStartPull = isStartPull;
+	}
+
+	public boolean isStopPull() {
+		return isStopPull;
+	}
+
+	public void setStopPull(boolean isStopPull) {
+		this.isStopPull = isStopPull;
+	}
+
+	public boolean isStartChain() {
+		return isStartChain;
+	}
+
+	public void setStartChain(boolean isStartChain) {
+		this.isStartChain = isStartChain;
+	}
+
+	public boolean isStopChain() {
+		return isStopChain;
+	}
+
+	public void setStopChain(boolean isStopChain) {
+		this.isStopChain = isStopChain;
+	}
+
+	public boolean isStartSlide() {
+		return isStartSlide;
+	}
+
+	public void setStartSlide(boolean isStartSlide) {
+		this.isStartSlide = isStartSlide;
+	}
+
+	public boolean isStopSlide() {
+		return isStopSlide;
+	}
+
+	public void setStopSlide(boolean isStopSlide) {
+		this.isStopSlide = isStopSlide;
+	}
+
+	public List<Note> getMiddle() {
+		return middle;
+	}
+
+	public void setMiddle(List<Note> middle) {
+		this.middle = middle;
+	}
+
+	public boolean isMiddle() {
+		return middle.contains(this);
+	}
+
+	@Override
+	public int getStringNum() {
+		return s.getStringNum();
+	}
+
+	/**
+	 * Return the position of the note in its measure.
+	 * 
+	 * @return the position of the note
+	 */
+	@Override
+	public int getPosition() {
+		return position;
+	}
+
 	/**
 	 * Return the string representation of this note.
 	 * 
@@ -252,48 +386,6 @@ public class Note extends StringItem {
 	@Override
 	public String toString() {
 		return step;
-	}
-
-	/**
-	 * Get the note type of a note as a string.
-	 * 
-	 * @param note
-	 * @return the type of note of <b>note</b> argument otherwise null if
-	 *         <b>note</b> is not valid
-	 */
-	private static NoteType getNoteType(String note) {
-		for (NoteType type : NoteType.values()) {
-			if (type.getValue().equals(note))
-				return type;
-		}
-		return null;
-	}
-
-	/**
-	 * Construct a note from the ASCII tablature.
-	 * 
-	 * @param input string input(<em>"tune + fret"</em>)
-	 * @return a note based on the properties of the input
-	 * @throws InvalidTokenException if the parsed note type doesn't match the
-	 *                               parsed step
-	 */
-	private NoteType setNoteType() {
-		String tune = s.getTune();
-		int fretNum = fret.toInt();
-
-		Pattern p = Pattern.compile("^[A-G]\\d+$");
-		String input = tune + fretNum;
-		
-		if (!p.matcher(input).matches())
-			throw new InputMismatchException("The Note is invalid.");
-
-		int oldIndex = Note.getNoteType(tune).ordinal();
-		int index = (oldIndex + fretNum) % 12;
-
-		NoteType noteType = NoteType.values()[index];
-		setStep(noteType.getValue());
-
-		return noteType;
 	}
 
 	/**
@@ -321,5 +413,47 @@ public class Note extends StringItem {
 
 		Note value = new Note(noteType, step);
 		return value;
+	}
+
+	/**
+	 * Get the note type of a note as a string.
+	 * 
+	 * @param note
+	 * @return the type of note of <b>note</b> argument otherwise null if
+	 *         <b>note</b> is not valid
+	 */
+	public static NoteType getNoteType(String note) {
+		for (NoteType type : NoteType.values()) {
+			if (type.getValue().equals(note))
+				return type;
+		}
+		return null;
+	}
+
+	/**
+	 * Construct a note from the ASCII tablature.
+	 * 
+	 * @param input string input(<em>"tune + fret"</em>)
+	 * @return a note based on the properties of the input
+	 * @throws InvalidTokenException if the parsed note type doesn't match the
+	 *                               parsed step
+	 */
+	private NoteType setNoteType() {
+		String tune = s.getTune();
+		int fretNum = fret.toInt();
+
+		Pattern p = Pattern.compile("^[A-G]\\d+$");
+		String input = tune + fretNum;
+
+		if (!p.matcher(input).matches())
+			throw new InputMismatchException("The Note is invalid.");
+
+		int oldIndex = Note.getNoteType(tune).ordinal();
+		int index = (oldIndex + fretNum) % 12;
+
+		NoteType noteType = NoteType.values()[index];
+		setStep(noteType.getValue());
+
+		return noteType;
 	}
 }

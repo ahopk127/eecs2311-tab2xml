@@ -4,14 +4,20 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class GuitarString extends StaffItem {
-	private List<StringItem> items;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5274699295630375450L;
+	private ArrayList<StringItem> items;
 	private String tune;
-	private static int stringNum = 0;
+	private static int count = 0;
 	private int numMeasures;
+	private int stringNum;
 
 	public GuitarString() {
 		items = new ArrayList<>();
-		stringNum++;
+		count = getCount() + 1;
+		this.stringNum = getCount();
 	}
 
 	public void addItem(StringItem item) {
@@ -31,12 +37,12 @@ public class GuitarString extends StaffItem {
 		this.tune = tune;
 	}
 
-	public static int getStringNum() {
+	public int getStringNum() {
 		return stringNum;
 	}
 
-	public static void setStringNum(int stringNum) {
-		GuitarString.stringNum = stringNum;
+	public void setStringNum(int stringNum) {
+		this.stringNum = stringNum;
 	}
 
 	public int getNumMeasures() {
@@ -47,7 +53,15 @@ public class GuitarString extends StaffItem {
 		this.numMeasures = numMeasures;
 	}
 
-	public List<StringItem> getItems() {
+	public ArrayList<StringItem> getItems() {
 		return items;
+	}
+
+	public static int getCount() {
+		return count;
+	}
+
+	public static void setCount(int count) {
+		GuitarString.count = count;
 	}
 }

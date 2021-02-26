@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 import tab2xml.antlr.GuitarTabBaseVisitor;
@@ -52,28 +53,29 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	public StringItem visitTune(TuneContext ctx) {
 		String value = ctx.getChild(0).getText();
 		Tune tune;
-
 		if (!value.equals("|"))
-			tune = new Tune(value);
+			tune = new Tune(value, false);
 		else
-			tune = new Tune(Tune.standardTuning[GuitarString.getStringNum()]);
-
+			tune = new Tune(Tune.standardTuning[s.getStringNum() - 1][0], true);
+		tune.setStringNum(s.getStringNum());
 		return tune;
 	}
 
 	@Override
 	public StringItem visitStringItems(StringItemsContext ctx) {
 		StringItemsCollector coll = new StringItemsCollector(new ArrayList<StringItem>());
-		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() ==  TerminalNodeImpl.class).count();
+		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() == TerminalNodeImpl.class).count();
 		s.setNumMeasures(numMeasures);
-		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class).forEach(c -> coll.add(visit(c)));
+		ctx.children.stream().forEach(c -> coll.add(visit(c)));
 		return coll;
 	}
 
 	@Override
 	public StringItem visitSlide(SlideContext ctx) {
 		Note start = (Note) visit(ctx.getChild(0));
+		start.setStartSlide(true);
 		Note stop = (Note) visit(ctx.getChild(2));
+		stop.setStopSlide(true);
 		Slide slide = new Slide(start, stop);
 		return slide;
 	}
@@ -81,7 +83,9 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	@Override
 	public StringItem visitPulloff(PulloffContext ctx) {
 		Note start = (Note) visit(ctx.getChild(0));
+		start.setStartPull(true);
 		Note stop = (Note) visit(ctx.getChild(2));
+		stop.setStopPull(true);
 		PullOff pullOff = new PullOff(start, stop);
 		return pullOff;
 	}
@@ -89,7 +93,9 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	@Override
 	public StringItem visitHammeron(HammeronContext ctx) {
 		Note start = (Note) visit(ctx.getChild(0));
+		start.setStartHammer(true);
 		Note stop = (Note) visit(ctx.getChild(2));
+		stop.setStopHammer(true);
 		HammerOn hammerOn = new HammerOn(start, stop);
 		return hammerOn;
 	}
@@ -104,9 +110,14 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 				notes.add(note);
 			}
 		}
-		Note start = notes.get(0);
-		Note stop = notes.get(notes.size() - 1);
-		List<Note> middle = notes.subList(1,  notes.size() - 1);
+		Note start = (Note) notes.get(0);
+		start.setStartChain(true);
+		Note stop = (Note) notes.get(notes.size() - 1);
+		stop.setStopChain(true);
+		List<Note> subList = notes.subList(1, notes.size() - 1);
+		List<Note> middle = new ArrayList<>(subList);
+		start.setMiddle(middle);
+
 		HammerPull hammerPull = new HammerPull(start, middle, stop);
 		return hammerPull;
 	}
@@ -121,11 +132,24 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	@Override
 	public StringItem visitFret(FretContext ctx) {
 		Token token = ctx.FRET_NUM().getSymbol();
-		int column = token.getCharPositionInLine() + 1;
+		int length = token.getText().length();
+		int column = token.getCharPositionInLine() + length;
 		String value = ctx.getChild(0).getText();
 		Fret fret = new Fret(value, column);
 		Note note = new Note(fret, s);
+		note.setOctave(Tune.standardTuning[s.getStringNum() - 1][1]);
 		return note;
+	}
+
+	@Override
+	public StringItem visitTerminal(TerminalNode node) {
+		Token token = node.getSymbol();
+		int length = token.getText().length();
+		int column = token.getCharPositionInLine() + length;
+		Bar bar = new Bar();
+		bar.setStringNum(s.getStringNum());
+		bar.setPosition(column);
+		return bar;
 	}
 
 	public List<StringItem> getStringItems() {

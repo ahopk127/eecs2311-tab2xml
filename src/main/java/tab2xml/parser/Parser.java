@@ -1,22 +1,20 @@
 package tab2xml.parser;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
 import tab2xml.xmlconversion.Transform;
+
 import tab2xml.exceptions.InvalidInputException;
 import tab2xml.exceptions.InvalidTokenException;
-import tab2xml.model.GToken;
-import tab2xml.model.TokenType;
+import tab2xml.model.Score;
 
 /**
- * The parser is responsible for getting note, information from ASCII tablature.
+ * The parser is responsible for delegating extraction from data based on
+ * instrument.
  * 
  * @author amir
  */
 public class Parser {
-	private Lexer lexer;
-	private ArrayList<ArrayList<GToken>> tokens;
+	private Processor processor;
+	private Score sheet;
 	private Instrument instrument;
 
 	/**
@@ -24,12 +22,12 @@ public class Parser {
 	 * 
 	 * @param input      the tablature to be parsed
 	 * @param instrument the corresponding instrument
-	 * @throws InvalidTokenException 
+	 * @throws InvalidTokenException
+	 * @throws IOException
 	 */
 	public Parser(String input, Instrument instrument) throws InvalidTokenException {
-		//TODO we don't need the lexer.
-		lexer = new Lexer(input, instrument);
-		tokens = lexer.tokenize();
+		processor = new Processor(input, instrument);
+		sheet = processor.process();
 		this.instrument = instrument;
 	}
 
@@ -60,75 +58,10 @@ public class Parser {
 	 * @throws InvalidInputException if invalid input is parsed.
 	 * @throws InvalidTokenException if invalid token is parsed.
 	 */
-	private String parseGuitar() throws InvalidInputException, InvalidTokenException {
-		if (tokens == null || tokens.size() == 0)
-			throw new InvalidInputException("Could not parse input.");
-
-		// TODO: we don't need to limit strings to 6
-		//if (tokens.size() != 6)
-		//throw new InvalidInputException("Must have 6 strings for prototype.");
-
+	private String parseGuitar() {
 		String xmlOutput;
-		ArrayList<ArrayList<Object>> data = new ArrayList<>();
-		Stack<GToken> oracle = new Stack<>();
-		int currentString = 0;
-
-		for (ArrayList<GToken> line : tokens) {
-			ArrayList<Object> temp = new ArrayList<>();
-
-			if (line.isEmpty()) {
-				currentString = 0;
-				data.add(temp);
-				continue;
-			}
-
-			String tune = line.get(0).getData();
-
-			if (!TokenType.NOTE.matches(tune) && !TokenType.BAR.matches(tune))
-				throw new InvalidInputException(
-						String.format("String %d does not have a proper tune.", currentString + 1));
-
-			if (TokenType.BAR.matches(tune) && instrument == Instrument.GUITAR) {
-				tune = Instrument.standardTuningGuitar[currentString];
-				Instrument.isStandardTuningGuitar = true;
-			} else
-				Instrument.isStandardTuningGuitar = false;
-
-			for (int i = 0; i < line.size(); i++) {
-				GToken token = line.get(i);
-				switch (token.type()) {
-				case HYPHEN:
-					if (!Instrument.isStandardTuningGuitar && i == 1)
-						throw new InvalidInputException(
-								String.format("String %d does not have a proper start of measure.", currentString + 1));
-					break;
-				case FRET:
-					
-					break;
-				case BAR:
-					if (oracle.isEmpty())
-						oracle.push(token);
-					else {
-						oracle.pop();
-
-						if (line.indexOf(token) != line.size() - 1)
-							oracle.push(token);
-					}
-					temp.add(token);
-					break;
-				default:
-					break;
-				}
-			}
-			if (!oracle.isEmpty())
-				throw new InvalidInputException(String.format("Measure incomplete on string %d.", currentString + 1));
-			currentString++;
-			data.add(temp);
-		}
-
-		Transform tf = new Transform(data, instrument);
+		Transform tf = new Transform(sheet, instrument);
 		xmlOutput = tf.toXML();
-
 		return xmlOutput;
 	}
 

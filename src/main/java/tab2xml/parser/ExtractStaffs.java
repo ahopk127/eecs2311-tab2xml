@@ -25,9 +25,7 @@ public class ExtractStaffs extends GuitarTabBaseVisitor<StaffItem> {
 	public StaffItem visitStaff(StaffContext staff) {
 		Staff st = new Staff();
 		staff.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
-				.forEach(c -> st.addString((GuitarString) visit(c)));	
-		
-		st.getStrings().forEach(s -> System.out.println(s.getTune()));
+				.forEach(c -> st.addString((GuitarString) visit(c)));
 		return st;
 	}
 

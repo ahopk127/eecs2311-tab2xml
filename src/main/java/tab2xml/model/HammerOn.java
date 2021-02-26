@@ -1,6 +1,14 @@
 package tab2xml.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class HammerOn extends StringItem {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1578840013025953896L;
 	private Note start;
 	private Note stop;
 
@@ -17,8 +25,21 @@ public class HammerOn extends StringItem {
 		return stop;
 	}
 
+	public Collection<? extends StringItem> getNotes() {
+		List<StringItem> notes = new ArrayList<>();
+		notes.add((StringItem) StringItem.deepClone(start));
+		notes.add((StringItem) StringItem.deepClone(stop));
+		return notes;
+	}
+
+	@Override
 	public int getPosition() {
 		return start.getPosition();
+	}
+
+	@Override
+	public int getStringNum() {
+		return start.getStringNum();
 	}
 
 	@Override
