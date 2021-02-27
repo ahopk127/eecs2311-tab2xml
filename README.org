@@ -15,4 +15,4 @@ It is fairly easy to use, but a full instruction manual can be found at [[./Docu
 [[./Screenshots/text-tab.png]]
 
 #+CAPTION: Text tab converted (as of 2021-02-17)
-[[./Screenshots/creenshot-converted-20210217.png]]
+[[./Screenshots/converted-20210217.png]]
