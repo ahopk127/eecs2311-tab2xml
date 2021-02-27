@@ -1,3 +1,4 @@
+\newpage
 * Front-End Tests
 Many of the front-end tests are implemented using a =ViewBot=, a class that simulates a GUI.
 
