@@ -1,5 +1,10 @@
 package tab2xml.gui;
 
+import java.nio.file.Path;
+import java.util.Optional;
+
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import tab2xml.parser.Instrument;
 
 /**
@@ -95,6 +100,19 @@ public interface View {
 	 * @since 2021-01-25
 	 */
 	Instrument getSelectedInstrument();
+	
+	/**
+	 * Prompt the user for a filepath, and returns the filepath. If the user
+	 * doesn't enter a filepath, returns an empty optional.
+	 * 
+	 * @param preferredFileType file choosing should prefer files of this type,
+	 *                          but the returned file does not have to match this
+	 *                          filter. For example, JFileChoosers can simply use
+	 *                          the filter.
+	 *
+	 * @since 2021-02-25
+	 */
+	Optional<Path> promptForFile(FileNameExtensionFilter preferredFileType);
 	
 	/**
 	 * Sets the view's input text to {@code text}. This method is optional.
