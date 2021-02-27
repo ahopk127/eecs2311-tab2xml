@@ -6,35 +6,35 @@
 ** Installation
 *** Eclipse
     1. Open Eclipse, and press ~File > Import~ in the menus.
-       [[./screenshot-eclipse-install-1.png]]
+       [[../Screenshots/eclipse-install-1.png]]
     2. In the window that opens, select "Projects from Git", in the folder called "Git".  Then, click "Next"
-       [[./screenshot-eclipse-install-2.png]]
+       [[../Screenshots/eclipse-install-2.png]]
     3. Click "Clone URI" then click "Next".
-       [[./screenshot-eclipse-install-3.png]]
+       [[../Screenshots/eclipse-install-3.png]]
     4. Enter "~https://github.com/ahopk127/eecs2311-tab2xml.git~" in the first field ("URI"), then click "Next".  No authentication is required.
-       [[./screenshot-eclipse-install-4.png]]
+       [[../Screenshots/eclipse-install-4.png]]
     5. Choose where you want the program to be saved on your computer (or just use the default location), then click "Next".
-       [[./screenshot-eclipse-install-5.png]]
+       [[../Screenshots/eclipse-install-5.png]]
     6. Click "Next" then "Finish".  The program is now installed on your computer, but must be built using Gradle.
-       [[./screenshot-eclipse-install-7.png]]
+       [[../Screenshots/eclipse-install-7.png]]
     7. You will need the "Gradle Tasks" window for the next step.  If you can't find it, press ~Window > Show View > Other~ in the menu, then find "Gradle Tasks" in the Gradle folder, then click "Open".
-       [[./screenshot-eclipse-build-2.png]]
+       [[../Screenshots/eclipse-build-2.png]]
     8. In the "Gradle Tasks" window, double-click the green "build" item in the "build" folder.
-       [[./screenshot-eclipse-build.png]]
+       [[../Screenshots/eclipse-build.png]]
 *** Commandline
     1. Use the command ~git clone https://github.com/ahopk127/eecs2311-tab2xml.git~ to clone the project to the directory of your choice
     2. Change directory to the directory where you installed the project, then use ~./gradlew build~ to build the project.
 ** Convert Text Tab
    1. Run the application.  In Eclipse, double-click the green "run" item in the "application folder".  In commandline, use ~gradlew run~.\\
       You should see a window like this:
-      [[../screendump-main-interface.png]]
+      [[../Screenshots/main-interface.png]]
    2. Input your text tab into the application.  There are multiple ways of doing this:
       - Type or copy-and-paste your text tab into the text box.  
       - Press the "Load from File" button then choose a file to load your text tab from a file.  
       - Drag and drop a text tab file into the input box
-      [[../screendump-text-tab.png]]
+      [[../Screenshots/text-tab.png]]
    3. Press the "Convert" button.  The text tab will be replaced with the corresponding MusicXML.
-      [[../screendump-converted-20210217.png]]
+      [[../Screenshots/converted-20210217.png]]
    4. You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button.
 ** Other Use Cases
    - You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.  In addition, the tab in the input box will not be replaced with MusicXML, so you can edit it then convert again!

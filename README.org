@@ -9,10 +9,10 @@ It is fairly easy to use, but a full instruction manual can be found at [[./Docu
 
 * Screenshots
 #+CAPTION: The main interface
-[[./screendump-main-interface.png]]
+[[./Screenshots/main-interface.png]]
 
 #+CAPTION: Entering a text tab
-[[./screendump-text-tab.png]]
+[[./Screenshots/text-tab.png]]
 
 #+CAPTION: Text tab converted (as of 2021-02-17)
-[[./screendump-converted-20210217.png]]
+[[./Screenshots/creenshot-converted-20210217.png]]
