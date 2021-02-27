@@ -1,0 +1,111 @@
+% Created 2021-02-27 Sat 09:54
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.1 (Org mode 9.4.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{Functional Requirements}
+\label{sec:org14dc261}
+\subsection{Functionality}
+\label{sec:orgc561520}
+\begin{itemize}
+\item Must convert text tablature to MusicXML tablature
+\item Must be able to read guitar, drum and bass text tabs
+\item Must be able to access and edit the original text tab after conversion
+\item Must be able to account for drop tunings
+\item Must be able to account for an unusual amount of strings in guitar tabs
+\item Must be compatible with music in any time signature or key
+\item Should be able to notate techniques such as bends, slides, hammer-ons, pull-offs, etc.
+\end{itemize}
+
+\subsection{Usability}
+\label{sec:orge7b56c5}
+\begin{itemize}
+\item Must have an intuitive visual interface
+\item Must be able to accept copy-pasted text or text read from a file
+\item Must automatically detect which instrument the tab is for
+\item Must allow the user to override this instrument detection
+\end{itemize}
+
+\subsection{Reliability}
+\label{sec:org86adf94}
+\begin{itemize}
+\item Must be able to work with lots of variation in the format of the text tab
+\item The converted MusicXML tablature must be error free
+\end{itemize}
+
+\subsection{Performance}
+\label{sec:orge81867d}
+\begin{itemize}
+\item Must convert the text tab in a reasonable amount of time
+\end{itemize}
+
+\subsection{Supportability}
+\label{sec:orgacd24fa}
+\begin{itemize}
+\item Should allow the user to configure their preferences for how they want the drums sheet music to be displayed (selecting the value and noteheads). Can have a default notation but should be able to be customized through preferences
+\item Must be testable via automated testing
+\end{itemize}
+
+\section{Non-Functional Requirements}
+\label{sec:org52447fc}
+\begin{itemize}
+\item Should have an API that can be used by other programs
+\end{itemize}
+
+\section{Use Cases}
+\label{sec:org438b5a5}
+\subsection{Convert Text Tab}
+\label{sec:orge105ce4}
+Primary Actor: Musician
+Goal: The musician has a text tab, and they want a MusicXML file
+Success Scenario:
+\begin{enumerate}
+\item Musician starts program
+\item Musician inputs the text tab
+\item System identifies what instrument it is for
+\item Musician tells system to convert text tab
+\item System converts text tab to MusicXML
+\item Musician saves output
+\item Musician closes program
+\end{enumerate}
+
+\subsubsection{Extensions}
+\label{sec:orga29f8ba}
+3a. If system cannot identify instrument, user can choose instrument manually.
+5a. If text tab is unrecognizable, notify user and restart at step 2
+
+\subsection{Change Settings}
+\label{sec:orga3d6cb7}
+Primary Actor: Musician
+Success Scenario:
+\begin{enumerate}
+\item Musician starts program (if it isn't already started)
+\item Musician changes settings
+\item System updates settings internally
+\item Musician stops program or continues using program for something else
+\end{enumerate}
+\end{document}
