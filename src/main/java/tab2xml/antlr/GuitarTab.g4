@@ -44,7 +44,7 @@ hammeron
 	;
 
 hampullchain
-	: fret (('h' | 'p') fret)+	# HammerPull
+	: fret ('h' | 'p')  (fret  ('h' | 'p') fret)+		# HammerPull
 	;
 
 harmonic
