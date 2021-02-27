@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+### Added
+ - Added new frontend tests
+ - Added a model
+ - When selecting a file, the appropriate file extension will be chosen for you
+ - Added the ability to convert and save with one button press
+
+### Changed
+ - Changed parsing method to a parse tree using ANTLR
+ - Errors are now reported via a dialog box.
+
 ## [0.1.0] - 2021-02-17 (First Prototype)
 ### Added
  - Set up Gradle building
