@@ -27,12 +27,6 @@ public class Transform {
 	private DocumentBuilder dBuilder;
 	private DocumentBuilderFactory dbFactory;
 
-	private static int hammerOnCount = 1;
-	private static int pullOffCount = 1;
-	private static int chainCount = 1;
-	private static int slideCount = 1;
-	private static int slurCount = 1;
-
 	/**
 	 * Construct a transformer that accepts a specified score and an instrument.
 	 * 
@@ -161,47 +155,40 @@ public class Transform {
 				XMLElement hammeron = new XMLElement("hammer-on", musicSheet);
 				setNotationAttr(hammeron, currNote, "start", "H");
 				technical.append(hammeron);
-				notations.append(slur(currNote, "start", "above"));
 
 			} else if (currNote.isStopHammer()) {
 				XMLElement hammeron = new XMLElement("hammer-on", musicSheet);
 				setNotationAttr(hammeron, currNote, "stop", "");
 				technical.append(hammeron);
-				notations.append(slur(currNote, "stop", "above"));
 
 			} else if (currNote.isStartPull()) {
+				System.out.println("created pull off");
 				XMLElement pulloff = new XMLElement("pull-off", musicSheet);
 				setNotationAttr(pulloff, currNote, "start", "P");
 				technical.append(pulloff);
-				notations.append(slur(currNote, "start", "above"));
 
 			} else if (currNote.isStopPull()) {
 				XMLElement pulloff = new XMLElement("pull-off", musicSheet);
 				setNotationAttr(pulloff, currNote, "stop", "");
 				technical.append(pulloff);
-				notations.append(slur(currNote, "stop", "above"));
 
 			} else if (currNote.isStartChain()) {
-				XMLElement chain = new XMLElement("hammer-on-pull-off", musicSheet);
-				setNotationAttr(chain, currNote, "start", "HP");
-				technical.append(chain);
 				notations.append(slur(currNote, "start", "above"));
 
 			} else if (currNote.isStopChain()) {
-				XMLElement chain = new XMLElement("hammer-on-pull-off", musicSheet);
-				setNotationAttr(chain, currNote, "stop", "");
-				technical.append(chain);
 				notations.append(slur(currNote, "stop", "above"));
+
 			} else if (currNote.isStartSlide()) {
 				XMLElement slide = new XMLElement("slide", musicSheet);
+				slide.setAttribute("line-type", "solid");
 				setNotationAttr(slide, currNote, "start", "S");
-				technical.append(slide);
-				notations.append(slur(currNote, "start", "above"));
+				notations.append(slide);
+
 			} else if (currNote.isStopSlide()) {
 				XMLElement slide = new XMLElement("slide", musicSheet);
+				slide.setAttribute("line-type", "solid");
 				setNotationAttr(slide, currNote, "stop", "");
-				technical.append(slide);
-				notations.append(slur(currNote, "stop", "above"));
+				notations.append(slide);
 			}
 
 			XMLElement string = new XMLElement("string", musicSheet);

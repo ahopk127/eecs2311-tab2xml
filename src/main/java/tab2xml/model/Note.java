@@ -71,6 +71,12 @@ public class Note extends StringItem {
 		this.note = setNoteType();
 		this.position = fret.getPosition();
 		this.string = Integer.toString(s.getStringNum());
+		isStartPull = false;
+		isStopPull = false;
+		isStartChain = false;
+		isStopChain = false;
+		isStartSlide = false;
+		isStopSlide = false;
 	}
 
 	public Note(NoteType note) {

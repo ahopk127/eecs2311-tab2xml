@@ -108,7 +108,7 @@ public class Score {
 	}
 
 	public Iterator<StringItem> staffIterator(int index) {
-		return new StaffIterator(this.staffToNoteList(index), staffs.get(index));
+		return new StaffIterator(this.staffToNoteList(index), staffs.get(index), this.numberOfMeasures());
 	}
 
 	private static class StaffIterator implements Iterator<StringItem> {
@@ -117,19 +117,20 @@ public class Score {
 		int x = 0;
 		int y;
 		int barsNotSeen;
+		int totalMeasures;
 		int numStrings;
 		int lengths[];
 		int count = 0;
-
 		@SuppressWarnings("unused")
 		int totalNotesInCurrMeasure;
 		private static int currMeasure = 0;
 		StringItem previousItem = null;
 
-		public StaffIterator(List<LinkedList<StringItem>> notes, Staff staff) {
+		public StaffIterator(List<LinkedList<StringItem>> notes, Staff staff, int totalMeasures) {
 			this.notes = notes;
 			y = staff.size() - 1;
 			barsNotSeen = staff.numberOfMeasures();
+			this.totalMeasures = totalMeasures;
 			numStrings = staff.size();
 			lengths = new int[numStrings];
 			Arrays.fill(lengths, -1);
@@ -138,7 +139,7 @@ public class Score {
 
 		@Override
 		public boolean hasNext() {
-			if (barsNotSeen == 0)
+			if (barsNotSeen == 0 && currMeasure == totalMeasures)
 				currMeasure = 0;
 			return barsNotSeen != 0;
 		}
