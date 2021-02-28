@@ -18,7 +18,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
+import org.antlr.v4.runtime.Token;
+
+import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 
 /**
@@ -154,6 +159,8 @@ final class SingleEntryView implements View {
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
 		this.textBox.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
 		FileDragDropTarget.enableDragAndDrop(this.textBox);
+		this.textBox.addCaretListener(
+				e -> this.textBox.getHighlighter().removeAllHighlights());
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
@@ -215,6 +222,27 @@ final class SingleEntryView implements View {
 		// The only objects in this list are Instrument instances, so the cast
 		// should work.
 		return (Instrument) this.instrumentSelection.getSelectedItem();
+	}
+	
+	@Override
+	public void onParseError(UnparseableInputException error) {
+		// show dialog box
+		View.super.onParseError(error);
+		
+		// highlight positions of errors
+		final DefaultHighlightPainter painter = new DefaultHighlightPainter(
+				Color.RED);
+		
+		// highlight each error
+		for (final Token errorToken : error.getErrors()) {
+			try {
+				this.textBox.getHighlighter().addHighlight(
+						errorToken.getStartIndex(), errorToken.getStopIndex(),
+						painter);
+			} catch (final BadLocationException e) {
+				throw new AssertionError("Should not happen.", e);
+			}
+		}
 	}
 	
 	@Override

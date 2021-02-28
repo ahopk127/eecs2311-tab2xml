@@ -26,7 +26,7 @@ public class Parser {
 	 * @throws InvalidInputException if invalid input is parsed
 	 * 
 	 */
-	public Parser(String input, Instrument instrument) throws InvalidTokenException, InvalidInputException {
+	public Parser(String input, Instrument instrument) throws InvalidInputException {
 		processor = new Processor(input, instrument);
 		sheet = processor.process();
 		this.instrument = instrument;

@@ -64,8 +64,8 @@ public class Note extends StringItem {
 	/**
 	 * Construct a note object based on type and a given step.
 	 * 
-	 * @param tune the tune of the string of this note
 	 * @param fret the fret number of this note
+	 * @param s the guitar string of this note
 	 */
 	public Note(Fret fret, GuitarString s) {
 		this.fret = fret;

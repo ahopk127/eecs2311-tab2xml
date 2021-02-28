@@ -9,6 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 
 import tab2xml.parser.Instrument;
+import tab2xml.Main;
 import tab2xml.model.Note;
 import tab2xml.model.Score;
 import tab2xml.model.Staff;
@@ -247,7 +248,7 @@ public class Transform {
 		XMLElement work = new XMLElement("work", musicSheet);
 		XMLElement workTitle = new XMLElement("work-title", musicSheet);
 		work.append(workTitle);
-		workTitle.setText("TAB2XML v0.1.1 - Group 2 Midterm Submission");
+		workTitle.setText("TAB2XML " + Main.PROGRAM_VERSION + " - Group 2");
 		XMLElement partList = new XMLElement("part-list", musicSheet);
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");
