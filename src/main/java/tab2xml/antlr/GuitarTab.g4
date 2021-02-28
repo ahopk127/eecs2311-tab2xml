@@ -5,7 +5,7 @@ grammar GuitarTab;
 }
 
 sheet
-	: (.*? staff .*?)* EOF			
+	: (.*? NEWLINE* staff .*? NEWLINE*)* EOF			
 	;
 	
 staff								
@@ -13,7 +13,7 @@ staff
 	;
 
 string
-	: tune stringItems SPACE* NEWLINE
+	: tune stringItems SPACE* NEWLINE?
 	;
 
 tune
@@ -77,7 +77,7 @@ SPACE
 	;
 
 NEWLINE
-	: SPACE* ('\r\n' | '\n')
+	: ('\r\n' | '\n') -> skip
 	;
 	
 MULTI_COMMENT

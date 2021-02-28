@@ -53,6 +53,10 @@ public class GuitarString extends StaffItem {
 		this.numMeasures = numMeasures;
 	}
 
+	public int getNoteCount() {
+		return (int) items.stream().filter(i -> i.getClass() == Note.class).count();
+	}
+
 	public ArrayList<StringItem> getItems() {
 		return items;
 	}

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -62,7 +60,7 @@ public class Processor {
 
 	public Score processGuitar() throws InvalidInputException {
 		preprocessGuitar();
-		input += "\r\n\r\n";
+		input += "\r\n";
 
 		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 		GuitarTabLexer lexer = null;
@@ -89,17 +87,11 @@ public class Processor {
 		// TODO alert user. LIFO concept will be used to display errors in order of occurrence
 		LinkedList<Token> errors = listener.getErrNodes();
 
-		System.out.println("there are " + errors.size() + " errors");
-
 		if (!errors.isEmpty())
 			showErrors(errors);
 
 		SerializeScore ss = new SerializeScore();
 		Score sheet = ss.visit(root);
-
-		System.out.println("parser is successful: ");
-		System.out.println(sheet.toString());
-
 		return sheet;
 	}
 

@@ -3,7 +3,6 @@ package tab2xml.xmlconversion;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -95,11 +94,9 @@ public class Transform {
 		staff.setLowerBeat("4");
 		setStaffDefaults(staff, measures.get(0));
 
-		for (int i = 0; i < sheet.size(); i++) {
-			Iterator<StringItem> itr = sheet.staffIterator(i);
-
-			while (itr.hasNext()) {
-				Note note = (Note) itr.next();
+		for (Staff st : sheet.getStaffs()) {
+			for (StringItem item : st) {
+				Note note = (Note) item;
 				if (note == null)
 					continue;
 				addNoteToMeasure(note, note.getMeasure(), measures);
