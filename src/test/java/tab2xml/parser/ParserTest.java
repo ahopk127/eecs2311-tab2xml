@@ -9,9 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
+
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -22,15 +21,7 @@ import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.model.Fret;
 import tab2xml.model.GuitarString;
-import tab2xml.model.HammerOn;
-import tab2xml.model.HammerPull;
-import tab2xml.model.Harmonic;
-import tab2xml.model.Note;
-import tab2xml.model.PullOff;
-import tab2xml.model.Score;
-import tab2xml.model.Staff;
-import tab2xml.model.StringItem;
-import tab2xml.model.Tune;
+import tab2xml.model.*;
 
 class ParserTest {
 	// TODO: create detailed parser test for model.
@@ -81,6 +72,7 @@ class ParserTest {
 
 			SerializeScore ss = new SerializeScore();
 			Score sheet = ss.visit(root);
+			
 			String[] expected = { "G", "B", "F#", "B", "C", "F#", "G", "G", "F#", "G", "F#", "G", "C", "D", "E", "D",
 					"F#", "F#", "E", "E", "C", "C", "G", "E", "C", "G", "B", "F#", "C", "F#", "B", "F#", "B", "B", "E",
 					"F#", "A", "F#", "B", "E", "D", "G", "F#", "D", "C", "E", "D", "A", "E", "A", "E", "F#", "G", "G",
@@ -89,7 +81,12 @@ class ParserTest {
 					"E", "A", "E", "B", "E", "E", "B", "B", "C", "B", "D", "F#", "G", "B", "B", "A", "D", "B", "E", "B",
 					"F#", "C", "F#", "B", "C", "F#", "G", "C", "E", "F#", "B", "A", "D", "E", "E", "E", "E", "E", "A",
 					"G", "F#", "B", "F#", "G" };
+			
+			assertTrue(4 == sheet.size());
 		}
+		
+		
+		
 	}
 
 	@Test
@@ -266,19 +263,8 @@ class ParserTest {
 			GuitarTabParser parser = new GuitarTabParser(tokens);
 
 			ParseTree root = parser.staff();
-			// expected strings, measures, tuning
-
-			//this takes a list of strings (empty at start)
-			List<ArrayList<Staff>> stringList = new ArrayList<>();
-			ExtractStaffs estaff = new ExtractStaffs(stringList);
-			String[][] expectedTuning = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
-					{ "E", "2" } };
-
-			for (int i = 0; i < stringList.size(); i++) {
-				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
-				String tune = gs.getTune();
-				assertEquals(expectedTuning[i], tune);
-			}
+			
+			// test hammer pulls
 		}
 
 	}
