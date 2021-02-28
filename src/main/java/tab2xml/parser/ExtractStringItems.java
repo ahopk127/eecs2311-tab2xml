@@ -22,10 +22,23 @@ import tab2xml.antlr.GuitarTabParser.TuneContext;
 
 import tab2xml.model.*;
 
+/**
+ * Extract string contents from parse tree.
+ * 
+ * @author amir
+ *
+ */
 public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	private List<StringItem> stringItems;
 	private GuitarString s;
 
+	/**
+	 * Construct a sample parse tree visitor from a specified {@code GuitarString}
+	 * and ({@code StringContext}.
+	 * 
+	 * @param s  the guitar string model
+	 * @param sc the corresponding string context
+	 */
 	public ExtractStringItems(GuitarString s, StringContext sc) {
 		stringItems = new ArrayList<>();
 		this.s = s;
@@ -49,6 +62,15 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		s.addAllItems(stringItems);
 	}
 
+	/**
+	 * Return a list of all retrieved data.
+	 * 
+	 * @return the list of string items extracted
+	 */
+	public List<StringItem> getStringItems() {
+		return stringItems;
+	}
+
 	@Override
 	public StringItem visitTune(TuneContext ctx) {
 		String value = ctx.getChild(0).getText();
@@ -56,7 +78,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		if (!value.equals("|"))
 			tune = new Tune(value, false);
 		else
-			tune = new Tune(Tune.standardTuning[s.getStringNum() - 1][0], true);
+			tune = new Tune(Tune.standardTuning[(s.getStringNum() - 1) % 6][0], true);
 		tune.setStringNum(s.getStringNum());
 		return tune;
 	}
@@ -124,8 +146,9 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 
 	@Override
 	public StringItem visitHarmonic(HarmonicContext ctx) {
-		Note fret = (Note) visit(ctx.getChild(0));
-		Harmonic harmonic = new Harmonic(fret);
+		Note note = (Note) visit(ctx.getChild(1));
+		Harmonic harmonic = new Harmonic(note);
+		note.setHarmonic(true);
 		return harmonic;
 	}
 
@@ -137,7 +160,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		String value = ctx.getChild(0).getText();
 		Fret fret = new Fret(value, column);
 		Note note = new Note(fret, s);
-		note.setOctave(Tune.standardTuning[s.getStringNum() - 1][1]);
+		note.setOctave(Tune.standardTuning[(s.getStringNum() - 1) % 6][1]);
 		return note;
 	}
 
@@ -150,9 +173,5 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		bar.setStringNum(s.getStringNum());
 		bar.setPosition(column);
 		return bar;
-	}
-
-	public List<StringItem> getStringItems() {
-		return stringItems;
 	}
 }

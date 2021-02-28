@@ -1,5 +1,22 @@
 package tab2xml.listeners;
 
-public class ErrorListener {
+import java.util.LinkedList;
 
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ErrorNode;
+
+import tab2xml.antlr.GuitarTabBaseListener;
+
+public class ErrorListener extends GuitarTabBaseListener {
+	// TODO: implement flexible error parsing for GUI.
+	private static LinkedList<Token> errors = new LinkedList<>();
+
+	@Override
+	public void visitErrorNode(ErrorNode node) {
+		errors.add(node.getSymbol());
+	}
+
+	public LinkedList<Token> getErrNodes() {
+		return errors;
+	}
 }

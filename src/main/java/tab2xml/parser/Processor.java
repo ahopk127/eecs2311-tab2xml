@@ -4,14 +4,21 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
+import tab2xml.exceptions.InvalidInputException;
 import tab2xml.model.Score;
+import tab2xml.listeners.*;
 
 /**
  * A processor which works in 2 stages serializing ASCII tablature for a
@@ -38,8 +45,9 @@ public class Processor {
 	 * Delegate processing based on instrument.
 	 *
 	 * @return a score with serialized
+	 * @throws InvalidInputException if invalid input occurs
 	 */
-	public Score process() {
+	public Score process() throws InvalidInputException {
 		switch (instrument) {
 		case GUITAR:
 			return processGuitar();
@@ -52,9 +60,9 @@ public class Processor {
 		}
 	}
 
-	public Score processGuitar() {
+	public Score processGuitar() throws InvalidInputException {
 		preprocessGuitar();
-		input = input + "\r\n";
+		input += "\r\n\r\n";
 
 		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 		GuitarTabLexer lexer = null;
@@ -64,6 +72,7 @@ public class Processor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		if (lexer == null)
 			return new Score();
 
@@ -72,11 +81,24 @@ public class Processor {
 
 		ParseTree root = parser.sheet();
 
-		//ParseTreeWalker walker = new ParseTreeWalker();
-		//walker.walk(listener, root);
+		ParseTreeWalker walker = new ParseTreeWalker();
+		ErrorListener listener = new ErrorListener();
+
+		walker.walk(listener, root);
+
+		// TODO alert user. LIFO concept will be used to display errors in order of occurrence
+		LinkedList<Token> errors = listener.getErrNodes();
+
+		System.out.println("there are " + errors.size() + " errors");
+
+		if (!errors.isEmpty())
+			showErrors(errors);
 
 		SerializeScore ss = new SerializeScore();
 		Score sheet = ss.visit(root);
+
+		System.out.println("parser is successful: ");
+		System.out.println(sheet.toString());
 
 		return sheet;
 	}
@@ -113,5 +135,21 @@ public class Processor {
 			- error check simple input deformations(early stage)
 			- send string to processor.
 		*/
+	}
+
+	private void showErrors(LinkedList<Token> errors) throws InvalidInputException {
+		StringBuilder sb = new StringBuilder();
+		while (!errors.isEmpty()) {
+			Token t = errors.pop();
+
+			int col = t.getCharPositionInLine();
+			int line = t.getLine();
+			String token = t.getText();
+
+			// TODO: make mode detailed error message after we retrieve more data
+			sb.append("Undexpected: \"" + token + "\"" + "(" + line + ":" + col + ")");
+			sb.append("\n");
+		}
+		throw new InvalidInputException(sb.toString());
 	}
 }

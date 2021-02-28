@@ -92,11 +92,11 @@ public final class Presenter {
 			musicXMLOutput = parser.parse();
 		} catch (final InvalidInputException e) {
 			e.printStackTrace();
-			this.view.showErrorMessage("Error: Invalid Input", e.getMessage());
+			this.view.showErrorMessage("Error: ", e.getMessage());
 			return Optional.empty();
 		} catch (final InvalidTokenException e) {
 			e.printStackTrace();
-			this.view.showErrorMessage("Error: Invalid Token", e.getMessage());
+			this.view.showErrorMessage("Error: Invalid Token\n", e.getMessage());
 			return Optional.empty();
 		} catch (final Exception e) {
 			e.printStackTrace();

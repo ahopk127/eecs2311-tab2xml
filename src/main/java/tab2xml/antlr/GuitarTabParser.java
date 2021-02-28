@@ -128,23 +128,56 @@ public class GuitarTabParser extends Parser {
 		enterRule(_localctx, 0, RULE_sheet);
 		int _la;
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(25);
+			setState(37);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NOTE) | (1L << BAR) | (1L << NEWLINE))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << T__4) | (1L << NOTE) | (1L << BAR) | (1L << HYPHEN) | (1L << FRET_NUM) | (1L << SPACE) | (1L << NEWLINE) | (1L << MULTI_COMMENT) | (1L << LINE_COMMENT))) != 0)) {
 				{
 				{
-				setState(22);
+				setState(25);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
+				while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+					if ( _alt==1+1 ) {
+						{
+						{
+						setState(22);
+						matchWildcard();
+						}
+						} 
+					}
+					setState(27);
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,0,_ctx);
+				}
+				setState(28);
 				staff();
+				setState(32);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
+				while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+					if ( _alt==1+1 ) {
+						{
+						{
+						setState(29);
+						matchWildcard();
+						}
+						} 
+					}
+					setState(34);
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
 				}
 				}
-				setState(27);
+				}
+				setState(39);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(28);
+			setState(40);
 			match(EOF);
 			}
 		}
@@ -197,21 +230,17 @@ public class GuitarTabParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(33);
+			setState(43);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==NEWLINE) {
+			if (_la==NEWLINE) {
 				{
-				{
-				setState(30);
+				setState(42);
 				match(NEWLINE);
 				}
-				}
-				setState(35);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
 			}
-			setState(37); 
+
+			setState(46); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -219,7 +248,7 @@ public class GuitarTabParser extends Parser {
 				case 1:
 					{
 					{
-					setState(36);
+					setState(45);
 					string();
 					}
 					}
@@ -227,25 +256,19 @@ public class GuitarTabParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(39); 
+				setState(48); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			setState(44);
+			setState(51);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					{
-					{
-					setState(41);
-					match(NEWLINE);
-					}
-					} 
+			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
+			case 1:
+				{
+				setState(50);
+				match(NEWLINE);
 				}
-				setState(46);
-				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
+				break;
 			}
 			}
 		}
@@ -298,25 +321,25 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(47);
+			setState(53);
 			tune();
-			setState(48);
+			setState(54);
 			stringItems();
-			setState(52);
+			setState(58);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SPACE) {
 				{
 				{
-				setState(49);
+				setState(55);
 				match(SPACE);
 				}
 				}
-				setState(54);
+				setState(60);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(55);
+			setState(61);
 			match(NEWLINE);
 			}
 		}
@@ -360,17 +383,17 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(58);
+			setState(64);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOTE) {
 				{
-				setState(57);
+				setState(63);
 				match(NOTE);
 				}
 			}
 
-			setState(60);
+			setState(66);
 			match(BAR);
 			}
 		}
@@ -457,17 +480,17 @@ public class GuitarTabParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(79); 
+			setState(85); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(79);
+				setState(85);
 				_errHandler.sync(this);
 				switch (_input.LA(1)) {
 				case HYPHEN:
 					{
-					setState(63); 
+					setState(69); 
 					_errHandler.sync(this);
 					_alt = 1;
 					do {
@@ -475,7 +498,7 @@ public class GuitarTabParser extends Parser {
 						case 1:
 							{
 							{
-							setState(62);
+							setState(68);
 							match(HYPHEN);
 							}
 							}
@@ -483,9 +506,9 @@ public class GuitarTabParser extends Parser {
 						default:
 							throw new NoViableAltException(this);
 						}
-						setState(65); 
+						setState(71); 
 						_errHandler.sync(this);
-						_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
+						_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 					} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 					}
 					break;
@@ -493,57 +516,57 @@ public class GuitarTabParser extends Parser {
 				case BAR:
 				case FRET_NUM:
 					{
-					setState(75);
+					setState(81);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 					while (_la==T__3 || _la==FRET_NUM) {
 						{
-						setState(73);
+						setState(79);
 						_errHandler.sync(this);
-						switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
+						switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 						case 1:
 							{
-							setState(67);
+							setState(73);
 							fret();
 							}
 							break;
 						case 2:
 							{
-							setState(68);
+							setState(74);
 							harmonic();
 							}
 							break;
 						case 3:
 							{
-							setState(69);
+							setState(75);
 							hampullchain();
 							}
 							break;
 						case 4:
 							{
-							setState(70);
+							setState(76);
 							hammeron();
 							}
 							break;
 						case 5:
 							{
-							setState(71);
+							setState(77);
 							pulloff();
 							}
 							break;
 						case 6:
 							{
-							setState(72);
+							setState(78);
 							slide();
 							}
 							break;
 						}
 						}
-						setState(77);
+						setState(83);
 						_errHandler.sync(this);
 						_la = _input.LA(1);
 					}
-					setState(78);
+					setState(84);
 					match(BAR);
 					}
 					break;
@@ -551,7 +574,7 @@ public class GuitarTabParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(81); 
+				setState(87); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__3) | (1L << BAR) | (1L << HYPHEN) | (1L << FRET_NUM))) != 0) );
@@ -601,21 +624,21 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(83);
+			setState(89);
 			fret();
-			setState(86); 
+			setState(92); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(84);
+				setState(90);
 				match(T__0);
-				setState(85);
+				setState(91);
 				fret();
 				}
 				}
-				setState(88); 
+				setState(94); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__0 );
@@ -665,21 +688,21 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(90);
+			setState(96);
 			fret();
-			setState(93); 
+			setState(99); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(91);
+				setState(97);
 				match(T__1);
-				setState(92);
+				setState(98);
 				fret();
 				}
 				}
-				setState(95); 
+				setState(101); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__1 );
@@ -729,21 +752,21 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(97);
+			setState(103);
 			fret();
-			setState(100); 
+			setState(106); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(98);
+				setState(104);
 				match(T__2);
-				setState(99);
+				setState(105);
 				fret();
 				}
 				}
-				setState(102); 
+				setState(108); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__2 );
@@ -803,9 +826,9 @@ public class GuitarTabParser extends Parser {
 			_localctx = new HammerPullContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(104);
+			setState(110);
 			fret();
-			setState(105);
+			setState(111);
 			_la = _input.LA(1);
 			if ( !(_la==T__1 || _la==T__2) ) {
 			_errHandler.recoverInline(this);
@@ -815,7 +838,7 @@ public class GuitarTabParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(110); 
+			setState(116); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -823,9 +846,9 @@ public class GuitarTabParser extends Parser {
 				case 1:
 					{
 					{
-					setState(106);
+					setState(112);
 					fret();
-					setState(107);
+					setState(113);
 					_la = _input.LA(1);
 					if ( !(_la==T__1 || _la==T__2) ) {
 					_errHandler.recoverInline(this);
@@ -835,7 +858,7 @@ public class GuitarTabParser extends Parser {
 						_errHandler.reportMatch(this);
 						consume();
 					}
-					setState(108);
+					setState(114);
 					fret();
 					}
 					}
@@ -843,9 +866,9 @@ public class GuitarTabParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(112); 
+				setState(118); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			}
 		}
@@ -889,11 +912,11 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(114);
+			setState(120);
 			match(T__3);
-			setState(115);
+			setState(121);
 			fret();
-			setState(116);
+			setState(122);
 			match(T__4);
 			}
 		}
@@ -935,7 +958,7 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(118);
+			setState(124);
 			match(FRET_NUM);
 			}
 		}
@@ -951,36 +974,38 @@ public class GuitarTabParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\17{\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
-		"\f\t\f\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\3\3\7\3\"\n\3\f\3\16\3"+
-		"%\13\3\3\3\6\3(\n\3\r\3\16\3)\3\3\7\3-\n\3\f\3\16\3\60\13\3\3\4\3\4\3"+
-		"\4\7\4\65\n\4\f\4\16\48\13\4\3\4\3\4\3\5\5\5=\n\5\3\5\3\5\3\6\6\6B\n\6"+
-		"\r\6\16\6C\3\6\3\6\3\6\3\6\3\6\3\6\7\6L\n\6\f\6\16\6O\13\6\3\6\6\6R\n"+
-		"\6\r\6\16\6S\3\7\3\7\3\7\6\7Y\n\7\r\7\16\7Z\3\b\3\b\3\b\6\b`\n\b\r\b\16"+
-		"\ba\3\t\3\t\3\t\6\tg\n\t\r\t\16\th\3\n\3\n\3\n\3\n\3\n\3\n\6\nq\n\n\r"+
-		"\n\16\nr\3\13\3\13\3\13\3\13\3\f\3\f\3\f\2\2\r\2\4\6\b\n\f\16\20\22\24"+
-		"\26\2\3\3\2\4\5\2\u0082\2\33\3\2\2\2\4#\3\2\2\2\6\61\3\2\2\2\b<\3\2\2"+
-		"\2\nQ\3\2\2\2\fU\3\2\2\2\16\\\3\2\2\2\20c\3\2\2\2\22j\3\2\2\2\24t\3\2"+
-		"\2\2\26x\3\2\2\2\30\32\5\4\3\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2"+
-		"\2\33\34\3\2\2\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2"+
-		"\2 \"\7\r\2\2! \3\2\2\2\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\'\3\2\2\2%#\3"+
-		"\2\2\2&(\5\6\4\2\'&\3\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+"+
-		"-\7\r\2\2,+\3\2\2\2-\60\3\2\2\2.,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2"+
-		"\2\2\61\62\5\b\5\2\62\66\5\n\6\2\63\65\7\f\2\2\64\63\3\2\2\2\658\3\2\2"+
-		"\2\66\64\3\2\2\2\66\67\3\2\2\2\679\3\2\2\28\66\3\2\2\29:\7\r\2\2:\7\3"+
-		"\2\2\2;=\7\b\2\2<;\3\2\2\2<=\3\2\2\2=>\3\2\2\2>?\7\t\2\2?\t\3\2\2\2@B"+
-		"\7\n\2\2A@\3\2\2\2BC\3\2\2\2CA\3\2\2\2CD\3\2\2\2DR\3\2\2\2EL\5\26\f\2"+
-		"FL\5\24\13\2GL\5\22\n\2HL\5\20\t\2IL\5\16\b\2JL\5\f\7\2KE\3\2\2\2KF\3"+
-		"\2\2\2KG\3\2\2\2KH\3\2\2\2KI\3\2\2\2KJ\3\2\2\2LO\3\2\2\2MK\3\2\2\2MN\3"+
-		"\2\2\2NP\3\2\2\2OM\3\2\2\2PR\7\t\2\2QA\3\2\2\2QM\3\2\2\2RS\3\2\2\2SQ\3"+
-		"\2\2\2ST\3\2\2\2T\13\3\2\2\2UX\5\26\f\2VW\7\3\2\2WY\5\26\f\2XV\3\2\2\2"+
-		"YZ\3\2\2\2ZX\3\2\2\2Z[\3\2\2\2[\r\3\2\2\2\\_\5\26\f\2]^\7\4\2\2^`\5\26"+
-		"\f\2_]\3\2\2\2`a\3\2\2\2a_\3\2\2\2ab\3\2\2\2b\17\3\2\2\2cf\5\26\f\2de"+
-		"\7\5\2\2eg\5\26\f\2fd\3\2\2\2gh\3\2\2\2hf\3\2\2\2hi\3\2\2\2i\21\3\2\2"+
-		"\2jk\5\26\f\2kp\t\2\2\2lm\5\26\f\2mn\t\2\2\2no\5\26\f\2oq\3\2\2\2pl\3"+
-		"\2\2\2qr\3\2\2\2rp\3\2\2\2rs\3\2\2\2s\23\3\2\2\2tu\7\6\2\2uv\5\26\f\2"+
-		"vw\7\7\2\2w\25\3\2\2\2xy\7\13\2\2y\27\3\2\2\2\21\33#).\66<CKMQSZahr";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\17\u0081\4\2\t\2"+
+		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
+		"\t\13\4\f\t\f\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\7\2!\n\2\f\2\16"+
+		"\2$\13\2\7\2&\n\2\f\2\16\2)\13\2\3\2\3\2\3\3\5\3.\n\3\3\3\6\3\61\n\3\r"+
+		"\3\16\3\62\3\3\5\3\66\n\3\3\4\3\4\3\4\7\4;\n\4\f\4\16\4>\13\4\3\4\3\4"+
+		"\3\5\5\5C\n\5\3\5\3\5\3\6\6\6H\n\6\r\6\16\6I\3\6\3\6\3\6\3\6\3\6\3\6\7"+
+		"\6R\n\6\f\6\16\6U\13\6\3\6\6\6X\n\6\r\6\16\6Y\3\7\3\7\3\7\6\7_\n\7\r\7"+
+		"\16\7`\3\b\3\b\3\b\6\bf\n\b\r\b\16\bg\3\t\3\t\3\t\6\tm\n\t\r\t\16\tn\3"+
+		"\n\3\n\3\n\3\n\3\n\3\n\6\nw\n\n\r\n\16\nx\3\13\3\13\3\13\3\13\3\f\3\f"+
+		"\3\f\4\33\"\2\r\2\4\6\b\n\f\16\20\22\24\26\2\3\3\2\4\5\2\u008a\2\'\3\2"+
+		"\2\2\4-\3\2\2\2\6\67\3\2\2\2\bB\3\2\2\2\nW\3\2\2\2\f[\3\2\2\2\16b\3\2"+
+		"\2\2\20i\3\2\2\2\22p\3\2\2\2\24z\3\2\2\2\26~\3\2\2\2\30\32\13\2\2\2\31"+
+		"\30\3\2\2\2\32\35\3\2\2\2\33\34\3\2\2\2\33\31\3\2\2\2\34\36\3\2\2\2\35"+
+		"\33\3\2\2\2\36\"\5\4\3\2\37!\13\2\2\2 \37\3\2\2\2!$\3\2\2\2\"#\3\2\2\2"+
+		"\" \3\2\2\2#&\3\2\2\2$\"\3\2\2\2%\33\3\2\2\2&)\3\2\2\2\'%\3\2\2\2\'(\3"+
+		"\2\2\2(*\3\2\2\2)\'\3\2\2\2*+\7\2\2\3+\3\3\2\2\2,.\7\r\2\2-,\3\2\2\2-"+
+		".\3\2\2\2.\60\3\2\2\2/\61\5\6\4\2\60/\3\2\2\2\61\62\3\2\2\2\62\60\3\2"+
+		"\2\2\62\63\3\2\2\2\63\65\3\2\2\2\64\66\7\r\2\2\65\64\3\2\2\2\65\66\3\2"+
+		"\2\2\66\5\3\2\2\2\678\5\b\5\28<\5\n\6\29;\7\f\2\2:9\3\2\2\2;>\3\2\2\2"+
+		"<:\3\2\2\2<=\3\2\2\2=?\3\2\2\2><\3\2\2\2?@\7\r\2\2@\7\3\2\2\2AC\7\b\2"+
+		"\2BA\3\2\2\2BC\3\2\2\2CD\3\2\2\2DE\7\t\2\2E\t\3\2\2\2FH\7\n\2\2GF\3\2"+
+		"\2\2HI\3\2\2\2IG\3\2\2\2IJ\3\2\2\2JX\3\2\2\2KR\5\26\f\2LR\5\24\13\2MR"+
+		"\5\22\n\2NR\5\20\t\2OR\5\16\b\2PR\5\f\7\2QK\3\2\2\2QL\3\2\2\2QM\3\2\2"+
+		"\2QN\3\2\2\2QO\3\2\2\2QP\3\2\2\2RU\3\2\2\2SQ\3\2\2\2ST\3\2\2\2TV\3\2\2"+
+		"\2US\3\2\2\2VX\7\t\2\2WG\3\2\2\2WS\3\2\2\2XY\3\2\2\2YW\3\2\2\2YZ\3\2\2"+
+		"\2Z\13\3\2\2\2[^\5\26\f\2\\]\7\3\2\2]_\5\26\f\2^\\\3\2\2\2_`\3\2\2\2`"+
+		"^\3\2\2\2`a\3\2\2\2a\r\3\2\2\2be\5\26\f\2cd\7\4\2\2df\5\26\f\2ec\3\2\2"+
+		"\2fg\3\2\2\2ge\3\2\2\2gh\3\2\2\2h\17\3\2\2\2il\5\26\f\2jk\7\5\2\2km\5"+
+		"\26\f\2lj\3\2\2\2mn\3\2\2\2nl\3\2\2\2no\3\2\2\2o\21\3\2\2\2pq\5\26\f\2"+
+		"qv\t\2\2\2rs\5\26\f\2st\t\2\2\2tu\5\26\f\2uw\3\2\2\2vr\3\2\2\2wx\3\2\2"+
+		"\2xv\3\2\2\2xy\3\2\2\2y\23\3\2\2\2z{\7\6\2\2{|\5\26\f\2|}\7\7\2\2}\25"+
+		"\3\2\2\2~\177\7\13\2\2\177\27\3\2\2\2\23\33\"\'-\62\65<BIQSWY`gnx";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

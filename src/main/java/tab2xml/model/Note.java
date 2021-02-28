@@ -59,6 +59,8 @@ public class Note extends StringItem {
 	private boolean isStartSlide;
 	private boolean isStopSlide;
 
+	private boolean isHarmonic;
+
 	/**
 	 * Construct a note object based on type and a given step.
 	 * 
@@ -71,12 +73,6 @@ public class Note extends StringItem {
 		this.note = setNoteType();
 		this.position = fret.getPosition();
 		this.string = Integer.toString(s.getStringNum());
-		isStartPull = false;
-		isStopPull = false;
-		isStartChain = false;
-		isStopChain = false;
-		isStartSlide = false;
-		isStopSlide = false;
 	}
 
 	public Note(NoteType note) {
@@ -369,6 +365,14 @@ public class Note extends StringItem {
 		return middle.contains(this);
 	}
 
+	public boolean isHarmonic() {
+		return isHarmonic;
+	}
+
+	public void setHarmonic(boolean isHarmonic) {
+		this.isHarmonic = isHarmonic;
+	}
+
 	@Override
 	public int getStringNum() {
 		return s.getStringNum();
@@ -403,12 +407,12 @@ public class Note extends StringItem {
 	 *                               parsed step
 	 */
 	public static Note toNote(String input) throws InvalidTokenException {
-		Pattern p = Pattern.compile("^[A-G]\\d+$");
-
+		Pattern p = Pattern.compile("^[a-gA-G]\\d+$");
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException("The Note is invalid.");
 
 		String tune = input.substring(0, 1);
+		tune = tune.toUpperCase();
 		int fret = Integer.parseInt(input.substring(1));
 
 		Note note = new Note(Note.getNoteType(tune));
@@ -446,6 +450,7 @@ public class Note extends StringItem {
 	 */
 	private NoteType setNoteType() {
 		String tune = s.getTune();
+		tune = tune.toUpperCase();
 		int fretNum = fret.toInt();
 
 		Pattern p = Pattern.compile("^[A-G]\\d+$");
@@ -462,4 +467,5 @@ public class Note extends StringItem {
 
 		return noteType;
 	}
+
 }

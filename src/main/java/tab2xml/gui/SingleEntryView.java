@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import tab2xml.model.Score;
 import tab2xml.parser.Instrument;
 
 /**
@@ -171,6 +172,7 @@ final class SingleEntryView implements View {
 		this.revertButton
 				.addActionListener(e -> this.setInputText(this.previousInputText));
 		buttonPanel.add(this.revertButton, gridBag(3, 0, 1, 1, buttonInsets));
+		this.revertButton.addActionListener(e -> Score.resetMeasureCount());
 		
 		this.saveFileButton = new JButton("Save to File");
 		this.saveFileButton.addActionListener(e -> {

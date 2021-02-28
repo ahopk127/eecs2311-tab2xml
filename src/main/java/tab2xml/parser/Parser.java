@@ -11,6 +11,7 @@ import tab2xml.model.Score;
  * instrument.
  * 
  * @author amir
+ * 
  */
 public class Parser {
 	private Processor processor;
@@ -22,10 +23,10 @@ public class Parser {
 	 * 
 	 * @param input      the tablature to be parsed
 	 * @param instrument the corresponding instrument
-	 * @throws InvalidTokenException
-	 * @throws IOException
+	 * @throws InvalidInputException if invalid input is parsed
+	 * 
 	 */
-	public Parser(String input, Instrument instrument) throws InvalidTokenException {
+	public Parser(String input, Instrument instrument) throws InvalidTokenException, InvalidInputException {
 		processor = new Processor(input, instrument);
 		sheet = processor.process();
 		this.instrument = instrument;
@@ -37,6 +38,7 @@ public class Parser {
 	 * @return an XML conversion of the input
 	 * @throws InvalidInputException if invalid input is parsed
 	 * @throws InvalidTokenException if invalid token is parsed
+	 * 
 	 */
 	public String parse() throws InvalidInputException, InvalidTokenException {
 		switch (instrument) {
@@ -71,6 +73,7 @@ public class Parser {
 	 * @return an XML conversion for a Drum
 	 * @throws InvalidInputException if invalid input is parsed.
 	 * @throws InvalidTokenException if invalid token is parsed.
+	 * 
 	 */
 	private String parseDrum() {
 		return "Support not yet added for drums.";
@@ -82,6 +85,7 @@ public class Parser {
 	 * @return an XML conversion for a Bass
 	 * @throws InvalidInputException if invalid input is parsed.
 	 * @throws InvalidTokenException if invalid token is parsed.
+	 * 
 	 */
 	private String parseBass() {
 		return "Support not yet added for bass.";

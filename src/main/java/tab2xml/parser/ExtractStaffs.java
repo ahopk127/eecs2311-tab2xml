@@ -13,6 +13,11 @@ import tab2xml.model.GuitarString;
 import tab2xml.model.Staff;
 import tab2xml.model.StaffItem;
 
+/**
+ * Extract staffs from parse tree.
+ * 
+ * @author amir
+ */
 public class ExtractStaffs extends GuitarTabBaseVisitor<StaffItem> {
 	@SuppressWarnings("unused")
 	private List<ArrayList<Staff>> data;

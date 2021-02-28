@@ -3,7 +3,9 @@ package tab2xml.model;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.nio.charset.StandardCharsets;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -17,28 +19,58 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
-import tab2xml.model.Score;
 import tab2xml.parser.SerializeScore;
+import tab2xml.model.Score;
 
+/**
+ * A representation of a score sheet.
+ * 
+ * @author amir
+ *
+ */
 public class Score {
 	private List<Staff> staffs;
 
+	/**
+	 * Construct an empty score.
+	 * 
+	 */
 	public Score() {
 		this.staffs = new ArrayList<>();
 	}
 
+	/**
+	 * Add a specified staff, <b>s></b> to this score.
+	 * 
+	 * @param s the staff to add to this score
+	 */
 	public void addStaff(Staff s) {
 		this.staffs.add(s);
 	}
 
+	/**
+	 * Return the total number of staffs in this score.
+	 * 
+	 * @return the number of staffs in this score
+	 */
 	public int size() {
 		return staffs.size();
 	}
 
+	/**
+	 * Return a list of staffs.
+	 * 
+	 * @return the list of staffs in this score
+	 */
 	public List<Staff> getStaffs() {
 		return staffs;
 	}
 
+	/**
+	 * Return the number of measures in this score.
+	 * 
+	 * @return the number of measures in this score
+	 */
 	public int numberOfMeasures() {
 		int count = 0;
 		for (int i = 0; i < staffs.size(); i++) {
@@ -48,10 +80,25 @@ public class Score {
 		return count;
 	}
 
+	/**
+	 * Reset the number of measures on undo.
+	 * 
+	 */
+	public static void resetMeasureCount() {
+		StaffIterator.currMeasure = 0;
+	}
+
+	/**
+	 * Extract notes from a staff at a specified index.
+	 * 
+	 * @param index the index to extract notes from
+	 * @return a list of notes representing a staff at a specified index
+	 */
 	public List<LinkedList<StringItem>> staffToNoteList(int index) {
 		List<LinkedList<StringItem>> res = new ArrayList<>();
 
 		Staff staff = staffs.get(index);
+
 		for (GuitarString s : staff.getStrings()) {
 			List<StringItem> items = s.getItems();
 			LinkedList<StringItem> notes = new LinkedList<>();
@@ -91,131 +138,170 @@ public class Score {
 		return res;
 	}
 
+	/**
+	 * Return an array of staffs with the notes representing the score as a string.
+	 */
 	@Override
 	public String toString() {
+		int acc = 0;
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < staffs.size(); i++) {
 			Staff staff = staffs.get(i);
 			List<GuitarString> strings = staff.getStrings();
 			for (int j = 0; j < strings.size(); j++) {
-				List<StringItem> stringItems = strings.get(j).getItems();
-				stringItems.stream().forEach(item -> sb.append(item.toString() + " "));
+				for (StringItem item : strings.get(j).getItems()) {
+					int count = item.getPosition() - acc;
+					acc += count + (item.toString().length() / 2);
+					while (--count > 0)
+						sb.append("-");
+
+					sb.append(item.toString());
+				}
 				sb.append("\n");
 			}
-			sb.append("\n\n");
+			sb.append("\n");
 		}
 		return sb.toString();
 	}
 
+	/**
+	 * Return a custom iterator for traversing a staff at a specified index.
+	 * 
+	 * @param index the index of the staff to traverse
+	 * @return an iterator for a staff at specified <b>index</b>
+	 */
 	public Iterator<StringItem> staffIterator(int index) {
 		return new StaffIterator(this.staffToNoteList(index), staffs.get(index), this.numberOfMeasures());
 	}
 
+	// TODO: make it public and a stand alone iterator(to reuse for drums/bass)
+	/**
+	 * A custom iterator for traversing a staff and its notes.
+	 * 
+	 * @author amir
+	 *
+	 */
 	private static class StaffIterator implements Iterator<StringItem> {
-		List<LinkedList<StringItem>> notes;
-
-		int x = 0;
-		int y;
-		int barsNotSeen;
-		int totalMeasures;
-		int numStrings;
-		int lengths[];
-		int count = 0;
+		private List<LinkedList<StringItem>> notes;
+		private static PriorityQueue<StringItem> pq;
+		private int x = 0;
+		private int y;
 		@SuppressWarnings("unused")
-		int totalNotesInCurrMeasure;
+		private int barsNotSeen;
+		@SuppressWarnings("unused")
+		private int totalMeasures;
+		private int numStrings;
+		private int lengths[];
+		private int totalNotesInCurrMeasure;
 		private static int currMeasure = 0;
-		StringItem previousItem = null;
+		private boolean collecting;
+		private boolean hasMore = true;
+		Note previousNote = null;
 
+		/**
+		 * Construct a staff iterator.
+		 * 
+		 * @param notes         the notes representing <b>staff</b>
+		 * @param staff         the staff to iterate
+		 * @param totalMeasures the total number of measures <b>staff</b>
+		 */
 		public StaffIterator(List<LinkedList<StringItem>> notes, Staff staff, int totalMeasures) {
 			this.notes = notes;
+			this.totalMeasures = totalMeasures;
 			y = staff.size() - 1;
 			barsNotSeen = staff.numberOfMeasures();
-			this.totalMeasures = totalMeasures;
 			numStrings = staff.size();
 			lengths = new int[numStrings];
 			Arrays.fill(lengths, -1);
-			totalNotesInCurrMeasure = setNotesPerString(lengths);
+			collecting = true;
+			totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
+			pq = new PriorityQueue<>();
 		}
 
+		/**
+		 * @return true the specified staff has notes remaining.
+		 */
 		@Override
 		public boolean hasNext() {
-			if (barsNotSeen == 0 && currMeasure == totalMeasures)
-				currMeasure = 0;
-			return barsNotSeen != 0;
+			notes.stream().forEach(l -> hasMore = !l.isEmpty());
+			return !pq.isEmpty() || hasMore;
 		}
 
+		/**
+		 * Return the next note within a specified staff.
+		 * 
+		 */
 		@Override
 		public StringItem next() {
-			PriorityQueue<StringItem> pq = new PriorityQueue<>((a, b) -> a.getPosition() - b.getPosition());
 			// TODO: figure out how to calculate duration and type??
-			while (y >= 0) {
-				if (Arrays.stream(lengths).sum() == 0)
-					Arrays.fill(lengths, -1);
+			while ((pq.isEmpty() || collecting) && totalNotesInCurrMeasure != 0) {
+				collecting = true;
+
+				if (y > notes.size() - 1)
+					y = 0;
 
 				if (lengths[y] == 0) {
-					y--;
+					y++;
 					continue;
 				}
 
 				StringItem item = (StringItem) notes.get(y).get(x);
 
-				if (item.getClass() == Bar.class) {
-					if (++count % numStrings == 0) {
-						notes.forEach(l -> l.remove(0));
-						totalNotesInCurrMeasure = setNotesPerString(lengths);
-						barsNotSeen--;
-						currMeasure++;
-						count = 0;
-					}
-				} else if (item.getClass() == Note.class) {
+				if (item.getClass() == Note.class) {
 					Note note = (Note) item;
 					note.setMeasure(currMeasure);
-
-					if (previousItem != null && note.getPosition() == previousItem.getPosition()) {
-						note.setChord(true);
-						note.setType(1);
-						note.setDuration("1");
-					} else {
-						note.setChord(false);
-						note.setType(1);
-						note.setDuration("1");
-					}
-
 					pq.add(item);
+					notes.get(y).remove(item);
+					lengths[y]--;
+					totalNotesInCurrMeasure--;
 				}
-				notes.removeIf(l -> l.isEmpty());
-				y--;
+				y++;
 			}
-			y = notes.size() - 1;
+			collecting = false;
+			y = 0;
 
-			StringItem item = pq.poll();
-			previousItem = (StringItem) StringItem.deepClone(item);
+			// at this point we have collected the notes in the measure:
 
-			if (item == null)
+			if (totalNotesInCurrMeasure == 0) {
+				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(0));
+				totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
+				barsNotSeen--;
+				if (barsNotSeen == 0 || totalNotesInCurrMeasure != 0)
+					currMeasure++;
+			}
+
+			Note note = (Note) pq.poll();
+
+			if (note == null)
 				return null;
 
-			int string = item.getStringNum() - 1;
-			notes.get(string).remove(item);
-			lengths[item.getStringNum() - 1]--;
-			pq.clear();
-			return item;
+			if (previousNote != null && note.getPosition() == previousNote.getPosition()) {
+				note.setChord(true);
+				note.setType(1);
+				note.setDuration("1");
+			} else {
+				note.setChord(false);
+				note.setType(1);
+				note.setDuration("1");
+			}
+			previousNote = (Note) StringItem.deepClone(note);
+
+			return note;
 		}
 
-		private int setNotesPerString(int[] lengths) {
+		private int setNotesInCurrMeasure(int[] lengths) {
 			int len = 0;
-			int currMeasure = 0;
 			for (int i = notes.size() - 1; i >= 0; i--) {
 				LinkedList<StringItem> line = notes.get(i);
 				for (int j = 0; j < line.size(); j++) {
 					Object obj = line.get(j);
 					if (obj.getClass() == Bar.class) {
-						currMeasure++;
-					} else if (currMeasure != 1 && obj.getClass() == Note.class)
+						lengths[i] = len;
+						len = 0;
+						break;
+					} else if (obj.getClass() == Note.class)
 						len++;
 				}
-				lengths[i] = len;
-				currMeasure = 0;
-				len = 0;
 			}
 			return Arrays.stream(lengths).sum();
 		}
@@ -232,14 +318,32 @@ public class Score {
 	}
 
 	public static void main(String[] args) {
-		String input = "E|--8p5-------5----------------7-9-10-12-|-13---13p12-10----------9h12p9-----------|\r\n"
-				+ "B|--------6-------6-------9-10-----------|------10---------10------------11-8------|\r\n"
-				+ "G|---------------------------------------|------10---------10-----------------9----|\r\n"
-				+ "D|--------7-------7----------------------|--------------------------------------11-|\r\n"
-				+ "A|------------8-------7--------0---------|-------------0--------7---------0--------|\r\n"
-				+ "D|----0----------------------------------|--0--------------------------------------|\r\n" + "\r\n"
-				+ "";
+		String input = "e|--------2-----|-----3--------|-----------2--|-----------2--|--0-----0-----|\r\n"
+				+ "B|--------0-----|--------------|--------------|--1--3--------|-----1-----0--|\r\n"
+				+ "G|-----0--------|--------------|--------------|--------------|--------------|\r\n"
+				+ "D|--------------|--4-----------|--------------|--0--------2--|-----------4--|\r\n"
+				+ "A|-----2--3-----|--------------|--------------|--------------|--3-----3--3--|\r\n"
+				+ "E|--------------|--3-----2-----|--3--------3--|--0-----2-----|-----3--3--2--|\r\n" + "\r\n"
+				+ "e|-----2--------|--2-----------|-----0--------|-----0-----3--|--0-----------|\r\n"
+				+ "B|--0--0--------|-----0--------|-----3--------|--------------|-----------1--|\r\n"
+				+ "G|--------4-----|-----------0--|--------------|-----------0--|-----4--------|\r\n"
+				+ "D|--------2--4--|--------0-----|--0-----------|-----4--------|--4-----------|\r\n"
+				+ "A|-----------0--|--------------|--3--0-----0--|--------------|--------------|\r\n"
+				+ "E|--------------|-----0-----2--|-----0--------|--------------|--------3-----|\r\n" + "\r\n"
+				+ "e|--0-----------|-----------3--|--------------|--------------|--------0-----|\r\n"
+				+ "B|--------------|--3--3-----0--|--------3-----|--3--0--------|--------0--1--|\r\n"
+				+ "G|-----0--------|-----2--2-----|-----2--4--2--|--------------|-----2--4-----|\r\n"
+				+ "D|--------0--4--|--4-----------|--------------|-----0--------|-----2--------|\r\n"
+				+ "A|-----2-----0--|--0-----2--2--|-----------0--|-----3--0--0--|-----2--------|\r\n"
+				+ "E|-----0--2--0--|--------------|-----------3--|--2--0--3--0--|-----0--------|\r\n" + "\r\n"
+				+ "e|--------------|--0--------2--|-----------2--|--------------|--0-----3--2--|\r\n"
+				+ "B|--------------|--------1-----|--1-----------|--0-----3-----|--------------|\r\n"
+				+ "G|--4--0--4--2--|--4-----------|--------------|--------------|-----2--------|\r\n"
+				+ "D|--0--------0--|-----4--------|--4-----------|-----------2--|--2-----4-----|\r\n"
+				+ "A|--------2--2--|-----------2--|-----3--------|--0-----------|--------2-----|\r\n"
+				+ "E|--2-----------|--------------|--3--0--------|--------0--0--|-----------3--|\r\n" + "";
 
+		input += "\r\n";
 		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 		GuitarTabLexer lexer = null;
 		try {
@@ -257,9 +361,7 @@ public class Score {
 			SerializeScore ss = new SerializeScore();
 			Score sheet = ss.visit(root);
 
-			System.out.println("-----------------------");
 			System.out.println(sheet.toString());
-			System.out.println("-----------------------\n\n");
 
 			for (int i = 0; i < sheet.size(); i++) {
 				Iterator<StringItem> itr = sheet.staffIterator(i);
@@ -268,26 +370,9 @@ public class Score {
 					Note note = (Note) itr.next();
 					if (note == null)
 						continue;
-					System.out.println(note.getMeasure());
+					System.out.print(note.toString() + "(" + +note.getMeasure() + "," + note.getStringNum() + ") ");
 				}
-			}
-
-			SerializeScore ss2 = new SerializeScore();
-			Score sheet2 = ss2.visit(root);
-
-			System.out.println("-----------------------");
-			System.out.println(sheet2.toString());
-			System.out.println("-----------------------\n\n");
-
-			for (int i = 0; i < sheet2.size(); i++) {
-				Iterator<StringItem> itr = sheet2.staffIterator(i);
-
-				while (itr.hasNext()) {
-					Note note = (Note) itr.next();
-					if (note == null)
-						continue;
-					System.out.println(note.getMeasure());
-				}
+				System.out.println();
 			}
 		}
 	}

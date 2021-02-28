@@ -5,11 +5,11 @@ grammar GuitarTab;
 }
 
 sheet
-	: staff* EOF			
+	: (.*? staff .*?)* EOF			
 	;
-
+	
 staff								
-	: NEWLINE* string+ NEWLINE*
+	: NEWLINE? string+ NEWLINE?
 	;
 
 string
@@ -29,7 +29,6 @@ stringItems
 	| pulloff
 	| slide)* BAR)+				
 	;	
-
 
 slide
 	: fret ('s' fret)+				
@@ -58,7 +57,7 @@ fret
 /* Tokens */
 
 NOTE
-	: [A-G]'#'?
+	: [a-gA-G]'#'?
 	;
 	
 BAR

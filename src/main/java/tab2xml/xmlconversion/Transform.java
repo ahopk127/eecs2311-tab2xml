@@ -14,6 +14,7 @@ import tab2xml.model.Note;
 import tab2xml.model.Score;
 import tab2xml.model.Staff;
 import tab2xml.model.StringItem;
+import tab2xml.model.Tune;
 
 /**
  * The transformer which generates the XML output as a string.
@@ -70,6 +71,7 @@ public class Transform {
 
 	/**
 	 * Generate XML from data for selected instrument, Guitar.
+	 * 
 	 */
 	private void generateGuitar() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
@@ -116,7 +118,6 @@ public class Transform {
 	 * @param measures    the list of all the measures
 	 */
 	private void addNoteToMeasure(Note currNote, int currMeasure, ArrayList<XMLElement> measures) {
-		System.out.println(currMeasure);
 		if (measures.get(currMeasure) != null) {
 			XMLElement note = new XMLElement("note", musicSheet);
 
@@ -162,7 +163,6 @@ public class Transform {
 				technical.append(hammeron);
 
 			} else if (currNote.isStartPull()) {
-				System.out.println("created pull off");
 				XMLElement pulloff = new XMLElement("pull-off", musicSheet);
 				setNotationAttr(pulloff, currNote, "start", "P");
 				technical.append(pulloff);
@@ -190,6 +190,15 @@ public class Transform {
 				setNotationAttr(slide, currNote, "stop", "");
 				notations.append(slide);
 			}
+			// TODO: harmonic
+			//			else if (currNote.isHarmonic()) {
+			//				XMLElement harmonic = new XMLElement("harmonic", musicSheet);
+			//				harmonic.setAttribute("default-x", "3");
+			//				harmonic.setAttribute("default-y", "24");
+			//				harmonic.setAttribute("placement", "above");
+			//				harmonic.setAttribute("print-object", "yes");
+			//				technical.append(harmonic);
+			//			}
 
 			XMLElement string = new XMLElement("string", musicSheet);
 			string.setText(currNote.getString());
@@ -203,6 +212,12 @@ public class Transform {
 		}
 	}
 
+	/**
+	 * @param note      the note to add a slur to
+	 * @param type      the type of slur
+	 * @param placement the placement of the slur
+	 * @return the slur XML element
+	 */
 	private XMLElement slur(Note note, String type, String placement) {
 		XMLElement slur = new XMLElement("slur", musicSheet);
 		slur.setAttribute("number", Integer.toString(note.getStringNum()));
@@ -211,6 +226,12 @@ public class Transform {
 		return slur;
 	}
 
+	/**
+	 * @param item the item to set attributes for
+	 * @param note the note to add the item to
+	 * @param type the type of item
+	 * @param text the text content
+	 */
 	private void setNotationAttr(XMLElement item, Note note, String type, String text) {
 		item.setAttribute("number", Integer.toString(note.getStringNum()));
 		item.setAttribute("type", type);
@@ -226,7 +247,10 @@ public class Transform {
 	private void setDefaults(XMLElement root) {
 		root.setAttribute("version", "3.1");
 		musicSheet.append(root);
-
+		XMLElement work = new XMLElement("work", musicSheet);
+		XMLElement workTitle = new XMLElement("work-title", musicSheet);
+		work.append(workTitle);
+		workTitle.setText("TAB2XML v0.1.1 - Group 2 Midterm Submission");
 		XMLElement partList = new XMLElement("part-list", musicSheet);
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");
@@ -236,7 +260,7 @@ public class Transform {
 		scorePart.append(partName);
 		partList.append(scorePart);
 
-		root.append(partList);
+		root.append(work, partList);
 	}
 
 	/**
@@ -280,9 +304,9 @@ public class Transform {
 			XMLElement staffTuning = new XMLElement("staff-tuning", musicSheet);
 			staffTuning.setAttribute("line", Integer.toString(i + 1));
 			XMLElement tuningStep = new XMLElement("tuning-step", musicSheet);
-			tuningStep.setText(Instrument.standardTuningGuitar[i]);
+			tuningStep.setText(staff.getStrings().get(i).getTune());
 			XMLElement tuningOctave = new XMLElement("tuning-octave", musicSheet);
-			tuningOctave.setText(Instrument.tuningOctaveGuitar[i]);
+			tuningOctave.setText(Tune.standardTuning[5 - (i % 6)][1]);
 			staffTuning.append(tuningStep, tuningOctave);
 			staffDetails.append(staffTuning);
 		}
@@ -292,6 +316,7 @@ public class Transform {
 
 	/**
 	 * Generate XML from score for selected instrument, Drum.
+	 * 
 	 */
 	private void generateDrum() {
 		generateSamplePlaceHolder();
@@ -299,12 +324,13 @@ public class Transform {
 
 	/**
 	 * Generate XML from score for selected instrument, Bass.
+	 * 
 	 */
 	private void generateBass() {
 		generateSamplePlaceHolder();
 	}
 
-	/* template xml placeholder */
+	/* template XML placeholder */
 	private void generateSamplePlaceHolder() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
 		musicSheet.append(root);
