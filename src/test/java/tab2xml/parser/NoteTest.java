@@ -84,5 +84,6 @@ class NoteTest {
 				"The Note is invalid.");
 		assertTrue(thrown.getMessage().contains("The Note is invalid."));
 	}
+	
 
 }
