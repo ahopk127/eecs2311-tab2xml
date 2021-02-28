@@ -49,6 +49,11 @@ public class HammerPull extends StringItem {
 	public int getStringNum() {
 		return start.getStringNum();
 	}
+	
+	@Override
+	public int getNoteCount() {
+		return getNotes().size();
+	}
 
 	@Override
 	public String toString() {

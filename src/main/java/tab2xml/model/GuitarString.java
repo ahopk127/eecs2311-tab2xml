@@ -8,25 +8,30 @@ public class GuitarString extends StaffItem {
 	 * 
 	 */
 	private static final long serialVersionUID = -5274699295630375450L;
-	private ArrayList<StringItem> items;
+	private ArrayList<StringItem> stringItems;
 	private String tune;
 	private static int count = 0;
 	private int numMeasures;
 	private int stringNum;
 
 	public GuitarString() {
-		items = new ArrayList<>();
-		count = getCount() + 1;
+		stringItems = new ArrayList<>();
+		setCount(count + 1);
 		this.stringNum = getCount();
 	}
 
+	public GuitarString(int stringNum) {
+		stringItems = new ArrayList<>();
+		this.stringNum = stringNum;
+	}
+
 	public void addItem(StringItem item) {
-		items.add(item);
+		stringItems.add(item);
 	}
 
 	public void addAllItems(List<StringItem> items) {
 		for (StringItem item : items)
-			this.items.add(item);
+			this.stringItems.add(item);
 	}
 
 	public String getTune() {
@@ -53,8 +58,17 @@ public class GuitarString extends StaffItem {
 		this.numMeasures = numMeasures;
 	}
 
+	public int getNoteCount() {
+		int count = 0;
+		for (int i = 1; i < stringItems.size(); i++) {
+			StringItem item = stringItems.get(i);
+			count += item.getNoteCount();
+		}
+		return count;
+	}
+
 	public ArrayList<StringItem> getItems() {
-		return items;
+		return stringItems;
 	}
 
 	public static int getCount() {
@@ -63,5 +77,21 @@ public class GuitarString extends StaffItem {
 
 	public static void setCount(int count) {
 		GuitarString.count = count;
+	}
+
+	public List<StringItem> getStringItems() {
+		return stringItems;
+	}
+
+	public boolean add(StringItem item) {
+		if (item != null)
+			stringItems.add(item);
+		return true;
+	}
+
+	public boolean addAll(List<StringItem> stringItems) {
+		for (StringItem item : stringItems)
+			add(item);
+		return true;
 	}
 }

@@ -31,6 +31,11 @@ public class Harmonic extends StringItem {
 	}
 
 	@Override
+	public int getNoteCount() {
+		return getNotes().size();
+	}
+
+	@Override
 	public String toString() {
 		if (note == null)
 			return "";

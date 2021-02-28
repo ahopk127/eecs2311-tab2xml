@@ -47,6 +47,12 @@ public abstract class StringItem implements Serializable, Comparable<StringItem>
 	 */
 	public abstract int getStringNum();
 
+	/**
+	 * Return the string number of notes in this item.
+	 * 
+	 * @return the number of notes in this item
+	 */
+	public abstract int getNoteCount();
 	
 	/**
 	 *{@inheritDoc}

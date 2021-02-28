@@ -30,4 +30,9 @@ public class StringItemsCollector extends StringItem {
 	public int getStringNum() {
 		return 0;
 	}
+	
+	@Override
+	public int getNoteCount() {
+		return 0;
+	}
 }

@@ -7,7 +7,7 @@ public class Tune extends StringItem {
 	private static final long serialVersionUID = 7283815230989809053L;
 	public static String standardTuning[][] = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
 			{ "E", "2" } };
-	
+
 	private String tune;
 	private boolean isStandard;
 	private int stringNum;
@@ -37,6 +37,11 @@ public class Tune extends StringItem {
 	@Override
 	public int getStringNum() {
 		return stringNum;
+	}
+
+	@Override
+	public int getNoteCount() {
+		return 0;
 	}
 
 	@Override

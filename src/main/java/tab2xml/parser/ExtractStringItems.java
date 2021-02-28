@@ -1,7 +1,6 @@
 package tab2xml.parser;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
 
 import org.antlr.v4.runtime.Token;
@@ -29,37 +28,32 @@ import tab2xml.model.*;
  *
  */
 public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
-	private List<StringItem> stringItems;
 	private GuitarString s;
 
 	/**
 	 * Construct a sample parse tree visitor from a specified {@code GuitarString}
 	 * and ({@code StringContext}.
 	 * 
-	 * @param s  the guitar string model
+	 * @param string  the guitar string model
 	 * @param sc the corresponding string context
 	 */
-	public ExtractStringItems(GuitarString s, StringContext sc) {
-		stringItems = new ArrayList<>();
-		this.s = s;
+	public ExtractStringItems(GuitarString string, StringContext sc) {
+		this.s = string;
 		List<StringItem> visited = new ArrayList<>();
 
 		Tune tune = (Tune) visit(sc.getChild(0));
-		s.setTune(tune.getTune());
+		string.setTune(tune.getTune());
 		visited.add(tune);
 		visited.add(visit(sc.getChild(1)));
 
 		for (StringItem item : visited) {
 			if (item.getClass() == Tune.class)
-				stringItems.add(item);
+				string.add(item);
 			else if (item.getClass() == StringItemsCollector.class) {
 				StringItemsCollector coll = (StringItemsCollector) item;
-				stringItems.addAll(coll.getStringItems());
+				string.addAll(coll.getStringItems());
 			}
 		}
-
-		stringItems = stringItems.stream().filter(i -> i != null).collect(Collectors.toList());
-		s.addAllItems(stringItems);
 	}
 
 	/**
@@ -68,7 +62,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	 * @return the list of string items extracted
 	 */
 	public List<StringItem> getStringItems() {
-		return stringItems;
+		return s.getStringItems();
 	}
 
 	@Override
@@ -159,7 +153,9 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		int column = token.getCharPositionInLine() + length;
 		String value = ctx.getChild(0).getText();
 		Fret fret = new Fret(value, column);
-		Note note = new Note(fret, s);
+		Note note = new Note(s.getTune(), fret.getValue());
+		note.setPosition(fret.getPosition());
+		note.setString(Integer.toString(s.getStringNum()));
 		note.setOctave(Tune.standardTuning[(s.getStringNum() - 1) % 6][1]);
 		return note;
 	}

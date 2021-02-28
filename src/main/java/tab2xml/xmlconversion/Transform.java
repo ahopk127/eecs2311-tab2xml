@@ -3,13 +3,13 @@ package tab2xml.xmlconversion;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 
 import tab2xml.parser.Instrument;
+import tab2xml.Main;
 import tab2xml.model.Note;
 import tab2xml.model.Score;
 import tab2xml.model.Staff;
@@ -95,11 +95,9 @@ public class Transform {
 		staff.setLowerBeat("4");
 		setStaffDefaults(staff, measures.get(0));
 
-		for (int i = 0; i < sheet.size(); i++) {
-			Iterator<StringItem> itr = sheet.staffIterator(i);
-
-			while (itr.hasNext()) {
-				Note note = (Note) itr.next();
+		for (Staff st : sheet.getStaffs()) {
+			for (StringItem item : st) {
+				Note note = (Note) item;
 				if (note == null)
 					continue;
 				addNoteToMeasure(note, note.getMeasure(), measures);
@@ -203,7 +201,7 @@ public class Transform {
 			XMLElement string = new XMLElement("string", musicSheet);
 			string.setText(currNote.getString());
 			XMLElement fret = new XMLElement("fret", musicSheet);
-			fret.setText(currNote.getFret().getValue());
+			fret.setText(currNote.getFret());
 			technical.append(string, fret);
 			notations.append(technical);
 			note.append(pitch, duration, voice, type, notations);
@@ -250,7 +248,7 @@ public class Transform {
 		XMLElement work = new XMLElement("work", musicSheet);
 		XMLElement workTitle = new XMLElement("work-title", musicSheet);
 		work.append(workTitle);
-		workTitle.setText("TAB2XML v0.1.1 - Group 2 Midterm Submission");
+		workTitle.setText("TAB2XML " + Main.PROGRAM_VERSION + " - Group 2");
 		XMLElement partList = new XMLElement("part-list", musicSheet);
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");

@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -17,6 +15,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.exceptions.InvalidInputException;
+import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.model.Score;
 import tab2xml.listeners.*;
 
@@ -62,7 +61,7 @@ public class Processor {
 
 	public Score processGuitar() throws InvalidInputException {
 		preprocessGuitar();
-		input += "\r\n\r\n";
+		input += "\r\n";
 
 		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 		GuitarTabLexer lexer = null;
@@ -89,17 +88,11 @@ public class Processor {
 		// TODO alert user. LIFO concept will be used to display errors in order of occurrence
 		LinkedList<Token> errors = listener.getErrNodes();
 
-		System.out.println("there are " + errors.size() + " errors");
-
 		if (!errors.isEmpty())
 			showErrors(errors);
 
 		SerializeScore ss = new SerializeScore();
 		Score sheet = ss.visit(root);
-
-		System.out.println("parser is successful: ");
-		System.out.println(sheet.toString());
-
 		return sheet;
 	}
 
@@ -137,19 +130,9 @@ public class Processor {
 		*/
 	}
 
-	private void showErrors(LinkedList<Token> errors) throws InvalidInputException {
-		StringBuilder sb = new StringBuilder();
-		while (!errors.isEmpty()) {
-			Token t = errors.pop();
-
-			int col = t.getCharPositionInLine();
-			int line = t.getLine();
-			String token = t.getText();
-
-			// TODO: make mode detailed error message after we retrieve more data
-			sb.append("Undexpected: \"" + token + "\"" + "(" + line + ":" + col + ")");
-			sb.append("\n");
-		}
-		throw new InvalidInputException(sb.toString());
+	private void showErrors(LinkedList<Token> errors) throws UnparseableInputException {
+		UnparseableInputException e =  UnparseableInputException.get(errors);
+		errors.clear();
+		throw e;
 	}
 }
