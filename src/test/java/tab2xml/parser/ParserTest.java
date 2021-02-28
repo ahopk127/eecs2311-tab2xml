@@ -264,7 +264,6 @@ class ParserTest {
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			GuitarTabParser parser = new GuitarTabParser(tokens);
 
-
 			ParseTree root = parser.hampullchain();
 			ParseTree root2 = parser.staff();
 			root.getChild(0);
@@ -285,7 +284,7 @@ class ParserTest {
 			}
 			
 		}
-
+ 
 	}
 
 	@Test
