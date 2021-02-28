@@ -16,16 +16,6 @@ public final class UnparseableInputException extends InvalidInputException {
 	private static final long serialVersionUID = 2307637151275887207L;
 	
 	/**
-	 * Creates an error message from an invalid token.
-	 *
-	 * @since 2021-02-28
-	 */
-	private static final String singleErrorMessage(Token error) {
-		return String.format("Invalid token \"%s\" at line %d, column %d",
-				error.getText(), error.getLine(), error.getCharPositionInLine());
-	}
-	
-	/**
 	 * Generates an error message from a list of invalid tokens.
 	 *
 	 * @since 2021-02-28
@@ -44,6 +34,16 @@ public final class UnparseableInputException extends InvalidInputException {
 	 */
 	public static UnparseableInputException get(List<Token> errors) {
 		return new UnparseableInputException(new LinkedList<>(errors));
+	}
+	
+	/**
+	 * Creates an error message from an invalid token.
+	 *
+	 * @since 2021-02-28
+	 */
+	private static final String singleErrorMessage(Token error) {
+		return String.format("Invalid token \"%s\" at line %d, column %d",
+				error.getText(), error.getLine(), error.getCharPositionInLine());
 	}
 	
 	/**
@@ -69,4 +69,5 @@ public final class UnparseableInputException extends InvalidInputException {
 	public final List<Token> getErrors() {
 		return Collections.unmodifiableList(this.errors);
 	}
+	
 }

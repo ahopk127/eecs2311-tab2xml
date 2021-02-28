@@ -139,6 +139,8 @@ public class Processor {
 	}
 
 	private void showErrors(LinkedList<Token> errors) throws UnparseableInputException {
-		throw UnparseableInputException.get(errors);
+		UnparseableInputException e =  UnparseableInputException.get(errors);
+		errors.clear();
+		throw e;
 	}
 }

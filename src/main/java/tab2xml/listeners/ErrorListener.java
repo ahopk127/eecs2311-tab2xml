@@ -8,7 +8,6 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import tab2xml.antlr.GuitarTabBaseListener;
 
 public class ErrorListener extends GuitarTabBaseListener {
-	// TODO: implement flexible error parsing for GUI.
 	private static LinkedList<Token> errors = new LinkedList<>();
 
 	@Override
