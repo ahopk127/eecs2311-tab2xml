@@ -43,6 +43,11 @@ public class Slide extends StringItem {
 	}
 
 	@Override
+	public int getNoteCount() {
+		return getNotes().size();
+	}
+
+	@Override
 	public String toString() {
 		if (start == null)
 			return "";

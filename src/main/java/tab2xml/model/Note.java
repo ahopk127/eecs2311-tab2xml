@@ -17,7 +17,10 @@ public class Note extends StringItem {
 	 */
 	private static final long serialVersionUID = -7423778159486375067L;
 
-	private final NoteType note;
+	/**
+	 * The note type of this note.
+	 */
+	private NoteType note;
 
 	/*
 	 * Pitch attributes.
@@ -36,15 +39,16 @@ public class Note extends StringItem {
 	 * Technical attributes.
 	 */
 	private String string;
-	private Fret fret;
+	private String fret;
 	private int type;
 
 	/*
-	 * Position of the note.
+	 * Other data.
 	 */
 	private int position;
 	private int measure;
-	private GuitarString s;
+	private String tune;
+
 	private boolean isChord;
 	private boolean isStartHammer;
 	private boolean isStopHammer;
@@ -62,26 +66,34 @@ public class Note extends StringItem {
 	private boolean isHarmonic;
 
 	/**
-	 * Construct a note object based on type and a given step.
-	 * 
-	 * @param fret the fret number of this note
-	 * @param s the guitar string of this note
+	 * Construct a note object based on tune and a given fret.
+	 *
+	 * @param tune the tune of the string this note is on
+	 * @param fret the fret of this note
 	 */
-	public Note(Fret fret, GuitarString s) {
+	public Note(String tune, String fret) {
+		this.tune = tune;
 		this.fret = fret;
-		this.s = s;
+		this.note = setNoteType();
+	}
+
+	/**
+	 * Construct a note object based on type of note.
+	 * 
+	 * @param type the type of this note
+	 */
+	public Note(NoteType type) {
+		this.note = type;
+		this.step = type.getValue();
+		this.note = type;
+	}
+
+	public Note(Fret fret, GuitarString guitarString) {
+		this.fret = fret.getValue();
+		this.tune = guitarString.getTune();
 		this.note = setNoteType();
 		this.position = fret.getPosition();
-		this.string = Integer.toString(s.getStringNum());
-	}
-
-	public Note(NoteType note) {
-		this.note = note;
-	}
-
-	public Note(NoteType note, String step) {
-		this.note = note;
-		this.step = step;
+		this.string = Integer.toString(guitarString.getStringNum());
 	}
 
 	/**
@@ -170,7 +182,7 @@ public class Note extends StringItem {
 	 * 
 	 * @return the fret attribute of this note
 	 */
-	public Fret getFret() {
+	public String getFret() {
 		return fret;
 	}
 
@@ -179,7 +191,7 @@ public class Note extends StringItem {
 	 * 
 	 * @param fret the value to set the fret attribute
 	 */
-	public void setFret(Fret fret) {
+	public void setFret(String fret) {
 		this.fret = fret;
 	}
 
@@ -375,7 +387,7 @@ public class Note extends StringItem {
 
 	@Override
 	public int getStringNum() {
-		return s.getStringNum();
+		return Integer.parseInt(string);
 	}
 
 	/**
@@ -386,6 +398,11 @@ public class Note extends StringItem {
 	@Override
 	public int getPosition() {
 		return position;
+	}
+
+	@Override
+	public int getNoteCount() {
+		return 1;
 	}
 
 	/**
@@ -401,28 +418,28 @@ public class Note extends StringItem {
 	/**
 	 * Construct a note from the ASCII tablature.
 	 * 
-	 * @param input string input(<em>"tune + fret"</em>)
+	 * @param input  string input(<em>"tune + fret"</em>)
+	 * @param string the string this note is on
 	 * @return a note based on the properties of the input
 	 * @throws InvalidTokenException if the parsed note type doesn't match the
 	 *                               parsed step
 	 */
-	public static Note toNote(String input) throws InvalidTokenException {
+	public static Note toNote(String input, int string) throws InvalidTokenException {
 		Pattern p = Pattern.compile("^[a-gA-G]\\d+$");
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException("The Note is invalid.");
 
 		String tune = input.substring(0, 1);
 		tune = tune.toUpperCase();
-		int fret = Integer.parseInt(input.substring(1));
+		String fret = input.substring(1);
 
 		Note note = new Note(Note.getNoteType(tune));
-		int index = (note.getIndex() + fret) % 12;
+		int index = (note.getIndex() + Integer.parseInt(fret)) % 12;
 
 		NoteType noteType = NoteType.values()[index];
-		String step = noteType.getValue();
-
-		Note value = new Note(noteType, step);
-		return value;
+		Note noteResult = new Note(noteType);
+		noteResult.setString(Integer.toString(string));
+		return noteResult;
 	}
 
 	/**
@@ -441,17 +458,16 @@ public class Note extends StringItem {
 	}
 
 	/**
-	 * Construct a note from the ASCII tablature.
+	 * Set note type from a note already defined with a step and fret
 	 * 
-	 * @param input string input(<em>"tune + fret"</em>)
-	 * @return a note based on the properties of the input
+	 * @return the note type of this note
 	 * @throws InvalidTokenException if the parsed note type doesn't match the
 	 *                               parsed step
 	 */
 	private NoteType setNoteType() {
-		String tune = s.getTune();
+		String tune = this.tune;
 		tune = tune.toUpperCase();
-		int fretNum = fret.toInt();
+		int fretNum = Integer.parseInt(fret);
 
 		Pattern p = Pattern.compile("^[A-G]\\d+$");
 		String input = tune + fretNum;
@@ -467,5 +483,4 @@ public class Note extends StringItem {
 
 		return noteType;
 	}
-
 }

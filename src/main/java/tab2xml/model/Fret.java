@@ -47,4 +47,9 @@ public class Fret extends StringItem {
 	public int getStringNum() {
 		return stringNum;
 	}
+	
+	@Override
+	public int getNoteCount() {
+		return 0;
+	}
 }

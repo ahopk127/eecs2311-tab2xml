@@ -201,7 +201,7 @@ public class Transform {
 			XMLElement string = new XMLElement("string", musicSheet);
 			string.setText(currNote.getString());
 			XMLElement fret = new XMLElement("fret", musicSheet);
-			fret.setText(currNote.getFret().getValue());
+			fret.setText(currNote.getFret());
 			technical.append(string, fret);
 			notations.append(technical);
 			note.append(pitch, duration, voice, type, notations);

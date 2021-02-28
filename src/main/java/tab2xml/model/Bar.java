@@ -28,7 +28,12 @@ public class Bar extends StringItem {
 	public int getStringNum() {
 		return stringNum;
 	}
-
+	
+	@Override
+	public int getNoteCount() {
+		return 0;
+	}
+	
 	@Override
 	public String toString() {
 		return "|";

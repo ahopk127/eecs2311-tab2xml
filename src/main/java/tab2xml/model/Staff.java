@@ -69,8 +69,9 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 	 */
 	public int getNoteCount() {
 		int count = 0;
-		for (GuitarString string : strings)
+		for (GuitarString string : strings) {
 			count += string.getNoteCount();
+		}
 		return count;
 	}
 
