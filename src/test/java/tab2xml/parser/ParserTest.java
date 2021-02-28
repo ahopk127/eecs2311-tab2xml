@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
+import tab2xml.antlr.GuitarTabParser.StringContext;
+import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.model.Fret;
 import tab2xml.model.GuitarString;
 import tab2xml.model.HammerOn;
@@ -291,20 +293,31 @@ class ParserTest {
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			GuitarTabParser parser = new GuitarTabParser(tokens);
 
-			ParseTree root = parser.staff();
-			// expected strings, measures, tuning
-			
-			//this takes a list of strings (empty at start)
+			ParseTree root = parser.hampullchain();
+			ParseTree root2 = parser.staff();
+			root.getChild(0);
+			root.getChild(root.getChildCount() - 1);
 			List<ArrayList<Staff>> stringList = new ArrayList<>();
 			ExtractStaffs estaff = new ExtractStaffs(stringList);
-			String[][] expectedTuning = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
-					{ "E", "2" } };
+			ParseTree staff = (ParseTree) (estaff.visit(root2));
+			staff.getChild(1);
 			
-			for (int i = 0; i < stringList.size(); i++) {
-				GuitarString gs = (GuitarString)(estaff.visit(root.getChild(i)));
-				String tune = gs.getTune();
-				assertEquals(expectedTuning[i], tune);
+			
+			for (int i = 0; i < staff.getChildCount(); i++) {
+					GuitarString gs = (GuitarString)(estaff.visit(root.getChild(i)));
+					ExtractStringItems eItems = new ExtractStringItems(gs, (StringContext) staff.getChild(i));
+					staff.getChild(i);
+					//StringItemsContext sic = eItems.visit(staff.getChild(i).getChild(1));
+					
+				
 			}
+			
+				
+				
+			
+			
+			
+		
 		}
 		
 	}
