@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 
 /**
@@ -100,6 +101,18 @@ public interface View {
 	 * @since 2021-01-25
 	 */
 	Instrument getSelectedInstrument();
+	
+	/**
+	 * This method is run when the backend code throws an
+	 * {@code UnparseableInputException}. It should highlight the exception to
+	 * the user.
+	 *
+	 * @param error error, with all available details about the parsing.
+	 * @since 2021-02-28
+	 */
+	default void onParseError(UnparseableInputException error) {
+		this.showErrorMessage("Input Parsing Error", error.getMessage());
+	}
 	
 	/**
 	 * Prompt the user for a filepath, and returns the filepath. If the user

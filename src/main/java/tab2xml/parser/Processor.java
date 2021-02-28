@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.exceptions.InvalidInputException;
+import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.model.Score;
 import tab2xml.listeners.*;
 
@@ -137,19 +138,7 @@ public class Processor {
 		*/
 	}
 
-	private void showErrors(LinkedList<Token> errors) throws InvalidInputException {
-		StringBuilder sb = new StringBuilder();
-		while (!errors.isEmpty()) {
-			Token t = errors.pop();
-
-			int col = t.getCharPositionInLine();
-			int line = t.getLine();
-			String token = t.getText();
-
-			// TODO: make mode detailed error message after we retrieve more data
-			sb.append("Undexpected: \"" + token + "\"" + "(" + line + ":" + col + ")");
-			sb.append("\n");
-		}
-		throw new InvalidInputException(sb.toString());
+	private void showErrors(LinkedList<Token> errors) throws UnparseableInputException {
+		throw UnparseableInputException.get(errors);
 	}
 }
