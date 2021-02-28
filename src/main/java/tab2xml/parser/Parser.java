@@ -26,7 +26,10 @@ public class Parser {
 	 * @throws InvalidInputException if invalid input is parsed
 	 * 
 	 */
-	public Parser(String input, Instrument instrument) throws InvalidTokenException, InvalidInputException {
+	public Parser(String input, Instrument instrument) throws InvalidInputException {
+		// reset the number of measures before every conversion
+		Score.resetMeasureCount();
+
 		processor = new Processor(input, instrument);
 		sheet = processor.process();
 		this.instrument = instrument;

@@ -92,11 +92,11 @@ public final class Presenter {
 			musicXMLOutput = parser.parse();
 		} catch (final InvalidInputException e) {
 			e.printStackTrace();
-			this.view.showErrorMessage("Error: ", e.getMessage());
+			this.view.showErrorMessage("Error: Invalid Input", e.getMessage());
 			return Optional.empty();
 		} catch (final InvalidTokenException e) {
 			e.printStackTrace();
-			this.view.showErrorMessage("Error: Invalid Token\n", e.getMessage());
+			this.view.showErrorMessage("Error: Invalid Token", e.getMessage());
 			return Optional.empty();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -113,7 +113,7 @@ public final class Presenter {
 	 * 
 	 * @param showInView whether the converted MusicXML should be shown in the
 	 *                   View and saved, or just saved
-	 * 
+	 * 						
 	 * @since 2021-02-25
 	 */
 	public void convertAndSave(boolean showInView) {
@@ -155,7 +155,7 @@ public final class Presenter {
 	 * 
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
-	 * 
+	 * 													
 	 * @since 2021-02-25
 	 */
 	public void loadFromFile() {
