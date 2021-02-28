@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.antlr.GuitarTabParser.StringContext;
-import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.model.Fret;
 import tab2xml.model.GuitarString;
 import tab2xml.model.*;
@@ -264,6 +263,7 @@ class ParserTest {
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			GuitarTabParser parser = new GuitarTabParser(tokens);
 
+			
 			ParseTree root = parser.hampullchain();
 			ParseTree root2 = parser.staff();
 			root.getChild(0);
@@ -284,7 +284,6 @@ class ParserTest {
 			}
 			
 		}
- 
 	}
 
 	@Test
