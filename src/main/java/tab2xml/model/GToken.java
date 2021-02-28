@@ -1,7 +1,5 @@
 package tab2xml.model;
 
-import tab2xml.exceptions.InvalidTokenException;
-
 /**
  * An atomic token in the ASCII tablature
  * 
@@ -25,8 +23,6 @@ public class GToken {
 	 * 
 	 * @param type the type of token
 	 * @param data the contents of the token
-	 * @throws InvalidTokenException thrown if there is a mismatch between data and
-	 *                               the token type
 	 */
 	public GToken(TokenType type, String data){
 		this.type = type;

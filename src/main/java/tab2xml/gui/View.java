@@ -87,8 +87,10 @@ public interface View {
 	
 	/**
 	 * Gets the text outputted to the user. This method is optional.
-	 * 
-	 * @implNote This method is only used by the file-writing mechanism.
+	 * <p>
+	 * <b>Implementation Note:</b> This method is only used by the file-writing
+	 * mechanism.
+	 *
 	 * @since 2021-01-29
 	 * @throws UnsupportedOperationException if the implementation does not
 	 *                                       support this method
@@ -130,7 +132,9 @@ public interface View {
 	/**
 	 * Sets the view's input text to {@code text}. This method is optional.
 	 * 
-	 * @implNote This method is only used by the file-reading mechanism.
+	 * <p>
+	 * <b>Implementation Note:</b> This method is only used by the file-reading
+	 * mechanism.
 	 *
 	 * @since 2021-01-29
 	 * @throws UnsupportedOperationException if the implementation does not
@@ -149,8 +153,10 @@ public interface View {
 	 * Sets the view's selected instrument to {@code instrument}. This method is
 	 * optional.
 	 * 
-	 * @implNote This method is currently unused, but is planned to be used in
-	 *           the future by instrument auto-detection.
+	 * <p>
+	 * <b>Implementation Note:</b> This method is currently unused, but is
+	 * planned to be used in the future by instrument auto-detection.
+	 *
 	 * @since 2021-01-29
 	 * @throws UnsupportedOperationException if the implementation does not
 	 *                                       support this method
