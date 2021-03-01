@@ -56,7 +56,7 @@ It is fairly easy to use, but a full instruction manual can be found at [[./Docu
           D|--------------------------------------------|--------------------------------------|
          
 
-- Corresponding rendered XML (*via OpenSheetMusicDisplay*)
+* Corresponding rendered XML (*via OpenSheetMusicDisplay*)
 #+CAPTION: Sample Output Chords
 [[./Screenshots/sample-output-chords.png]]
 

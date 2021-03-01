@@ -10,18 +10,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.jupiter.api.Test;
 
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.antlr.GuitarTabParser.StringContext;
-import tab2xml.model.Fret;
-import tab2xml.model.GuitarString;
+import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.model.*;
 
 class ParserTest {
@@ -84,6 +84,8 @@ class ParserTest {
 					"G", "F#", "B", "F#", "G" };
 			
 			assertTrue(4 == sheet.size());
+			
+			
 		}
 		
 		
@@ -115,25 +117,17 @@ class ParserTest {
 			List<ArrayList<Staff>> stringList = new ArrayList<>();
 			ExtractStaffs estaff = new ExtractStaffs(stringList);
 
-			String[][] expectedTuning = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
-					{ "E", "2" } };
-
 			Staff staff = (Staff) (estaff.visit(root));
 			assertEquals(6, staff.size());
 			assertEquals(2, staff.numberOfMeasures());
-			for (int i = 0; i < stringList.size(); i++) {
-				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
-				String tune = gs.getTune();
-				assertEquals(expectedTuning[i], tune);
-
-			}
+			
 
 		}
 
 	}
 
 	@Test
-	void testStrings() {
+	void testTuning() {
 		String input = "|-----------0-----|-0---------------|\r\n" + "|---------0---0---|-0---------------|\r\n"
 				+ "|-------1-------1-|-1---------------|\r\n" + "|-----2-----------|-2---------------|\r\n"
 				+ "|---2-------------|-2---------------|\r\n" + "|-0---------------|-0---------------|";
@@ -167,41 +161,6 @@ class ParserTest {
 		}
 	}
 
-	@Test
-	void testStringItems() {
-
-		String input = "|-----------0-----|-0---------------|\r\n" + "|---------0---0---|-0---------------|\r\n"
-				+ "|-------1-------1-|-1---------------|\r\n" + "|-----2-----------|-2---------------|\r\n"
-				+ "|---2-------------|-2---------------|\r\n" + "|-0---------------|-0---------------|";
-		input += "\r\n";
-		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-		GuitarTabLexer lexer = null;
-		try {
-			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (lexer != null) {
-
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			GuitarTabParser parser = new GuitarTabParser(tokens);
-
-			ParseTree root = parser.staff();
-			// expected strings, measures, tuning
-
-			//this takes a list of strings (empty at start)
-			List<ArrayList<Staff>> stringList = new ArrayList<>();
-			ExtractStaffs estaff = new ExtractStaffs(stringList);
-			String[][] expectedTuning = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
-					{ "E", "2" } };
-
-			for (int i = 0; i < stringList.size(); i++) {
-				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
-				String tune = gs.getTune();
-				assertEquals(expectedTuning[i], tune);
-			}
-		}
-	}
 
 	@Test
 	void stringItemCompareTo() {
@@ -237,76 +196,131 @@ class ParserTest {
 		stringItems.add(note5);
 		stringItems.add(note6);
 		Collections.sort(stringItems);
-		System.out.println(stringItems);
+		//System.out.println(stringItems);
 		String[] expected = { "E", "A", "D", "G", "B", "E" };
 		assertEquals(Arrays.toString(expected), stringItems.toString());
 	}
-
-	@Test
-	void testHammerPull() {
-		String input = "E|--10h12p10---0-------0--------------------|-----------------------------------|\r\n"
-				+ "		B|-------------0-------0-----0-2-3s10-----8-|-8h10p8--7---------------5---------|\r\n"
-				+ "		G|---------0--------------------------------|---------------------------6-------|\r\n"
-				+ "		D|----------------------------------------9-|-9---------7---------------5-------|\r\n"
-				+ "		A|------------------------------------------|-0-----------------0---------------|\r\n"
-				+ "		D|-----------------5-------2----------------|-----------------------------------|";
-		input += "\r\n";
-		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-		GuitarTabLexer lexer = null;
-		try {
-			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (lexer != null) {
-
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			GuitarTabParser parser = new GuitarTabParser(tokens);
-
-
-			ParseTree root = parser.hampullchain();
-			ParseTree root2 = parser.staff();
-			root.getChild(0);
-			root.getChild(root.getChildCount() - 1);
-			List<ArrayList<Staff>> stringList = new ArrayList<>();
-			ExtractStaffs estaff = new ExtractStaffs(stringList);
-			ParseTree staff = (ParseTree) (estaff.visit(root2));
-			staff.getChild(1);
-			
-			
-			for (int i = 0; i < staff.getChildCount(); i++) {
-					GuitarString gs = (GuitarString)(estaff.visit(root.getChild(i)));
-					ExtractStringItems eItems = new ExtractStringItems(gs, (StringContext) staff.getChild(i));
-					staff.getChild(i);
-					//StringItemsContext sic = eItems.visit(staff.getChild(i).getChild(1));
-					
-				
-			}
-			
-		}
-	}
-
-	@Test
-	void testHammerOn() {
-
-	}
-
-	@Test
-	void testPullOff() {
-
-	}
-
-	@Test
-	void testHarmonic() {
-	}
-
-	@Test
-	void testFret() {
-
-	}
-
-	@Test
-	void testDeepClone() {
-
-	}
 }
+//	@Test
+//	void testHammerPull() {
+//		String input = "E|--10h12p10---0-------0--------------------|-----------------------------------|\r\n"
+//				+ "		B|-------------0-------0-----0-2-3s10-----8-|-8h10p8--7---------------5---------|\r\n"
+//				+ "		G|---------0--------------------------------|---------------------------6-------|\r\n"
+//				+ "		D|----------------------------------------9-|-9---------7---------------5-------|\r\n"
+//				+ "		A|------------------------------------------|-0-----------------0---------------|\r\n"
+//				+ "		D|-----------------5-------2----------------|-----------------------------------|";
+//		input += "\r\n";
+//		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+//		GuitarTabLexer lexer = null;
+//		try {
+//			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		if (lexer != null) {
+//
+//			CommonTokenStream tokens = new CommonTokenStream(lexer);
+//			GuitarTabParser parser = new GuitarTabParser(tokens);
+//
+//			
+//			GuitarString expectedGuitar = new GuitarString();
+//			
+//			Fret fret1 = new Fret("10");
+//			Fret fret2 = new Fret("12");
+//			Fret fret3 = new Fret("8");
+//			Note firstExpected = new Note(fret1, expectedGuitar);
+//			Note middleExpected = new Note(fret2, expectedGuitar);
+//			Note lastExpected = new Note(fret1, expectedGuitar);
+//			Note firstExpected2 = new Note(fret3, expectedGuitar);
+//			Note middleExpected2 = new Note(fret1, expectedGuitar);
+//			Note lastExpected2 = new Note(fret3, expectedGuitar);
+//			
+//			ParseTree root = parser.staff();
+//			ParseTree ham = parser.hampullchain();
+//			
+//			//this takes a list of strings (empty at start)
+//			List<ArrayList<Staff>> stringList = new ArrayList<>();
+//			ExtractStaffs estaff = new ExtractStaffs(stringList);
+//			ParseTree x = (ParseTree) estaff.visit(ham);
+//			for (int i = 0; i < stringList.size(); i++) {
+//				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
+//				StringContext sc = new StringContext((ParserRuleContext) ham, i);
+//				ExtractStringItems esi = new ExtractStringItems(gs, (StringContext) x);
+//				esi.visit(ham);
+//				//List<StringItem> gsList = esi.getStringItems().stream().filter(c->c.getClass() == HammPullContext.class).collect(Collectors.collectingAndThen(downstream, finisher));
+//				//Note note = (Note) gsList.get(i);
+//				
+//				
+//			}
+//			}
+//			
+//			
+////			ParseTree root = parser.hampullchain();
+////			ParseTree root2 = parser.staff();
+////			
+////			root.getChild(0);
+////			root.getChild(root.getChildCount() - 1);
+////			List<ArrayList<Staff>> stringList = new ArrayList<>();
+////			ExtractStaffs estaff = new ExtractStaffs(stringList);
+////			ParseTree staff = (ParseTree) (estaff.visit(root2));
+////			staff.getChild(1);
+////			
+////			
+////			for (int i = 0; i < staff.getChildCount(); i++) {
+////					GuitarString gs = (GuitarString)(estaff.visit(root.getChild(i)));
+////					ExtractStringItems eItems = new ExtractStringItems(gs, (StringContext) staff.getChild(i));
+////					staff.getChild(i);
+//					//StringItem sItem = eItems.visit(staff.getChild(i).getChild(1));
+//					//System.out.println(sItem);
+//					
+//				
+//			//}
+//			
+//		}
+//	
+//
+//	@Test
+//	void testHammerOn() {
+//		String input = "E|--10h12------0-------0--------------------|-----------------------------------|\r\n"
+//				+ "		B|-------------0-------0-----0-2h4-3h10---8-|-8h10----7---------------5---------|\r\n"
+//				+ "		G|---------0--------------------------------|---------------------------6-------|\r\n"
+//				+ "		D|----------------------------------------9-|-9---------7---------------5-------|\r\n"
+//				+ "		A|------------------------------------------|-0-----------------0---------------|\r\n"
+//				+ "		D|-----------------5-------2----------------|-----------------------------------|";
+//		input += "\r\n";
+//		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+//		GuitarTabLexer lexer = null;
+//		try {
+//			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		if (lexer != null) {
+//
+//			CommonTokenStream tokens = new CommonTokenStream(lexer);
+//			GuitarTabParser parser = new GuitarTabParser(tokens);
+//			
+//			ParseTree root = parser.staff();
+//			// expected strings, measures, tuning
+//
+//			//this takes a list of strings (empty at start)
+//			List<ArrayList<Staff>> stringList = new ArrayList<>();
+//			ExtractStaffs estaff = new ExtractStaffs(stringList);
+//			String[][] expectedTuning = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
+//					{ "E", "2" } };
+//
+////			for (int i = 0; i < stringList.size(); i++) {
+////				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
+////				String tune = gs;
+////			//	assertEquals(expectedTuning[i], tune);
+////			}
+//			
+//		}
+//	}
+//
+//	@Test
+//	void testPullOff() {
+//
+//	}
+//
+//}
