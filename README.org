@@ -31,8 +31,8 @@ It is fairly easy to use, but a full instruction manual can be found at [[./Docu
   - pull-off notations
   - hammer-on/pull-off combination sequences
   - chords
-  - in-line comments (*=// this is a comment=*)
-  - multiline comments (*=/* this is a multiline comment */=*)
+  - in-line comments (~// this is a comment~)
+  - multiline comments (~/* this is a multiline comment */~)
 
 * Sample Inputs
 
