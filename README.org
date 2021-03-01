@@ -31,41 +31,41 @@ It is fairly easy to use, but a full instruction manual can be found at [[./Docu
   - pull-off notations
   - hammer-on/pull-off combination sequences
   - chords
-  - in-line comments (*// this is a comment*)
-  - multiline comments (*/\* this is a multiline comment \*/*)
+  - in-line comments (*=// this is a comment=*)
+  - multiline comments (*=/* this is a multiline comment */=*)
 
 * Sample Inputs
 
 - chords:
 
-  :TEXT_TAB:
+  #+BEGIN_EXAMPLE
   e|-----2--------|-----2--------|--0-----3--0--|--------------|--2--------0--|
   B|--------------|--------1-----|--0-----0--3--|--------------|--------1-----|
   G|--------------|-----------0--|-----------2--|-----2--2--4--|--------------|
   D|-----------2--|-----0--------|--2--2--------|-----0--4-----|-----2--------|
   A|--3--------2--|--0--------2--|--------------|--0-----2-----|--2--------0--|
   E|--0--0--------|--------------|--------------|--------------|--------------|
-  :END:
+  #+END_EXAMPLE
 
-  :TEXT_TAB:
+  #+BEGIN_EXAMPLE
   e|--------2--3--|--------------|-----------3--|-----2--------|--2-----------|
   B|--3-----3-----|--3--0--3--0--|--------1--0--|--------------|--------1-----|
   G|-----------2--|--------4-----|-----------0--|--2-----2-----|--------------|
   D|-----------2--|--4--------0--|--------------|-----------2--|--4-----------|
   A|--------------|--0-----------|--------------|-----------0--|--------------|
   E|--------3--0--|-----3--2-----|--0-----------|--------3-----|-----------3--|
-  :END:
+  #+END_EXAMPLE
 
 - binary actions: hammer-on/pull-off/slides:
           
-  :TEXT_TAB:
+  #+BEGIN_EXAMPLE
   E|--8h10p8---6---5---3---6p5-10p9-12p10-13p12-|-15p12-10p9-12s10-6p5-8p6---0---------|
   B|-----------8-------5------------------------|--------------------------8---3---2---|
   G|-------0-------3--------------10s11---------|--------------------------------3---2-|
   D|--------------------------------------------|--------------------------------------|
   A|-----------------------0--------------------|--0-----------10p8----------------0---|
   D|--------------------------------------------|--------------------------------------|
-  :END:
+  #+END_EXAMPLE
          
 ** Corresponding rendered XML (*via OpenSheetMusicDisplay*)
    *Sample Output Chords*
@@ -73,6 +73,9 @@ It is fairly easy to use, but a full instruction manual can be found at [[./Docu
 
    *Sample Output Binary Actions*
    [[./Screenshots/sample-output-binary.png]]
+
+   *Sample Output Slides*
+   [[./Screenshots/sample-output-slide.png]]
 
 ** Discrepancies
 	- There are some ambiguities with token recognition and the GUI will reflect this.
