@@ -18,16 +18,6 @@ import tab2xml.model.*;
 
 class NoteTest {
 
-	/**
-	 * @author Edward and Sayed this tests the getNoteType method in the Note class
-	 */
-	@Test
-	void getNoteTypeTester() {
-		Note note = new Note(NoteType.A);
-		NoteType expected = NoteType.A;
-		assertEquals(expected, note.getNoteType());
-	}
-
 	static Stream<Arguments> noteNames() {
 		return Stream.of(Arguments.of(new Note(NoteType.A), "A", 0), Arguments.of(new Note(NoteType.AS), "A#", 1),
 				Arguments.of(new Note(NoteType.B), "B", 2), Arguments.of(new Note(NoteType.C), "C", 3),
