@@ -1,10 +1,11 @@
 * Changelog
-** Unreleased
+** [0.2.0] - [2021-02-28 Sun] (Midterm Submission)
 *** Added
- - Added new frontend tests
+ - Added more tests for both the frontend and backend
  - Added a model
  - When selecting a file, the appropriate file extension will be chosen for you
  - Added the ability to convert and save with one button press
+ - The SingleEntryView can highlight the approximate location of errors
 *** Changed
  - Changed parsing method to a parse tree using ANTLR
  - Errors are now reported via a dialog box.
