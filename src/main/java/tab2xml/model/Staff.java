@@ -78,7 +78,6 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 	/**
 	 * Extract notes from a staff at a specified index.
 	 * 
-	 * @param index the index to extract notes from
 	 * @return a list of notes representing a staff at a specified index
 	 */
 	public List<LinkedList<StringItem>> toList() {
@@ -126,7 +125,6 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 	/**
 	 * Return a custom iterator for traversing a staff at a specified index.
 	 * 
-	 * @param index the index of the staff to traverse
 	 * @return an iterator for a staff at specified <b>index</b>
 	 */
 	@Override
@@ -156,7 +154,6 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		/**
 		 * Construct a staff iterator.
 		 * 
-		 * @param notes the notes representing <b>staff</b>
 		 * @param staff the staff to iterate
 		 */
 		public StaffIterator(Staff staff) {
