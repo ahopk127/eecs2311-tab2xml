@@ -1,0 +1,10 @@
+/GuitarTab.interp
+/GuitarTab.tokens
+/GuitarTabBaseListener.java
+/GuitarTabBaseVisitor.java
+/GuitarTabLexer.interp
+/GuitarTabLexer.java
+/GuitarTabLexer.tokens
+/GuitarTabListener.java
+/GuitarTabParser.java
+/GuitarTabVisitor.java
