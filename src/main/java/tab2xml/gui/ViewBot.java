@@ -1,5 +1,10 @@
 package tab2xml.gui;
 
+import java.nio.file.Path;
+import java.util.Optional;
+
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import tab2xml.parser.Instrument;
 
 /**
@@ -25,6 +30,11 @@ public final class ViewBot implements View {
 	private Instrument selectedInstrument;
 	
 	/**
+	 * The file selected by the "user", will be used in promptForFile()
+	 */
+	private Path selectedFile;
+	
+	/**
 	 * Creates a {@code ViewBot}. The initial input and output text will be the
 	 * empty string, while the initial selected instrument will be {@code null}.
 	 * 
@@ -34,6 +44,7 @@ public final class ViewBot implements View {
 		this.inputText = "";
 		this.outputText = "";
 		this.selectedInstrument = null;
+		this.selectedFile = null;
 	}
 	
 	@Override
@@ -46,9 +57,22 @@ public final class ViewBot implements View {
 		return this.outputText;
 	}
 	
+	/**
+	 * @return file which will be used in {@link #promptForFile}.
+	 * @since 2021-02-25
+	 */
+	public final Path getSelectedFile() {
+		return this.selectedFile;
+	}
+	
 	@Override
 	public final Instrument getSelectedInstrument() {
 		return this.selectedInstrument;
+	}
+	
+	@Override
+	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
+		return Optional.ofNullable(this.selectedFile);
 	}
 	
 	@Override
@@ -61,13 +85,21 @@ public final class ViewBot implements View {
 		this.outputText = outputText;
 	}
 	
+	/**
+	 * @param selectedFile file which will be used in {@link #promptForFile}.
+	 * @since 2021-02-25
+	 */
+	public final void setSelectedFile(Path selectedFile) {
+		this.selectedFile = selectedFile;
+	}
+	
 	@Override
 	public final void setSelectedInstrument(Instrument selectedInstrument) {
 		this.selectedInstrument = selectedInstrument;
 	}
 	
 	@Override
-	public void showErrorMessage(String message, Object... formatArgs) {
-		throw new RuntimeException(String.format(message, formatArgs));
+	public void showErrorMessage(String title, String message) {
+		throw new RuntimeException(message);
 	}
 }

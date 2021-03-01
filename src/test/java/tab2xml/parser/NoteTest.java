@@ -2,344 +2,79 @@ package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.InputMismatchException;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import tab2xml.parser.Lexer.InvalidTokenException;
+import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.model.*;
 
 class NoteTest {
-	
-	/**
-	 * @author Edward and Sayed this tests the getNoteType method in the Note class
-	 */
-	@Test
-	void getNoteTypeTester() {
-		Note note = new Note(NoteType.A);
-		NoteType expected = NoteType.A;
-		assertEquals(expected, note.getNoteType());
+
+	static Stream<Arguments> noteNames() {
+		return Stream.of(Arguments.of(new Note(NoteType.A), "A", 0), Arguments.of(new Note(NoteType.AS), "A#", 1),
+				Arguments.of(new Note(NoteType.B), "B", 2), Arguments.of(new Note(NoteType.C), "C", 3),
+				Arguments.of(new Note(NoteType.CS), "C#", 4), Arguments.of(new Note(NoteType.D), "D", 5),
+				Arguments.of(new Note(NoteType.DS), "D#", 6), Arguments.of(new Note(NoteType.E), "E", 7),
+				Arguments.of(new Note(NoteType.F), "F", 8), Arguments.of(new Note(NoteType.FS), "F#", 9),
+				Arguments.of(new Note(NoteType.G), "G", 10), Arguments.of(new Note(NoteType.GS), "G#", 11));
 	}
 
 	/**
-	 * @author Edward and Sayed this tests the getName method for A  in the
-	 *         Note class
-	 * @throws InvalidTokenException 
+	 * Tests that notes have the correct name and index.
+	 * 
+	 * @param note          note to test
+	 * @param expectedName  expected name of note
+	 * @param expectedIndex expected index of note
+	 * @since 2021-02-24
 	 */
-	@Test
-	void getNameTester1() throws InvalidTokenException {
-		Note note = new Note(NoteType.A, "A");
-		String expected = "A";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
+	@ParameterizedTest
+	@MethodSource("noteNames")
+	void noteTest(Note note, String expectedName, int expectedIndex) {
+		assertEquals(expectedName, note.getStep());
+		assertEquals(expectedName, note.getNoteType().getValue());
+		assertEquals(expectedIndex, note.getIndex());
 	}
-	
+
 	/**
-	 * @author Edward and Sayed this tests the getName method for A sharp in the
-	 *         Note class
-	 * @throws InvalidTokenException 
+	 * Tests that notes are correctly converted.
+	 * 
+	 * @param note          note to test
+	 * @param expectedName  expected name of note
+	 * @since 2021-02-24
 	 */
-	@Test
-	void getNameTester2() throws InvalidTokenException {
-		Note note = new Note(NoteType.AS, "A#");
-		String expected = "A#";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
+	static Stream<Arguments> toNoteTest() {
+		return Stream.of(Arguments.of("E0", "E"), Arguments.of("F0", "F"), Arguments.of("B0", "B"),
+				Arguments.of("B3", "D"), Arguments.of("G0", "G"), Arguments.of("G5", "C"), Arguments.of("D0", "D"),
+				Arguments.of("D4", "F#"), Arguments.of("A0", "A"), Arguments.of("A13", "A#"));
 	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for B in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester3() throws InvalidTokenException {
-		Note note = new Note(NoteType.B, "B");
-		String expected = "B";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for C in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester4() throws InvalidTokenException {
-		Note note = new Note(NoteType.C, "C");
-		String expected = "C";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for C Sharp in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester5() throws InvalidTokenException {
-		Note note = new Note(NoteType.CS, "C#");
-		String expected = "C#";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for D in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester6() throws InvalidTokenException {
-		Note note = new Note(NoteType.D, "D");
-		String expected = "D";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for D Sharp in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester7() throws InvalidTokenException {
-		Note note = new Note(NoteType.DS, "D#");
-		String expected = "D#";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for E in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester8() throws InvalidTokenException {
-		Note note = new Note(NoteType.E, "E");
-		String expected = "E";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for F in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester9() throws InvalidTokenException {
-		Note note = new Note(NoteType.F, "F");
-		String expected = "F";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for F Sharp in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester10() throws InvalidTokenException {
-		Note note = new Note(NoteType.FS, "F#");
-		String expected = "F#";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for G in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester11() throws InvalidTokenException {
-		Note note = new Note(NoteType.G, "G");
-		String expected = "G";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getName method for G Sharp in the
-	 *         Note class
-	 * @throws InvalidTokenException 
-	 */
-	@Test
-	void getNameTester12() throws InvalidTokenException {
-		Note note = new Note(NoteType.GS, "G#");
-		String expected = "G#";
-		assertEquals(expected, note.getData());
-		assertEquals(expected, note.getNoteType().getValue());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note A in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester1() {
-		Note note = new Note(NoteType.A);
-		int expected = 0;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note A sharp in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester2() {
-		Note note = new Note(NoteType.AS);
-		int expected = 1;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note B in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester3() {
-		Note note = new Note(NoteType.B);
-		int expected = 2;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note C in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester4() {
-		Note note = new Note(NoteType.C);
-		int expected = 3;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note C sharp in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester5() {
-		Note note = new Note(NoteType.CS);
-		int expected = 4;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note D in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester6() {
-		Note note = new Note(NoteType.D);
-		int expected = 5;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note D sharp in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester7() {
-		Note note = new Note(NoteType.DS);
-		int expected = 6;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note E in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester8() {
-		Note note = new Note(NoteType.E);
-		int expected = 7;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note F in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester9() {
-		Note note = new Note(NoteType.F);
-		int expected = 8;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note F Sharp in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester10() {
-		Note note = new Note(NoteType.FS);
-		int expected = 9;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note G in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester11() {
-		Note note = new Note(NoteType.G);
-		int expected = 10;
-		assertEquals(expected, note.getIndex());
-	}
-	
-	/**
-	 * @author Edward and Sayed this tests the getIndex method for note G Sharp in the
-	 *         Note class
-	 */
-	@Test
-	void getIndexTester12() {
-		Note note = new Note(NoteType.GS);
-		int expected = 11;
-		assertEquals(expected, note.getIndex());
-	}
-	
+
 	/**
 	 * @author Edward and Sayed this tests the Tonote method in the Note class
 	 * @throws InvalidTokenException
 	 */
-	@Test
-	void testToNote() throws InvalidTokenException {
-		NoteType expected = NoteType.A;
-		assertEquals(expected, Note.toNote("A0").getNoteType());
-		try {
-			assertEquals(expected, Note.toNote("A0").getNoteType());
-		} catch (InvalidTokenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			fail("InvalidTokenException occured.");
-		}
+	@ParameterizedTest
+	@MethodSource("toNoteTest")
+	void testToNote(String input, String expected) throws InvalidTokenException {
+		assertEquals(expected, Note.toNote(input, 0).getStep());
 	}
-	
+
 	/**
-	 * @author Edward, Sayed and amir Tests that trying to convert an invalid string to a note is invalid
+	 * @author Edward and Sayed this tests the invalid notes
 	 * @throws InvalidTokenException
 	 */
-	@Test
-	void testToNoteInvalid() throws InvalidTokenException {
-		String invalidNote = "R0R";
-		InputMismatchException thrown = assertThrows(InputMismatchException.class, () -> Note.toNote(invalidNote),"The Note is invalid.");
+	@ParameterizedTest
+	@ValueSource(strings = {"x0", "20", "#2", "E1E", "9E"})
+	void testToNote(String input) throws InvalidTokenException {
+		InputMismatchException thrown = assertThrows(InputMismatchException.class, () -> Note.toNote(input, 0),
+				"The Note is invalid.");
 		assertTrue(thrown.getMessage().contains("The Note is invalid."));
-		}
-		
 	}
-	
-
-
+}

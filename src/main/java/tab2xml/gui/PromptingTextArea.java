@@ -83,7 +83,7 @@ public final class PromptingTextArea extends JTextArea {
 		this.prompting = false;
 		super.setText("");
 		this.setForeground(REGULAR_TEXT_COLOR);
-		this.setFont(
+		super.setFont(
 				this.regularFont == null ? this.getFont() : this.regularFont);
 	}
 	
@@ -100,7 +100,7 @@ public final class PromptingTextArea extends JTextArea {
 		if (this.promptFont == null) {
 			this.promptFont = this.getFont().deriveFont(Font.ITALIC);
 		}
-		this.setFont(this.promptFont);
+		super.setFont(this.promptFont);
 	}
 	
 	/**

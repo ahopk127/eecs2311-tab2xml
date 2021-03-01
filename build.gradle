@@ -1,17 +1,25 @@
 plugins {
 	id 'application'
+	id 'antlr'
 }
 
 repositories {
+	mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    // Use JUnit test framework
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    // add the 'params' API for more functionality
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+	implementation "org.antlr:antlr4:4.9.1"
+	compile "org.antlr:antlr4-runtime:4.9.1"
+}
+
+generateGrammarSource {
+    outputDirectory = file("src/main/java/tab2xml/antlr")
+    maxHeapSize = "64m"
+    arguments += ["-visitor", "-long-messages"]
 }
 
 test {

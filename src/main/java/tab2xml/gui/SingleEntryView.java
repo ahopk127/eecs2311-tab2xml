@@ -5,8 +5,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.IOException;
+import java.awt.Insets;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,9 +16,14 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
+import org.antlr.v4.runtime.Token;
+
+import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 
 /**
@@ -38,7 +44,7 @@ final class SingleEntryView implements View {
 				view.textBoxState = INPUT;
 				view.convertButton.setEnabled(true);
 				view.revertButton.setEnabled(false);
-				view.saveFileButton.setEnabled(false);
+				view.saveFileButton.setText("Convert and Save");
 			}
 		},
 		OUTPUT {
@@ -47,7 +53,7 @@ final class SingleEntryView implements View {
 				view.textBoxState = OUTPUT;
 				view.convertButton.setEnabled(false);
 				view.revertButton.setEnabled(true);
-				view.saveFileButton.setEnabled(true);
+				view.saveFileButton.setText("     Save to File     ");
 			}
 		};
 		
@@ -57,16 +63,16 @@ final class SingleEntryView implements View {
 		public abstract void enable(SingleEntryView v);
 	}
 	
-	/** The dialog title for error messages. */
-	private static final String DEFAULT_ERROR_TITLE = "Error";
-	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
 	 * @since 2021-01-18
 	 */
 	private static GridBagConstraints gridBag(int x, int y) {
-		return gridBag(x, y, 1, 1);
+		final GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = x;
+		gbc.gridy = y;
+		return gbc;
 	}
 	
 	/**
@@ -76,11 +82,21 @@ final class SingleEntryView implements View {
 	 */
 	private static GridBagConstraints gridBag(int x, int y, int width,
 			int height) {
-		final GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = x;
-		gbc.gridy = y;
+		final GridBagConstraints gbc = gridBag(x, y);
 		gbc.gridwidth = width;
 		gbc.gridheight = height;
+		return gbc;
+	}
+	
+	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-02-25
+	 */
+	private static GridBagConstraints gridBag(int x, int y, int width,
+			int height, Insets insets) {
+		final GridBagConstraints gbc = gridBag(x, y, width, height);
+		gbc.insets = insets;
 		return gbc;
 	}
 	
@@ -100,7 +116,7 @@ final class SingleEntryView implements View {
 	private final Presenter presenter;
 	
 	/** The text box that handles both input and output. */
-	private final JTextArea textBox;
+	private final PromptingTextArea textBox;
 	/** The dropdown box to select the instrument. */
 	private final JComboBox<Instrument> instrumentSelection;
 	/** The button that converts tab to XML. */
@@ -141,31 +157,42 @@ final class SingleEntryView implements View {
 		this.textBox = new PromptingTextArea(
 				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
-		this.textBox.setFont(new Font("Monospaced", Font.ITALIC, 12));
+		this.textBox.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
 		FileDragDropTarget.enableDragAndDrop(this.textBox);
+		this.textBox.addCaretListener(
+				e -> this.textBox.getHighlighter().removeAllHighlights());
 		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
+		final Insets buttonInsets = new Insets(3, 8, 3, 8);
+		
 		final JButton loadFileButton = new JButton("Load From File");
-		loadFileButton.addActionListener(e -> this.loadFromFile());
-		buttonPanel.add(loadFileButton, gridBag(1, 0));
+		loadFileButton.addActionListener(e -> this.presenter.loadFromFile());
+		buttonPanel.add(loadFileButton, gridBag(1, 0, 1, 1, buttonInsets));
 		
 		this.convertButton = new JButton("Convert");
 		this.convertButton.addActionListener(e -> this.presenter.convert());
-		buttonPanel.add(this.convertButton, gridBag(2, 0));
+		buttonPanel.add(this.convertButton, gridBag(2, 0, 1, 1, buttonInsets));
 		
 		this.revertButton = new JButton("Undo Conversion");
 		this.revertButton
 				.addActionListener(e -> this.setInputText(this.previousInputText));
-		buttonPanel.add(this.revertButton, gridBag(3, 0));
+		buttonPanel.add(this.revertButton, gridBag(3, 0, 1, 1, buttonInsets));
 		
 		this.saveFileButton = new JButton("Save to File");
-		this.saveFileButton.addActionListener(e -> this.saveToFile());
-		buttonPanel.add(this.saveFileButton, gridBag(4, 0));
+		this.saveFileButton.addActionListener(e -> {
+			if (this.textBoxState == State.INPUT) {
+				this.presenter.convertAndSave(false);
+			} else {
+				this.presenter.saveToFile();
+			}
+		});
+		buttonPanel.add(this.saveFileButton, gridBag(4, 0, 1, 1, buttonInsets));
 		
 		// combo boxes
 		this.instrumentSelection = new JComboBox<>(Instrument.values());
-		buttonPanel.add(this.instrumentSelection, gridBag(0, 0));
+		buttonPanel.add(this.instrumentSelection,
+				gridBag(0, 0, 1, 1, buttonInsets));
 		
 		// set the frame to INPUT state.
 		State.INPUT.enable(this);
@@ -197,58 +224,54 @@ final class SingleEntryView implements View {
 		return (Instrument) this.instrumentSelection.getSelectedItem();
 	}
 	
-	/**
-	 * Allows the user to choose a file, then loads input text from that file.
-	 * 
-	 * @since 2021-01-29
-	 */
-	private void loadFromFile() {
-		final JFileChooser fc = new JFileChooser();
+	@Override
+	public void onParseError(UnparseableInputException error) {
+		// show dialog box
+		View.super.onParseError(error);
 		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
-			final Path path = fc.getSelectedFile().toPath();
+		// highlight positions of errors
+		final DefaultHighlightPainter painter = new DefaultHighlightPainter(
+				Color.RED);
+		
+		// highlight each error
+		for (final Token errorToken : error.getErrors()) {
 			try {
-				this.presenter.loadFromFile(path);
-			} catch (final IOException e) {
-				JOptionPane.showMessageDialog(this.frame,
-						"An error happened while reading the file: "
-								+ e.getLocalizedMessage(),
-						"File Read Error", JOptionPane.ERROR_MESSAGE);
+				this.textBox.getHighlighter().addHighlight(
+						errorToken.getStartIndex(), errorToken.getStopIndex(),
+						painter);
+			} catch (final BadLocationException e) {
+				throw new AssertionError("Should not happen.", e);
 			}
 		}
 	}
 	
-	/**
-	 * Prompts the user to choose a file, then saves output text to that file.
-	 * 
-	 * @since 2021-01-29
-	 */
-	private void saveToFile() {
+	@Override
+	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
 		final JFileChooser fc = new JFileChooser();
+		fc.addChoosableFileFilter(preferredType);
+		fc.setFileFilter(preferredType);
 		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
-			final Path path = fc.getSelectedFile().toPath();
-			try {
-				this.presenter.saveToFile(path);
-			} catch (final IOException e) {
-				JOptionPane.showMessageDialog(this.frame,
-						"An error happened while writing to the file: "
-								+ e.getLocalizedMessage(),
-						"File Write Error", JOptionPane.ERROR_MESSAGE);
-			}
-		}
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION)
+			return Optional.of(fc.getSelectedFile().toPath());
+		else
+			return Optional.empty();
 	}
 	
 	@Override
 	public void setInputText(String text) {
 		this.previousInputText = null;
-		this.textBox.setText(text);
+		if (text.isBlank()) {
+			this.textBox.setPrompting(true);
+		} else {
+			this.textBox.setText(text);
+		}
 		State.INPUT.enable(this);
 	}
 	
 	@Override
 	public void setOutputText(String text) {
-		this.previousInputText = this.textBox.getText();
+		this.previousInputText = this.textBox.isPrompting() ? ""
+				: this.textBox.getText();
 		this.textBox.setText(text);
 		State.OUTPUT.enable(this);
 	}
@@ -259,8 +282,8 @@ final class SingleEntryView implements View {
 	}
 	
 	@Override
-	public void showErrorMessage(String message, Object... formatArgs) {
-		JOptionPane.showMessageDialog(this.frame, DEFAULT_ERROR_TITLE,
-				String.format(message, formatArgs), JOptionPane.ERROR_MESSAGE);
+	public void showErrorMessage(String title, String message) {
+		JOptionPane.showMessageDialog(this.frame, message, title,
+				JOptionPane.ERROR_MESSAGE);
 	}
 }
