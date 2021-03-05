@@ -10,6 +10,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
@@ -26,9 +27,11 @@ import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Highlighter.HighlightPainter;
 
 import org.antlr.v4.runtime.Token;
 
+import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 
@@ -69,11 +72,11 @@ final class SingleEntryView implements View {
 		public abstract void enable(SingleEntryView v);
 	}
 	
-	private static final JPanel fillerPanel() {
-		final JPanel panel = new JPanel();
-		panel.setOpaque(false);
-		return panel;
-	}
+//	private static final JPanel fillerPanel() {
+//		final JPanel panel = new JPanel();
+//		panel.setOpaque(false);
+//		return panel;
+//	}
 	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
@@ -280,24 +283,42 @@ final class SingleEntryView implements View {
 	}
 	
 	@Override
+	public void handleParseWarnings(Collection<ParsingWarning> warnings) {
+		// show dialog box
+		View.super.handleParseWarnings(warnings);
+		
+		// highlight position of each warning
+		final HighlightPainter painter = new DefaultHighlightPainter(
+				Color.YELLOW);
+		warnings.stream().map(ParsingWarning::getLocation)
+				.flatMap(Optional::stream)
+				.forEach(token -> this.highlightToken(token, painter));
+	}
+	
+	/**
+	 * Highlights a token in the text box.
+	 *
+	 * @param token   token to highlight
+	 * @param painter highlighting settings
+	 * @since 2021-03-05
+	 */
+	private void highlightToken(Token token, HighlightPainter painter) {
+		try {
+			this.textBox.getHighlighter().addHighlight(token.getStartIndex(),
+					token.getStopIndex(), painter);
+		} catch (final BadLocationException e) {
+			throw new AssertionError("Invalid token " + token, e);
+		}
+	}
+	
+	@Override
 	public void onParseError(UnparseableInputException error) {
 		// show dialog box
 		View.super.onParseError(error);
 		
-		// highlight positions of errors
-		final DefaultHighlightPainter painter = new DefaultHighlightPainter(
-				Color.RED);
-		
-		// highlight each error
-		for (final Token errorToken : error.getErrors()) {
-			try {
-				this.textBox.getHighlighter().addHighlight(
-						errorToken.getStartIndex(), errorToken.getStopIndex(),
-						painter);
-			} catch (final BadLocationException e) {
-				throw new AssertionError("Should not happen.", e);
-			}
-		}
+		// highlight position of each error
+		final HighlightPainter painter = new DefaultHighlightPainter(Color.RED);
+		error.getErrors().forEach(token -> this.highlightToken(token, painter));
 	}
 	
 	@Override
