@@ -5,10 +5,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -16,13 +21,17 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Highlighter.HighlightPainter;
 
 import org.antlr.v4.runtime.Token;
 
+import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 
@@ -62,6 +71,12 @@ final class SingleEntryView implements View {
 		 */
 		public abstract void enable(SingleEntryView v);
 	}
+	
+//	private static final JPanel fillerPanel() {
+//		final JPanel panel = new JPanel();
+//		panel.setOpaque(false);
+//		return panel;
+//	}
 	
 	/**
 	 * Creates a {@code GridBagConstraints} object.
@@ -114,7 +129,6 @@ final class SingleEntryView implements View {
 	
 	/** The presenter that handles the view's input */
 	private final Presenter presenter;
-	
 	/** The text box that handles both input and output. */
 	private final PromptingTextArea textBox;
 	/** The dropdown box to select the instrument. */
@@ -123,11 +137,12 @@ final class SingleEntryView implements View {
 	private final JButton convertButton;
 	/** The undo button for conversion. */
 	private final JButton revertButton;
+	
 	/** The button that saves output text to files. */
 	private final JButton saveFileButton;
-	
 	/** What kind of text is stored in the text box */
 	private State textBoxState;
+	
 	/**
 	 * The input text that was inputted before a conversion. This variable is
 	 * used for the "Undo Conversion" button.
@@ -144,14 +159,46 @@ final class SingleEntryView implements View {
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.presenter = new Presenter(this);
 		
+		final String nativeLF = UIManager.getSystemLookAndFeelClassName();
+		
+		// Install the look and feel
+		try {
+			UIManager.setLookAndFeel(nativeLF);
+		} catch (final ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (final InstantiationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (final IllegalAccessException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (final UnsupportedLookAndFeelException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		// load images
+		final Image bgImage;
+		try {
+			bgImage = ImageIO
+					.read(Path.of("src/main/resources/appmap.png").toFile());
+		} catch (final IOException e) {
+			throw new AssertionError("Image loading failed.", e);
+		}
+		
+		final JPanel backgroundPanel = new BackgroundImagePanel(bgImage);
+		backgroundPanel.setLayout(new GridLayout(1, 1));
+		this.frame.add(backgroundPanel);
+		
 		// create components
-		final JPanel masterPanel = new JPanel();
-		masterPanel.setLayout(new BorderLayout());
-		this.frame.add(masterPanel);
+		final JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		backgroundPanel.add(mainPanel);
 		
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
-		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
+		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
 		// text box
 		this.textBox = new PromptingTextArea(
@@ -161,7 +208,7 @@ final class SingleEntryView implements View {
 		FileDragDropTarget.enableDragAndDrop(this.textBox);
 		this.textBox.addCaretListener(
 				e -> this.textBox.getHighlighter().removeAllHighlights());
-		masterPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
+		mainPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
 		
 		// buttons
 		final Insets buttonInsets = new Insets(3, 8, 3, 8);
@@ -194,6 +241,17 @@ final class SingleEntryView implements View {
 		buttonPanel.add(this.instrumentSelection,
 				gridBag(0, 0, 1, 1, buttonInsets));
 		
+		// background
+//		backgroundPanel.add(fillerPanel());
+//		backgroundPanel.add(fillerPanel());
+//		backgroundPanel.add(fillerPanel());
+//		backgroundPanel.add(fillerPanel());
+//		backgroundPanel.add(mainPanel);
+//		backgroundPanel.add(fillerPanel());
+//		backgroundPanel.add(fillerPanel());
+//		backgroundPanel.add(fillerPanel());
+//		backgroundPanel.add(fillerPanel());
+		
 		// set the frame to INPUT state.
 		State.INPUT.enable(this);
 		
@@ -225,24 +283,42 @@ final class SingleEntryView implements View {
 	}
 	
 	@Override
+	public void handleParseWarnings(Collection<ParsingWarning> warnings) {
+		// show dialog box
+		View.super.handleParseWarnings(warnings);
+		
+		// highlight position of each warning
+		final HighlightPainter painter = new DefaultHighlightPainter(
+				Color.YELLOW);
+		warnings.stream().map(ParsingWarning::getLocation)
+				.flatMap(Optional::stream)
+				.forEach(token -> this.highlightToken(token, painter));
+	}
+	
+	/**
+	 * Highlights a token in the text box.
+	 *
+	 * @param token   token to highlight
+	 * @param painter highlighting settings
+	 * @since 2021-03-05
+	 */
+	private void highlightToken(Token token, HighlightPainter painter) {
+		try {
+			this.textBox.getHighlighter().addHighlight(token.getStartIndex(),
+					token.getStopIndex(), painter);
+		} catch (final BadLocationException e) {
+			throw new AssertionError("Invalid token " + token, e);
+		}
+	}
+	
+	@Override
 	public void onParseError(UnparseableInputException error) {
 		// show dialog box
 		View.super.onParseError(error);
 		
-		// highlight positions of errors
-		final DefaultHighlightPainter painter = new DefaultHighlightPainter(
-				Color.RED);
-		
-		// highlight each error
-		for (final Token errorToken : error.getErrors()) {
-			try {
-				this.textBox.getHighlighter().addHighlight(
-						errorToken.getStartIndex(), errorToken.getStopIndex(),
-						painter);
-			} catch (final BadLocationException e) {
-				throw new AssertionError("Should not happen.", e);
-			}
-		}
+		// highlight position of each error
+		final HighlightPainter painter = new DefaultHighlightPainter(Color.RED);
+		error.getErrors().forEach(token -> this.highlightToken(token, painter));
 	}
 	
 	@Override

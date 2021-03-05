@@ -3,12 +3,14 @@ package tab2xml.gui;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tab2xml.exceptions.InvalidInputException;
 import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 import tab2xml.parser.Parser;
@@ -87,10 +89,13 @@ public final class Presenter {
 	private Optional<String> convert(String input,
 			Instrument selectedInstrument) {
 		final String musicXMLOutput;
+		final Collection<ParsingWarning> warnings;
 		try {
 			final Parser parser = new Parser(input, selectedInstrument);
 			
-			musicXMLOutput = parser.parse();
+			final var output = parser.parse();
+			musicXMLOutput = output.getFirst();
+			warnings = output.getSecond();
 			
 			// handle parsing errors
 		} catch (final UnparseableInputException e) {
@@ -107,8 +112,13 @@ public final class Presenter {
 		} catch (final Exception e) {
 			e.printStackTrace();
 			this.view.showErrorMessage("Error",
-					"An error occured during parsing: " + e.getMessage());
+					"An error occured during parsing: \n" + e.getMessage());
 			return Optional.empty();
+		}
+		
+		// handle parsing warnings
+		if (!warnings.isEmpty()) {
+			this.view.handleParseWarnings(warnings);
 		}
 		
 		return Optional.of(musicXMLOutput);
@@ -119,7 +129,7 @@ public final class Presenter {
 	 * 
 	 * @param showInView whether the converted MusicXML should be shown in the
 	 *                   View and saved, or just saved
-	 * 						
+	 * 
 	 * @since 2021-02-25
 	 */
 	public void convertAndSave(boolean showInView) {
@@ -161,7 +171,7 @@ public final class Presenter {
 	 * 
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
-	 * 													
+	 * 
 	 * @since 2021-02-25
 	 */
 	public void loadFromFile() {
