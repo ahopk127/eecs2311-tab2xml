@@ -5,17 +5,17 @@ grammar DrumTab;
 	
 }
 
-sheet
-	: (.*? staff .*?)* EOF			
-	;
-	
-staff								
-	: NEWLINE? string+ NEWLINE?
-	;
-	
-string
-	: tune stringItems SPACE* NEWLINE            // may be not right
-	;
+//sheet
+//	: (.*? staff .*?)* EOF			
+//	;
+//	
+//staff								
+//	: NEWLINE? string+ NEWLINE?
+//	;
+//	
+//string
+//	: tune stringItems SPACE* NEWLINE            // may be not right
+//	;
 tune
 	: NOTE? BAR           // may be not right
 	;

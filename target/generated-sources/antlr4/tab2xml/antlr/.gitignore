@@ -4,3 +4,9 @@
 /GuitarTabLexer.tokens
 /GuitarTabListener.java
 /GuitarTabParser.java
+/DrumTab.tokens
+/DrumTabBaseListener.java
+/DrumTabLexer.java
+/DrumTabLexer.tokens
+/DrumTabListener.java
+/DrumTabParser.java
