@@ -1,0 +1,36 @@
+(i dont think this is important) Score Instrument. Each piece of the drumkit might need to be created at the beginning of the xml file
+<score-instrument id="P1-I36">
+        <instrument-name>Bass Drum 1</instrument-name>
+        </score-instrument>
+
+- beginning information will be mostly the same as guitar except the clef will be percussion
+
+note
+
+ <note>
+        <unpitched>
+          <display-step>G</display-step>
+          <display-octave>5</display-octave>
+          </unpitched>
+        <duration>2</duration>
+        <instrument id="P1-I43"/>
+        <voice>1</voice>
+        <type>eighth</type>
+        <stem>up</stem>
+        <notehead>x</notehead>
+        <beam number="1">continue</beam>
+        </note>
+
+- step and octave are the same as before except octave will be 4 or 5 basically always. User might need to input which notes they want as which drum
+-instrument id doesnt seem important but it is linked to the "score-instrument" part above.
+-voice is still useless
+-good luck with duration and type
+- stem i would honestly just put as up if the octave is 5 and down if its 4 or just pick randomly
+- notehead is really important however i think the user will need to input which noteheads they want.
+     - noteheads include slash, triangle, diamond, square, cross, x, circle-x, inverted triangle, arrow down, arrow up, 
+	circled, slashed, back slashed, normal, cluster, circle dot, left triangle, rectangle, none, do, re, mi, fa, fa up, so, la, ti, and other
+	(I SWEAR HALF OF THESE DONT WORK. if you dont include notehead it will default to regular music notes. x and default are most common. maybe diamond)
+- beam doesnt change much but makes the notes look nicer. I'd test this one out before deciding how/if you want to implement it. It has a huge impact on the 
+  order of the notes. it seems like a group of eighth notes are connected by beam number 1 and sixteenth are connected by 2.
+  Follows a "begin, continue, end" pattern for all the notes in a beam.
+- chords are still a thing.
