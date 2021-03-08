@@ -1,6 +1,6 @@
 // Generated from GuitarTab.g4 by ANTLR 4.9.1
 
-	package tab2xml.antlr; 
+	package tab2xml.antlr;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -78,13 +78,13 @@ public class GuitarTabBaseListener implements GuitarTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSlide(GuitarTabParser.SlideContext ctx) { }
+	@Override public void enterHammerPull(GuitarTabParser.HammerPullContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSlide(GuitarTabParser.SlideContext ctx) { }
+	@Override public void exitHammerPull(GuitarTabParser.HammerPullContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -114,13 +114,13 @@ public class GuitarTabBaseListener implements GuitarTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterHammerPull(GuitarTabParser.HammerPullContext ctx) { }
+	@Override public void enterSlide(GuitarTabParser.SlideContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitHammerPull(GuitarTabParser.HammerPullContext ctx) { }
+	@Override public void exitSlide(GuitarTabParser.SlideContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

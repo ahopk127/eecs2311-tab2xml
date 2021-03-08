@@ -18,7 +18,8 @@ public class StringItemsCollector extends StringItem {
 	}
 
 	public void add(StringItem item) {
-		stringItems.add(item);
+		if (item != null)
+			stringItems.add(item);
 	}
 
 	@Override

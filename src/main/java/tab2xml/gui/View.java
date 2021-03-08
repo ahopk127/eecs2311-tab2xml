@@ -1,10 +1,13 @@
 package tab2xml.gui;
 
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 
@@ -103,6 +106,21 @@ public interface View {
 	 * @since 2021-01-25
 	 */
 	Instrument getSelectedInstrument();
+	
+	/**
+	 * Runs whenever the backend code returns one or more parsing warning. Should
+	 * display the warnings to the user, but should not stop the parsing.
+	 *
+	 * @param warnings warnings returned by backend code
+	 * @since 2021-03-05
+	 */
+	default void handleParseWarnings(Collection<ParsingWarning> warnings) {
+		final String message = warnings.size()
+				+ " warnings occured during parsing: \n"
+				+ warnings.stream().map(ParsingWarning::toString)
+						.collect(Collectors.joining("\n"));
+		this.showErrorMessage("Parsing Warning", message);
+	}
 	
 	/**
 	 * This method is run when the backend code throws an

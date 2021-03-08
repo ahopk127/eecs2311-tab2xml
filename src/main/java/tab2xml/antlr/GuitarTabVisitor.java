@@ -1,6 +1,6 @@
 // Generated from GuitarTab.g4 by ANTLR 4.9.1
 
-	package tab2xml.antlr; 
+	package tab2xml.antlr;
 
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -43,11 +43,12 @@ public interface GuitarTabVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStringItems(GuitarTabParser.StringItemsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GuitarTabParser#slide}.
+	 * Visit a parse tree produced by the {@code HammerPull}
+	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSlide(GuitarTabParser.SlideContext ctx);
+	T visitHammerPull(GuitarTabParser.HammerPullContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GuitarTabParser#pulloff}.
 	 * @param ctx the parse tree
@@ -61,12 +62,11 @@ public interface GuitarTabVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitHammeron(GuitarTabParser.HammeronContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code HammerPull}
-	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
+	 * Visit a parse tree produced by {@link GuitarTabParser#slide}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitHammerPull(GuitarTabParser.HammerPullContext ctx);
+	T visitSlide(GuitarTabParser.SlideContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GuitarTabParser#harmonic}.
 	 * @param ctx the parse tree

@@ -174,7 +174,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		 */
 		@Override
 		public boolean hasNext() {
-			return --totalNotesInStaff != 0;
+			return totalNotesInStaff-- > 0;
 		}
 
 		/**

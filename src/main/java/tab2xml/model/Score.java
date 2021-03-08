@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
+import tab2xml.listeners.ErrorListener;
 import tab2xml.parser.SerializeScore;
 import tab2xml.model.Score;
 
@@ -105,12 +106,12 @@ public class Score {
 
 	public static void main(String[] args) {
 
-		String input = "E|------------------------7-9-10-9h10p9----7-9-|-7h9p7------------------------2-5s12--10|\r\n"
-				+ "B|--7s10-------10-----------------------10-----|---------10-----------------3-----------|\r\n"
-				+ "G|---------7--------7--------------------------|----------7-------7-------2-------------|\r\n"
-				+ "D|---------7--------7-----------------7--------|------------------7---0p4---------------|\r\n"
-				+ "A|--------------9-------7----------------------|--------------9-------------------------|\r\n"
-				+ "D|-----0---------------------------------------|-----0----------------------------------|";
+		String input = "E|--8h10p8---6---5---3---6p5-10p9-12p10-13p12-|-15p12-10p9-12p10-6p5-8p6---0---------|\r\n"
+				+ "B|-----------8-------5------------------------|--------------------------8---3---2---|\r\n"
+				+ "G|-------0-------3----------------------------|--------------------------------3---2-|\r\n"
+				+ "D|--------------------------------------------|--------------------------------------|\r\n"
+				+ "A|-----------------------0--------------------|--0-------------------------------0---|\r\n"
+				+ "D|--------------------------------------------|--------------------------------------|";
 
 		input += "\r\n";
 		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
@@ -125,20 +126,16 @@ public class Score {
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			GuitarTabParser parser = new GuitarTabParser(tokens);
 
+			ErrorListener listener = new ErrorListener();
+			
+			parser.removeErrorListeners();
+			parser.addErrorListener(listener);
+			
 			ParseTree root = parser.sheet();
-
+			
 			SerializeScore ss = new SerializeScore();
 			Score sheet = ss.visit(root);
 			System.out.println(sheet.toString());
-			
-			int count = 0;
-			for (Staff staff : sheet.getStaffs()) {
-				for (StringItem item : staff) {
-					Note note = (Note) item;
-					System.out.print(note.toString() + "(" + note.getMeasure() + "," + ++count + ") ");
-				}
-				System.out.println();
-			}
 		}
 	}
 }

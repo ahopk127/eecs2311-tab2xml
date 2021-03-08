@@ -187,16 +187,14 @@ public class Transform {
 				slide.setAttribute("line-type", "solid");
 				setNotationAttr(slide, currNote, "stop", "");
 				notations.append(slide);
+				
+			} else if (currNote.isHarmonic()) {
+				XMLElement harmonic = new XMLElement("harmonic", musicSheet);
+				XMLElement artificial = new XMLElement("artificial", musicSheet);
+				XMLElement basePitch = new XMLElement("basePitch", musicSheet);
+				harmonic.append(artificial, basePitch);
+				technical.append(harmonic);
 			}
-			// TODO: harmonic
-			//			else if (currNote.isHarmonic()) {
-			//				XMLElement harmonic = new XMLElement("harmonic", musicSheet);
-			//				harmonic.setAttribute("default-x", "3");
-			//				harmonic.setAttribute("default-y", "24");
-			//				harmonic.setAttribute("placement", "above");
-			//				harmonic.setAttribute("print-object", "yes");
-			//				technical.append(harmonic);
-			//			}
 
 			XMLElement string = new XMLElement("string", musicSheet);
 			string.setText(currNote.getString());

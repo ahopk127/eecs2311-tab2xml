@@ -46,7 +46,7 @@ class PresenterTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("example-e-major.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			expectedOutput = new Parser(input, instrument).parse();
+			expectedOutput = new Parser(input, instrument).parse().getFirst();
 		} catch (final Exception e) {
 			e.printStackTrace();
 			assumeTrue(false,
@@ -83,7 +83,7 @@ class PresenterTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("example-e-major.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			expectedOutput = new Parser(input, instrument).parse();
+			expectedOutput = new Parser(input, instrument).parse().getFirst();
 		} catch (final Exception e) {
 			e.printStackTrace();
 			assumeTrue(false,
