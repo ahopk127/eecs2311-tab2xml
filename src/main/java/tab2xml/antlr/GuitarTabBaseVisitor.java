@@ -1,6 +1,6 @@
 // Generated from GuitarTab.g4 by ANTLR 4.9.1
 
-	package tab2xml.antlr; 
+	package tab2xml.antlr;
 
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -54,7 +54,7 @@ public class GuitarTabBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSlide(GuitarTabParser.SlideContext ctx) { return visitChildren(ctx); }
+	@Override public T visitHammerPull(GuitarTabParser.HammerPullContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -75,7 +75,7 @@ public class GuitarTabBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHammerPull(GuitarTabParser.HammerPullContext ctx) { return visitChildren(ctx); }
+	@Override public T visitSlide(GuitarTabParser.SlideContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

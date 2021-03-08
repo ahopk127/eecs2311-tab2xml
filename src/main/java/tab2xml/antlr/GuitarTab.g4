@@ -1,19 +1,19 @@
 grammar GuitarTab;
 
 @header {
-	package tab2xml.antlr; 
+	package tab2xml.antlr;
 }
 
 sheet
-	: (.*? staff .*?)* EOF			
+	: staff* EOF		
 	;
 	
 staff								
-	: NEWLINE? string+ NEWLINE?
+	: NEWLINE* string+ NEWLINE*
 	;
 
 string
-	: tune stringItems SPACE* NEWLINE
+	: tune stringItems SPACE* NEWLINE?
 	;
 
 tune
@@ -21,29 +21,31 @@ tune
 	;
 
 stringItems
-	:(HYPHEN+ 
-	|(fret
-	| harmonic
+	:(HYPHEN 
 	| hampullchain
-	| hammeron
 	| pulloff
-	| slide)* BAR)+				
+	| hammeron
+	| slide 
+	| harmonic 
+	| fret 
+	| BAR)+	BAR		
 	;	
 
-slide
-	: fret ('s' fret)+				
+hampullchain
+	: fret ('h' | 'p')  fret  (('h' | 'p') fret)+		# HammerPull
 	;
 
+
 pulloff
-	: fret ('p' fret)+ 				
+	: fret 'p' fret				
 	;
 
 hammeron 
-	: fret ('h' fret)+				
+	: fret 'h' fret				
 	;
 
-hampullchain
-	: fret ('h' | 'p')  (fret  ('h' | 'p') fret)+		# HammerPull
+slide
+	: fret 's' fret				
 	;
 
 harmonic
@@ -65,25 +67,37 @@ BAR
 	;
 	
 HYPHEN 
-	: '-' -> channel(HIDDEN)
+	: '-' 
 	;
 	
 FRET_NUM
 	: [1-2]?[0-9]
 	;
-  
+	
+H: 'h';
+P: 'p';
+S: 's';
+
+LSB
+	: '['
+	;
+RSB
+	: ']'
+	;
+	
 SPACE
 	: [ \t]
 	;
 
 NEWLINE
-	: SPACE* ('\r\n' | '\n')
+	: SPACE* '\r'? '\n'
 	;
-	
+
 MULTI_COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
+    : '/*' .*? '*/' -> channel(HIDDEN)
     ;
 
 LINE_COMMENT
-    :   '//' ~[\r\n]* -> channel(HIDDEN)
+    : '//' ~[\r\n]* -> channel(HIDDEN)
     ;
+    

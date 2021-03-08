@@ -1,6 +1,6 @@
 // Generated from GuitarTab.g4 by ANTLR 4.9.1
 
-	package tab2xml.antlr; 
+	package tab2xml.antlr;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -60,15 +60,17 @@ public interface GuitarTabListener extends ParseTreeListener {
 	 */
 	void exitStringItems(GuitarTabParser.StringItemsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GuitarTabParser#slide}.
+	 * Enter a parse tree produced by the {@code HammerPull}
+	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
 	 * @param ctx the parse tree
 	 */
-	void enterSlide(GuitarTabParser.SlideContext ctx);
+	void enterHammerPull(GuitarTabParser.HammerPullContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GuitarTabParser#slide}.
+	 * Exit a parse tree produced by the {@code HammerPull}
+	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
 	 * @param ctx the parse tree
 	 */
-	void exitSlide(GuitarTabParser.SlideContext ctx);
+	void exitHammerPull(GuitarTabParser.HammerPullContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GuitarTabParser#pulloff}.
 	 * @param ctx the parse tree
@@ -90,17 +92,15 @@ public interface GuitarTabListener extends ParseTreeListener {
 	 */
 	void exitHammeron(GuitarTabParser.HammeronContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code HammerPull}
-	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
+	 * Enter a parse tree produced by {@link GuitarTabParser#slide}.
 	 * @param ctx the parse tree
 	 */
-	void enterHammerPull(GuitarTabParser.HammerPullContext ctx);
+	void enterSlide(GuitarTabParser.SlideContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code HammerPull}
-	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
+	 * Exit a parse tree produced by {@link GuitarTabParser#slide}.
 	 * @param ctx the parse tree
 	 */
-	void exitHammerPull(GuitarTabParser.HammerPullContext ctx);
+	void exitSlide(GuitarTabParser.SlideContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GuitarTabParser#harmonic}.
 	 * @param ctx the parse tree

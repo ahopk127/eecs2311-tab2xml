@@ -80,7 +80,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	@Override
 	public StringItem visitStringItems(StringItemsContext ctx) {
 		StringItemsCollector coll = new StringItemsCollector(new ArrayList<StringItem>());
-		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() == TerminalNodeImpl.class).count();
+		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() == TerminalNodeImpl.class && c.getText().equals("|")).count();
 		s.setNumMeasures(numMeasures);
 		ctx.children.stream().forEach(c -> coll.add(visit(c)));
 		return coll;
@@ -141,8 +141,8 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	@Override
 	public StringItem visitHarmonic(HarmonicContext ctx) {
 		Note note = (Note) visit(ctx.getChild(1));
-		Harmonic harmonic = new Harmonic(note);
 		note.setHarmonic(true);
+		Harmonic harmonic = new Harmonic(note);
 		return harmonic;
 	}
 
@@ -163,6 +163,10 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	@Override
 	public StringItem visitTerminal(TerminalNode node) {
 		Token token = node.getSymbol();
+		
+		if (token.getText().equals("-"))
+			return null;
+		
 		int length = token.getText().length();
 		int column = token.getCharPositionInLine() + length;
 		Bar bar = new Bar();
