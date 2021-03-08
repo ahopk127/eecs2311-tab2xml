@@ -10,18 +10,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.jupiter.api.Test;
 
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
-import tab2xml.antlr.GuitarTabParser.StringContext;
-import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.model.*;
 
 class ParserTest {
