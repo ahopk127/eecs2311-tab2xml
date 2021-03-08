@@ -4,16 +4,21 @@
  - Must convert text tablature to MusicXML tablature
  - Must be able to read guitar, drum and bass text tabs
  - Must be able to access and edit the original text tab after conversion
+ - Must be able to save any edits to the text tab
+ - Must be able to finetune MusicXML output by editing input, including metadata
  - Must be able to account for drop tunings
  - Must be able to account for an unusual amount of strings in guitar tabs
  - Must be compatible with music in any time signature or key
  - Should be able to notate techniques such as bends, slides, hammer-ons, pull-offs, etc.
+ - Must support repeated measures
+ - Must support grace notes
 
 ** Usability
  - Must have an intuitive visual interface
  - Must be able to accept copy-pasted text or text read from a file
  - Must automatically detect which instrument the tab is for
  - Must allow the user to override this instrument detection
+ - Must deal with errors in a user-friendly way
 
 ** Reliability
  - Must be able to work with lots of variation in the format of the text tab
