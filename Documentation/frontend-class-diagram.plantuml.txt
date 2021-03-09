@@ -1,0 +1,25 @@
+@startuml
+
+interface View {
+  +{static} createView(ViewType) : View
+  +{abstract} getInputText() : String
+  +{abstract} getSelectedInstrument() : Instrument
+  +{abstract} setOutputText(String)
+  +{abstract} promptForFile(FileNameExtensionFilter) : Optional<Path>
+  +{abstract} showErrorMessage(String, String)
+}
+
+class Presenter {
+  -View view
+
+  -convert(String input, Instrument selectedInstrument)
+  +convert()
+  +loadFromFile()
+  +saveToFile()
+}
+
+Presenter o-- View
+View <|-- SingleEntryView
+View <|-- ViewBot
+
+@enduml

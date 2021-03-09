@@ -1,0 +1,15 @@
+@startuml
+
+User -> View : Input text tab into text box
+User -> View : Click "Convert and Save"
+View -> Presenter : Call convertAndSave()
+View -> Presenter : provide input text
+Presenter -> Parser : provide input text
+Presenter <-- Parser : return converted output
+View <-- Presenter : display warnings
+User -> View : select output file
+View -> Presenter : pass output file
+Presenter -> Files : writeString()
+
+@enduml
+
