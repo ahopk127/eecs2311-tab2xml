@@ -126,9 +126,9 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 				notes.add(note);
 			}
 		}
-		Note start = (Note) notes.get(0);
+		Note start = notes.get(0);
 		start.setStartChain(true);
-		Note stop = (Note) notes.get(notes.size() - 1);
+		Note stop = notes.get(notes.size() - 1);
 		stop.setStopChain(true);
 		List<Note> subList = notes.subList(1, notes.size() - 1);
 		List<Note> middle = new ArrayList<>(subList);

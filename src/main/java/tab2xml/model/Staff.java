@@ -197,7 +197,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 					continue;
 				}
 
-				StringItem item = (StringItem) notes.get(y).get(x);
+				StringItem item = notes.get(y).get(x);
 				
 				if (item.getClass() == Note.class) {
 					Note note = (Note) item;
