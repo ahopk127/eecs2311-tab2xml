@@ -1,4 +1,7 @@
 * Changelog
+** [0.2.2] - [2021-03-10 Wed] 
+*** Fixed
+    - Fixed an issue that caused some text tabs to fail when loaded from a file, but not copy-pasted
 ** [0.2.1] - [2021-03-08]
 *** Added
     - Started working on drum tab support

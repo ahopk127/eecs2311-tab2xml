@@ -129,7 +129,7 @@ public final class Presenter {
 	 * 
 	 * @param showInView whether the converted MusicXML should be shown in the
 	 *                   View and saved, or just saved
-	 * 
+	 * 						
 	 * @since 2021-02-25
 	 */
 	public void convertAndSave(boolean showInView) {
@@ -171,7 +171,7 @@ public final class Presenter {
 	 * 
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
-	 * 
+	 * 													
 	 * @since 2021-02-25
 	 */
 	public void loadFromFile() {
@@ -180,7 +180,9 @@ public final class Presenter {
 			return; // user cancelled, stop function
 			
 		try {
-			this.view.setInputText(Files.readString(loadPath.get()));
+			// read file, using only Unix line endings (\n)
+			this.view.setInputText(
+					Files.readString(loadPath.get()).replaceAll("\\r\\n", "\n"));
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",
 					"An error occured while reading from the selected file: "
