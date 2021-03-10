@@ -12,7 +12,7 @@ interface View {
 class Presenter {
   -View view
 
-  -convert(String input, Instrument selectedInstrument)
+  -convert(String input, Instrument selectedInstrument) : Optional<String>
   +convert()
   +loadFromFile()
   +saveToFile()

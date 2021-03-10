@@ -6,10 +6,11 @@ View -> Presenter : Call convertAndSave()
 View -> Presenter : provide input text
 Presenter -> Parser : provide input text
 Presenter <-- Parser : return converted output
-View <-- Presenter : display warnings
+View <-- Presenter : display any errors or warnings
 User -> View : select output file
 View -> Presenter : pass output file
 Presenter -> Files : writeString()
+View <-- Presenter : display any errors or warnings
 
 @enduml
 
