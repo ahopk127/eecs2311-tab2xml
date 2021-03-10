@@ -1,10 +1,13 @@
 package tab2xml.gui;
 
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Optional;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import tab2xml.exceptions.ParsingWarning;
+import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.parser.Instrument;
 
 /**
@@ -68,6 +71,16 @@ public final class ViewBot implements View {
 	@Override
 	public final Instrument getSelectedInstrument() {
 		return this.selectedInstrument;
+	}
+	
+	@Override
+	public void handleParseWarnings(Collection<ParsingWarning> warnings) {
+		warnings.forEach(System.err::println);
+	}
+	
+	@Override
+	public void onParseError(UnparseableInputException error) {
+		throw new RuntimeException(error);
 	}
 	
 	@Override

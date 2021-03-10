@@ -117,7 +117,7 @@ final class DoubleEntryView implements View {
 				"Enter the text tab or load from a file...", 15, 50);
 		this.input.setBorder(new LineBorder(Color.BLACK));
 		this.input.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
-		FileDragDropTarget.enableDragAndDrop(this.input);
+		this.input.setDropTarget(new FileDragDropTarget(this.input));
 		masterPanel.add(new JScrollPane(this.input), gridBag(0, 1, 1, 2));
 		
 		this.output = new JTextArea(15, 50);

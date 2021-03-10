@@ -1,4 +1,9 @@
 * Changelog
+** Unreleased
+*** Added
+    - Added new view, TabbedView, that uses tabs to combine the positives of single-entry and double-entry Views
+*** Fixed
+    - The issue fixed in v0.2.2 was not fixed for drag-and-drop input
 ** [0.2.2] - [2021-03-10 Wed] 
 *** Fixed
     - Fixed an issue that caused some text tabs to fail when loaded from a file, but not copy-pasted
