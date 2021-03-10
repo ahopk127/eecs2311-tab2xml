@@ -64,17 +64,20 @@ public final class Presenter {
 	 * Converts the view's inputted text tab to MusicXML, and puts that text into
 	 * the output.
 	 * 
+	 * @return true if conversion was successful, false otherwise
+	 * 
 	 * @since 2021-01-18
 	 */
-	public void convert() {
+	public boolean convert() {
 		final String input = this.view.getInputText();
 		final Instrument selectedInstrument = this.view.getSelectedInstrument();
 		final Optional<String> output = this.convert(input, selectedInstrument);
 		
 		if (output.isEmpty())
-			return;
+			return false;
 		else {
 			this.view.setOutputText(output.get());
+			return true;
 		}
 	}
 	
@@ -129,10 +132,12 @@ public final class Presenter {
 	 * 
 	 * @param showInView whether the converted MusicXML should be shown in the
 	 *                   View and saved, or just saved
-	 * 						
+	 * @return {@code true} if both conversion and saving were successful,
+	 *         {@code false} otherwise
+	 * 
 	 * @since 2021-02-25
 	 */
-	public void convertAndSave(boolean showInView) {
+	public boolean convertAndSave(boolean showInView) {
 		// get input and output
 		final String input = this.view.getInputText();
 		final Instrument selectedInstrument = this.view.getSelectedInstrument();
@@ -140,7 +145,7 @@ public final class Presenter {
 		
 		// if an error occurred, abort
 		if (output.isEmpty())
-			return;
+			return false;
 		
 		// set output text in view
 		if (showInView) {
@@ -151,17 +156,19 @@ public final class Presenter {
 		final Optional<Path> savePathInput = this.view
 				.promptForFile(MUSICXML_FILE);
 		if (savePathInput.isEmpty())
-			return; // operation cancelled
+			return false; // operation cancelled
 			
 		final Path savePath = withPreferredExtension(savePathInput.get(), "xml");
 		
 		// save to file
 		try {
 			Files.writeString(savePath, output.get());
+			return true;
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",
 					"An error occured while saving to the selected file: "
 							+ e.getMessage());
+			return false;
 		}
 	}
 	
@@ -171,45 +178,52 @@ public final class Presenter {
 	 * 
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
+	 * @return true if loading was successful
 	 * 													
 	 * @since 2021-02-25
 	 */
-	public void loadFromFile() {
+	public boolean loadFromFile() {
 		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE);
 		if (loadPath.isEmpty())
-			return; // user cancelled, stop function
+			return false; // user cancelled, stop function
 			
 		try {
 			// read file, using only Unix line endings (\n)
 			this.view.setInputText(
 					Files.readString(loadPath.get()).replaceAll("\\r\\n", "\n"));
+			return true;
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",
 					"An error occured while reading from the selected file: "
 							+ e.getMessage());
+			return false;
 		}
 	}
 	
 	/**
 	 * Prompts the user for an output file, then saves the view's output text to
 	 * that file.
+	 *
+	 * @return true if saving was successful
 	 * 
 	 * @since 2021-02-25
 	 */
-	public void saveToFile() {
+	public boolean saveToFile() {
 		final Optional<Path> savePathInput = this.view
 				.promptForFile(MUSICXML_FILE);
 		if (savePathInput.isEmpty())
-			return; // operation cancelled
+			return false; // operation cancelled
 			
 		final Path savePath = withPreferredExtension(savePathInput.get(), "xml");
 		
 		try {
 			Files.writeString(savePath, this.view.getOutputText());
+			return true;
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",
 					"An error occured while saving to the selected file: "
 							+ e.getMessage());
+			return false;
 		}
 	}
 }

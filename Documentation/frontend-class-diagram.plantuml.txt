@@ -13,9 +13,9 @@ class Presenter {
   -View view
 
   -convert(String input, Instrument selectedInstrument) : Optional<String>
-  +convert()
-  +loadFromFile()
-  +saveToFile()
+  +convert() : boolean
+  +loadFromFile() : boolean
+  +saveToFile() : boolean
 }
 
 Presenter o-- View
