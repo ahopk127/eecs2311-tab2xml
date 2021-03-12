@@ -16,6 +16,7 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 /**
  * A background panel used in the TabbedView.
@@ -62,11 +63,11 @@ public final class BackgroundPanel extends JPanel {
 		
 		// put component on background
 		final GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = (Insets) DEFAULT_INSETS.clone();
 		super.add(comp, gbc);
 		
 		// set preferred component settings
 		comp.setOpaque(false);
+		comp.setBorder(new EmptyBorder(DEFAULT_INSETS));
 	}
 	
 	/**

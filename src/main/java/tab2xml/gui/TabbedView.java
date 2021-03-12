@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -69,6 +70,7 @@ final class TabbedView implements View {
 	public TabbedView() {
 		this.frame = new JFrame("TAB2XML");
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setResizable(false);
 		this.presenter = new Presenter(this);
 		
 		// master components - for both input and output
@@ -85,7 +87,11 @@ final class TabbedView implements View {
 		this.input = new JTextArea(24, 80);
 		this.input.setBorder(new LineBorder(Color.BLACK));
 		this.input.setDropTarget(new FileDragDropTarget(this.input));
-		inputPanel.add(new JScrollPane(this.input), BorderLayout.CENTER);
+		inputPanel.add(
+				new JScrollPane(this.input,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
 		
 		final JLabel inputLabel = new JLabel(
 				"Enter text tab or load it from a file...");
@@ -120,7 +126,12 @@ final class TabbedView implements View {
 		
 		this.output = new JTextArea(24, 80);
 		this.output.setBorder(new LineBorder(Color.BLACK));
-		outputPanel.add(new JScrollPane(this.output), BorderLayout.CENTER);
+		
+		outputPanel.add(
+				new JScrollPane(this.output,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
 		
 		final JLabel outputLabel = new JLabel(
 				"The output MusicXML will be displayed here.");

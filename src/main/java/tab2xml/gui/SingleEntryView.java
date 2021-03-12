@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
@@ -145,6 +146,7 @@ final class SingleEntryView implements View {
 	public SingleEntryView() {
 		this.frame = new JFrame("Tab2XML");
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setResizable(false);
 		this.presenter = new Presenter(this);
 		
 		// create components
@@ -164,7 +166,11 @@ final class SingleEntryView implements View {
 		this.textBox.setDropTarget(new FileDragDropTarget(this.textBox));
 		this.textBox.addCaretListener(
 				e -> this.textBox.getHighlighter().removeAllHighlights());
-		mainPanel.add(new JScrollPane(this.textBox), BorderLayout.CENTER);
+		mainPanel.add(
+				new JScrollPane(this.textBox,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
 		
 		// buttons
 		final Insets buttonInsets = new Insets(3, 8, 3, 8);
