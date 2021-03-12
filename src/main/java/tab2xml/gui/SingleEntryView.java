@@ -203,17 +203,6 @@ final class SingleEntryView implements View {
 		buttonPanel.add(this.instrumentSelection,
 				gridBag(0, 0, 1, 1, buttonInsets));
 		
-		// background
-		// backgroundPanel.add(fillerPanel());
-		// backgroundPanel.add(fillerPanel());
-		// backgroundPanel.add(fillerPanel());
-		// backgroundPanel.add(fillerPanel());
-		// backgroundPanel.add(mainPanel);
-		// backgroundPanel.add(fillerPanel());
-		// backgroundPanel.add(fillerPanel());
-		// backgroundPanel.add(fillerPanel());
-		// backgroundPanel.add(fillerPanel());
-		
 		// set the frame to INPUT state.
 		State.INPUT.enable(this);
 		

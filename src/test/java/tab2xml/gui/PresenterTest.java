@@ -122,13 +122,13 @@ class PresenterTest {
 	}
 	
 	/**
-	 * Tests that invalid text tabs show an error message.
+	 * Tests that invalid text tabs and files show an error message.
 	 * 
 	 * @since 2021-03-12
 	 */
 	@Test
 	final void testErrors() {
-		final View view = View.createViewBot();
+		final ViewBot view = View.createViewBot();
 		final Presenter presenter = new Presenter(view);
 		
 		// instrument is null
@@ -136,6 +136,10 @@ class PresenterTest {
 		
 		view.setSelectedInstrument(Instrument.GUITAR);
 		assertThrows(RuntimeException.class, () -> presenter.convert());
+		
+		// invalid files
+		view.setSelectedFile(TEST_FILES.resolve("NONEXISTENT"));
+		assertThrows(RuntimeException.class, () -> presenter.loadFromFile());
 	}
 	
 	/**
