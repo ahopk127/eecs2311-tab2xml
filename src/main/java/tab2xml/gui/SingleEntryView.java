@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.io.IOException;
@@ -166,14 +165,10 @@ final class SingleEntryView implements View {
 			throw new AssertionError("Image loading failed.", e);
 		}
 		
-		final JPanel backgroundPanel = new BackgroundImagePanel(bgImage);
-		backgroundPanel.setLayout(new GridLayout(1, 1));
-		this.frame.add(backgroundPanel);
-		
 		// create components
 		final JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		backgroundPanel.add(mainPanel);
+		this.frame.add(new BackgroundPanel(mainPanel));
 		
 		final JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());

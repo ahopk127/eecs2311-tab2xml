@@ -73,7 +73,7 @@ final class TabbedView implements View {
 		
 		// master components - for both input and output
 		final JPanel masterPanel = new JPanel(new BorderLayout());
-		this.frame.add(masterPanel);
+		this.frame.add(new BackgroundPanel(masterPanel));
 		
 		this.inputOutputPane = new JTabbedPane();
 		masterPanel.add(this.inputOutputPane);
