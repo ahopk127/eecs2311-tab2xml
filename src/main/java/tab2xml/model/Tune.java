@@ -1,9 +1,6 @@
 package tab2xml.model;
 
 public class Tune extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7283815230989809053L;
 	public static String standardTuning[][] = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
 			{ "E", "2" } };
@@ -30,7 +27,7 @@ public class Tune extends StringItem {
 	}
 
 	@Override
-	public int getPosition() {
+	public double getPosition() {
 		return 0;
 	}
 

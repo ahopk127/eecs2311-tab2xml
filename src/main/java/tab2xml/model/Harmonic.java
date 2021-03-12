@@ -5,9 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class Harmonic extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7485103510856786127L;
 	private Note note;
 
@@ -15,7 +12,7 @@ public class Harmonic extends StringItem {
 		this.note = note;
 	}
 
-	public int getPosition() {
+	public double getPosition() {
 		return note.getPosition();
 	}
 

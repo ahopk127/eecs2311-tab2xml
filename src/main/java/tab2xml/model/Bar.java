@@ -1,12 +1,14 @@
 package tab2xml.model;
 
 public class Bar extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6758542578259875168L;
-	int position;
+	private int position;
 	private int stringNum;
+	private int repeatCount;
+	private boolean isDoubleBar;
+	private boolean isRepeat;
+	private boolean start;
+	private boolean stop;
 
 	public Bar() {
 	}
@@ -19,8 +21,48 @@ public class Bar extends StringItem {
 		this.stringNum = stringNum;
 	}
 
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
+	}
+
+	public boolean isDoubleBar() {
+		return isDoubleBar;
+	}
+
+	public void setDoubleBar(boolean isDoubleBar) {
+		this.isDoubleBar = isDoubleBar;
+	}
+
+	public boolean isRepeat() {
+		return isRepeat;
+	}
+
+	public void setRepeat(boolean isRepeat) {
+		this.isRepeat = isRepeat;
+	}
+
+	public boolean isStart() {
+		return start;
+	}
+
+	public void setStart(boolean start) {
+		this.start = start;
+	}
+
+	public boolean isStop() {
+		return stop;
+	}
+
+	public void setStop(boolean stop) {
+		this.stop = stop;
+	}
+
 	@Override
-	public int getPosition() {
+	public double getPosition() {
 		return position;
 	}
 
@@ -36,6 +78,15 @@ public class Bar extends StringItem {
 	
 	@Override
 	public String toString() {
-		return "|";
+		if (isDoubleBar && !isRepeat)
+			return "||";
+		else if (isDoubleBar && isRepeat && repeatCount != 0)
+			return String.format("%d|", repeatCount);
+		else if (isDoubleBar && isRepeat && start)
+			return "||*";
+		else if (isDoubleBar && isRepeat && stop)
+			return "*||";
+		else
+			return "|";
 	}
 }

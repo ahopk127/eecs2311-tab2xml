@@ -1,9 +1,6 @@
 package tab2xml.model;
 
 public class Fret extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5648596253080025937L;
 	private String value;
 	private int position;
@@ -39,7 +36,7 @@ public class Fret extends StringItem {
 	}
 
 	@Override
-	public int getPosition() {
+	public double getPosition() {
 		return position;
 	}
 
@@ -47,7 +44,7 @@ public class Fret extends StringItem {
 	public int getStringNum() {
 		return stringNum;
 	}
-	
+
 	@Override
 	public int getNoteCount() {
 		return 0;

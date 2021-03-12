@@ -5,9 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class HammerOn extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1578840013025953896L;
 	private Note start;
 	private Note stop;
@@ -33,7 +30,7 @@ public class HammerOn extends StringItem {
 	}
 
 	@Override
-	public int getPosition() {
+	public double getPosition() {
 		return start.getPosition();
 	}
 
@@ -46,7 +43,7 @@ public class HammerOn extends StringItem {
 	public int getNoteCount() {
 		return getNotes().size();
 	}
-	
+
 	@Override
 	public String toString() {
 		if (start == null)

@@ -41,7 +41,20 @@ public final class UnparseableInputException extends InvalidInputException {
 	 * @since 2021-02-28
 	 */
 	private static final String singleErrorMessage(ErrorToken error) {
-		return error.getMesage();
+		switch (error.getMesage()) {
+		case "extraneous input '-' expecting {NOTE, '|', NEWLINE}":
+		case "missing '|' at '-'":
+			return String.format("Incomplete tune: line %d column %d", error.getLine(), error.getColumn());
+		case "missing FRET_NUM at '-'":
+			return String.format("Missing Fret: line %d column %d", error.getLine(), error.getColumn());
+		case "extraneous input '\\n' expecting {'g', '|', '-', FRET_NUM, '['}":
+			return String.format("Missing end of string: line %d column %d", error.getLine(), error.getColumn());
+		case "extraneous input 'p' expecting FRET_NUM":
+		case "extraneous input 'h' expecting FRET_NUM":
+			return String.format("Expecting fret: line %d column %d", error.getLine(), error.getColumn());
+		default:
+			return error.getMesage();
+		}
 	}
 
 	/**

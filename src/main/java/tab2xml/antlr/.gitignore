@@ -32,3 +32,7 @@
 /DrumTabListener.java
 /DrumTabParser.java
 /DrumTabVisitor.java
+/DrumTab.interp
+/DrumTabLexer.interp
+/DrumTabLexer.java
+/DrumTabLexer.tokens

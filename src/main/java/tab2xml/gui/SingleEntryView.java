@@ -293,7 +293,7 @@ final class SingleEntryView implements View {
 	 */
 	private void highlightToken(ErrorToken token, HighlightPainter painter) {
 		try {
-			this.textBox.getHighlighter().addHighlight(token.getStart() == 0?0: token.getStart() - 1, token.getStop(), painter);
+			this.textBox.getHighlighter().addHighlight(token.getStart(), token.getStop(), painter);
 		} catch (final BadLocationException e) {
 			throw new AssertionError("Invalid token " + token, e);
 		}

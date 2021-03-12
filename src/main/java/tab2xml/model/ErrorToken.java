@@ -1,7 +1,7 @@
 package tab2xml.model;
 
 /**
- * An atomic token in the ASCII tablature
+ * An error token for invalid inputs when parsing.
  * 
  * @author amir
  */
@@ -10,11 +10,12 @@ public class ErrorToken {
 	private String message;
 	private int start;
 	private int stop;
-	
+	private int line;
+	private int column;
+
 	/**
 	 * Construct a default error token.
 	 * 
-	 * @param type the type of this error token
 	 */
 	public ErrorToken() {
 		data = "";
@@ -30,11 +31,11 @@ public class ErrorToken {
 	public ErrorToken(String data) {
 		this.data = data;
 	}
-	
+
 	public String getData() {
 		return data;
 	}
-	
+
 	public void setData(String data) {
 		this.data = data;
 	}
@@ -42,11 +43,11 @@ public class ErrorToken {
 	public String getMesage() {
 		return message;
 	}
-	
+
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	public int getStart() {
 		return start;
 	}
@@ -63,11 +64,22 @@ public class ErrorToken {
 		this.stop = stop;
 	}
 
-	/**
-	 * Return this value of this error token.
-	 * 
-	 * @return this error token's value
-	 */
+	public int getLine() {
+		return line;
+	}
+
+	public void setLine(int line) {
+		this.line = line;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+
+	public void setColumn(int column) {
+		this.column = column;
+	}
+
 	@Override
 	public String toString() {
 		return data;

@@ -90,7 +90,7 @@ public class Score {
 			List<GuitarString> strings = staff.getStrings();
 			for (int j = 0; j < strings.size(); j++) {
 				for (StringItem item : strings.get(j).getItems()) {
-					int count = item.getPosition() - acc;
+					double count = item.getPosition() - acc;
 					acc += count + (item.toString().length() / 2);
 					while (--count > 0)
 						sb.append("-");
@@ -106,15 +106,19 @@ public class Score {
 
 	public static void main(String[] args) {
 
-		String input = "E|--8h10p8---6---5---3---6p5-10p9-12p10-13p12-|-15p12-10p9-12p10-6p5-8p6---0---------|\r\n"
-				+ "B|-----------8-------5------------------------|--------------------------8---3---2---|\r\n"
-				+ "G|-------0-------3----------------------------|--------------------------------3---2-|\r\n"
-				+ "D|--------------------------------------------|--------------------------------------|\r\n"
-				+ "A|-----------------------0--------------------|--0-------------------------------0---|\r\n"
-				+ "D|--------------------------------------------|--------------------------------------|";
+		@SuppressWarnings("unused")
+		String input = "|-----------0-----||----------0--------4|\r\n" + "|---------0---0---||----------0--------||\r\n"
+				+ "|-------1-------1-||*---------1-------*||\r\n" + "|-----2-----------||*---------2-------*||\r\n"
+				+ "|---2-------------||------2---2--------||\r\n" + "|-0---------------||--0-------0--------||";
+
+		String input2 = "|-----------0-----|-0---------------|\r\n" + "|---------0---0---|-0---------------|\r\n"
+				+ "|-------1-------1-|-1---------------|\r\n" + "|-----2-----------|-2---------------|\r\n"
+				+ "|---2-------------|-2---------------|\r\n" + "|-0---------------|-0---------------|";
 
 		input += "\r\n";
-		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+		input2 += "\r\n";
+
+		InputStream stream = new ByteArrayInputStream(input2.getBytes(StandardCharsets.UTF_8));
 		GuitarTabLexer lexer = null;
 		try {
 			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
@@ -127,15 +131,16 @@ public class Score {
 			GuitarTabParser parser = new GuitarTabParser(tokens);
 
 			ErrorListener listener = new ErrorListener();
-			
+
 			parser.removeErrorListeners();
 			parser.addErrorListener(listener);
-			
+
 			ParseTree root = parser.sheet();
-			
+
 			SerializeScore ss = new SerializeScore();
 			Score sheet = ss.visit(root);
 			System.out.println(sheet.toString());
+			System.out.println(sheet.numberOfMeasures());
 		}
 	}
 }

@@ -6,11 +6,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * An abstract object that is on a single line of a staff.
+ * 
+ * @author amir
+ */
 public abstract class StringItem implements Serializable, Comparable<StringItem> {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3470299774150433578L;
 
 	/**
@@ -38,7 +39,7 @@ public abstract class StringItem implements Serializable, Comparable<StringItem>
 	 * 
 	 * @return the position of this string item
 	 */
-	public abstract int getPosition();
+	public abstract double getPosition();
 
 	/**
 	 * Return the string number of this item.
@@ -53,9 +54,9 @@ public abstract class StringItem implements Serializable, Comparable<StringItem>
 	 * @return the number of notes in this item
 	 */
 	public abstract int getNoteCount();
-	
+
 	/**
-	 *{@inheritDoc}
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int compareTo(StringItem o) {
@@ -63,10 +64,9 @@ public abstract class StringItem implements Serializable, Comparable<StringItem>
 			if (this.getStringNum() == o.getStringNum())
 				return 0;
 			else {
-				return this.getStringNum() - o.getStringNum();
+				return o.getStringNum() - this.getStringNum();
 			}
 		} else
-			return this.getPosition() - o.getPosition();
+			return Double.compare(this.getPosition(), o.getPosition());
 	}
-
 }

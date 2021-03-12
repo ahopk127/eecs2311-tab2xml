@@ -12,9 +12,6 @@ import tab2xml.exceptions.InvalidTokenException;
  * @author amir
  */
 public class Note extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7423778159486375067L;
 
 	/**
@@ -45,8 +42,9 @@ public class Note extends StringItem {
 	/*
 	 * Other data.
 	 */
-	private int position;
+	private double position;
 	private int measure;
+	private int repeatCount;
 	private String tune;
 
 	private boolean isChord;
@@ -64,6 +62,9 @@ public class Note extends StringItem {
 	private boolean isStopSlide;
 
 	private boolean isHarmonic;
+	private boolean isGrace;
+	private boolean isRepeatedStart;
+	private boolean isRepeatedStop;
 
 	/**
 	 * Construct a note object based on tune and a given fret.
@@ -252,12 +253,7 @@ public class Note extends StringItem {
 		return note;
 	}
 
-	/**
-	 * Set the position of this note in within its measure.
-	 * 
-	 * @param position the value to set the position of this note.
-	 */
-	public void setPosition(int position) {
+	public void setPosition(double position) {
 		this.position = position;
 	}
 
@@ -385,6 +381,38 @@ public class Note extends StringItem {
 		this.isHarmonic = isHarmonic;
 	}
 
+	public boolean isGrace() {
+		return isGrace;
+	}
+
+	public void setGrace(boolean isGrace) {
+		this.isGrace = isGrace;
+	}
+
+	public boolean isRepeatedStart() {
+		return isRepeatedStart;
+	}
+
+	public void setRepeatedStart(boolean isRepeatedStart) {
+		this.isRepeatedStart = isRepeatedStart;
+	}
+
+	public boolean isRepeatedStop() {
+		return isRepeatedStop;
+	}
+
+	public void setRepeatedStop(boolean isRepeatedStop) {
+		this.isRepeatedStop = isRepeatedStop;
+	}
+
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
+	}
+
 	@Override
 	public int getStringNum() {
 		return Integer.parseInt(string);
@@ -396,7 +424,7 @@ public class Note extends StringItem {
 	 * @return the position of the note
 	 */
 	@Override
-	public int getPosition() {
+	public double getPosition() {
 		return position;
 	}
 

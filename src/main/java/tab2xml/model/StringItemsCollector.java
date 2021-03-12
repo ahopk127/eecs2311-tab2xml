@@ -3,9 +3,6 @@ package tab2xml.model;
 import java.util.List;
 
 public class StringItemsCollector extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5896057496942602721L;
 	private List<StringItem> stringItems;
 
@@ -23,7 +20,7 @@ public class StringItemsCollector extends StringItem {
 	}
 
 	@Override
-	public int getPosition() {
+	public double getPosition() {
 		return -1;
 	}
 

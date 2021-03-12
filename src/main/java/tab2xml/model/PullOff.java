@@ -5,9 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class PullOff extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -216451585018707396L;
 	private Note start;
 	private Note stop;
@@ -25,8 +22,15 @@ public class PullOff extends StringItem {
 		return stop;
 	}
 
-	public int getPosition() {
+	public double getPosition() {
 		return start.getPosition();
+	}
+
+	public Collection<? extends StringItem> getNotes() {
+		List<StringItem> notes = new ArrayList<>();
+		notes.add((StringItem) StringItem.deepClone(start));
+		notes.add((StringItem) StringItem.deepClone(stop));
+		return notes;
 	}
 
 	@Override
@@ -48,12 +52,5 @@ public class PullOff extends StringItem {
 		sb.append(" ");
 		sb.append(stop.getStep());
 		return sb.toString();
-	}
-
-	public Collection<? extends StringItem> getNotes() {
-		List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(start));
-		notes.add((StringItem) StringItem.deepClone(stop));
-		return notes;
 	}
 }

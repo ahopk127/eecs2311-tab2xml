@@ -5,9 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class Slide extends StringItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 328697200069305169L;
 	private Note start;
 	private Note stop;
@@ -33,7 +30,7 @@ public class Slide extends StringItem {
 	}
 
 	@Override
-	public int getPosition() {
+	public double getPosition() {
 		return start.getPosition();
 	}
 

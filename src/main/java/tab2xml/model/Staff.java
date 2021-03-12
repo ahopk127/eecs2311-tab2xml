@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class Staff extends StaffItem implements Iterable<StringItem> {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5418273130827075188L;
 	private List<GuitarString> strings;
 	private String upperBeat;
@@ -30,10 +27,6 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		return strings;
 	}
 
-	public int numberOfMeasures() {
-		return strings.get(0).getNumMeasures();
-	}
-
 	public String getUpperBeat() {
 		return upperBeat;
 	}
@@ -48,6 +41,15 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 
 	public void setLowerBeat(String lowerBeat) {
 		this.lowerBeat = lowerBeat;
+	}
+
+	/**
+	 * Return the total measure count in this staff.
+	 * 
+	 * @return the number of measures in this staff
+	 */
+	public int numberOfMeasures() {
+		return strings.get(0).getNumMeasures();
 	}
 
 	/**
@@ -149,6 +151,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		private int totalNotesInCurrMeasure;
 		private int totalNotesInStaff;
 		private boolean collecting;
+		private boolean setFirstRepeatNote;
 		private Note previousNote = null;
 
 		/**
@@ -164,6 +167,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 			lengths = new int[numStrings];
 			Arrays.fill(lengths, -1);
 			collecting = true;
+			setFirstRepeatNote = false;
 			totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 			totalNotesInStaff = staff.getNoteCount();
 			pq = new PriorityQueue<>();
@@ -198,7 +202,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 				}
 
 				StringItem item = (StringItem) notes.get(y).get(x);
-				
+
 				if (item.getClass() == Note.class) {
 					Note note = (Note) item;
 					note.setMeasure(accumulateMeasure);
@@ -206,26 +210,51 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 					notes.get(y).remove(item);
 					lengths[y]--;
 					totalNotesInCurrMeasure--;
+					
+					if (note.isGrace()) {
+						while (((Note) notes.get(y).get(x)).isGrace()) {
+							Note gNote = ((Note) notes.get(y).get(x));
+							gNote.setGrace(false);
+							gNote.setMeasure(accumulateMeasure);
+							pq.add(gNote);
+							notes.get(y).remove(gNote);
+							lengths[y]--;
+							totalNotesInCurrMeasure--;
+						}
+					}
 				}
 				y++;
 			}
 			collecting = false;
 			y = 0;
 
-			// at this point we have collected the notes in the measure by our loop invariant:
+			Note note = (Note) pq.poll();
 
-			if (totalNotesInCurrMeasure == 0) {
+			if (note == null)
+				return null;
+
+			if (setFirstRepeatNote) {
+				note.setRepeatedStart(true);
+				Bar[] bars = getEndRepeatBars();
+				note.setRepeatCount(bars[0].getRepeatCount());
+				setFirstRepeatNote = false;
+			}
+
+			if (pq.isEmpty()) {
+				Bar bar = (Bar) notes.get(2).get(0);
+
+				if (bar.isDoubleBar() && bar.isRepeat() && bar.isStart())
+					setFirstRepeatNote = true;
+				else if (bar.isDoubleBar() && bar.isRepeat() && bar.isStop()) {
+					note.setRepeatedStop(true);
+				}
+
 				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(0));
 				totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 				barsNotSeen--;
 				if (barsNotSeen == 0 || totalNotesInCurrMeasure != 0)
 					setAccumulateMeasure(accumulateMeasure + 1);
 			}
-
-			Note note = (Note) pq.poll();
-
-			if (note == null)
-				return null;
 
 			if (previousNote != null && note.getPosition() == previousNote.getPosition()) {
 				note.setChord(true);
@@ -256,6 +285,22 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 				}
 			}
 			return Arrays.stream(lengths).sum();
+		}
+
+		private Bar[] getEndRepeatBars() {
+			Bar[] bars = new Bar[numStrings];
+
+			for (int i = notes.size() - 1; i >= 0; i--) {
+				LinkedList<StringItem> line = notes.get(i);
+				for (int j = 0; j < line.size(); j++) {
+					Object obj = line.get(j);
+					if (obj.getClass() == Bar.class) {
+						bars[i] = (Bar) obj;
+					} else if (obj.getClass() == Note.class)
+						continue;
+				}
+			}
+			return bars;
 		}
 
 		@SuppressWarnings("unused")

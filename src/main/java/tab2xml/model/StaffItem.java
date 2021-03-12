@@ -6,13 +6,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+/**
+ * An abstract object that is within a staff.
+ * 
+ * @author amir
+ */
 public abstract class StaffItem implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2287885769489399982L;
 
+	/**
+	 * Construct a deep copy clone of a {@code StaffItem} using serialization.
+	 * 
+	 * @param object the object of type {@code StaffItem} to deep copy
+	 * @return
+	 */
 	public static Object deepClone(Object object) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();

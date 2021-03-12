@@ -4,9 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class GuitarString extends StaffItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5274699295630375450L;
 	private ArrayList<StringItem> stringItems;
 	private String tune;
@@ -23,15 +20,6 @@ public class GuitarString extends StaffItem {
 	public GuitarString(int stringNum) {
 		stringItems = new ArrayList<>();
 		this.stringNum = stringNum;
-	}
-
-	public void addItem(StringItem item) {
-		stringItems.add(item);
-	}
-
-	public void addAllItems(List<StringItem> items) {
-		for (StringItem item : items)
-			this.stringItems.add(item);
 	}
 
 	public String getTune() {
@@ -77,10 +65,6 @@ public class GuitarString extends StaffItem {
 
 	public static void setCount(int count) {
 		GuitarString.count = count;
-	}
-
-	public List<StringItem> getStringItems() {
-		return stringItems;
 	}
 
 	public boolean add(StringItem item) {
