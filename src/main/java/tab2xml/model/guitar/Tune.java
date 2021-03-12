@@ -1,4 +1,4 @@
-package tab2xml.model;
+package tab2xml.model.guitar;
 
 public class Tune extends StringItem {
 	private static final long serialVersionUID = 7283815230989809053L;

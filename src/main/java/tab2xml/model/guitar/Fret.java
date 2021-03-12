@@ -1,4 +1,4 @@
-package tab2xml.model;
+package tab2xml.model.guitar;
 
 public class Fret extends StringItem {
 	private static final long serialVersionUID = 5648596253080025937L;

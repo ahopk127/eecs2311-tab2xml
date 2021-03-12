@@ -1,4 +1,4 @@
-package tab2xml.model;
+package tab2xml.model.guitar;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,8 +16,8 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.listeners.ErrorListener;
+import tab2xml.model.guitar.Score;
 import tab2xml.parser.SerializeScore;
-import tab2xml.model.Score;
 
 /**
  * A representation of a score sheet.

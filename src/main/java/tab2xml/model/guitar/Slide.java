@@ -1,19 +1,17 @@
-package tab2xml.model;
+package tab2xml.model.guitar;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class HammerPull extends StringItem {
-	private static final long serialVersionUID = -1117048664217523691L;
+public class Slide extends StringItem {
+	private static final long serialVersionUID = 328697200069305169L;
 	private Note start;
 	private Note stop;
-	private List<Note> middle;
 
-	public HammerPull(Note start, List<Note> middle, Note stop) {
+	public Slide(Note start, Note stop) {
 		this.start = start;
 		this.stop = stop;
-		this.middle = middle;
 	}
 
 	public Note getStart() {
@@ -24,15 +22,9 @@ public class HammerPull extends StringItem {
 		return stop;
 	}
 
-	public List<Note> getMiddle() {
-		return middle;
-	}
-
 	public Collection<? extends StringItem> getNotes() {
 		List<StringItem> notes = new ArrayList<>();
 		notes.add((StringItem) StringItem.deepClone(start));
-		for (StringItem note : middle)
-			notes.add((StringItem) StringItem.deepClone(note));
 		notes.add((StringItem) StringItem.deepClone(stop));
 		return notes;
 	}
@@ -59,10 +51,6 @@ public class HammerPull extends StringItem {
 		StringBuilder sb = new StringBuilder();
 		sb.append(start.getStep());
 		sb.append(" ");
-		for (StringItem item : middle) {
-			sb.append(((Note) item).getStep());
-			sb.append(" ");
-		}
 		sb.append(stop.getStep());
 		return sb.toString();
 	}

@@ -21,6 +21,18 @@ import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.antlr.GuitarTabParser.TuneContext;
 
 import tab2xml.model.*;
+import tab2xml.model.guitar.Bar;
+import tab2xml.model.guitar.Fret;
+import tab2xml.model.guitar.GuitarString;
+import tab2xml.model.guitar.HammerOn;
+import tab2xml.model.guitar.HammerPull;
+import tab2xml.model.guitar.Harmonic;
+import tab2xml.model.guitar.Note;
+import tab2xml.model.guitar.PullOff;
+import tab2xml.model.guitar.Slide;
+import tab2xml.model.guitar.StringItem;
+import tab2xml.model.guitar.StringItemsCollector;
+import tab2xml.model.guitar.Tune;
 
 /**
  * Extract string contents from parse tree.

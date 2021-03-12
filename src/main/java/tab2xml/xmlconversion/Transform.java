@@ -10,11 +10,11 @@ import javax.xml.parsers.DocumentBuilder;
 
 import tab2xml.parser.Instrument;
 import tab2xml.Main;
-import tab2xml.model.Note;
-import tab2xml.model.Score;
-import tab2xml.model.Staff;
-import tab2xml.model.StringItem;
-import tab2xml.model.Tune;
+import tab2xml.model.guitar.Note;
+import tab2xml.model.guitar.Score;
+import tab2xml.model.guitar.Staff;
+import tab2xml.model.guitar.StringItem;
+import tab2xml.model.guitar.Tune;
 
 /**
  * The transformer which generates the XML output as a string.

@@ -1,4 +1,4 @@
-package tab2xml.model;
+package tab2xml.model.guitar;
 
 /**
  * The 12 basic music notes.

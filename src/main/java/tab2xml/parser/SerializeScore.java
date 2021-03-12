@@ -7,8 +7,8 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
 import tab2xml.antlr.GuitarTabBaseVisitor;
 import tab2xml.antlr.GuitarTabParser.SheetContext;
-import tab2xml.model.Score;
-import tab2xml.model.Staff;
+import tab2xml.model.guitar.Score;
+import tab2xml.model.guitar.Staff;
 
 /**
  * Serialize a score into a list of staffs.

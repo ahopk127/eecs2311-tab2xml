@@ -1,4 +1,4 @@
-package tab2xml.model;
+package tab2xml.model.guitar;
 
 public class Bar extends StringItem {
 	private static final long serialVersionUID = 6758542578259875168L;

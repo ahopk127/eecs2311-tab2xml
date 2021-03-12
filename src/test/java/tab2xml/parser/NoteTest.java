@@ -14,6 +14,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import tab2xml.exceptions.InvalidTokenException;
 import tab2xml.model.*;
+import tab2xml.model.guitar.Note;
+import tab2xml.model.guitar.NoteType;
 
 class NoteTest {
 

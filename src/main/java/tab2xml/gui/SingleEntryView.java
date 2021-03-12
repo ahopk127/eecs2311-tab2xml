@@ -31,7 +31,7 @@ import javax.swing.text.Highlighter.HighlightPainter;
 
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
-import tab2xml.model.ErrorToken;
+import tab2xml.model.guitar.ErrorToken;
 import tab2xml.parser.Instrument;
 
 /**

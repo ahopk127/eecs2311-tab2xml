@@ -8,10 +8,9 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import tab2xml.antlr.GuitarTabBaseVisitor;
 import tab2xml.antlr.GuitarTabParser.StaffContext;
 import tab2xml.antlr.GuitarTabParser.StringContext;
-
-import tab2xml.model.GuitarString;
-import tab2xml.model.Staff;
-import tab2xml.model.StaffItem;
+import tab2xml.model.guitar.GuitarString;
+import tab2xml.model.guitar.Staff;
+import tab2xml.model.guitar.StaffItem;
 
 /**
  * Extract staffs from parse tree.

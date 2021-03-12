@@ -21,9 +21,9 @@ import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.exceptions.InvalidInputException;
 import tab2xml.exceptions.UnparseableInputException;
-import tab2xml.model.ErrorToken;
-import tab2xml.model.Score;
 import tab2xml.listeners.*;
+import tab2xml.model.guitar.ErrorToken;
+import tab2xml.model.guitar.Score;
 
 /**
  * A processor which works in 2 stages serializing ASCII tablature for a
