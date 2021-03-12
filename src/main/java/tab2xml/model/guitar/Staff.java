@@ -202,7 +202,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 				}
 
 				StringItem item = notes.get(y).get(x);
-
+				
 				if (item.getClass() == Note.class) {
 					Note note = (Note) item;
 					note.setMeasure(accumulateMeasure);

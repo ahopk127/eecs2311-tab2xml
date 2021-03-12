@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,9 +68,9 @@ public class Processor {
 
 	public Score processGuitar() throws InvalidInputException {
 		input = preprocessGuitar(input);
-		final LinkedList<ErrorToken> errorTokens = new LinkedList<>();
+		final List<ErrorToken> errorTokens = new LinkedList<>();
 
-		LinkedList<Integer> positions = new LinkedList<>();
+		List<Integer> positions = new LinkedList<>();
 
 		for (int i = 0; i < input.length() - 1; i++) {
 			char c1 = input.charAt(i);
@@ -165,12 +166,12 @@ public class Processor {
 		if (input == null || input.length() == 0)
 			return "";
 
-		final ArrayList<String> guitarMetadata = new ArrayList<>();
-		guitarMetadata.clear();
-
-
 		input += "\r\n";
+
+		final List<String> guitarMetadata = new ArrayList<>();
+
 		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?(\\||-)).*?\\|).*$)+)).*\\n?)+";
+
 		StringBuilder commentedInput = new StringBuilder();
 		StringBuilder staffMeta = new StringBuilder();
 
@@ -231,7 +232,7 @@ public class Processor {
 		*/
 	}
 
-	private static void showErrors(LinkedList<ErrorToken> errors) throws UnparseableInputException {
+	private static void showErrors(List<ErrorToken> errors) throws UnparseableInputException {
 		UnparseableInputException e = UnparseableInputException.get(errors);
 		throw e;
 	}

@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 
 import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
-import tab2xml.model.*;
 import tab2xml.model.guitar.Fret;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.Note;

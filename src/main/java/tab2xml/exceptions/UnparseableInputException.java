@@ -14,27 +14,28 @@ import tab2xml.model.guitar.ErrorToken;
  */
 public final class UnparseableInputException extends InvalidInputException {
 	private static final long serialVersionUID = 2307637151275887207L;
-
+	
 	/**
 	 * Generates an error message from a list of invalid tokens.
 	 *
 	 * @since 2021-02-28
 	 */
-	private static final String generateErrorMessage(LinkedList<ErrorToken> errors) {
+	private static final String generateErrorMessage(List<ErrorToken> errors) {
 		// stream code! converts each error to an error message then joins them
 		// using \n as a delimiter
-		return errors.stream().map(UnparseableInputException::singleErrorMessage).collect(Collectors.joining("\n"));
+		return errors.stream().map(UnparseableInputException::singleErrorMessage)
+				.collect(Collectors.joining("\n"));
 	}
-
+	
 	/**
 	 * Gets an UnparseableInputException from a list of invalid tokens
 	 *
 	 * @since 2021-02-28
 	 */
-	public static UnparseableInputException get(LinkedList<ErrorToken> errors) {
+	public static UnparseableInputException get(List<ErrorToken> errors) {
 		return new UnparseableInputException(new LinkedList<>(errors));
 	}
-
+	
 	/**
 	 * Creates an error message from an invalid token.
 	 *
@@ -57,23 +58,23 @@ public final class UnparseableInputException extends InvalidInputException {
 			return error.getMesage();
 		}
 	}
-
+	
 	/**
 	 * A list of all invalid tokens
 	 */
 	private final List<ErrorToken> errors;
-
+	
 	/**
 	 * Creates the exception
 	 *
 	 * @param errors list of all invalid tokens
 	 * @since 2021-02-28
 	 */
-	private UnparseableInputException(LinkedList<ErrorToken> errors) {
+	private UnparseableInputException(List<ErrorToken> errors) {
 		super(generateErrorMessage(errors));
 		this.errors = errors;
 	}
-
+	
 	/**
 	 * @return unmodifiable list of invalid tokens
 	 * @since 2021-02-28
@@ -81,5 +82,5 @@ public final class UnparseableInputException extends InvalidInputException {
 	public final List<ErrorToken> getErrors() {
 		return Collections.unmodifiableList(this.errors);
 	}
-
+	
 }
