@@ -22,15 +22,16 @@ public class PullOff extends StringItem {
 		return stop;
 	}
 
-	public double getPosition() {
-		return start.getPosition();
-	}
-
 	public Collection<? extends StringItem> getNotes() {
 		List<StringItem> notes = new ArrayList<>();
 		notes.add((StringItem) StringItem.deepClone(start));
 		notes.add((StringItem) StringItem.deepClone(stop));
 		return notes;
+	}
+
+	@Override
+	public double getPosition() {
+		return start.getPosition();
 	}
 
 	@Override

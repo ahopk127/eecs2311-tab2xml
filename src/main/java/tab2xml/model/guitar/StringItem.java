@@ -63,10 +63,8 @@ public abstract class StringItem implements Serializable, Comparable<StringItem>
 		if (this.getPosition() == o.getPosition()) {
 			if (this.getStringNum() == o.getStringNum())
 				return 0;
-			else {
-				return o.getStringNum() - this.getStringNum();
-			}
-		} else
-			return Double.compare(this.getPosition(), o.getPosition());
+			return o.getStringNum() - this.getStringNum();
+		}
+		return Double.compare(this.getPosition(), o.getPosition());
 	}
 }

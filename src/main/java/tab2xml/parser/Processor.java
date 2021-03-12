@@ -151,25 +151,25 @@ public class Processor {
 		return sheet;
 	}
 
-	public Score processDrum() {
+	public static Score processDrum() {
 		// TODO process the sheet for drum
 		return null;
 	}
 
-	public Score processBass() {
+	public static Score processBass() {
 		// TODO process the sheet for bass
 		return null;
 	}
 
-	private String preprocessGuitar(String input) {
-		input += "\r\n";
+	private static String preprocessGuitar(String input) {
+		if (input == null || input.length() == 0)
+			return "";
 
 		final ArrayList<String> guitarMetadata = new ArrayList<>();
 		guitarMetadata.clear();
 
-		if (input == null || input.length() == 0)
-			return "";
 
+		input += "\r\n";
 		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?(\\||-)).*?\\|).*$)+)).*\\n?)+";
 		StringBuilder commentedInput = new StringBuilder();
 		StringBuilder staffMeta = new StringBuilder();
@@ -231,7 +231,7 @@ public class Processor {
 		*/
 	}
 
-	private void showErrors(LinkedList<ErrorToken> errors) throws UnparseableInputException {
+	private static void showErrors(LinkedList<ErrorToken> errors) throws UnparseableInputException {
 		UnparseableInputException e = UnparseableInputException.get(errors);
 		throw e;
 	}

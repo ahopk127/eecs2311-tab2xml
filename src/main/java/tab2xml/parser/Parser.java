@@ -103,7 +103,7 @@ public class Parser {
 		final Transform tf = new Transform(this.sheet, this.instrument);
 		xmlOutput = tf.toXML();
 		
-		// NEW ERROR CODE - put any warnings here
+		// TODO: ADD WARNINGS from score data
 		final List<ParsingWarning> warnings = new ArrayList<>();
 		
 		return ImmutablePair.of(xmlOutput, warnings);

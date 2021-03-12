@@ -20,7 +20,6 @@ import tab2xml.antlr.GuitarTabParser.StringContext;
 import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.antlr.GuitarTabParser.TuneContext;
 
-import tab2xml.model.*;
 import tab2xml.model.guitar.Bar;
 import tab2xml.model.guitar.Fret;
 import tab2xml.model.guitar.GuitarString;
@@ -46,7 +45,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 
 	/**
 	 * Construct a sample parse tree visitor from a specified {@code GuitarString}
-	 * and ({@code StringContext}.
+	 * and {@code StringContext}.
 	 * 
 	 * @param string the guitar string model
 	 * @param sc     the corresponding string context
@@ -183,9 +182,9 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 			}
 		}
 
-		Note start = (Note) notes.get(0);
+		Note start = notes.get(0);
 		start.setStartChain(true);
-		Note stop = (Note) notes.get(notes.size() - 1);
+		Note stop = notes.get(notes.size() - 1);
 		stop.setStopChain(true);
 		List<Note> subList = notes.subList(1, notes.size() - 1);
 		List<Note> middle = new ArrayList<>(subList);
@@ -260,7 +259,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		return bar;
 	}
 
-	private boolean isNumeric(String s) {
+	private static boolean isNumeric(String s) {
 		return Pattern.matches("\\d+", s);
 	}
 }

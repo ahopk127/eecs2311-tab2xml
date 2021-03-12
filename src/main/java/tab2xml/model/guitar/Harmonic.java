@@ -12,14 +12,15 @@ public class Harmonic extends StringItem {
 		this.note = note;
 	}
 
-	public double getPosition() {
-		return note.getPosition();
-	}
-
 	public Collection<? extends StringItem> getNotes() {
 		List<StringItem> notes = new ArrayList<>();
 		notes.add((StringItem) StringItem.deepClone(note));
 		return notes;
+	}
+
+	@Override
+	public double getPosition() {
+		return note.getPosition();
 	}
 
 	@Override

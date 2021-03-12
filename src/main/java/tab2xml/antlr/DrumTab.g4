@@ -61,11 +61,11 @@ TYPE
 	;
 	
 STRIKES
-	: ('x' | 'o')?
+	: ('x' | 'o')
 	;
 	
 ACCENTS
-	: ('X' | 'O')?
+	: ('X' | 'O')
 	;
 	
 BAR
@@ -74,14 +74,6 @@ BAR
 	
 HYPHEN 
 	: '-' -> channel(HIDDEN)
-	;
-	
-LSB
-	: '['
-	;
-	
-RSB
-	: ']'
 	;
 	
 SPACE

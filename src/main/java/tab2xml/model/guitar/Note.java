@@ -39,9 +39,6 @@ public class Note extends StringItem {
 	private String fret;
 	private int type;
 
-	/*
-	 * Other data.
-	 */
 	private double position;
 	private int measure;
 	private int repeatCount;
@@ -414,18 +411,13 @@ public class Note extends StringItem {
 	}
 
 	@Override
-	public int getStringNum() {
-		return Integer.parseInt(string);
-	}
-
-	/**
-	 * Return the position of the note in its measure.
-	 * 
-	 * @return the position of the note
-	 */
-	@Override
 	public double getPosition() {
 		return position;
+	}
+
+	@Override
+	public int getStringNum() {
+		return Integer.parseInt(string);
 	}
 
 	@Override

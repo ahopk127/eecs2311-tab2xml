@@ -47,12 +47,12 @@ public class GuitarString extends StaffItem {
 	}
 
 	public int getNoteCount() {
-		int count = 0;
+		int total = 0;
 		for (int i = 1; i < stringItems.size(); i++) {
 			StringItem item = stringItems.get(i);
-			count += item.getNoteCount();
+			total += item.getNoteCount();
 		}
-		return count;
+		return total;
 	}
 
 	public ArrayList<StringItem> getItems() {
@@ -73,8 +73,8 @@ public class GuitarString extends StaffItem {
 		return true;
 	}
 
-	public boolean addAll(List<StringItem> stringItems) {
-		for (StringItem item : stringItems)
+	public boolean addAll(List<StringItem> items) {
+		for (StringItem item : items)
 			add(item);
 		return true;
 	}

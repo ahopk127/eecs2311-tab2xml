@@ -41,6 +41,7 @@ public final class UnparseableInputException extends InvalidInputException {
 	 * @since 2021-02-28
 	 */
 	private static final String singleErrorMessage(ErrorToken error) {
+		// TODO: use else if statements for more control
 		switch (error.getMesage()) {
 		case "extraneous input '-' expecting {NOTE, '|', NEWLINE}":
 		case "missing '|' at '-'":

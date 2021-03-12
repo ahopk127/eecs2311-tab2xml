@@ -21,7 +21,7 @@ public class DrumTabParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, TYPE=5, STRIKES=6, ACCENTS=7, BAR=8, HYPHEN=9, 
-		LSB=10, RSB=11, SPACE=12, NEWLINE=13, MULTI_COMMENT=14, LINE_COMMENT=15;
+		SPACE=10, NEWLINE=11, MULTI_COMMENT=12, LINE_COMMENT=13;
 	public static final int
 		RULE_sheet = 0, RULE_staff = 1, RULE_line = 2, RULE_lineItems = 3, RULE_drumType = 4, 
 		RULE_strike = 5, RULE_accent = 6, RULE_ghost = 7, RULE_roll = 8, RULE_choke = 9, 
@@ -36,15 +36,14 @@ public class DrumTabParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'g'", "'d'", "'#'", "'f'", null, null, null, "'|'", "'-'", "'['", 
-			"']'"
+			null, "'g'", "'d'", "'#'", "'f'", null, null, null, "'|'", "'-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, null, null, null, null, "TYPE", "STRIKES", "ACCENTS", "BAR", "HYPHEN", 
-			"LSB", "RSB", "SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
+			"SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -136,7 +135,7 @@ public class DrumTabParser extends Parser {
 			setState(37);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << TYPE) | (1L << STRIKES) | (1L << ACCENTS) | (1L << BAR) | (1L << HYPHEN) | (1L << LSB) | (1L << RSB) | (1L << SPACE) | (1L << NEWLINE) | (1L << MULTI_COMMENT) | (1L << LINE_COMMENT))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__1) | (1L << T__2) | (1L << T__3) | (1L << TYPE) | (1L << STRIKES) | (1L << ACCENTS) | (1L << BAR) | (1L << HYPHEN) | (1L << SPACE) | (1L << NEWLINE) | (1L << MULTI_COMMENT) | (1L << LINE_COMMENT))) != 0)) {
 				{
 				{
 				setState(25);
@@ -815,7 +814,7 @@ public class DrumTabParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21a\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\17a\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\7\2!\n\2\f\2\16\2$\13\2"+
 		"\7\2&\n\2\f\2\16\2)\13\2\3\2\3\2\3\3\5\3.\n\3\3\3\6\3\61\n\3\r\3\16\3"+
@@ -828,17 +827,17 @@ public class DrumTabParser extends Parser {
 		"\3\2\2\2\33\31\3\2\2\2\34\36\3\2\2\2\35\33\3\2\2\2\36\"\5\4\3\2\37!\13"+
 		"\2\2\2 \37\3\2\2\2!$\3\2\2\2\"#\3\2\2\2\" \3\2\2\2#&\3\2\2\2$\"\3\2\2"+
 		"\2%\33\3\2\2\2&)\3\2\2\2\'%\3\2\2\2\'(\3\2\2\2(*\3\2\2\2)\'\3\2\2\2*+"+
-		"\7\2\2\3+\3\3\2\2\2,.\7\17\2\2-,\3\2\2\2-.\3\2\2\2.\60\3\2\2\2/\61\5\6"+
+		"\7\2\2\3+\3\3\2\2\2,.\7\r\2\2-,\3\2\2\2-.\3\2\2\2.\60\3\2\2\2/\61\5\6"+
 		"\4\2\60/\3\2\2\2\61\62\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2\63\65\3\2\2"+
-		"\2\64\66\7\17\2\2\65\64\3\2\2\2\65\66\3\2\2\2\66\5\3\2\2\2\678\5\n\6\2"+
-		"8<\5\b\5\29;\7\16\2\2:9\3\2\2\2;>\3\2\2\2<:\3\2\2\2<=\3\2\2\2=?\3\2\2"+
-		"\2><\3\2\2\2?@\7\17\2\2@\7\3\2\2\2AJ\7\13\2\2BJ\5\f\7\2CJ\5\16\b\2DJ\5"+
-		"\20\t\2EJ\5\22\n\2FJ\5\24\13\2GJ\5\26\f\2HJ\7\n\2\2IA\3\2\2\2IB\3\2\2"+
-		"\2IC\3\2\2\2ID\3\2\2\2IE\3\2\2\2IF\3\2\2\2IG\3\2\2\2IH\3\2\2\2JK\3\2\2"+
-		"\2KI\3\2\2\2KL\3\2\2\2LM\3\2\2\2MN\7\n\2\2N\t\3\2\2\2OQ\7\7\2\2PO\3\2"+
-		"\2\2PQ\3\2\2\2QR\3\2\2\2RS\7\n\2\2S\13\3\2\2\2TU\7\b\2\2U\r\3\2\2\2VW"+
-		"\7\t\2\2W\17\3\2\2\2XY\7\3\2\2Y\21\3\2\2\2Z[\7\4\2\2[\23\3\2\2\2\\]\7"+
-		"\5\2\2]\25\3\2\2\2^_\7\6\2\2_\27\3\2\2\2\f\33\"\'-\62\65<IKP";
+		"\2\64\66\7\r\2\2\65\64\3\2\2\2\65\66\3\2\2\2\66\5\3\2\2\2\678\5\n\6\2"+
+		"8<\5\b\5\29;\7\f\2\2:9\3\2\2\2;>\3\2\2\2<:\3\2\2\2<=\3\2\2\2=?\3\2\2\2"+
+		"><\3\2\2\2?@\7\r\2\2@\7\3\2\2\2AJ\7\13\2\2BJ\5\f\7\2CJ\5\16\b\2DJ\5\20"+
+		"\t\2EJ\5\22\n\2FJ\5\24\13\2GJ\5\26\f\2HJ\7\n\2\2IA\3\2\2\2IB\3\2\2\2I"+
+		"C\3\2\2\2ID\3\2\2\2IE\3\2\2\2IF\3\2\2\2IG\3\2\2\2IH\3\2\2\2JK\3\2\2\2"+
+		"KI\3\2\2\2KL\3\2\2\2LM\3\2\2\2MN\7\n\2\2N\t\3\2\2\2OQ\7\7\2\2PO\3\2\2"+
+		"\2PQ\3\2\2\2QR\3\2\2\2RS\7\n\2\2S\13\3\2\2\2TU\7\b\2\2U\r\3\2\2\2VW\7"+
+		"\t\2\2W\17\3\2\2\2XY\7\3\2\2Y\21\3\2\2\2Z[\7\4\2\2[\23\3\2\2\2\\]\7\5"+
+		"\2\2]\25\3\2\2\2^_\7\6\2\2_\27\3\2\2\2\f\33\"\'-\62\65<IKP";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

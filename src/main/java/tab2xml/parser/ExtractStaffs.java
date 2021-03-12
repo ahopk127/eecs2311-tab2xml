@@ -33,6 +33,7 @@ public class ExtractStaffs extends GuitarTabBaseVisitor<StaffItem> {
 		return st;
 	}
 
+	@Override
 	public StaffItem visitString(StringContext ctx) {
 		GuitarString s = new GuitarString();
 		@SuppressWarnings("unused")
