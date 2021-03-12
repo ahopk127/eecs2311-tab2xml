@@ -6,15 +6,15 @@ grammar DrumTab;
 }
 
 sheet
-	: (.*? staff .*?)* EOF			
+	: staff* EOF			
 	;
 	
 staff								
-	: NEWLINE? line+ NEWLINE?
+	: NEWLINE* line+ NEWLINE*
 	;
 	
 line
-	: drumType lineItems SPACE* NEWLINE          
+	: drumType lineItems SPACE* NEWLINE?          
 	;
 
 lineItems
@@ -27,10 +27,10 @@ lineItems
 	| flam
 	| BAR)+	BAR		
 	;	
-drumType
-	: TYPE? BAR           //Question for amir. what are the question marks?
-	;
 	
+drumType
+	: TYPE? BAR        
+	;
 	
 strike
 	: STRIKES		
@@ -54,10 +54,11 @@ choke
 flam
 	: 'f'
 	;
+	
 /* Tokens */
 
 TYPE         
-	: ('CC' | 'SD' | 'HH' | 'HT' | 'MT' | 'BD' | 't' | 'T' | 'FT' | 'F' | 'B' | 'C' | 'R' | 'H' |'S'| 'Hf' | 'FH')?    // question for amir - is this right? LMAO
+	: ('CC' | 'SD' | 'HH' | 'HT' | 'MT' | 'BD' | 't' | 'T' | 'FT' | 'F' | 'B' | 'C' | 'R' | 'H' |'S'| 'Hf' | 'FH')
 	;
 	
 STRIKES
