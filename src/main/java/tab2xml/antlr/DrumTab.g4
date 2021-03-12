@@ -57,7 +57,7 @@ flam
 /* Tokens */
 
 TYPE         
-	: ('CC' | 'SD' | 'HH' | 'HT' | 'MT' | 'BD' | 't' | 'T' | 'FT' | 'F' | 'B' | 'C' | 'R' | 'H')?    // question for amir - is this right? LMAO
+	: ('CC' | 'SD' | 'HH' | 'HT' | 'MT' | 'BD' | 't' | 'T' | 'FT' | 'F' | 'B' | 'C' | 'R' | 'H' |'S'| 'Hf' | 'FH')?    // question for amir - is this right? LMAO
 	;
 	
 STRIKES
