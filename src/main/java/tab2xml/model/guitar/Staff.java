@@ -86,41 +86,11 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		List<LinkedList<StringItem>> res = new ArrayList<>();
 
 		for (GuitarString s : this.getStrings()) {
-			List<StringItem> items = s.getItems();
 			LinkedList<StringItem> notes = new LinkedList<>();
-
-			for (StringItem item : items) {
-				if (item.getClass() == Slide.class) {
-					Slide sl = (Slide) item;
-					notes.addAll(sl.getNotes());
-
-				} else if (item.getClass() == PullOff.class) {
-					PullOff po = (PullOff) item;
-					notes.addAll(po.getNotes());
-
-				} else if (item.getClass() == HammerOn.class) {
-					HammerOn ho = (HammerOn) item;
-					notes.addAll(ho.getNotes());
-
-				} else if (item.getClass() == HammerPull.class) {
-					HammerPull hp = (HammerPull) item;
-					notes.addAll(hp.getNotes());
-
-				} else if (item.getClass() == Harmonic.class) {
-					Harmonic h = (Harmonic) item;
-					notes.addAll(h.getNotes());
-
-				} else if (item.getClass() == Note.class) {
-					Note note = (Note) item;
-					notes.add((StringItem) StringItem.deepClone(note));
-
-				} else if (item.getClass() == Bar.class) {
-					Bar bar = (Bar) item;
-					notes.add((StringItem) StringItem.deepClone(bar));
-				}
-			}
+			notes.addAll(s.getNotes());
 			res.add(notes);
 		}
+
 		return res;
 	}
 
@@ -182,9 +152,9 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		}
 
 		/**
-		 * Return the next chronological note within the staff.
+		 * Return the next chronological note within a specified staff.
 		 * 
-		 * Return the next note within a specified staff.
+		 * @return the next note within a specified staff.
 		 * 
 		 */
 		@Override
@@ -202,7 +172,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 				}
 
 				StringItem item = notes.get(y).get(x);
-				
+
 				if (item.getClass() == Note.class) {
 					Note note = (Note) item;
 					note.setMeasure(accumulateMeasure);
@@ -210,7 +180,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 					notes.get(y).remove(item);
 					lengths[y]--;
 					totalNotesInCurrMeasure--;
-					
+
 					if (note.isGrace()) {
 						while (((Note) notes.get(y).get(x)).isGrace()) {
 							Note gNote = ((Note) notes.get(y).get(x));
@@ -233,23 +203,41 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 			if (note == null)
 				return null;
 
+			Bar[] bars = getEndRepeatBars();
+
 			if (setFirstRepeatNote) {
 				note.setRepeatedStart(true);
-				Bar[] bars = getEndRepeatBars();
 				note.setRepeatCount(bars[0].getRepeatCount());
 				setFirstRepeatNote = false;
 			}
 
-			if (pq.isEmpty()) {
-				Bar bar = (Bar) notes.get(2).get(0);
+			if (pq.isEmpty() && bars != null) {
+				if (totalNotesInCurrMeasure == 0) {
+					boolean isRepeatEnd = false;
+					for (int i = 1; i < bars.length; i++) {
+						if (bars[i].isRepeat() && bars[i].isStop())
+							isRepeatEnd = true;
+					}
 
-				if (bar.isDoubleBar() && bar.isRepeat() && bar.isStart())
+					if (bars[0].isRepeat() && bars[0].isStop() && !isRepeatEnd) {
+						String value = bars[0].toString();
+						String fret = value.substring(0, value.indexOf("|"));
+						double position = bars[0].getPosition() - 1;
+						Note newNote = new Note(bars[0].getTune(), fret);
+						newNote.setPosition(position);
+						newNote.setString(String.valueOf(bars[0].getStringNum()));
+						pq.add(newNote);
+						totalNotesInStaff++;
+					}
+				}
+
+				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStart()) {
 					setFirstRepeatNote = true;
-				else if (bar.isDoubleBar() && bar.isRepeat() && bar.isStop()) {
+				} else if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
 					note.setRepeatedStop(true);
 				}
 
-				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(0));
+				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(x));
 				totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 				barsNotSeen--;
 				if (barsNotSeen == 0 || totalNotesInCurrMeasure != 0)
@@ -289,28 +277,16 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 
 		private Bar[] getEndRepeatBars() {
 			Bar[] bars = new Bar[numStrings];
-
 			for (int i = notes.size() - 1; i >= 0; i--) {
 				LinkedList<StringItem> line = notes.get(i);
-				for (int j = 0; j < line.size(); j++) {
-					Object obj = line.get(j);
-					if (obj.getClass() == Bar.class) {
-						bars[i] = (Bar) obj;
-					} else if (obj.getClass() == Note.class)
-						continue;
+				Object obj = line.size() == 0 ? null : line.get(0);
+				if (obj != null && obj.getClass() == Bar.class) {
+					bars[i] = (Bar) obj;
+					continue;
 				}
+				return null;
 			}
 			return bars;
-		}
-
-		@SuppressWarnings("unused")
-		private void printNotes() {
-			for (LinkedList<StringItem> line : notes) {
-				for (StringItem item : line)
-					System.out.print(item.toString() + " ");
-				System.out.println();
-			}
-			System.out.println();
 		}
 	}
 

@@ -2,6 +2,7 @@ package tab2xml.model.guitar;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class GuitarString extends StaffItem {
 	private static final long serialVersionUID = -5274699295630375450L;
@@ -28,6 +29,10 @@ public class GuitarString extends StaffItem {
 
 	public void setTune(String tune) {
 		this.tune = tune;
+	}
+
+	public Tune getTuneObj() {
+		return (Tune) stringItems.get(0);
 	}
 
 	public int getStringNum() {
@@ -57,6 +62,42 @@ public class GuitarString extends StaffItem {
 
 	public ArrayList<StringItem> getItems() {
 		return stringItems;
+	}
+
+	public Collection<? extends StringItem> getNotes() {
+		List<StringItem> notes = new ArrayList<>();
+
+		for (StringItem item : stringItems) {
+			if (item.getClass() == Slide.class) {
+				Slide sl = (Slide) item;
+				notes.addAll(sl.getNotes());
+
+			} else if (item.getClass() == PullOff.class) {
+				PullOff po = (PullOff) item;
+				notes.addAll(po.getNotes());
+
+			} else if (item.getClass() == HammerOn.class) {
+				HammerOn ho = (HammerOn) item;
+				notes.addAll(ho.getNotes());
+
+			} else if (item.getClass() == HammerPull.class) {
+				HammerPull hp = (HammerPull) item;
+				notes.addAll(hp.getNotes());
+
+			} else if (item.getClass() == Harmonic.class) {
+				Harmonic h = (Harmonic) item;
+				notes.addAll(h.getNotes());
+
+			} else if (item.getClass() == Note.class) {
+				Note note = (Note) item;
+				notes.add((StringItem) StringItem.deepClone(note));
+
+			} else if (item.getClass() == Bar.class) {
+				Bar bar = (Bar) item;
+				notes.add((StringItem) StringItem.deepClone(bar));
+			}
+		}
+		return notes;
 	}
 
 	public static int getCount() {

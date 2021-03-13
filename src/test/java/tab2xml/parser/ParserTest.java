@@ -2,326 +2,371 @@ package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.junit.jupiter.api.Test;
 
-import tab2xml.antlr.GuitarTabLexer;
-import tab2xml.antlr.GuitarTabParser;
-import tab2xml.model.guitar.Fret;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.Note;
 import tab2xml.model.guitar.Score;
 import tab2xml.model.guitar.Staff;
 import tab2xml.model.guitar.StringItem;
+import tab2xml.model.guitar.Tune;
 
 class ParserTest {
-	// TODO: create detailed parser test for model.
-	@Test
-	void testScore() {
-		String input = "e|--------2-----|-----3--------|-----------2--|-----------2--|--0-----0-----|\r\n"
-				+ "B|--------0-----|--------------|--------------|--1--3--------|-----1-----0--|\r\n"
-				+ "G|-----0--------|--------------|--------------|--------------|--------------|\r\n"
-				+ "D|--------------|--4-----------|--------------|--0--------2--|-----------4--|\r\n"
-				+ "A|-----2--3-----|--------------|--------------|--------------|--3-----3--3--|\r\n"
-				+ "E|--------------|--3-----2-----|--3--------3--|--0-----2-----|-----3--3--2--|\r\n" + "\r\n"
-
-				+ "e|-----2--------|--2-----------|-----0--------|-----0-----3--|--0-----------|\r\n"
-				+ "B|--0--0--------|-----0--------|-----3--------|--------------|-----------1--|\r\n"
-				+ "G|--------4-----|-----------0--|--------------|-----------0--|-----4--------|\r\n"
-				+ "D|--------2--4--|--------0-----|--0-----------|-----4--------|--4-----------|\r\n"
-				+ "A|-----------0--|--------------|--3--0-----0--|--------------|--------------|\r\n"
-				+ "E|--------------|-----0-----2--|-----0--------|--------------|--------3-----|\r\n" + "\r\n"
-
-				+ "e|--0-----------|-----------3--|--------------|--------------|--------0-----|\r\n"
-				+ "B|--------------|--3--3-----0--|--------3-----|--3--0--------|--------0--1--|\r\n"
-				+ "G|-----0--------|-----2--2-----|-----2--4--2--|--------------|-----2--4-----|\r\n"
-				+ "D|--------0--4--|--4-----------|--------------|-----0--------|-----2--------|\r\n"
-				+ "A|-----2-----0--|--0-----2--2--|-----------0--|-----3--0--0--|-----2--------|\r\n"
-				+ "E|-----0--2--0--|--------------|-----------3--|--2--0--3--0--|-----0--------|\r\n" + "\r\n"
-
-				+ "e|--------------|--0--------2--|-----------2--|--------------|--0-----3--2--|\r\n"
-				+ "B|--------------|--------1-----|--1-----------|--0-----3-----|--------------|\r\n"
-				+ "G|--4--0--4--2--|--4-----------|--------------|--------------|-----2--------|\r\n"
-				+ "D|--0--------0--|-----4--------|--4-----------|-----------2--|--2-----4-----|\r\n"
-				+ "A|--------2--2--|-----------2--|-----3--------|--0-----------|--------2-----|\r\n"
-				+ "E|--2-----------|--------------|--3--0--------|--------0--0--|-----------3--|\r\n" + "";
-
-		input += "\r\n";
-		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-		GuitarTabLexer lexer = null;
-		try {
-			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (lexer != null) {
-
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			GuitarTabParser parser = new GuitarTabParser(tokens);
-
-			ParseTree root = parser.sheet();
-
-			SerializeScore ss = new SerializeScore();
-			Score sheet = ss.visit(root);
-			
-			String[] expected = { "G", "B", "F#", "B", "C", "F#", "G", "G", "F#", "G", "F#", "G", "C", "D", "E", "D",
-					"F#", "F#", "E", "E", "C", "C", "G", "E", "C", "G", "B", "F#", "C", "F#", "B", "F#", "B", "B", "E",
-					"F#", "A", "F#", "B", "E", "D", "G", "F#", "D", "C", "E", "D", "A", "E", "A", "E", "F#", "G", "G",
-					"E", "F#", "B", "G", "C", "E", "G", "B", "E", "D", "F#", "F#", "A", "E", "D", "F#", "A", "D", "A",
-					"A", "B", "G", "B", "B", "A", "D", "B", "A", "A", "G", "D", "F#", "B", "D", "C", "E", "A", "G", "A",
-					"E", "A", "E", "B", "E", "E", "B", "B", "C", "B", "D", "F#", "G", "B", "B", "A", "D", "B", "E", "B",
-					"F#", "C", "F#", "B", "C", "F#", "G", "C", "E", "F#", "B", "A", "D", "E", "E", "E", "E", "E", "A",
-					"G", "F#", "B", "F#", "G" };
-			
-			assertTrue(4 == sheet.size());
-			
-			
-		}
-		
-		
-		
-	}
-
-	@Test
-	void testStaff() {
-		String input = "|-----------0-----|-0---------------|\r\n" + "|---------0---0---|-0---------------|\r\n"
-				+ "|-------1-------1-|-1---------------|\r\n" + "|-----2-----------|-2---------------|\r\n"
-				+ "|---2-------------|-2---------------|\r\n" + "|-0---------------|-0---------------|";
-		input += "\r\n";
-		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-		GuitarTabLexer lexer = null;
-		try {
-			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (lexer != null) {
-
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			GuitarTabParser parser = new GuitarTabParser(tokens);
-
-			ParseTree root = parser.staff();
-			// expected strings, measures, tuning
-
-			//this takes a list of strings (empty at start)
-			List<ArrayList<Staff>> stringList = new ArrayList<>();
-			ExtractStaffs estaff = new ExtractStaffs(stringList);
-
-			Staff staff = (Staff) (estaff.visit(root));
-			assertEquals(6, staff.size());
-			assertEquals(2, staff.numberOfMeasures());
-			
-
-		}
-
-	}
-
-	@Test
-	void testTuning() {
-		String input = "|-----------0-----|-0---------------|\r\n" + "|---------0---0---|-0---------------|\r\n"
-				+ "|-------1-------1-|-1---------------|\r\n" + "|-----2-----------|-2---------------|\r\n"
-				+ "|---2-------------|-2---------------|\r\n" + "|-0---------------|-0---------------|";
-		input += "\r\n";
-		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-		GuitarTabLexer lexer = null;
-		try {
-			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (lexer != null) {
-
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			GuitarTabParser parser = new GuitarTabParser(tokens);
-
-			ParseTree root = parser.staff();
-			// expected strings, measures, tuning
-
-			//this takes a list of strings (empty at start)
-			List<ArrayList<Staff>> stringList = new ArrayList<>();
-			ExtractStaffs estaff = new ExtractStaffs(stringList);
-			String[][] expectedTuning = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
-					{ "E", "2" } };
-
-			for (int i = 0; i < stringList.size(); i++) {
-				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
-				String tune = gs.getTune();
-				assertEquals(expectedTuning[i], tune);
-			}
-		}
-	}
-
+	private static final Path TEST_FILES = Path.of("src", "test", "resources");
 
 	@Test
 	void stringItemCompareTo() {
-		List<StringItem> stringItems = new ArrayList<>();
-		Fret fret1 = new Fret("0", 6);
-		GuitarString guitarString1 = new GuitarString(1);
-		guitarString1.setTune("E");
-		Note note1 = new Note(fret1, guitarString1);
-		Fret fret2 = new Fret("0", 5);
-		GuitarString guitarString2 = new GuitarString(2);
-		guitarString2.setTune("B");
-		Note note2 = new Note(fret2, guitarString2);
-		Fret fret3 = new Fret("0", 4);
-		GuitarString guitarString3 = new GuitarString(3);
-		guitarString3.setTune("G");
-		Note note3 = new Note(fret3, guitarString3);
-		Fret fret4 = new Fret("0", 3);
-		GuitarString guitarString4 = new GuitarString(3);
-		guitarString4.setTune("D");
-		Note note4 = new Note(fret4, guitarString4);
-		Fret fret5 = new Fret("0", 2);
-		GuitarString guitarString5 = new GuitarString(4);
-		guitarString5.setTune("A");
-		Note note5 = new Note(fret5, guitarString5);
-		Fret fret6 = new Fret("0", 1);
-		GuitarString guitarString6 = new GuitarString(5);
-		guitarString6.setTune("E");
-		Note note6 = new Note(fret6, guitarString6);
-		stringItems.add(note1);
-		stringItems.add(note2);
-		stringItems.add(note3);
-		stringItems.add(note4);
-		stringItems.add(note5);
-		stringItems.add(note6);
-		Collections.sort(stringItems);
-		//System.out.println(stringItems);
-		String[] expected = { "E", "A", "D", "G", "B", "E" };
-		assertEquals(Arrays.toString(expected), stringItems.toString());
+		final int NUM_NOTES = 12;
+		final Random RAND = new Random();
+
+		StringItem[] stringItems = new StringItem[NUM_NOTES];
+		GuitarString[] strings = new GuitarString[6];
+
+		for (int i = 1; i <= strings.length; i++) {
+			strings[i - 1] = new GuitarString(i);
+			strings[i - 1].setTune(Tune.standardTuning[(i - 1) % 6][0]);
+		}
+
+		int index;
+
+		// same string: insertion at random orders
+		for (int i = 1; i <= NUM_NOTES; i++) {
+			Note note = new Note(strings[0], String.valueOf(i));
+			note.setPosition(i);
+
+			do {
+				index = RAND.nextInt(NUM_NOTES);
+			} while (stringItems[index] != null);
+			stringItems[index] = note;
+		}
+
+		Arrays.sort(stringItems);
+		String[] expected1 = { "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E" };
+		assertEquals(Arrays.toString(expected1), Arrays.toString(stringItems));
+		Arrays.fill(stringItems, null);
+
+		// different strings: insertion at random orders
+		for (int i = 1; i <= NUM_NOTES; i++) {
+			Note note = new Note(strings[(i - 1) % strings.length], String.valueOf(i));
+			note.setPosition(i);
+
+			do {
+				index = RAND.nextInt(NUM_NOTES);
+			} while (stringItems[index] != null);
+			stringItems[index] = note;
+		}
+
+		Arrays.sort(stringItems);
+		String[] expected2 = { "F", "C#", "A#", "F#", "D", "A#", "B", "G", "E", "C", "G#", "E" };
+		assertEquals(Arrays.toString(expected2), Arrays.toString(stringItems));
+		Arrays.fill(stringItems, null);
+	}
+
+	@Test
+	void testConversion_0() {
+		final String input;
+		final Instrument instrument = Instrument.GUITAR;
+
+		// noteCount, numStrings, numMeasures, ...
+		final int[][] exStaffData = { { 14, 6, 2 } };
+
+		// fret, step, ...
+		final String[][] exNoteData = { { "0", "E" }, { "2", "B" }, { "2", "E" }, { "1", "G#" }, { "0", "B" },
+				{ "0", "E" }, { "0", "B" }, { "1", "G#" }, { "0", "E" }, { "2", "B" }, { "2", "E" }, { "1", "G#" },
+				{ "0", "B" }, { "0", "E" } };
+
+		final int exTotalNotes = sumColumn(0, exStaffData);
+
+		try {
+			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test0.txt");
+			input = Files.readString(TEST_INPUT_FILE);
+			final Processor processor = new Processor(input, instrument);
+			final Score score = processor.process();
+
+			assertEquals(1, score.size());
+			assertEquals(2, score.numberOfMeasures());
+			assertEquals(exTotalNotes, score.getNoteCount());
+
+			final List<Staff> staffs = score.getStaffs();
+
+			for (int i = 0; i < staffs.size(); i++) {
+				Staff staff = staffs.get(i);
+
+				assertEquals(exStaffData[i][0], staff.getNoteCount());
+				assertEquals(exStaffData[i][1], staff.size());
+
+				int j = 0;
+				for (StringItem item : staff) {
+					if (item == null)
+						continue;
+					final Note note = (Note) item;
+					assertEquals(exNoteData[j][0], note.getFret());
+					assertEquals(exNoteData[j][1], note.getStep());
+					j++;
+				}
+			}
+
+			final Parser parser = new Parser(input, instrument);
+			final var output = parser.parse();
+			final String xml = output.getFirst();
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+			fail("Error: failed to parse tab correctly");
+			return;
+		}
+	}
+
+	@Test
+	void testConversion_1() {
+		final String input;
+		final Instrument instrument = Instrument.GUITAR;
+
+		// noteCount, numStrings, numMeasures, ...
+		final int[][] exStaffData = { { 9, 6, 2 }, { 26, 6, 2 } };
+
+		// fret, step, ...
+		final String[][][] exNoteData = {
+				{ { "0", "E" }, { "5", "G" }, { "3", "A#" }, { "3", "D" }, { "5", "E" }, { "0", "A" }, { "2", "E" },
+						{ "2", "A" }, { "2", "C#" } },
+				{ { "0", "D" }, { "3", "F" }, { "2", "A" }, { "3", "D" }, { "3", "F" }, { "2", "A" }, { "3", "D" },
+						{ "2", "E" }, { "2", "A" }, { "2", "C#" }, { "0", "A" }, { "5", "G" }, { "2", "A" },
+						{ "2", "C#" }, { "0", "D" }, { "3", "F" }, { "2", "A" }, { "3", "D" }, { "3", "F" },
+						{ "2", "A" }, { "3", "D" }, { "2", "E" }, { "2", "A" }, { "2", "C#" }, { "0", "A" },
+						{ "2", "A" } } };
+
+		final int exTotalNotes = sumColumn(0, exStaffData);
+
+		try {
+			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1.txt");
+			input = Files.readString(TEST_INPUT_FILE);
+			final Processor processor = new Processor(input, instrument);
+			final Score score = processor.process();
+
+			assertEquals(2, score.size());
+			assertEquals(4, score.numberOfMeasures());
+			assertEquals(exTotalNotes, score.getNoteCount());
+
+			final List<Staff> staffs = score.getStaffs();
+
+			for (int i = 0; i < staffs.size(); i++) {
+				Staff staff = staffs.get(i);
+
+				assertEquals(exStaffData[i][0], staff.getNoteCount());
+				assertEquals(exStaffData[i][1], staff.size());
+
+				int j = 0;
+				for (StringItem item : staff) {
+					if (item == null)
+						continue;
+					final Note note = (Note) item;
+					assertEquals(exNoteData[i][j][0], note.getFret());
+					assertEquals(exNoteData[i][j][1], note.getStep());
+					j++;
+				}
+			}
+
+			final Parser parser = new Parser(input, instrument);
+			final var output = parser.parse();
+			final String xml = output.getFirst();
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+			fail("Error: failed to parse tab correctly");
+			return;
+		}
+	}
+
+	@Test
+	void testConversion_2() {
+		final String input;
+		final Instrument instrument = Instrument.GUITAR;
+
+		// noteCount, numStrings, numMeasures, ...
+		final int[][] exStaffData = { { 30, 6, 2 }, { 37, 6, 2 }, { 34, 6, 2 } };
+
+		// fret, step, ...
+		final String[][][] exNoteData = {
+				{ { "0", "D" }, { "10", "A" }, { "7", "A" }, { "8", "F" }, { "10", "A" }, { "7", "A" }, { "7", "D" },
+						{ "7", "E" }, { "8", "G" }, { "6", "F" }, { "0", "A" }, { "5", "E" }, { "6", "F" },
+						{ "8", "G" }, { "5", "E" }, { "3", "D" }, { "0", "D" }, { "6", "F" }, { "7", "A" },
+						{ "7", "D" }, { "7", "F#" }, { "7", "A" }, { "5", "C" }, { "5", "D" }, { "7", "A" },
+						{ "5", "C" }, { "7", "F#" }, { "5", "A" }, { "8", "C" }, { "11", "D#" }, { "10", "D" } },
+				{ { "8", "C" }, { "10", "D" }, { "0", "G" }, { "8", "C" }, { "8", "G" }, { "6", "A#" }, { "3", "A#" },
+						{ "5", "A" }, { "5", "E" }, { "3", "G" }, { "0", "A" }, { "6", "A#" }, { "5", "A" },
+						{ "10", "D" }, { "9", "C#" }, { "12", "E" }, { "10", "D" }, { "13", "F" }, { "12", "E" },
+						{ "0", "A" }, { "15", "G" }, { "12", "E" }, { "10", "D" }, { "9", "C#" }, { "12", "E" },
+						{ "10", "D" }, { "6", "A#" }, { "5", "A" }, { "8", "C" }, { "6", "A#" }, { "8", "G" },
+						{ "0", "E" }, { "3", "D" }, { "3", "A#" }, { "0", "A" }, { "2", "C#" }, { "2", "A" } },
+				{ { "6", "A#" }, { "8", "C" }, { "6", "A#" }, { "0", "A" }, { "5", "A" }, { "6", "C#" }, { "5", "E" },
+						{ "7", "A" }, { "6", "C#" }, { "5", "E" }, { "0", "A" }, { "9", "C#" }, { "6", "A#" },
+						{ "8", "G" }, { "3", "D" }, { "0", "E" }, { "3", "A#" }, { "0", "G" }, { "0", "A" },
+						{ "2", "E" }, { "2", "A" }, { "2", "C#" }, { "10", "A" }, { "0", "E" }, { "9", "C#" },
+						{ "12", "E" }, { "0", "A" }, { "6", "A#" }, { "3", "G" }, { "5", "E" }, { "3", "D" },
+						{ "3", "A#" }, { "0", "G" }, { "2", "E" } } };
+
+		final int exTotalNotes = sumColumn(0, exStaffData);
+
+		try {
+			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test2.txt");
+			input = Files.readString(TEST_INPUT_FILE);
+			final Processor processor = new Processor(input, instrument);
+			final Score score = processor.process();
+
+			assertEquals(3, score.size());
+			assertEquals(6, score.numberOfMeasures());
+			assertEquals(exTotalNotes, score.getNoteCount());
+
+			final List<Staff> staffs = score.getStaffs();
+
+			for (int i = 0; i < staffs.size(); i++) {
+				Staff staff = staffs.get(i);
+
+				assertEquals(exStaffData[i][0], staff.getNoteCount());
+				assertEquals(exStaffData[i][1], staff.size());
+
+				int j = 0;
+				for (StringItem item : staff) {
+					if (item == null)
+						continue;
+					final Note note = (Note) item;
+					assertEquals(exNoteData[i][j][0], note.getFret());
+					assertEquals(exNoteData[i][j][1], note.getStep());
+					j++;
+				}
+			}
+
+			final Parser parser = new Parser(input, instrument);
+			final var output = parser.parse();
+			final String xml = output.getFirst();
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+			fail("Error: failed to parse tab correctly");
+			return;
+		}
+	}
+
+	@Test
+	void testConversion_3() {
+		final String input;
+		final Instrument instrument = Instrument.GUITAR;
+
+		// noteCount, numStrings, numMeasures, ...
+		final int[][] exStaffData = { { 15, 6, 2 } };
+
+		// fret, step, ...
+		final String[][][] exNoteData = { { { "0", "E" }, { "2", "B" }, { "2", "E" }, { "0", "G" }, { "1", "G#" },
+				{ "0", "B" }, { "0", "E" }, { "0", "B" }, { "1", "G#" }, { "0", "E" }, { "2", "B" }, { "2", "E" },
+				{ "1", "G#" }, { "0", "B" }, { "0", "E" } } };
+
+		final int exTotalNotes = sumColumn(0, exStaffData);
+
+		try {
+			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test3.txt");
+			input = Files.readString(TEST_INPUT_FILE);
+			final Processor processor = new Processor(input, instrument);
+			final Score score = processor.process();
+
+			assertEquals(1, score.size());
+			assertEquals(2, score.numberOfMeasures());
+			assertEquals(exTotalNotes, score.getNoteCount());
+
+			final List<Staff> staffs = score.getStaffs();
+
+			for (int i = 0; i < staffs.size(); i++) {
+				Staff staff = staffs.get(i);
+
+				assertEquals(exStaffData[i][0], staff.getNoteCount());
+				assertEquals(exStaffData[i][1], staff.size());
+
+				int j = 0;
+				for (StringItem item : staff) {
+					if (item == null)
+						continue;
+					final Note note = (Note) item;
+					assertEquals(exNoteData[i][j][0], note.getFret());
+					assertEquals(exNoteData[i][j][1], note.getStep());
+					j++;
+				}
+			}
+
+			final Parser parser = new Parser(input, instrument);
+			final var output = parser.parse();
+			final String xml = output.getFirst();
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+			fail("Error: failed to parse tab correctly");
+			return;
+		}
+	}
+
+	@Test
+	void testConversion_4() {
+		final String input;
+		final Instrument instrument = Instrument.GUITAR;
+
+		// noteCount, numStrings, numMeasures, ...
+		final int[][] exStaffData = { { 16, 6, 2 } };
+
+		// fret, step, ...
+		final String[][][] exNoteData = { { { "0", "E" }, { "2", "B" }, { "2", "E" }, { "1", "G#" }, { "0", "B" },
+				{ "0", "E" }, { "0", "B" }, { "1", "G#" }, { "0", "E" }, { "2", "B" }, { "0", "E" }, { "2", "B" },
+				{ "2", "E" }, { "1", "G#" }, { "0", "B" }, { "0", "E" } } };
+
+		final int exTotalNotes = sumColumn(0, exStaffData);
+
+		try {
+			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test4.txt");
+			input = Files.readString(TEST_INPUT_FILE);
+			final Processor processor = new Processor(input, instrument);
+			final Score score = processor.process();
+
+			assertEquals(1, score.size());
+			assertEquals(2, score.numberOfMeasures());
+			assertEquals(exTotalNotes, score.getNoteCount());
+
+			final List<Staff> staffs = score.getStaffs();
+
+			for (int i = 0; i < staffs.size(); i++) {
+				Staff staff = staffs.get(i);
+
+				assertEquals(exStaffData[i][0], staff.getNoteCount());
+				assertEquals(exStaffData[i][1], staff.size());
+
+				int j = 0;
+				for (StringItem item : staff) {
+					if (item == null)
+						continue;
+					final Note note = (Note) item;
+					assertEquals(exNoteData[i][j][0], note.getFret());
+					assertEquals(exNoteData[i][j][1], note.getStep());
+					j++;
+				}
+			}
+
+			final Parser parser = new Parser(input, instrument);
+			final var output = parser.parse();
+			final String xml = output.getFirst();
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+			fail("Error: failed to parse tab correctly");
+			return;
+		}
+	}
+
+	private static int sumColumn(int column, int[][] arr) {
+		int sum = 0;
+		for (int i = 0; i < arr.length; i++)
+			sum += arr[i][column];
+		return sum;
 	}
 }
-//	@Test
-//	void testHammerPull() {
-//		String input = "E|--10h12p10---0-------0--------------------|-----------------------------------|\r\n"
-//				+ "		B|-------------0-------0-----0-2-3s10-----8-|-8h10p8--7---------------5---------|\r\n"
-//				+ "		G|---------0--------------------------------|---------------------------6-------|\r\n"
-//				+ "		D|----------------------------------------9-|-9---------7---------------5-------|\r\n"
-//				+ "		A|------------------------------------------|-0-----------------0---------------|\r\n"
-//				+ "		D|-----------------5-------2----------------|-----------------------------------|";
-//		input += "\r\n";
-//		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-//		GuitarTabLexer lexer = null;
-//		try {
-//			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		if (lexer != null) {
-//
-//			CommonTokenStream tokens = new CommonTokenStream(lexer);
-//			GuitarTabParser parser = new GuitarTabParser(tokens);
-//
-//			
-//			GuitarString expectedGuitar = new GuitarString();
-//			
-//			Fret fret1 = new Fret("10");
-//			Fret fret2 = new Fret("12");
-//			Fret fret3 = new Fret("8");
-//			Note firstExpected = new Note(fret1, expectedGuitar);
-//			Note middleExpected = new Note(fret2, expectedGuitar);
-//			Note lastExpected = new Note(fret1, expectedGuitar);
-//			Note firstExpected2 = new Note(fret3, expectedGuitar);
-//			Note middleExpected2 = new Note(fret1, expectedGuitar);
-//			Note lastExpected2 = new Note(fret3, expectedGuitar);
-//			
-//			ParseTree root = parser.staff();
-//			ParseTree ham = parser.hampullchain();
-//			
-//			//this takes a list of strings (empty at start)
-//			List<ArrayList<Staff>> stringList = new ArrayList<>();
-//			ExtractStaffs estaff = new ExtractStaffs(stringList);
-//			ParseTree x = (ParseTree) estaff.visit(ham);
-//			for (int i = 0; i < stringList.size(); i++) {
-//				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
-//				StringContext sc = new StringContext((ParserRuleContext) ham, i);
-//				ExtractStringItems esi = new ExtractStringItems(gs, (StringContext) x);
-//				esi.visit(ham);
-//				//List<StringItem> gsList = esi.getStringItems().stream().filter(c->c.getClass() == HammPullContext.class).collect(Collectors.collectingAndThen(downstream, finisher));
-//				//Note note = (Note) gsList.get(i);
-//				
-//				
-//			}
-//			}
-//			
-//			
-////			ParseTree root = parser.hampullchain();
-////			ParseTree root2 = parser.staff();
-////			
-////			root.getChild(0);
-////			root.getChild(root.getChildCount() - 1);
-////			List<ArrayList<Staff>> stringList = new ArrayList<>();
-////			ExtractStaffs estaff = new ExtractStaffs(stringList);
-////			ParseTree staff = (ParseTree) (estaff.visit(root2));
-////			staff.getChild(1);
-////			
-////			
-////			for (int i = 0; i < staff.getChildCount(); i++) {
-////					GuitarString gs = (GuitarString)(estaff.visit(root.getChild(i)));
-////					ExtractStringItems eItems = new ExtractStringItems(gs, (StringContext) staff.getChild(i));
-////					staff.getChild(i);
-//					//StringItem sItem = eItems.visit(staff.getChild(i).getChild(1));
-//					//System.out.println(sItem);
-//					
-//				
-//			//}
-//			
-//		}
-//	
-//
-//	@Test
-//	void testHammerOn() {
-//		String input = "E|--10h12------0-------0--------------------|-----------------------------------|\r\n"
-//				+ "		B|-------------0-------0-----0-2h4-3h10---8-|-8h10----7---------------5---------|\r\n"
-//				+ "		G|---------0--------------------------------|---------------------------6-------|\r\n"
-//				+ "		D|----------------------------------------9-|-9---------7---------------5-------|\r\n"
-//				+ "		A|------------------------------------------|-0-----------------0---------------|\r\n"
-//				+ "		D|-----------------5-------2----------------|-----------------------------------|";
-//		input += "\r\n";
-//		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-//		GuitarTabLexer lexer = null;
-//		try {
-//			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		if (lexer != null) {
-//
-//			CommonTokenStream tokens = new CommonTokenStream(lexer);
-//			GuitarTabParser parser = new GuitarTabParser(tokens);
-//			
-//			ParseTree root = parser.staff();
-//			// expected strings, measures, tuning
-//
-//			//this takes a list of strings (empty at start)
-//			List<ArrayList<Staff>> stringList = new ArrayList<>();
-//			ExtractStaffs estaff = new ExtractStaffs(stringList);
-//			String[][] expectedTuning = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
-//					{ "E", "2" } };
-//
-////			for (int i = 0; i < stringList.size(); i++) {
-////				GuitarString gs = (GuitarString) (estaff.visit(root.getChild(i)));
-////				String tune = gs;
-////			//	assertEquals(expectedTuning[i], tune);
-////			}
-//			
-//		}
-//	}
-//
-//	@Test
-//	void testPullOff() {
-//
-//	}
-//
-//}

@@ -21,7 +21,6 @@ import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.antlr.GuitarTabParser.TuneContext;
 
 import tab2xml.model.guitar.Bar;
-import tab2xml.model.guitar.Fret;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.HammerOn;
 import tab2xml.model.guitar.HammerPull;
@@ -67,15 +66,6 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 				string.addAll(coll.getStringItems());
 			}
 		}
-	}
-
-	/**
-	 * Return a list of all retrieved data.
-	 * 
-	 * @return the list of string items extracted
-	 */
-	public List<StringItem> getStringItems() {
-		return s.getItems();
 	}
 
 	@Override
@@ -213,9 +203,8 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		int length = token.getText().length();
 		int column = token.getCharPositionInLine() + length;
 		String value = ctx.getChild(0).getText();
-		Fret fret = new Fret(value, column);
-		Note note = new Note(s.getTune(), fret.getValue());
-		note.setPosition(fret.getPosition());
+		Note note = new Note(s.getTune(), value);
+		note.setPosition(column);
 		note.setString(Integer.toString(s.getStringNum()));
 		note.setOctave(Tune.standardTuning[(s.getStringNum() - 1) % 6][1]);
 		return note;
@@ -228,34 +217,33 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		if (token.getText().equals("-"))
 			return null;
 
-		int column = token.getCharPositionInLine() + token.getText().length();
-
-		String[] text = token.getText().split("\\|");
+		String value = token.getText();
+		String start = value.substring(0, value.indexOf("|"));
+		int column = token.getCharPositionInLine() + value.length();
 
 		Bar bar = new Bar();
 		bar.setStringNum(s.getStringNum());
 		bar.setPosition(column);
-
-		if (text.length > 0) {
-			if (text[0].equals("*")) {
-				bar.setDoubleBar(true);
-				bar.setRepeat(true);
-				bar.setStop(true);
-			}
-			if (text[text.length - 1].equals("*")) {
-				bar.setDoubleBar(true);
-				bar.setRepeat(true);
-				bar.setStart(true);
-			}
-			if (isNumeric(text[0])) {
-				bar.setRepeatCount(Integer.parseInt(text[0]));
-				bar.setDoubleBar(true);
-				bar.setRepeat(true);
-				bar.setStop(true);
-			}
-		}
+		bar.setTune(s.getTune());
 		
-		if (token.getText().equals("||"))
+		if (start.equals("*")) {
+			bar.setDoubleBar(true);
+			bar.setRepeat(true);
+			bar.setStop(true);
+		}
+		if (value.charAt(value.length() - 1) == '*') {
+			bar.setDoubleBar(true);
+			bar.setRepeat(true);
+			bar.setStart(true);
+		}
+		if (isNumeric(start)) {
+			bar.setRepeatCount(Integer.parseInt(start));
+			bar.setDoubleBar(true);
+			bar.setRepeat(true);
+			bar.setStop(true);
+		}
+
+		if (value.equals("||"))
 			bar.setDoubleBar(true);
 
 		return bar;

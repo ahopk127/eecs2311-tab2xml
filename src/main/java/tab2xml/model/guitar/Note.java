@@ -81,16 +81,15 @@ public class Note extends StringItem {
 	 * @param type the type of this note
 	 */
 	public Note(NoteType type) {
+		// TODO REMOVE THIS CONSTURCTOR
 		this.note = type;
 		this.step = type.getValue();
-		this.note = type;
 	}
 
-	public Note(Fret fret, GuitarString guitarString) {
-		this.fret = fret.getValue();
+	public Note(GuitarString guitarString, String fret) {
+		this.fret = fret;
 		this.tune = guitarString.getTune();
 		this.note = setNoteType();
-		this.position = fret.getPosition();
 		this.string = Integer.toString(guitarString.getStringNum());
 	}
 

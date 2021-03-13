@@ -9,6 +9,7 @@ public class Bar extends StringItem {
 	private boolean isRepeat;
 	private boolean start;
 	private boolean stop;
+	private String tune;
 
 	public Bar() {
 	}
@@ -61,6 +62,14 @@ public class Bar extends StringItem {
 		this.stop = stop;
 	}
 
+	public String getTune() {
+		return tune;
+	}
+
+	public void setTune(String tune) {
+		this.tune = tune;
+	}
+
 	@Override
 	public double getPosition() {
 		return position;
@@ -70,12 +79,12 @@ public class Bar extends StringItem {
 	public int getStringNum() {
 		return stringNum;
 	}
-	
+
 	@Override
 	public int getNoteCount() {
 		return 0;
 	}
-	
+
 	@Override
 	public String toString() {
 		if (isDoubleBar && !isRepeat)

@@ -1,4 +1,4 @@
-// Generated from DrumTab.g4 by ANTLR 4.9.1
+// Generated from DrumTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr; 
 	
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class DrumTabParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =

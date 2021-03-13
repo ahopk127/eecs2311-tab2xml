@@ -67,9 +67,20 @@ public class Processor {
 	}
 
 	public Score processGuitar() throws InvalidInputException {
+		
+		// TODO: REMOVE THIS
+//		System.out.println("-----------------------");
+//		System.out.println(input);
+//		System.out.println("-----------------------");
+//		
 		input = preprocessGuitar(input);
 		final List<ErrorToken> errorTokens = new LinkedList<>();
-
+		
+		// TODO: REMOVE THIS
+//		System.out.println("-----------------------");
+//		System.out.println(input);
+//		System.out.println("-----------------------");
+//		
 		List<Integer> positions = new LinkedList<>();
 
 		for (int i = 0; i < input.length() - 1; i++) {
@@ -126,8 +137,10 @@ public class Processor {
 							leftComment++;
 					}
 				}
-				System.out.println("left: " + leftComment);
-				System.out.println("right: " + rightComment);
+				
+				// TODO: REMOVE THIS
+//				System.out.println("left: " + leftComment);
+//				System.out.println("right: " + rightComment);
 
 				leastCommentCount = 3 * (leftComment + rightComment);
 
@@ -148,7 +161,6 @@ public class Processor {
 		}
 		SerializeScore ss = new SerializeScore();
 		Score sheet = ss.visit(root);
-		System.out.println();
 		return sheet;
 	}
 
@@ -166,11 +178,11 @@ public class Processor {
 		if (input == null || input.length() == 0)
 			return "";
 
-		input += "\r\n";
+		input += "\n";
 
 		final List<String> guitarMetadata = new ArrayList<>();
 
-		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?(\\||-)).*?\\|).*$)+)).*\\n?)+";
+		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?(\\||-)).*?\\|).*$)+)).*\\r?\\n?)+";
 
 		StringBuilder commentedInput = new StringBuilder();
 		StringBuilder staffMeta = new StringBuilder();
