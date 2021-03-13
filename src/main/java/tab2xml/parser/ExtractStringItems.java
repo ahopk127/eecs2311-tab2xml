@@ -230,29 +230,31 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 
 		int column = token.getCharPositionInLine() + token.getText().length();
 
-		String[] text = token.getText().split("|");
+		String[] text = token.getText().split("\\|");
 
 		Bar bar = new Bar();
 		bar.setStringNum(s.getStringNum());
 		bar.setPosition(column);
 
-		if (text[0].equals("*")) {
-			bar.setDoubleBar(true);
-			bar.setRepeat(true);
-			bar.setStop(true);
+		if (text.length > 0) {
+			if (text[0].equals("*")) {
+				bar.setDoubleBar(true);
+				bar.setRepeat(true);
+				bar.setStop(true);
+			}
+			if (text[text.length - 1].equals("*")) {
+				bar.setDoubleBar(true);
+				bar.setRepeat(true);
+				bar.setStart(true);
+			}
+			if (isNumeric(text[0])) {
+				bar.setRepeatCount(Integer.parseInt(text[0]));
+				bar.setDoubleBar(true);
+				bar.setRepeat(true);
+				bar.setStop(true);
+			}
 		}
-		if (text[text.length - 1].equals("*")) {
-			bar.setDoubleBar(true);
-			bar.setRepeat(true);
-			bar.setStart(true);
-		}
-		if (isNumeric(text[0])) {
-			bar.setRepeatCount(Integer.parseInt(text[0]));
-			bar.setDoubleBar(true);
-			bar.setRepeat(true);
-			bar.setStop(true);
-		}
-
+		
 		if (token.getText().equals("||"))
 			bar.setDoubleBar(true);
 
