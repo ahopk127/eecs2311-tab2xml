@@ -4,15 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Insets;
-import java.nio.file.Path;
-import java.util.Optional;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -20,17 +14,14 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.JTextComponent;
-
-import tab2xml.parser.Instrument;
 
 /**
  * A view that shows input and output in separate text boxes, in tabs.
  *
  * @since 2021-03-10
  */
-final class TabbedView implements View {
+final class TabbedView extends AbstractSwingView {
 	/**
 	 * The insets used for prompt labels
 	 */
@@ -47,12 +38,6 @@ final class TabbedView implements View {
 		View.createView(View.ViewType.TABBED);
 	}
 	
-	private final Presenter presenter;
-	
-	private final JFrame frame;
-	
-	private final JComboBox<Instrument> instrumentSelection;
-	
 	/** The pane containing the input and output tabs. */
 	private final JTabbedPane inputOutputPane;
 	
@@ -68,10 +53,7 @@ final class TabbedView implements View {
 	 * @since 2021-03-10
 	 */
 	public TabbedView() {
-		this.frame = new JFrame("TAB2XML");
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setResizable(false);
-		this.presenter = new Presenter(this);
 		
 		// master components - for both input and output
 		final JPanel masterPanel = new JPanel(new BorderLayout());
@@ -156,9 +138,7 @@ final class TabbedView implements View {
 		masterPanel.add(instrumentSelectionPanel, BorderLayout.SOUTH);
 		
 		instrumentSelectionPanel.add(new JLabel("Instrument:"));
-		
-		this.instrumentSelection = new JComboBox<>(Instrument.values());
-		instrumentSelectionPanel.add(this.instrumentSelection);
+		instrumentSelectionPanel.add(this.instrumentSelector);
 		
 		// set the correct size, then open the window
 		this.frame.pack();
@@ -166,53 +146,12 @@ final class TabbedView implements View {
 	}
 	
 	@Override
-	public String getInputText() {
-		return this.input.getText();
+	protected JTextComponent getInput() {
+		return this.input;
 	}
 	
 	@Override
-	public String getOutputText() {
-		return this.output.getText();
-	}
-	
-	@Override
-	public Instrument getSelectedInstrument() {
-		// The only objects in this list are Instrument instances, so the cast
-		// should work.
-		return (Instrument) this.instrumentSelection.getSelectedItem();
-	}
-	
-	@Override
-	public Optional<Path> promptForFile(
-			FileNameExtensionFilter preferredFileType) {
-		final JFileChooser fc = new JFileChooser();
-		fc.addChoosableFileFilter(preferredFileType);
-		fc.setFileFilter(preferredFileType);
-		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION)
-			return Optional.of(fc.getSelectedFile().toPath());
-		else
-			return Optional.empty();
-	}
-	
-	@Override
-	public void setInputText(String text) {
-		this.input.setText(text);
-	}
-	
-	@Override
-	public void setOutputText(String text) {
-		this.output.setText(text);
-	}
-	
-	@Override
-	public void setSelectedInstrument(Instrument instrument) {
-		this.instrumentSelection.setSelectedItem(instrument);
-	}
-	
-	@Override
-	public void showErrorMessage(String title, String message) {
-		JOptionPane.showMessageDialog(this.frame, message, title,
-				JOptionPane.ERROR_MESSAGE);
+	protected JTextComponent getOutput() {
+		return this.output;
 	}
 }

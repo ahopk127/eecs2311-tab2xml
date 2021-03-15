@@ -4,22 +4,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.nio.file.Path;
-import java.util.Optional;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import tab2xml.parser.Instrument;
+import javax.swing.text.JTextComponent;
 
 /**
  * The view of Tab2XML. This class handles the GUI, and all interaction
@@ -27,7 +19,7 @@ import tab2xml.parser.Instrument;
  *
  * @since 2021-01-18
  */
-final class DoubleEntryView implements View {
+final class DoubleEntryView extends AbstractSwingView {
 	/**
 	 * Creates a {@code GridBagConstraints} object.
 	 *
@@ -61,18 +53,10 @@ final class DoubleEntryView implements View {
 		View.createView(View.ViewType.DOUBLE_ENTRY);
 	}
 	
-	/** The frame that the GUI is displayed on. */
-	private final JFrame frame;
-	
-	/** The presenter that handles the view's input */
-	private final Presenter presenter;
 	/** The text box that contains the input text. */
 	private final JTextArea input;
 	/** The text box that will contain the output text. */
 	private final JTextArea output;
-	
-	/** The dropdown box to select the instrument. */
-	private final JComboBox<Instrument> instrumentSelection;
 	
 	/**
 	 * Creates the view.
@@ -80,10 +64,6 @@ final class DoubleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public DoubleEntryView() {
-		this.frame = new JFrame("Tab2XML");
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.presenter = new Presenter(this);
-		
 		// create components
 		final JPanel masterPanel = new JPanel();
 		masterPanel.setLayout(new GridBagLayout());
@@ -126,8 +106,7 @@ final class DoubleEntryView implements View {
 		masterPanel.add(new JScrollPane(this.output), gridBag(2, 1, 1, 2));
 		
 		// combo boxes
-		this.instrumentSelection = new JComboBox<>(Instrument.values());
-		masterPanel.add(this.instrumentSelection, gridBag(1, 4));
+		masterPanel.add(this.instrumentSelector, gridBag(1, 4));
 		
 		// give everything the correct size
 		this.frame.pack();
@@ -137,52 +116,12 @@ final class DoubleEntryView implements View {
 	}
 	
 	@Override
-	public String getInputText() {
-		return this.input.getText();
+	protected JTextComponent getInput() {
+		return this.input;
 	}
 	
 	@Override
-	public String getOutputText() {
-		return this.output.getText();
-	}
-	
-	@Override
-	public Instrument getSelectedInstrument() {
-		// The only objects in this list are Instrument instances, so the cast
-		// should work.
-		return (Instrument) this.instrumentSelection.getSelectedItem();
-	}
-	
-	@Override
-	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
-		final JFileChooser fc = new JFileChooser();
-		fc.addChoosableFileFilter(preferredType);
-		fc.setFileFilter(preferredType);
-		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION)
-			return Optional.of(fc.getSelectedFile().toPath());
-		else
-			return Optional.empty();
-	}
-	
-	@Override
-	public void setInputText(String text) {
-		this.input.setText(text);
-	}
-	
-	@Override
-	public void setOutputText(String text) {
-		this.output.setText(text);
-	}
-	
-	@Override
-	public void setSelectedInstrument(Instrument instrument) {
-		this.instrumentSelection.setSelectedItem(instrument);
-	}
-	
-	@Override
-	public void showErrorMessage(String title, String message) {
-		JOptionPane.showMessageDialog(this.frame, message, title,
-				JOptionPane.ERROR_MESSAGE);
+	protected JTextComponent getOutput() {
+		return this.output;
 	}
 }
