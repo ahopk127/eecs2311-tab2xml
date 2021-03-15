@@ -1,4 +1,4 @@
-* About TAB2XML Version 0.2.2
+* About TAB2XML Version 0.3.0-alpha.1
 This is an application that converts text tablature to MusicXML, created as a project for EECS 2311 in 2021 Winter.
 
 It is fairly easy to use, but a full instruction manual can be found at [[./Documentation/instructions.pdf]].

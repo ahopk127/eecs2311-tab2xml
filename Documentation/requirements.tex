@@ -1,4 +1,4 @@
-% Created 2021-03-08 Mon 11:40
+% Created 2021-03-15 Mon 10:07
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -29,9 +29,9 @@
 
 \newpage
 \section{Functional Requirements}
-\label{sec:orga44f78e}
+\label{sec:org9ae3d05}
 \subsection{Functionality}
-\label{sec:orgdfb599d}
+\label{sec:orgbaf7ecc}
 \begin{itemize}
 \item Must convert text tablature to MusicXML tablature
 \item Must be able to read guitar, drum and bass text tabs
@@ -47,7 +47,7 @@
 \end{itemize}
 
 \subsection{Usability}
-\label{sec:orgb671d83}
+\label{sec:org760bd57}
 \begin{itemize}
 \item Must have an intuitive visual interface
 \item Must be able to accept copy-pasted text or text read from a file
@@ -57,35 +57,35 @@
 \end{itemize}
 
 \subsection{Reliability}
-\label{sec:orgf91aaa9}
+\label{sec:org292e6ed}
 \begin{itemize}
 \item Must be able to work with lots of variation in the format of the text tab
 \item The converted MusicXML tablature must be error free
 \end{itemize}
 
 \subsection{Performance}
-\label{sec:org66ae1c1}
+\label{sec:org767a4e7}
 \begin{itemize}
 \item Must convert the text tab in a reasonable amount of time
 \end{itemize}
 
 \subsection{Supportability}
-\label{sec:orgd8989a2}
+\label{sec:org8a4fcba}
 \begin{itemize}
 \item Should allow the user to configure their preferences for how they want the drums sheet music to be displayed (selecting the value and noteheads). Can have a default notation but should be able to be customized through preferences
 \item Must be testable via automated testing
 \end{itemize}
 
 \section{Non-Functional Requirements}
-\label{sec:org9349e92}
+\label{sec:org104c210}
 \begin{itemize}
 \item Should have an API that can be used by other programs
 \end{itemize}
 
 \section{Use Cases}
-\label{sec:org64a1f7c}
+\label{sec:org62c2fc7}
 \subsection{Convert Text Tab}
-\label{sec:orge50ba8c}
+\label{sec:orgbfbcbcb}
 Primary Actor: Musician
 Goal: The musician has a text tab, and they want a MusicXML file
 Success Scenario:
@@ -100,12 +100,12 @@ Success Scenario:
 \end{enumerate}
 
 \subsubsection{Extensions}
-\label{sec:org9af5b87}
+\label{sec:orga0f60d6}
 3a. If system cannot identify instrument, user can choose instrument manually.
 5a. If text tab is unrecognizable, notify user and restart at step 2
 
 \subsection{Change Settings}
-\label{sec:orgc2d28b8}
+\label{sec:org5d4a5f7}
 Primary Actor: Musician
 Success Scenario:
 \begin{enumerate}
