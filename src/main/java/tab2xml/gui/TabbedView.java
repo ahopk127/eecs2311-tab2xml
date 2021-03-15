@@ -68,7 +68,7 @@ final class TabbedView extends AbstractSwingView {
 		
 		this.input = new JTextArea(24, 80);
 		this.input.setBorder(new LineBorder(Color.BLACK));
-		this.input.setDropTarget(new FileDragDropTarget(this.input));
+		this.input.setDropTarget(new FileDragDropTarget(this));
 		inputPanel.add(
 				new JScrollPane(this.input,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,

@@ -153,23 +153,14 @@ public final class Presenter {
 		}
 		
 		// get file to save to
-		final Optional<Path> savePathInput = this.view
-				.promptForFile(MUSICXML_FILE);
-		if (savePathInput.isEmpty())
-			return false; // operation cancelled
-			
-		final Path savePath = withPreferredExtension(savePathInput.get(), "xml");
+		final Optional<Path> savePath = this.view.promptForFile(MUSICXML_FILE)
+				.map(path -> withPreferredExtension(path, "xml"));
 		
 		// save to file
-		try {
-			Files.writeString(savePath, output.get());
-			return true;
-		} catch (final IOException e) {
-			this.view.showErrorMessage("I/O Error",
-					"An error occured while saving to the selected file: "
-							+ e.getMessage());
-			return false;
-		}
+		if (savePath.isPresent())
+			return this.saveToFile(savePath.get(), output.get());
+		else
+			return false; // user did not select file
 	}
 	
 	/**
@@ -184,13 +175,23 @@ public final class Presenter {
 	 */
 	public boolean loadFromFile() {
 		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE);
-		if (loadPath.isEmpty())
-			return false; // user cancelled, stop function
-			
+		
+		if (loadPath.isPresent())
+			return this.loadFromFile(loadPath.get());
+		else
+			return false; // user did not provide a file
+	}
+	
+	/**
+	 * Gets the text from the provided file and puts it into the view's input.
+	 *
+	 * @since 2021-03-15
+	 */
+	boolean loadFromFile(Path file) {
 		try {
 			// read file, using only Unix line endings (\n)
-			this.view.setInputText(
-					Files.readString(loadPath.get()).replaceAll("\\r\\n", "\n"));
+			this.view
+					.setInputText(Files.readString(file).replaceAll("\\r\\n", "\n"));
 			return true;
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",
@@ -209,21 +210,13 @@ public final class Presenter {
 	 */
 	public boolean saveInput() {
 		final Optional<Path> savePathInput = this.view
-				.promptForFile(TEXT_TAB_FILE);
-		if (savePathInput.isEmpty())
-			return false; // operation cancelled
-			
-		final Path savePath = withPreferredExtension(savePathInput.get(), "txt");
+				.promptForFile(TEXT_TAB_FILE)
+				.map(path -> withPreferredExtension(path, "txt"));
 		
-		try {
-			Files.writeString(savePath, this.view.getInputText());
-			return true;
-		} catch (final IOException e) {
-			this.view.showErrorMessage("I/O Error",
-					"An error occured while saving to the selected file: "
-							+ e.getMessage());
-			return false;
-		}
+		if (savePathInput.isPresent())
+			return this.saveToFile(savePathInput.get(), this.view.getInputText());
+		else
+			return false; // user did not select file
 	}
 	
 	/**
@@ -236,14 +229,24 @@ public final class Presenter {
 	 */
 	public boolean saveOutput() {
 		final Optional<Path> savePathOutput = this.view
-				.promptForFile(MUSICXML_FILE);
-		if (savePathOutput.isEmpty())
-			return false; // operation cancelled
-			
-		final Path savePath = withPreferredExtension(savePathOutput.get(), "xml");
+				.promptForFile(MUSICXML_FILE)
+				.map(path -> withPreferredExtension(path, "xml"));
 		
+		if (savePathOutput.isPresent())
+			return this.saveToFile(savePathOutput.get(),
+					this.view.getOutputText());
+		else
+			return false; // user did not select file
+	}
+	
+	/**
+	 * Saves {@code text} to the provided file.
+	 *
+	 * @since 2021-03-15
+	 */
+	private boolean saveToFile(Path file, String text) {
 		try {
-			Files.writeString(savePath, this.view.getOutputText());
+			Files.writeString(file, text);
 			return true;
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",

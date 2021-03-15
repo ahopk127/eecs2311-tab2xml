@@ -9,13 +9,8 @@ import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
-import javax.swing.text.JTextComponent;
 
 final class FileDragDropTarget extends DropTarget {
 	private static final long serialVersionUID = -281039257803497320L;
@@ -23,16 +18,16 @@ final class FileDragDropTarget extends DropTarget {
 	/**
 	 * The target of the dragging and dropping
 	 */
-	private final JTextComponent target;
+	private final AbstractSwingView view;
 	
 	/**
-	 * Creates the drag and drop method, targeting {@code target}.
+	 * Creates the drag and drop method, targeting {@code view}.
 	 *
-	 * @param target
+	 * @param view view to target
 	 * @since 2021-02-08
 	 */
-	public FileDragDropTarget(JTextComponent target) {
-		this.target = target;
+	public FileDragDropTarget(AbstractSwingView view) {
+		this.view = view;
 	}
 	
 	@Override
@@ -54,40 +49,19 @@ final class FileDragDropTarget extends DropTarget {
 			droppedFiles = result.stream().map(File::toPath).collect(toList());
 		} catch (final IOException | UnsupportedFlavorException e) {
 			e.printStackTrace();
-			this.showErrorMessage(e.getClass() + " occurred.",
+			this.view.showErrorMessage(e.getClass() + " occurred.",
 					e.getLocalizedMessage());
 			return;
 		}
 		
 		// read files
 		if (droppedFiles.size() == 1) {
-			final Path droppedFile = droppedFiles.get(0);
-			try {
-				this.target.setText(
-						Files.readString(droppedFile).replaceAll("\\r\\n", "\n"));
-			} catch (final IOException e) {
-				e.printStackTrace();
-				this.showErrorMessage("I/O Error",
-						"Error reading file: " + e.getLocalizedMessage());
-				return;
-			}
+			this.view.presenter.loadFromFile(droppedFiles.get(0));
+			this.view.setDefaultDirectory(droppedFiles.get(0));
 		} else {
-			this.showErrorMessage("Wrong number of files.",
+			this.view.showErrorMessage("Wrong number of files.",
 					"You can only use one file at a time.");
 			return;
 		}
-	}
-	
-	/**
-	 * Shows an error message.
-	 *
-	 * @since 2021-02-08
-	 */
-	private final void showErrorMessage(String title, String message,
-			Object... args) {
-		final JRootPane pane = this.target.getRootPane();
-		
-		JOptionPane.showMessageDialog(pane, String.format(message, args), title,
-				JOptionPane.ERROR_MESSAGE);
 	}
 }

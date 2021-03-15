@@ -138,7 +138,7 @@ final class SingleEntryView extends AbstractSwingView {
 				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
 		this.textBox.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
-		this.textBox.setDropTarget(new FileDragDropTarget(this.textBox));
+		this.textBox.setDropTarget(new FileDragDropTarget(this));
 		this.textBox.addCaretListener(
 				e -> this.textBox.getHighlighter().removeAllHighlights());
 		mainPanel.add(

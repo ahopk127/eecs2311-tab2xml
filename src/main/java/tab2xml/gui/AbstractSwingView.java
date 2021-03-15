@@ -1,6 +1,7 @@
 package tab2xml.gui;
 
 import java.awt.Color;
+import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
@@ -64,6 +65,11 @@ abstract class AbstractSwingView implements View {
 	 * A combo box used to select the instrument.
 	 */
 	protected final JComboBox<Instrument> instrumentSelector;
+	
+	/**
+	 * The default/starting directory for the file chooser.
+	 */
+	private File defaultDirectory = null;
 	
 	/**
 	 * Creates the {@code AbstractSwingView}, initializing its frame and
@@ -131,14 +137,23 @@ abstract class AbstractSwingView implements View {
 	
 	@Override
 	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
-		final JFileChooser fc = new JFileChooser();
+		final JFileChooser fc = new JFileChooser(this.defaultDirectory);
 		fc.addChoosableFileFilter(preferredType);
 		fc.setFileFilter(preferredType);
 		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION)
+		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
+			this.defaultDirectory = fc.getCurrentDirectory();
 			return Optional.of(fc.getSelectedFile().toPath());
-		else
+		} else
 			return Optional.empty();
+	}
+	
+	/**
+	 * @param defaultDirectory default directory for file chooser
+	 * @since 2021-03-15
+	 */
+	final void setDefaultDirectory(Path defaultDirectory) {
+		this.defaultDirectory = defaultDirectory.toFile();
 	}
 	
 	@Override
