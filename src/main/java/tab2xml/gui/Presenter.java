@@ -201,6 +201,32 @@ public final class Presenter {
 	}
 	
 	/**
+	 * Prompts the user for an input file, then saves the view's input text to
+	 * that file.
+	 *
+	 * @return true if saving was successful
+	 * @since 2021-03-15
+	 */
+	public boolean saveInput() {
+		final Optional<Path> savePathInput = this.view
+				.promptForFile(TEXT_TAB_FILE);
+		if (savePathInput.isEmpty())
+			return false; // operation cancelled
+			
+		final Path savePath = withPreferredExtension(savePathInput.get(), "txt");
+		
+		try {
+			Files.writeString(savePath, this.view.getInputText());
+			return true;
+		} catch (final IOException e) {
+			this.view.showErrorMessage("I/O Error",
+					"An error occured while saving to the selected file: "
+							+ e.getMessage());
+			return false;
+		}
+	}
+	
+	/**
 	 * Prompts the user for an output file, then saves the view's output text to
 	 * that file.
 	 *
@@ -208,13 +234,13 @@ public final class Presenter {
 	 * 
 	 * @since 2021-02-25
 	 */
-	public boolean saveToFile() {
-		final Optional<Path> savePathInput = this.view
+	public boolean saveOutput() {
+		final Optional<Path> savePathOutput = this.view
 				.promptForFile(MUSICXML_FILE);
-		if (savePathInput.isEmpty())
+		if (savePathOutput.isEmpty())
 			return false; // operation cancelled
 			
-		final Path savePath = withPreferredExtension(savePathInput.get(), "xml");
+		final Path savePath = withPreferredExtension(savePathOutput.get(), "xml");
 		
 		try {
 			Files.writeString(savePath, this.view.getOutputText());

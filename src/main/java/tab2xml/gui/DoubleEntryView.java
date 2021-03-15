@@ -109,7 +109,7 @@ final class DoubleEntryView implements View {
 		masterPanel.add(loadFileButton, gridBag(0, 4));
 		
 		final JButton saveFileButton = new JButton("Save to File");
-		saveFileButton.addActionListener(e -> this.presenter.saveToFile());
+		saveFileButton.addActionListener(e -> this.presenter.saveOutput());
 		masterPanel.add(saveFileButton, gridBag(2, 4));
 		
 		// text boxes

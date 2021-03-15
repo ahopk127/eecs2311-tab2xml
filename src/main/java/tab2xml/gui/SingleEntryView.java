@@ -193,7 +193,7 @@ final class SingleEntryView implements View {
 			if (this.textBoxState == State.INPUT) {
 				this.presenter.convertAndSave(false);
 			} else {
-				this.presenter.saveToFile();
+				this.presenter.saveOutput();
 			}
 		});
 		buttonPanel.add(this.saveFileButton, gridBag(4, 0, 1, 1, buttonInsets));

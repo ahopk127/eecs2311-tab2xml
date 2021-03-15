@@ -120,6 +120,10 @@ final class TabbedView implements View {
 				.addActionListener(e -> this.presenter.convertAndSave(true));
 		inputButtonPanel.add(convertAndSave);
 		
+		final JButton saveInput = new JButton("Save Input");
+		saveInput.addActionListener(e -> this.presenter.saveInput());
+		inputButtonPanel.add(saveInput);
+		
 		// ----- OUTPUT -----
 		final JPanel outputPanel = new JPanel(new BorderLayout());
 		this.inputOutputPane.addTab("Output - MusicXML", outputPanel);
@@ -143,7 +147,7 @@ final class TabbedView implements View {
 		outputPanel.add(outputButtonPanel, BorderLayout.SOUTH);
 		
 		final JButton saveToFile = new JButton("Save to File");
-		saveToFile.addActionListener(e -> this.presenter.saveToFile());
+		saveToFile.addActionListener(e -> this.presenter.saveOutput());
 		outputButtonPanel.add(saveToFile);
 		
 		// ----- INSTRUMENT SELECTION -----

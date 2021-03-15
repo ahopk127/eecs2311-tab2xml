@@ -174,7 +174,7 @@ class PresenterTest {
 	 * @since 2021-02-06
 	 */
 	@Test
-	final void testSaveToFile() {
+	final void testSaveOutput() {
 		final ViewBot view = View.createViewBot();
 		final Presenter presenter = new Presenter(view);
 		final Path TEST_FILE = TEST_FILES.resolve("test-write.txt");
@@ -184,7 +184,7 @@ class PresenterTest {
 			
 			view.setOutputText(TEST_STRING);
 			view.setSelectedFile(TEST_FILE);
-			presenter.saveToFile();
+			presenter.saveOutput();
 			
 			assertEquals(TEST_STRING, Files.readString(TEST_FILE));
 		} catch (final Exception e) {
