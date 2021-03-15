@@ -85,7 +85,7 @@ final class DoubleEntryView extends AbstractSwingView {
 		masterPanel.add(convertButton, gridBag(1, 2));
 		
 		final JButton loadFileButton = new JButton("Load From File");
-		loadFileButton.addActionListener(e -> this.presenter.loadFromFile());
+		loadFileButton.addActionListener(e -> this.presenter.loadInput());
 		masterPanel.add(loadFileButton, gridBag(0, 4));
 		
 		final JButton saveFileButton = new JButton("Save to File");
@@ -97,8 +97,8 @@ final class DoubleEntryView extends AbstractSwingView {
 				"Enter the text tab or load from a file...", 15, 50);
 		this.input.setBorder(new LineBorder(Color.BLACK));
 		this.input.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
-		this.input.setDropTarget(new FileDragDropTarget(this));
 		masterPanel.add(new JScrollPane(this.input), gridBag(0, 1, 1, 2));
+		this.setUpFileDragAndDrop();
 		
 		this.output = new JTextArea(15, 50);
 		this.output.setBorder(new LineBorder(Color.BLACK));
@@ -106,7 +106,7 @@ final class DoubleEntryView extends AbstractSwingView {
 		masterPanel.add(new JScrollPane(this.output), gridBag(2, 1, 1, 2));
 		
 		// combo boxes
-		masterPanel.add(this.instrumentSelector, gridBag(1, 4));
+		masterPanel.add(this.getInstrumentSelector(), gridBag(1, 4));
 		
 		// give everything the correct size
 		this.frame.pack();

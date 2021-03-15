@@ -138,9 +138,9 @@ final class SingleEntryView extends AbstractSwingView {
 				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
 		this.textBox.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
-		this.textBox.setDropTarget(new FileDragDropTarget(this));
 		this.textBox.addCaretListener(
 				e -> this.textBox.getHighlighter().removeAllHighlights());
+		this.setUpFileDragAndDrop();
 		mainPanel.add(
 				new JScrollPane(this.textBox,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -151,7 +151,7 @@ final class SingleEntryView extends AbstractSwingView {
 		final Insets buttonInsets = new Insets(3, 8, 3, 8);
 		
 		final JButton loadFileButton = new JButton("Load From File");
-		loadFileButton.addActionListener(e -> this.presenter.loadFromFile());
+		loadFileButton.addActionListener(e -> this.presenter.loadInput());
 		buttonPanel.add(loadFileButton, gridBag(1, 0, 1, 1, buttonInsets));
 		
 		this.convertButton = new JButton("Convert");
@@ -174,7 +174,7 @@ final class SingleEntryView extends AbstractSwingView {
 		buttonPanel.add(this.saveFileButton, gridBag(4, 0, 1, 1, buttonInsets));
 		
 		// combo boxes
-		buttonPanel.add(this.instrumentSelector,
+		buttonPanel.add(this.getInstrumentSelector(),
 				gridBag(0, 0, 1, 1, buttonInsets));
 		
 		// set the frame to INPUT state.

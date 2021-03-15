@@ -68,7 +68,7 @@ final class TabbedView extends AbstractSwingView {
 		
 		this.input = new JTextArea(24, 80);
 		this.input.setBorder(new LineBorder(Color.BLACK));
-		this.input.setDropTarget(new FileDragDropTarget(this));
+		this.setUpFileDragAndDrop();
 		inputPanel.add(
 				new JScrollPane(this.input,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -86,7 +86,7 @@ final class TabbedView extends AbstractSwingView {
 		inputPanel.add(inputButtonPanel, BorderLayout.SOUTH);
 		
 		final JButton loadFromFile = new JButton("Load from File");
-		loadFromFile.addActionListener(e -> this.presenter.loadFromFile());
+		loadFromFile.addActionListener(e -> this.presenter.loadInput());
 		inputButtonPanel.add(loadFromFile);
 		
 		final JButton convertButton = new JButton("Convert");
@@ -138,7 +138,7 @@ final class TabbedView extends AbstractSwingView {
 		masterPanel.add(instrumentSelectionPanel, BorderLayout.SOUTH);
 		
 		instrumentSelectionPanel.add(new JLabel("Instrument:"));
-		instrumentSelectionPanel.add(this.instrumentSelector);
+		instrumentSelectionPanel.add(this.getInstrumentSelector());
 		
 		// set the correct size, then open the window
 		this.frame.pack();

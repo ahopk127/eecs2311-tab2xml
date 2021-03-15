@@ -128,7 +128,9 @@ public final class Presenter {
 	}
 	
 	/**
-	 * Converts text tab to MusicXML, then saves it to a file.
+	 * Converts text tab to MusicXML, then saves it to a file. If an I/O
+	 * exception occurs, it is shown using {@link View#showErrorMessage} and
+	 * {@code false} is returned.
 	 * 
 	 * @param showInView whether the converted MusicXML should be shown in the
 	 *                   View and saved, or just saved
@@ -164,46 +166,50 @@ public final class Presenter {
 	}
 	
 	/**
-	 * Gets the text from a user-selected file and writes it to the view's input
-	 * field.
-	 * 
-	 * @throws UnsupportedOperationException if the view does not support
-	 *                                       {@link View#setInputText}
-	 * @return true if loading was successful
-	 * 													
-	 * @since 2021-02-25
-	 */
-	public boolean loadFromFile() {
-		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE);
-		
-		if (loadPath.isPresent())
-			return this.loadFromFile(loadPath.get());
-		else
-			return false; // user did not provide a file
-	}
-	
-	/**
-	 * Gets the text from the provided file and puts it into the view's input.
+	 * Gets and returns the text from the provided file and puts it into the
+	 * view's input. If an I/O error occurs, it is shown using
+	 * {@link View#showErrorMessage} and an empty Optional is returned.
 	 *
 	 * @since 2021-03-15
 	 */
-	boolean loadFromFile(Path file) {
+	Optional<String> loadFromFile(Path file) {
 		try {
 			// read file, using only Unix line endings (\n)
-			this.view
-					.setInputText(Files.readString(file).replaceAll("\\r\\n", "\n"));
-			return true;
+			return Optional.of(Files.readString(file).replaceAll("\\r\\n", "\n"));
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",
 					"An error occured while reading from the selected file: "
 							+ e.getMessage());
-			return false;
+			return Optional.empty();
 		}
 	}
 	
 	/**
+	 * Gets the text from a user-selected file and writes it to the view's input
+	 * field. If an I/O exception occurs, it is shown using
+	 * {@link View#showErrorMessage} and {@code false} is returned.
+	 * 
+	 * @throws UnsupportedOperationException if the view does not support
+	 *                                       {@link View#setInputText}
+	 * @return true if loading was successful
+	 * 
+	 * @since 2021-02-25
+	 */
+	public boolean loadInput() {
+		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE);
+		
+		if (loadPath.isPresent()) {
+			final Optional<String> result = this.loadFromFile(loadPath.get());
+			result.ifPresent(this.view::setInputText);
+			return result.isPresent();
+		} else
+			return false; // user did not provide a file
+	}
+	
+	/**
 	 * Prompts the user for an input file, then saves the view's input text to
-	 * that file.
+	 * that file. If an I/O exception occurs, it is shown using
+	 * {@link View#showErrorMessage} and {@code false} is returned.
 	 *
 	 * @return true if saving was successful
 	 * @since 2021-03-15
@@ -221,7 +227,8 @@ public final class Presenter {
 	
 	/**
 	 * Prompts the user for an output file, then saves the view's output text to
-	 * that file.
+	 * that file. If an I/O exception occurs, it is shown using
+	 * {@link View#showErrorMessage} and {@code false} is returned.
 	 *
 	 * @return true if saving was successful
 	 * 
@@ -240,7 +247,8 @@ public final class Presenter {
 	}
 	
 	/**
-	 * Saves {@code text} to the provided file.
+	 * Saves {@code text} to the provided file. If an I/O exception occurs, it is
+	 * shown using {@link View#showErrorMessage} and {@code false} is returned.
 	 *
 	 * @since 2021-03-15
 	 */

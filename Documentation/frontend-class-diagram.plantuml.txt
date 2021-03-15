@@ -12,14 +12,37 @@ interface View {
 class Presenter {
   -View view
 
-  -convert(String input, Instrument selectedInstrument) : Optional<String>
+  -convert(String, Instrument) : Optional<String>
   +convert() : boolean
-  +loadFromFile() : boolean
-  +saveToFile() : boolean
+  +loadInput() : boolean
+  -loadFromFile(Path) : Optional<String>
+  +saveInput() : boolean
+  +saveOutput() : boolean
+  -saveToFile(Path, String) : boolean
 }
 
-Presenter o-- View
-View <|-- SingleEntryView
+abstract class AbstractSwingView {
+  #JFrame frame
+  #Presenter presenter
+  
+  -{static} highlightToken(ErrorToken, Highlighter, HighlightPainter)
+  #{abstract} getInput() : JTextComponent
+  #{abstract} getOutput() : JTextComponent
+  #getInstrumentSelector() : JComponent
+  #setUpFileDragAndDrop() : void
+  (Implements every method of View)
+}
+
+~class TabbedView {
+}
+~class SingleEntryView {
+}
+
+Presenter "1" o-- View
+AbstractSwingView "1" o-- Presenter
+View <|-- AbstractSwingView
+AbstractSwingView <|-- TabbedView
+AbstractSwingView <|-- SingleEntryView
 View <|-- ViewBot
 
 @enduml
