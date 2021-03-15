@@ -28,24 +28,24 @@ stringItems
 	| slide 
 	| harmonic 
 	| fret 
-	| BAR)+	BAR		
+	| BAR
+	| DOUBLEBAR)+	(BAR | DOUBLEBAR)		
 	;	
 
 hampullchain
-	: fret ('h' | 'p')  fret  (('h' | 'p') fret)+		# HammerPull
+	: 'g'? fret ('h' | 'p')  fret  (('h' | 'p') fret)+		# HammerPull
 	;
 
-
 pulloff
-	: fret 'p' fret				
+	: 'g'? fret 'p' fret				
 	;
 
 hammeron 
-	: fret 'h' fret				
+	: 'g'? fret 'h' fret				
 	;
 
 slide
-	: fret 's' fret				
+	: 'g'? fret 's' fret				
 	;
 
 harmonic
@@ -66,23 +66,16 @@ BAR
 	: '|'
 	;
 	
+DOUBLEBAR
+	: '*'? (BAR | FRET_NUM) '|''*'?
+	;
+	
 HYPHEN 
 	: '-' 
 	;
 	
 FRET_NUM
-	: [1-2]?[0-9]
-	;
-	
-H: 'h';
-P: 'p';
-S: 's';
-
-LSB
-	: '['
-	;
-RSB
-	: ']'
+	: [0-9]+
 	;
 	
 SPACE

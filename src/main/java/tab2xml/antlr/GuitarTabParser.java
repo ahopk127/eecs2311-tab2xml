@@ -1,4 +1,4 @@
-// Generated from GuitarTab.g4 by ANTLR 4.9.1
+// Generated from .\GuitarTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr;
 
@@ -13,14 +13,14 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class GuitarTabParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.9.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		NOTE=1, BAR=2, HYPHEN=3, FRET_NUM=4, H=5, P=6, S=7, LSB=8, RSB=9, SPACE=10, 
-		NEWLINE=11, MULTI_COMMENT=12, LINE_COMMENT=13;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, NOTE=7, BAR=8, DOUBLEBAR=9, 
+		HYPHEN=10, FRET_NUM=11, SPACE=12, NEWLINE=13, MULTI_COMMENT=14, LINE_COMMENT=15;
 	public static final int
 		RULE_sheet = 0, RULE_staff = 1, RULE_string = 2, RULE_tune = 3, RULE_stringItems = 4, 
 		RULE_hampullchain = 5, RULE_pulloff = 6, RULE_hammeron = 7, RULE_slide = 8, 
@@ -35,14 +35,14 @@ public class GuitarTabParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, "'|'", "'-'", null, "'h'", "'p'", "'s'", "'['", "']'"
+			null, "'g'", "'h'", "'p'", "'s'", "'['", "']'", null, "'|'", null, "'-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "NOTE", "BAR", "HYPHEN", "FRET_NUM", "H", "P", "S", "LSB", "RSB", 
-			"SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
+			null, null, null, null, null, null, null, "NOTE", "BAR", "DOUBLEBAR", 
+			"HYPHEN", "FRET_NUM", "SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -398,6 +398,10 @@ public class GuitarTabParser extends Parser {
 		public TerminalNode BAR(int i) {
 			return getToken(GuitarTabParser.BAR, i);
 		}
+		public List<TerminalNode> DOUBLEBAR() { return getTokens(GuitarTabParser.DOUBLEBAR); }
+		public TerminalNode DOUBLEBAR(int i) {
+			return getToken(GuitarTabParser.DOUBLEBAR, i);
+		}
 		public List<TerminalNode> HYPHEN() { return getTokens(GuitarTabParser.HYPHEN); }
 		public TerminalNode HYPHEN(int i) {
 			return getToken(GuitarTabParser.HYPHEN, i);
@@ -460,18 +464,19 @@ public class GuitarTabParser extends Parser {
 	public final StringItemsContext stringItems() throws RecognitionException {
 		StringItemsContext _localctx = new StringItemsContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_stringItems);
+		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(71); 
+			setState(72); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
 				switch (_alt) {
 				case 1:
 					{
-					setState(71);
+					setState(72);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 					case 1:
@@ -522,18 +527,32 @@ public class GuitarTabParser extends Parser {
 						match(BAR);
 						}
 						break;
+					case 9:
+						{
+						setState(71);
+						match(DOUBLEBAR);
+						}
+						break;
 					}
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(73); 
+				setState(74); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,8,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			setState(75);
-			match(BAR);
+			setState(76);
+			_la = _input.LA(1);
+			if ( !(_la==BAR || _la==DOUBLEBAR) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -565,14 +584,6 @@ public class GuitarTabParser extends Parser {
 		public FretContext fret(int i) {
 			return getRuleContext(FretContext.class,i);
 		}
-		public List<TerminalNode> H() { return getTokens(GuitarTabParser.H); }
-		public TerminalNode H(int i) {
-			return getToken(GuitarTabParser.H, i);
-		}
-		public List<TerminalNode> P() { return getTokens(GuitarTabParser.P); }
-		public TerminalNode P(int i) {
-			return getToken(GuitarTabParser.P, i);
-		}
 		public HammerPullContext(HampullchainContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -597,11 +608,21 @@ public class GuitarTabParser extends Parser {
 			_localctx = new HammerPullContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(77);
-			fret();
-			setState(78);
+			setState(79);
+			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if ( !(_la==H || _la==P) ) {
+			if (_la==T__0) {
+				{
+				setState(78);
+				match(T__0);
+				}
+			}
+
+			setState(81);
+			fret();
+			setState(82);
+			_la = _input.LA(1);
+			if ( !(_la==T__1 || _la==T__2) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -609,17 +630,17 @@ public class GuitarTabParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(79);
+			setState(83);
 			fret();
-			setState(82); 
+			setState(86); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(80);
+				setState(84);
 				_la = _input.LA(1);
-				if ( !(_la==H || _la==P) ) {
+				if ( !(_la==T__1 || _la==T__2) ) {
 				_errHandler.recoverInline(this);
 				}
 				else {
@@ -627,14 +648,14 @@ public class GuitarTabParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(81);
+				setState(85);
 				fret();
 				}
 				}
-				setState(84); 
+				setState(88); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==H || _la==P );
+			} while ( _la==T__1 || _la==T__2 );
 			}
 		}
 		catch (RecognitionException re) {
@@ -655,7 +676,6 @@ public class GuitarTabParser extends Parser {
 		public FretContext fret(int i) {
 			return getRuleContext(FretContext.class,i);
 		}
-		public TerminalNode P() { return getToken(GuitarTabParser.P, 0); }
 		public PulloffContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -678,14 +698,25 @@ public class GuitarTabParser extends Parser {
 	public final PulloffContext pulloff() throws RecognitionException {
 		PulloffContext _localctx = new PulloffContext(_ctx, getState());
 		enterRule(_localctx, 12, RULE_pulloff);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(86);
+			setState(91);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__0) {
+				{
+				setState(90);
+				match(T__0);
+				}
+			}
+
+			setState(93);
 			fret();
-			setState(87);
-			match(P);
-			setState(88);
+			setState(94);
+			match(T__2);
+			setState(95);
 			fret();
 			}
 		}
@@ -707,7 +738,6 @@ public class GuitarTabParser extends Parser {
 		public FretContext fret(int i) {
 			return getRuleContext(FretContext.class,i);
 		}
-		public TerminalNode H() { return getToken(GuitarTabParser.H, 0); }
 		public HammeronContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -730,14 +760,25 @@ public class GuitarTabParser extends Parser {
 	public final HammeronContext hammeron() throws RecognitionException {
 		HammeronContext _localctx = new HammeronContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_hammeron);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(90);
+			setState(98);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__0) {
+				{
+				setState(97);
+				match(T__0);
+				}
+			}
+
+			setState(100);
 			fret();
-			setState(91);
-			match(H);
-			setState(92);
+			setState(101);
+			match(T__1);
+			setState(102);
 			fret();
 			}
 		}
@@ -759,7 +800,6 @@ public class GuitarTabParser extends Parser {
 		public FretContext fret(int i) {
 			return getRuleContext(FretContext.class,i);
 		}
-		public TerminalNode S() { return getToken(GuitarTabParser.S, 0); }
 		public SlideContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -782,14 +822,25 @@ public class GuitarTabParser extends Parser {
 	public final SlideContext slide() throws RecognitionException {
 		SlideContext _localctx = new SlideContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_slide);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(94);
+			setState(105);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__0) {
+				{
+				setState(104);
+				match(T__0);
+				}
+			}
+
+			setState(107);
 			fret();
-			setState(95);
-			match(S);
-			setState(96);
+			setState(108);
+			match(T__3);
+			setState(109);
 			fret();
 			}
 		}
@@ -805,11 +856,9 @@ public class GuitarTabParser extends Parser {
 	}
 
 	public static class HarmonicContext extends ParserRuleContext {
-		public TerminalNode LSB() { return getToken(GuitarTabParser.LSB, 0); }
 		public FretContext fret() {
 			return getRuleContext(FretContext.class,0);
 		}
-		public TerminalNode RSB() { return getToken(GuitarTabParser.RSB, 0); }
 		public HarmonicContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -835,12 +884,12 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(98);
-			match(LSB);
-			setState(99);
+			setState(111);
+			match(T__4);
+			setState(112);
 			fret();
-			setState(100);
-			match(RSB);
+			setState(113);
+			match(T__5);
 			}
 		}
 		catch (RecognitionException re) {
@@ -881,7 +930,7 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(102);
+			setState(115);
 			match(FRET_NUM);
 			}
 		}
@@ -897,32 +946,36 @@ public class GuitarTabParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\17k\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21x\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\3\3\7\3\"\n\3\f\3\16\3"+
 		"%\13\3\3\3\6\3(\n\3\r\3\16\3)\3\3\7\3-\n\3\f\3\16\3\60\13\3\3\4\3\4\3"+
 		"\4\7\4\65\n\4\f\4\16\48\13\4\3\4\5\4;\n\4\3\5\5\5>\n\5\3\5\3\5\3\6\3\6"+
-		"\3\6\3\6\3\6\3\6\3\6\3\6\6\6J\n\6\r\6\16\6K\3\6\3\6\3\7\3\7\3\7\3\7\3"+
-		"\7\6\7U\n\7\r\7\16\7V\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\n\3\n\3\n\3\n"+
-		"\3\13\3\13\3\13\3\13\3\f\3\f\3\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\3"+
-		"\3\2\7\b\2o\2\33\3\2\2\2\4#\3\2\2\2\6\61\3\2\2\2\b=\3\2\2\2\nI\3\2\2\2"+
-		"\fO\3\2\2\2\16X\3\2\2\2\20\\\3\2\2\2\22`\3\2\2\2\24d\3\2\2\2\26h\3\2\2"+
+		"\3\6\3\6\3\6\3\6\3\6\3\6\3\6\6\6K\n\6\r\6\16\6L\3\6\3\6\3\7\5\7R\n\7\3"+
+		"\7\3\7\3\7\3\7\3\7\6\7Y\n\7\r\7\16\7Z\3\b\5\b^\n\b\3\b\3\b\3\b\3\b\3\t"+
+		"\5\te\n\t\3\t\3\t\3\t\3\t\3\n\5\nl\n\n\3\n\3\n\3\n\3\n\3\13\3\13\3\13"+
+		"\3\13\3\f\3\f\3\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\4\3\2\n\13\3\2\4"+
+		"\5\2\u0081\2\33\3\2\2\2\4#\3\2\2\2\6\61\3\2\2\2\b=\3\2\2\2\nJ\3\2\2\2"+
+		"\fQ\3\2\2\2\16]\3\2\2\2\20d\3\2\2\2\22k\3\2\2\2\24q\3\2\2\2\26u\3\2\2"+
 		"\2\30\32\5\4\3\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2"+
-		"\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2\2 \"\7\r\2\2!"+
-		" \3\2\2\2\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\'\3\2\2\2%#\3\2\2\2&(\5\6\4"+
-		"\2\'&\3\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+-\7\r\2\2,+\3\2"+
-		"\2\2-\60\3\2\2\2.,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\62\5\b"+
-		"\5\2\62\66\5\n\6\2\63\65\7\f\2\2\64\63\3\2\2\2\658\3\2\2\2\66\64\3\2\2"+
-		"\2\66\67\3\2\2\2\67:\3\2\2\28\66\3\2\2\29;\7\r\2\2:9\3\2\2\2:;\3\2\2\2"+
-		";\7\3\2\2\2<>\7\3\2\2=<\3\2\2\2=>\3\2\2\2>?\3\2\2\2?@\7\4\2\2@\t\3\2\2"+
-		"\2AJ\7\5\2\2BJ\5\f\7\2CJ\5\16\b\2DJ\5\20\t\2EJ\5\22\n\2FJ\5\24\13\2GJ"+
-		"\5\26\f\2HJ\7\4\2\2IA\3\2\2\2IB\3\2\2\2IC\3\2\2\2ID\3\2\2\2IE\3\2\2\2"+
-		"IF\3\2\2\2IG\3\2\2\2IH\3\2\2\2JK\3\2\2\2KI\3\2\2\2KL\3\2\2\2LM\3\2\2\2"+
-		"MN\7\4\2\2N\13\3\2\2\2OP\5\26\f\2PQ\t\2\2\2QT\5\26\f\2RS\t\2\2\2SU\5\26"+
-		"\f\2TR\3\2\2\2UV\3\2\2\2VT\3\2\2\2VW\3\2\2\2W\r\3\2\2\2XY\5\26\f\2YZ\7"+
-		"\b\2\2Z[\5\26\f\2[\17\3\2\2\2\\]\5\26\f\2]^\7\7\2\2^_\5\26\f\2_\21\3\2"+
-		"\2\2`a\5\26\f\2ab\7\t\2\2bc\5\26\f\2c\23\3\2\2\2de\7\n\2\2ef\5\26\f\2"+
-		"fg\7\13\2\2g\25\3\2\2\2hi\7\6\2\2i\27\3\2\2\2\f\33#).\66:=IKV";
+		"\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2\2 \"\7\17\2\2"+
+		"! \3\2\2\2\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\'\3\2\2\2%#\3\2\2\2&(\5\6\4"+
+		"\2\'&\3\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+-\7\17\2\2,+\3"+
+		"\2\2\2-\60\3\2\2\2.,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\62\5"+
+		"\b\5\2\62\66\5\n\6\2\63\65\7\16\2\2\64\63\3\2\2\2\658\3\2\2\2\66\64\3"+
+		"\2\2\2\66\67\3\2\2\2\67:\3\2\2\28\66\3\2\2\29;\7\17\2\2:9\3\2\2\2:;\3"+
+		"\2\2\2;\7\3\2\2\2<>\7\t\2\2=<\3\2\2\2=>\3\2\2\2>?\3\2\2\2?@\7\n\2\2@\t"+
+		"\3\2\2\2AK\7\f\2\2BK\5\f\7\2CK\5\16\b\2DK\5\20\t\2EK\5\22\n\2FK\5\24\13"+
+		"\2GK\5\26\f\2HK\7\n\2\2IK\7\13\2\2JA\3\2\2\2JB\3\2\2\2JC\3\2\2\2JD\3\2"+
+		"\2\2JE\3\2\2\2JF\3\2\2\2JG\3\2\2\2JH\3\2\2\2JI\3\2\2\2KL\3\2\2\2LJ\3\2"+
+		"\2\2LM\3\2\2\2MN\3\2\2\2NO\t\2\2\2O\13\3\2\2\2PR\7\3\2\2QP\3\2\2\2QR\3"+
+		"\2\2\2RS\3\2\2\2ST\5\26\f\2TU\t\3\2\2UX\5\26\f\2VW\t\3\2\2WY\5\26\f\2"+
+		"XV\3\2\2\2YZ\3\2\2\2ZX\3\2\2\2Z[\3\2\2\2[\r\3\2\2\2\\^\7\3\2\2]\\\3\2"+
+		"\2\2]^\3\2\2\2^_\3\2\2\2_`\5\26\f\2`a\7\5\2\2ab\5\26\f\2b\17\3\2\2\2c"+
+		"e\7\3\2\2dc\3\2\2\2de\3\2\2\2ef\3\2\2\2fg\5\26\f\2gh\7\4\2\2hi\5\26\f"+
+		"\2i\21\3\2\2\2jl\7\3\2\2kj\3\2\2\2kl\3\2\2\2lm\3\2\2\2mn\5\26\f\2no\7"+
+		"\6\2\2op\5\26\f\2p\23\3\2\2\2qr\7\7\2\2rs\5\26\f\2st\7\b\2\2t\25\3\2\2"+
+		"\2uv\7\r\2\2v\27\3\2\2\2\20\33#).\66:=JLQZ]dk";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -1,4 +1,16 @@
 * Changelog
+** [0.3.0-alpha.1] - [2021-03-15 Mon] (Week 8)
+*** Added
+    - Added new view, TabbedView, that uses tabs to combine the positives of single-entry and double-entry Views
+    - Added a background to SingleEntryView and TabbedView
+    - Added functionality for grace notes and repeat measures
+    - Added the ability to make a test coverage report
+    - Added more tests in the frontend and backend
+    - Created internal grammar for drum tabs
+*** Removed
+    - It is no longer possible to resize the windows of SingleEntryView and TabbedView.  This was removed because of bugs it caused in combination with the new background; it will be added back if these bugs are fixed.
+*** Fixed
+    - The issue fixed in v0.2.2 was not fixed for drag-and-drop input
 ** [0.2.2] - [2021-03-10 Wed] 
 *** Fixed
     - Fixed an issue that caused some text tabs to fail when loaded from a file, but not copy-pasted

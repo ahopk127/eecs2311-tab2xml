@@ -1,6 +1,7 @@
 plugins {
 	id 'application'
 	id 'antlr'
+	id 'jacoco'
 }
 
 repositories {
@@ -22,11 +23,21 @@ generateGrammarSource {
     arguments += ["-visitor", "-long-messages"]
 }
 
+jacoco {
+	toolVersion = "0.8.6"
+	reportsDirectory = file("$buildDir/reports/jacoco")
+}
+
 test {
   useJUnitPlatform()
   testLogging {
     events 'passed', 'skipped', 'failed'
   }
+  finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
 }
 
 run {

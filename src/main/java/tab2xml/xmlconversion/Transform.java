@@ -10,11 +10,11 @@ import javax.xml.parsers.DocumentBuilder;
 
 import tab2xml.parser.Instrument;
 import tab2xml.Main;
-import tab2xml.model.Note;
-import tab2xml.model.Score;
-import tab2xml.model.Staff;
-import tab2xml.model.StringItem;
-import tab2xml.model.Tune;
+import tab2xml.model.guitar.Note;
+import tab2xml.model.guitar.Score;
+import tab2xml.model.guitar.Staff;
+import tab2xml.model.guitar.StringItem;
+import tab2xml.model.guitar.Tune;
 
 /**
  * The transformer which generates the XML output as a string.
@@ -124,6 +124,11 @@ public class Transform {
 				note.append(chord);
 			}
 
+			if (currNote.isGrace()) {
+				XMLElement grace = new XMLElement("grace", musicSheet);
+				note.append(grace);
+			}
+
 			XMLElement pitch = new XMLElement("pitch", musicSheet);
 			XMLElement step = new XMLElement("step", musicSheet);
 			step.setText(currNote.getStep());
@@ -154,40 +159,32 @@ public class Transform {
 				XMLElement hammeron = new XMLElement("hammer-on", musicSheet);
 				setNotationAttr(hammeron, currNote, "start", "H");
 				technical.append(hammeron);
-
 			} else if (currNote.isStopHammer()) {
 				XMLElement hammeron = new XMLElement("hammer-on", musicSheet);
 				setNotationAttr(hammeron, currNote, "stop", "");
 				technical.append(hammeron);
-
 			} else if (currNote.isStartPull()) {
 				XMLElement pulloff = new XMLElement("pull-off", musicSheet);
 				setNotationAttr(pulloff, currNote, "start", "P");
 				technical.append(pulloff);
-
 			} else if (currNote.isStopPull()) {
 				XMLElement pulloff = new XMLElement("pull-off", musicSheet);
 				setNotationAttr(pulloff, currNote, "stop", "");
 				technical.append(pulloff);
-
 			} else if (currNote.isStartChain()) {
 				notations.append(slur(currNote, "start", "above"));
-
 			} else if (currNote.isStopChain()) {
 				notations.append(slur(currNote, "stop", "above"));
-
 			} else if (currNote.isStartSlide()) {
 				XMLElement slide = new XMLElement("slide", musicSheet);
 				slide.setAttribute("line-type", "solid");
 				setNotationAttr(slide, currNote, "start", "S");
 				notations.append(slide);
-
 			} else if (currNote.isStopSlide()) {
 				XMLElement slide = new XMLElement("slide", musicSheet);
 				slide.setAttribute("line-type", "solid");
 				setNotationAttr(slide, currNote, "stop", "");
 				notations.append(slide);
-				
 			} else if (currNote.isHarmonic()) {
 				XMLElement harmonic = new XMLElement("harmonic", musicSheet);
 				XMLElement artificial = new XMLElement("artificial", musicSheet);
@@ -204,7 +201,41 @@ public class Transform {
 			notations.append(technical);
 			note.append(pitch, duration, voice, type, notations);
 
+			if (currNote.isRepeatedStart()) {
+				XMLElement barline = new XMLElement("barline", musicSheet);
+				barline.setAttribute("location", "left");
+				XMLElement barStyle = new XMLElement("bar-style", musicSheet);
+				barStyle.setText("heavy-light");
+				XMLElement repeat = new XMLElement("repeat", musicSheet);
+				repeat.setAttribute("direction", "forward");
+				barline.append(barStyle, repeat);
+
+				XMLElement direction = new XMLElement("direction", musicSheet);
+				direction.setAttribute("placement", "above");
+				XMLElement directionType = new XMLElement("direction-type", musicSheet);
+				XMLElement words = new XMLElement("words", musicSheet);
+				words.setAttribute("relative-x", "256.17");
+				words.setAttribute("relative-y", "16.01");
+				words.setText(String.format("Repeat %d times", currNote.getRepeatCount()));
+				directionType.append(words);
+				direction.append(directionType);
+
+				measures.get(currMeasure).append(barline, direction);
+
+			}
+
 			measures.get(currMeasure).append(note);
+
+			if (currNote.isRepeatedStop()) {
+				XMLElement barline = new XMLElement("barline", musicSheet);
+				barline.setAttribute("location", "right");
+				XMLElement barStyle = new XMLElement("bar-style", musicSheet);
+				barStyle.setText("light-heavy");
+				XMLElement repeat = new XMLElement("repeat", musicSheet);
+				repeat.setAttribute("direction", "backward");
+				barline.append(barStyle, repeat);
+				measures.get(currMeasure).append(barline);
+			}
 		}
 	}
 

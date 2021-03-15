@@ -26,3 +26,13 @@
 /GuitarTabParser$TuneContext.class
 /GuitarTabParser.class
 /GuitarTabVisitor.class
+/DrumTab.tokens
+/DrumTabBaseListener.java
+/DrumTabBaseVisitor.java
+/DrumTabListener.java
+/DrumTabParser.java
+/DrumTabVisitor.java
+/DrumTab.interp
+/DrumTabLexer.interp
+/DrumTabLexer.java
+/DrumTabLexer.tokens

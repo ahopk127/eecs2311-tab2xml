@@ -8,7 +8,7 @@ import tab2xml.ImmutablePair;
 import tab2xml.exceptions.InvalidInputException;
 import tab2xml.exceptions.InvalidTokenException;
 import tab2xml.exceptions.ParsingWarning;
-import tab2xml.model.Score;
+import tab2xml.model.guitar.Score;
 import tab2xml.xmlconversion.Transform;
 
 /**
@@ -103,7 +103,7 @@ public class Parser {
 		final Transform tf = new Transform(this.sheet, this.instrument);
 		xmlOutput = tf.toXML();
 		
-		// NEW ERROR CODE - put any warnings here
+		// TODO: ADD WARNINGS from score data
 		final List<ParsingWarning> warnings = new ArrayList<>();
 		
 		return ImmutablePair.of(xmlOutput, warnings);

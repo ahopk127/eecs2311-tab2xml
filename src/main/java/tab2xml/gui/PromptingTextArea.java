@@ -70,6 +70,10 @@ public final class PromptingTextArea extends JTextArea {
 	public PromptingTextArea(String promptText, int rows, int columns) {
 		super(promptText, rows, columns);
 		this.promptText = promptText;
+		
+		this.regularFont = this.getFont();
+		this.promptFont = this.getFont().deriveFont(Font.ITALIC);
+		
 		this.enablePrompt();
 		this.addFocusListener(new PromptFocusListener());
 	}
@@ -83,8 +87,7 @@ public final class PromptingTextArea extends JTextArea {
 		this.prompting = false;
 		super.setText("");
 		this.setForeground(REGULAR_TEXT_COLOR);
-		super.setFont(
-				this.regularFont == null ? this.getFont() : this.regularFont);
+		super.setFont(this.regularFont);
 	}
 	
 	/**
@@ -97,9 +100,6 @@ public final class PromptingTextArea extends JTextArea {
 		super.setText(this.getPromptText());
 		this.setForeground(PROMPT_TEXT_COLOR);
 		
-		if (this.promptFont == null) {
-			this.promptFont = this.getFont().deriveFont(Font.ITALIC);
-		}
 		super.setFont(this.promptFont);
 	}
 	

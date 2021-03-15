@@ -21,29 +21,18 @@ final class FileDragDropTarget extends DropTarget {
 	private static final long serialVersionUID = -281039257803497320L;
 	
 	/**
-	 * Enables file drag-and-drop for {@code target} by setting its drop target.
-	 *
-	 * @since 2021-02-08
-	 */
-	public static final FileDragDropTarget enableDragAndDrop(
-			JTextComponent target) {
-		return new FileDragDropTarget(target);
-	}
-	
-	/**
 	 * The target of the dragging and dropping
 	 */
 	private final JTextComponent target;
 	
 	/**
-	 * Creates the drag and drop method.
+	 * Creates the drag and drop method, targeting {@code target}.
 	 *
 	 * @param target
 	 * @since 2021-02-08
 	 */
-	private FileDragDropTarget(JTextComponent target) {
+	public FileDragDropTarget(JTextComponent target) {
 		this.target = target;
-		this.target.setDropTarget(this);
 	}
 	
 	@Override
@@ -74,7 +63,8 @@ final class FileDragDropTarget extends DropTarget {
 		if (droppedFiles.size() == 1) {
 			final Path droppedFile = droppedFiles.get(0);
 			try {
-				this.target.setText(Files.readString(droppedFile));
+				this.target.setText(
+						Files.readString(droppedFile).replaceAll("\\r\\n", "\n"));
 			} catch (final IOException e) {
 				e.printStackTrace();
 				this.showErrorMessage("I/O Error",

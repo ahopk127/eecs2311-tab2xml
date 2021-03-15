@@ -2,7 +2,7 @@ package tab2xml.exceptions;
 
 import java.util.Optional;
 
-import tab2xml.model.ErrorToken;
+import tab2xml.model.guitar.ErrorToken;
 
 /**
  * A warning describing a minor error in the input, which is not serious enough
