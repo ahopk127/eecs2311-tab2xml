@@ -12,7 +12,7 @@ public class Main {
 	/**
 	 * The current version of TAB2XML.
 	 */
-	public static final String PROGRAM_VERSION = "v0.2.2";
+	public static final String PROGRAM_VERSION = "v0.3.0a1";
 	
 	/**
 	 * Executes the program using the Single Entry View.
