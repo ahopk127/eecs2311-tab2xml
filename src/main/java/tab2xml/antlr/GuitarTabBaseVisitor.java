@@ -1,4 +1,4 @@
-// Generated from .\GuitarTab.g4 by ANTLR 4.9.2
+// Generated from GuitarTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr;
 
@@ -40,13 +40,6 @@ public class GuitarTabBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTune(GuitarTabParser.TuneContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitStringItems(GuitarTabParser.StringItemsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -54,7 +47,14 @@ public class GuitarTabBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHammerPull(GuitarTabParser.HammerPullContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFret(GuitarTabParser.FretContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitHarmonic(GuitarTabParser.HarmonicContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -82,12 +82,12 @@ public class GuitarTabBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHarmonic(GuitarTabParser.HarmonicContext ctx) { return visitChildren(ctx); }
+	@Override public T visitHammerPull(GuitarTabParser.HammerPullContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFret(GuitarTabParser.FretContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTune(GuitarTabParser.TuneContext ctx) { return visitChildren(ctx); }
 }

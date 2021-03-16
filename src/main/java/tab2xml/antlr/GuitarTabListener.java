@@ -1,4 +1,4 @@
-// Generated from .\GuitarTab.g4 by ANTLR 4.9.2
+// Generated from GuitarTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr;
 
@@ -40,16 +40,6 @@ public interface GuitarTabListener extends ParseTreeListener {
 	 */
 	void exitString(GuitarTabParser.StringContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GuitarTabParser#tune}.
-	 * @param ctx the parse tree
-	 */
-	void enterTune(GuitarTabParser.TuneContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link GuitarTabParser#tune}.
-	 * @param ctx the parse tree
-	 */
-	void exitTune(GuitarTabParser.TuneContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link GuitarTabParser#stringItems}.
 	 * @param ctx the parse tree
 	 */
@@ -60,17 +50,25 @@ public interface GuitarTabListener extends ParseTreeListener {
 	 */
 	void exitStringItems(GuitarTabParser.StringItemsContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code HammerPull}
-	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
+	 * Enter a parse tree produced by {@link GuitarTabParser#fret}.
 	 * @param ctx the parse tree
 	 */
-	void enterHammerPull(GuitarTabParser.HammerPullContext ctx);
+	void enterFret(GuitarTabParser.FretContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code HammerPull}
-	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
+	 * Exit a parse tree produced by {@link GuitarTabParser#fret}.
 	 * @param ctx the parse tree
 	 */
-	void exitHammerPull(GuitarTabParser.HammerPullContext ctx);
+	void exitFret(GuitarTabParser.FretContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link GuitarTabParser#harmonic}.
+	 * @param ctx the parse tree
+	 */
+	void enterHarmonic(GuitarTabParser.HarmonicContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link GuitarTabParser#harmonic}.
+	 * @param ctx the parse tree
+	 */
+	void exitHarmonic(GuitarTabParser.HarmonicContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link GuitarTabParser#pulloff}.
 	 * @param ctx the parse tree
@@ -102,23 +100,25 @@ public interface GuitarTabListener extends ParseTreeListener {
 	 */
 	void exitSlide(GuitarTabParser.SlideContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GuitarTabParser#harmonic}.
+	 * Enter a parse tree produced by the {@code HammerPull}
+	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
 	 * @param ctx the parse tree
 	 */
-	void enterHarmonic(GuitarTabParser.HarmonicContext ctx);
+	void enterHammerPull(GuitarTabParser.HammerPullContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GuitarTabParser#harmonic}.
+	 * Exit a parse tree produced by the {@code HammerPull}
+	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
 	 * @param ctx the parse tree
 	 */
-	void exitHarmonic(GuitarTabParser.HarmonicContext ctx);
+	void exitHammerPull(GuitarTabParser.HammerPullContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link GuitarTabParser#fret}.
+	 * Enter a parse tree produced by {@link GuitarTabParser#tune}.
 	 * @param ctx the parse tree
 	 */
-	void enterFret(GuitarTabParser.FretContext ctx);
+	void enterTune(GuitarTabParser.TuneContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link GuitarTabParser#fret}.
+	 * Exit a parse tree produced by {@link GuitarTabParser#tune}.
 	 * @param ctx the parse tree
 	 */
-	void exitFret(GuitarTabParser.FretContext ctx);
+	void exitTune(GuitarTabParser.TuneContext ctx);
 }

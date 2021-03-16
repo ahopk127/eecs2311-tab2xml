@@ -1,4 +1,4 @@
-// Generated from .\GuitarTab.g4 by ANTLR 4.9.2
+// Generated from GuitarTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr;
 
@@ -54,18 +54,6 @@ public class GuitarTabBaseListener implements GuitarTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTune(GuitarTabParser.TuneContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTune(GuitarTabParser.TuneContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterStringItems(GuitarTabParser.StringItemsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -78,13 +66,25 @@ public class GuitarTabBaseListener implements GuitarTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterHammerPull(GuitarTabParser.HammerPullContext ctx) { }
+	@Override public void enterFret(GuitarTabParser.FretContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitHammerPull(GuitarTabParser.HammerPullContext ctx) { }
+	@Override public void exitFret(GuitarTabParser.FretContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterHarmonic(GuitarTabParser.HarmonicContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitHarmonic(GuitarTabParser.HarmonicContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -126,25 +126,25 @@ public class GuitarTabBaseListener implements GuitarTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterHarmonic(GuitarTabParser.HarmonicContext ctx) { }
+	@Override public void enterHammerPull(GuitarTabParser.HammerPullContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitHarmonic(GuitarTabParser.HarmonicContext ctx) { }
+	@Override public void exitHammerPull(GuitarTabParser.HammerPullContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFret(GuitarTabParser.FretContext ctx) { }
+	@Override public void enterTune(GuitarTabParser.TuneContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFret(GuitarTabParser.FretContext ctx) { }
+	@Override public void exitTune(GuitarTabParser.TuneContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

@@ -16,24 +16,25 @@ string
 	: tune stringItems SPACE* NEWLINE?
 	;
 
-tune
-	: NOTE? BAR
-	;
 
 stringItems
-	:(HYPHEN 
-	| hampullchain
+	:(fret
+	| harmonic 
 	| pulloff
 	| hammeron
 	| slide 
-	| harmonic 
-	| fret 
+	| hampullchain
 	| BAR
-	| DOUBLEBAR)+	(BAR | DOUBLEBAR)		
+	| DOUBLEBAR 
+	| HYPHEN)+	(BAR | DOUBLEBAR)		
 	;	
 
-hampullchain
-	: 'g'? fret ('h' | 'p')  fret  (('h' | 'p') fret)+		# HammerPull
+fret
+   : FRET_NUM			
+   ;
+
+harmonic
+	:  '[' fret ']'				
 	;
 
 pulloff
@@ -47,14 +48,14 @@ hammeron
 slide
 	: 'g'? fret 's' fret				
 	;
-
-harmonic
-	:  '[' fret ']'				
+		
+hampullchain
+	: 'g'? fret ('h' | 'p')  fret  (('h' | 'p') fret)+		# HammerPull
 	;
 
-fret
-   : FRET_NUM			
-   ;
+tune
+	: NOTE? BAR
+	;
 
 /* Tokens */
 
@@ -70,12 +71,12 @@ DOUBLEBAR
 	: '*'? (BAR | FRET_NUM) '|''*'?
 	;
 	
-HYPHEN 
-	: '-' 
-	;
-	
 FRET_NUM
 	: [0-9]+
+	;
+	
+HYPHEN 
+	: '-' 
 	;
 	
 SPACE
