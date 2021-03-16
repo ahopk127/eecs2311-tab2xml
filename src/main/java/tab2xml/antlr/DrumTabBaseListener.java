@@ -1,10 +1,11 @@
-// Generated from DrumTab.g4 by ANTLR 4.9.2
+// Generated from DrumTab.g4 by ANTLR 4.4
 
 	package tab2xml.antlr; 
 	
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -19,156 +20,156 @@ public class DrumTabBaseListener implements DrumTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSheet(DrumTabParser.SheetContext ctx) { }
+	@Override public void enterLineItems(@NotNull DrumTabParser.LineItemsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSheet(DrumTabParser.SheetContext ctx) { }
+	@Override public void exitLineItems(@NotNull DrumTabParser.LineItemsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStaff(DrumTabParser.StaffContext ctx) { }
+	@Override public void enterChoke(@NotNull DrumTabParser.ChokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStaff(DrumTabParser.StaffContext ctx) { }
+	@Override public void exitChoke(@NotNull DrumTabParser.ChokeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLine(DrumTabParser.LineContext ctx) { }
+	@Override public void enterGhost(@NotNull DrumTabParser.GhostContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLine(DrumTabParser.LineContext ctx) { }
+	@Override public void exitGhost(@NotNull DrumTabParser.GhostContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLineItems(DrumTabParser.LineItemsContext ctx) { }
+	@Override public void enterLine(@NotNull DrumTabParser.LineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLineItems(DrumTabParser.LineItemsContext ctx) { }
+	@Override public void exitLine(@NotNull DrumTabParser.LineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDrumType(DrumTabParser.DrumTypeContext ctx) { }
+	@Override public void enterStrike(@NotNull DrumTabParser.StrikeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDrumType(DrumTabParser.DrumTypeContext ctx) { }
+	@Override public void exitStrike(@NotNull DrumTabParser.StrikeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStrike(DrumTabParser.StrikeContext ctx) { }
+	@Override public void enterRoll(@NotNull DrumTabParser.RollContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStrike(DrumTabParser.StrikeContext ctx) { }
+	@Override public void exitRoll(@NotNull DrumTabParser.RollContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAccent(DrumTabParser.AccentContext ctx) { }
+	@Override public void enterSheet(@NotNull DrumTabParser.SheetContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAccent(DrumTabParser.AccentContext ctx) { }
+	@Override public void exitSheet(@NotNull DrumTabParser.SheetContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGhost(DrumTabParser.GhostContext ctx) { }
+	@Override public void enterStaff(@NotNull DrumTabParser.StaffContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGhost(DrumTabParser.GhostContext ctx) { }
+	@Override public void exitStaff(@NotNull DrumTabParser.StaffContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRoll(DrumTabParser.RollContext ctx) { }
+	@Override public void enterDrumType(@NotNull DrumTabParser.DrumTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRoll(DrumTabParser.RollContext ctx) { }
+	@Override public void exitDrumType(@NotNull DrumTabParser.DrumTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterChoke(DrumTabParser.ChokeContext ctx) { }
+	@Override public void enterAccent(@NotNull DrumTabParser.AccentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitChoke(DrumTabParser.ChokeContext ctx) { }
+	@Override public void exitAccent(@NotNull DrumTabParser.AccentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFlam(DrumTabParser.FlamContext ctx) { }
+	@Override public void enterFlam(@NotNull DrumTabParser.FlamContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFlam(DrumTabParser.FlamContext ctx) { }
+	@Override public void exitFlam(@NotNull DrumTabParser.FlamContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEveryRule(ParserRuleContext ctx) { }
+	@Override public void enterEveryRule(@NotNull ParserRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEveryRule(ParserRuleContext ctx) { }
+	@Override public void exitEveryRule(@NotNull ParserRuleContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitTerminal(TerminalNode node) { }
+	@Override public void visitTerminal(@NotNull TerminalNode node) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void visitErrorNode(ErrorNode node) { }
+	@Override public void visitErrorNode(@NotNull ErrorNode node) { }
 }
