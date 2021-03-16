@@ -34,7 +34,6 @@ final class TabbedView extends AbstractSwingView {
 	 * @since 2021-03-10
 	 */
 	public static void main(String[] args) {
-		View.enableSystemLookAndFeel();
 		View.createView(View.ViewType.TABBED);
 	}
 	

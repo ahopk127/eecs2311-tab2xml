@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tab2xml.exceptions.ParsingWarning;
@@ -92,21 +90,6 @@ public interface View {
 	 */
 	static ViewBot createViewBot() {
 		return new ViewBot();
-	}
-	
-	/**
-	 * Enables the system look-and-feel in Swing, if it works.
-	 * 
-	 * @since 2021-03-10
-	 */
-	public static void enableSystemLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			System.err.println("Failed to enable system look-and-feel.");
-			e.printStackTrace();
-		}
 	}
 	
 	/**

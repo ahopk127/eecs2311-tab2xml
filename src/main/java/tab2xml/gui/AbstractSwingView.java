@@ -19,6 +19,8 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
@@ -95,6 +97,23 @@ public abstract class AbstractSwingView implements View {
 			Color.YELLOW);
 	
 	/**
+	 * Enables the system look-and-feel in Swing, if it works.
+	 * 
+	 * @since 2021-03-10
+	 */
+	public static void enableSystemLookAndFeel() {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			// system view couldn't be installed - not the end of the world
+			// stuff will just look a bit worse
+			System.err.println("Failed to enable system look-and-feel.");
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Highlights a token in the text box.
 	 *
 	 * @param token   token to highlight
@@ -145,6 +164,8 @@ public abstract class AbstractSwingView implements View {
 	 * @since 2021-03-15
 	 */
 	protected AbstractSwingView() {
+		AbstractSwingView.enableSystemLookAndFeel();
+		
 		this.frame = new JFrame("TAB2XML " + Main.PROGRAM_VERSION);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.presenter = new Presenter(this);
@@ -300,7 +321,7 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 
+	 * 				
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {

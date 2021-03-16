@@ -94,7 +94,6 @@ final class SingleEntryView extends AbstractSwingView {
 	 * @since 2021-01-18
 	 */
 	public static void main(String[] args) {
-		View.enableSystemLookAndFeel();
 		View.createView(View.ViewType.SINGLE_ENTRY);
 	}
 	
