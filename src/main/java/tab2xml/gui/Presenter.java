@@ -47,6 +47,18 @@ public final class Presenter {
 			return path.resolveSibling(filename + "." + preferredExtension);
 	}
 	
+	/**
+	 * The number of times this presenter has attempted to read from a file.
+	 * <b>For testing only.</b>
+	 */
+	int fileReads = 0;
+	
+	/**
+	 * The number of times this presenter has attempted to write to a file.
+	 * <b>For testing only.</b>
+	 */
+	int fileWrites = 0;
+	
 	/** The view that this presenter takes input from and sends output to. */
 	private final View view;
 	
@@ -173,6 +185,7 @@ public final class Presenter {
 	 * @since 2021-03-15
 	 */
 	Optional<String> loadFromFile(Path file) {
+		this.fileReads++;
 		try {
 			// read file, using only Unix line endings (\n)
 			return Optional.of(Files.readString(file).replaceAll("\\r\\n", "\n"));
@@ -253,6 +266,7 @@ public final class Presenter {
 	 * @since 2021-03-15
 	 */
 	private boolean saveToFile(Path file, String text) {
+		this.fileWrites++;
 		try {
 			Files.writeString(file, text);
 			return true;
