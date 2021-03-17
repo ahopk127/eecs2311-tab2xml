@@ -18,17 +18,22 @@ It is fairly easy to use, but a full instruction manual can be found at [[./Docu
 
 * Screenshots
 *The main interface* \\
-[[./Screenshots/main-interface.png]]
+[[./Screenshots/main-interface-tabbedview-0.3.0a1.png]]
 
 *Entering a text tab* \\
-[[./Screenshots/text-tab.png]]
+[[./Screenshots/sample-inputs-tabbedview-0.3.0a1.png]]
 
-*Text tab converted (as of 2021-02-17)* \\
-[[./Screenshots/converted-20210217.png]]
+*Text tab converted (as of 2021-03-17)* \\
+[[./Screenshots/converted-20210317-tabbedview.png]]
+
+*This example rendered in [[https://opensheetmusicdisplay.github.io/demo/][OpenSheetMusicDisplay]]* \\
+[[./Screenshots/converted-20210317-opensheetmusicdisplay.png]]
 
 * Supported features
   - hammer-on notations
   - pull-off notations
+  - grace notes
+  - repeated measures
   - hammer-on/pull-off combination sequences
   - chords
   - in-line comments (~// this is a comment~)
@@ -79,6 +84,7 @@ D|--------------------------------------------|---------------------------------
 
 ** Discrepancies
 	- There are some ambiguities with token recognition and the GUI will reflect this.
+  - The program currently only supports using one text tab at a time.
   - You should not have any spaces before the start of the text tab.
 	- Staff meta-data is not yet functional.
 
