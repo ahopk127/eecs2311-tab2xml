@@ -205,7 +205,7 @@ public final class Presenter {
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
 	 * @return true if loading was successful
-	 * 
+	 * 													
 	 * @since 2021-02-25
 	 */
 	public boolean loadInput() {
@@ -268,6 +268,15 @@ public final class Presenter {
 	private boolean saveToFile(Path file, String text) {
 		this.fileWrites++;
 		try {
+			// prompt to user first
+			if (Files.exists(file)) {
+				final var result = this.view.promptOK("Warning: Overwriting File",
+						"The file you are about to save to already exists.  Saving to it will erase its contents.  Are you sure you want to continue?");
+				
+				if (result.isEmpty() || result.get().equals(Boolean.FALSE))
+					return false; // do not save to file
+			}
+			
 			Files.writeString(file, text);
 			return true;
 		} catch (final IOException e) {

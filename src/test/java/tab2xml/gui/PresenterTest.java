@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -135,6 +136,7 @@ class PresenterTest {
 		view.setInputText(input);
 		view.setSelectedInstrument(instrument);
 		view.setSelectedFile(TEST_FILE);
+		view.setOkPromptResult(Optional.of(true));
 		
 		presenter.convertAndSave(showInView);
 		
@@ -235,6 +237,7 @@ class PresenterTest {
 		// save input
 		view.setInputText(TEST_STRING);
 		view.setSelectedFile(TEST_FILE);
+		view.setOkPromptResult(Optional.of(true));
 		presenter.saveInput();
 		
 		// get result of saving
@@ -265,6 +268,7 @@ class PresenterTest {
 		
 		view.setOutputText(TEST_STRING);
 		view.setSelectedFile(TEST_FILE);
+		view.setOkPromptResult(Optional.of(true));
 		presenter.saveOutput();
 		
 		assertEquals(TEST_STRING, readStringHandleErrors(TEST_FILE));
