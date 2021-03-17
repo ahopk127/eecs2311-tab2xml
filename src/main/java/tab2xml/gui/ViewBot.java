@@ -38,6 +38,11 @@ public final class ViewBot implements View {
 	private Path selectedFile;
 	
 	/**
+	 * The value that will be returned by {@link #promptOK}.
+	 */
+	private Optional<Boolean> okPromptResult;
+	
+	/**
 	 * Creates a {@code ViewBot}. The initial input and output text will be the
 	 * empty string, while the initial selected instrument will be {@code null}.
 	 * 
@@ -48,6 +53,7 @@ public final class ViewBot implements View {
 		this.outputText = "";
 		this.selectedInstrument = null;
 		this.selectedFile = null;
+		this.okPromptResult = Optional.empty();
 	}
 	
 	@Override
@@ -89,8 +95,21 @@ public final class ViewBot implements View {
 	}
 	
 	@Override
+	public Optional<Boolean> promptOK(String title, String message) {
+		return this.okPromptResult;
+	}
+	
+	@Override
 	public final void setInputText(String inputText) {
 		this.inputText = inputText;
+	}
+	
+	/**
+	 * @param okPromptResult the value returned by {@link #promptOK}
+	 * @since 2021-03-17
+	 */
+	public final void setOkPromptResult(Optional<Boolean> okPromptResult) {
+		this.okPromptResult = okPromptResult;
 	}
 	
 	@Override

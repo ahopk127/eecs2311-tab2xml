@@ -160,6 +160,18 @@ public interface View {
 	Optional<Path> promptForFile(FileNameExtensionFilter preferredFileType);
 	
 	/**
+	 * Prompts the user to answer a yes or no question
+	 *
+	 * @param title   title of prompt; on any GUI View this should be the title
+	 *                of the dialog
+	 * @param message message to prompt the user with
+	 * @return true if the user accepts, false if the user rejects, empty
+	 *         Optional if the user cancels
+	 * @since 2021-03-17
+	 */
+	Optional<Boolean> promptOK(String title, String message);
+	
+	/**
 	 * Sets the view's input text to {@code text}. This method is optional.
 	 * 
 	 * <p>

@@ -47,6 +47,18 @@ public final class Presenter {
 			return path.resolveSibling(filename + "." + preferredExtension);
 	}
 	
+	/**
+	 * The number of times this presenter has attempted to read from a file.
+	 * <b>For testing only.</b>
+	 */
+	int fileReads = 0;
+	
+	/**
+	 * The number of times this presenter has attempted to write to a file.
+	 * <b>For testing only.</b>
+	 */
+	int fileWrites = 0;
+	
 	/** The view that this presenter takes input from and sends output to. */
 	private final View view;
 	
@@ -173,6 +185,7 @@ public final class Presenter {
 	 * @since 2021-03-15
 	 */
 	Optional<String> loadFromFile(Path file) {
+		this.fileReads++;
 		try {
 			// read file, using only Unix line endings (\n)
 			return Optional.of(Files.readString(file).replaceAll("\\r\\n", "\n"));
@@ -192,7 +205,7 @@ public final class Presenter {
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
 	 * @return true if loading was successful
-	 * 
+	 * 													
 	 * @since 2021-02-25
 	 */
 	public boolean loadInput() {
@@ -253,7 +266,17 @@ public final class Presenter {
 	 * @since 2021-03-15
 	 */
 	private boolean saveToFile(Path file, String text) {
+		this.fileWrites++;
 		try {
+			// prompt to user first
+			if (Files.exists(file)) {
+				final var result = this.view.promptOK("Warning: Overwriting File",
+						"The file you are about to save to already exists.  Saving to it will erase its contents.  Are you sure you want to continue?");
+				
+				if (result.isEmpty() || result.get().equals(Boolean.FALSE))
+					return false; // do not save to file
+			}
+			
 			Files.writeString(file, text);
 			return true;
 		} catch (final IOException e) {

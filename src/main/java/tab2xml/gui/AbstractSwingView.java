@@ -133,11 +133,11 @@ public abstract class AbstractSwingView implements View {
 	 * The frame where everything is on.
 	 */
 	protected final JFrame frame;
+	
 	/**
 	 * The presenter associated with this View.
 	 */
 	protected final Presenter presenter;
-	
 	/**
 	 * A combo box used to select the instrument.
 	 */
@@ -281,6 +281,28 @@ public abstract class AbstractSwingView implements View {
 			return Optional.of(fc.getSelectedFile().toPath());
 		} else
 			return Optional.empty();
+	}
+	
+	/**
+	 * Shows a Yes/No/Cancel prompt. The default implementation uses JOptionPane.
+	 * 
+	 * @param title   title of dialog
+	 * @param message message to prompt the user with
+	 */
+	@Override
+	public Optional<Boolean> promptOK(String title, String message) {
+		switch (JOptionPane.showConfirmDialog(this.frame, message, title,
+				JOptionPane.YES_NO_OPTION)) {
+		case JOptionPane.YES_OPTION:
+			return Optional.of(Boolean.TRUE);
+		case JOptionPane.CANCEL_OPTION:
+		case JOptionPane.NO_OPTION:
+			return Optional.of(Boolean.FALSE);
+		case JOptionPane.CLOSED_OPTION:
+			return Optional.empty();
+		default:
+			throw new AssertionError("Should not happen.");
+		}
 	}
 	
 	/**
