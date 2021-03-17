@@ -1,4 +1,7 @@
 * Changelog
+** Unreleased
+*** Added
+    - Added the ability to save the input to a file.
 ** [0.3.0-alpha.1] - [2021-03-15 Mon] (Week 8)
 *** Added
     - Added new view, TabbedView, that uses tabs to combine the positives of single-entry and double-entry Views

@@ -128,7 +128,9 @@ public final class Presenter {
 	}
 	
 	/**
-	 * Converts text tab to MusicXML, then saves it to a file.
+	 * Converts text tab to MusicXML, then saves it to a file. If an I/O
+	 * exception occurs, it is shown using {@link View#showErrorMessage} and
+	 * {@code false} is returned.
 	 * 
 	 * @param showInView whether the converted MusicXML should be shown in the
 	 *                   View and saved, or just saved
@@ -153,71 +155,106 @@ public final class Presenter {
 		}
 		
 		// get file to save to
-		final Optional<Path> savePathInput = this.view
-				.promptForFile(MUSICXML_FILE);
-		if (savePathInput.isEmpty())
-			return false; // operation cancelled
-			
-		final Path savePath = withPreferredExtension(savePathInput.get(), "xml");
+		final Optional<Path> savePath = this.view.promptForFile(MUSICXML_FILE)
+				.map(path -> withPreferredExtension(path, "xml"));
 		
 		// save to file
+		if (savePath.isPresent())
+			return this.saveToFile(savePath.get(), output.get());
+		else
+			return false; // user did not select file
+	}
+	
+	/**
+	 * Gets and returns the text from the provided file and puts it into the
+	 * view's input. If an I/O error occurs, it is shown using
+	 * {@link View#showErrorMessage} and an empty Optional is returned.
+	 *
+	 * @since 2021-03-15
+	 */
+	Optional<String> loadFromFile(Path file) {
 		try {
-			Files.writeString(savePath, output.get());
-			return true;
+			// read file, using only Unix line endings (\n)
+			return Optional.of(Files.readString(file).replaceAll("\\r\\n", "\n"));
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",
-					"An error occured while saving to the selected file: "
+					"An error occured while reading from the selected file: "
 							+ e.getMessage());
-			return false;
+			return Optional.empty();
 		}
 	}
 	
 	/**
 	 * Gets the text from a user-selected file and writes it to the view's input
-	 * field.
+	 * field. If an I/O exception occurs, it is shown using
+	 * {@link View#showErrorMessage} and {@code false} is returned.
 	 * 
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
 	 * @return true if loading was successful
-	 * 													
+	 * 
 	 * @since 2021-02-25
 	 */
-	public boolean loadFromFile() {
+	public boolean loadInput() {
 		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE);
-		if (loadPath.isEmpty())
-			return false; // user cancelled, stop function
-			
-		try {
-			// read file, using only Unix line endings (\n)
-			this.view.setInputText(
-					Files.readString(loadPath.get()).replaceAll("\\r\\n", "\n"));
-			return true;
-		} catch (final IOException e) {
-			this.view.showErrorMessage("I/O Error",
-					"An error occured while reading from the selected file: "
-							+ e.getMessage());
-			return false;
-		}
+		
+		if (loadPath.isPresent()) {
+			final Optional<String> result = this.loadFromFile(loadPath.get());
+			result.ifPresent(this.view::setInputText);
+			return result.isPresent();
+		} else
+			return false; // user did not provide a file
+	}
+	
+	/**
+	 * Prompts the user for an input file, then saves the view's input text to
+	 * that file. If an I/O exception occurs, it is shown using
+	 * {@link View#showErrorMessage} and {@code false} is returned.
+	 *
+	 * @return true if saving was successful
+	 * @since 2021-03-15
+	 */
+	public boolean saveInput() {
+		final Optional<Path> savePathInput = this.view
+				.promptForFile(TEXT_TAB_FILE)
+				.map(path -> withPreferredExtension(path, "txt"));
+		
+		if (savePathInput.isPresent())
+			return this.saveToFile(savePathInput.get(), this.view.getInputText());
+		else
+			return false; // user did not select file
 	}
 	
 	/**
 	 * Prompts the user for an output file, then saves the view's output text to
-	 * that file.
+	 * that file. If an I/O exception occurs, it is shown using
+	 * {@link View#showErrorMessage} and {@code false} is returned.
 	 *
 	 * @return true if saving was successful
 	 * 
 	 * @since 2021-02-25
 	 */
-	public boolean saveToFile() {
-		final Optional<Path> savePathInput = this.view
-				.promptForFile(MUSICXML_FILE);
-		if (savePathInput.isEmpty())
-			return false; // operation cancelled
-			
-		final Path savePath = withPreferredExtension(savePathInput.get(), "xml");
+	public boolean saveOutput() {
+		final Optional<Path> savePathOutput = this.view
+				.promptForFile(MUSICXML_FILE)
+				.map(path -> withPreferredExtension(path, "xml"));
 		
+		if (savePathOutput.isPresent())
+			return this.saveToFile(savePathOutput.get(),
+					this.view.getOutputText());
+		else
+			return false; // user did not select file
+	}
+	
+	/**
+	 * Saves {@code text} to the provided file. If an I/O exception occurs, it is
+	 * shown using {@link View#showErrorMessage} and {@code false} is returned.
+	 *
+	 * @since 2021-03-15
+	 */
+	private boolean saveToFile(Path file, String text) {
 		try {
-			Files.writeString(savePath, this.view.getOutputText());
+			Files.writeString(file, text);
 			return true;
 		} catch (final IOException e) {
 			this.view.showErrorMessage("I/O Error",

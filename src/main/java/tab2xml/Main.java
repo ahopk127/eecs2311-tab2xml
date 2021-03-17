@@ -18,7 +18,6 @@ public class Main {
 	 * Executes the program using the Single Entry View.
 	 */
 	public static void main(String[] args) {
-		View.enableSystemLookAndFeel();
 		View.createView(View.ViewType.TABBED);
 	}
 }

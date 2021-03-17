@@ -139,7 +139,7 @@ class PresenterTest {
 		
 		// invalid files
 		view.setSelectedFile(TEST_FILES.resolve("NONEXISTENT"));
-		assertThrows(RuntimeException.class, () -> presenter.loadFromFile());
+		assertThrows(RuntimeException.class, () -> presenter.loadInput());
 	}
 	
 	/**
@@ -148,7 +148,7 @@ class PresenterTest {
 	 * @since 2021-02-06
 	 */
 	@Test
-	final void testLoadFromFile() {
+	final void testLoadInput() {
 		final ViewBot view = View.createViewBot();
 		final Presenter presenter = new Presenter(view);
 		final Path TEST_FILE = TEST_FILES.resolve("test-read.txt");
@@ -157,7 +157,7 @@ class PresenterTest {
 			assumeTrue(TEST_STRING.equals(Files.readString(TEST_FILE)));
 			
 			view.setSelectedFile(TEST_FILE);
-			presenter.loadFromFile();
+			presenter.loadInput();
 			
 			assertEquals(TEST_STRING, view.getInputText());
 		} catch (final Exception e) {
@@ -174,7 +174,7 @@ class PresenterTest {
 	 * @since 2021-02-06
 	 */
 	@Test
-	final void testSaveToFile() {
+	final void testSaveOutput() {
 		final ViewBot view = View.createViewBot();
 		final Presenter presenter = new Presenter(view);
 		final Path TEST_FILE = TEST_FILES.resolve("test-write.txt");
@@ -184,7 +184,7 @@ class PresenterTest {
 			
 			view.setOutputText(TEST_STRING);
 			view.setSelectedFile(TEST_FILE);
-			presenter.saveToFile();
+			presenter.saveOutput();
 			
 			assertEquals(TEST_STRING, Files.readString(TEST_FILE));
 		} catch (final Exception e) {
