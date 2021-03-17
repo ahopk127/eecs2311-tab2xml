@@ -1,7 +1,14 @@
 * Changelog
 ** Unreleased
 *** Added
-    - Added the ability to save the input to a file.
+    - Added the ability to save the input to a file
+    - Added a prompt before the user overwrites a file
+    - Added more frontend tests
+*** Changed
+    - Rewrote README
+    - Updated documentation to new version, incorporating customer feedback
+    - The file chooser now starts at the previously selected directory instead of the user home directory
+    - Created a common abstract superclass for all three Swing views, implementing common features
 ** [0.3.0-alpha.1] - [2021-03-15 Mon] (Week 8)
 *** Added
     - Added new view, TabbedView, that uses tabs to combine the positives of single-entry and double-entry Views
