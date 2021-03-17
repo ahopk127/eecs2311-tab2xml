@@ -57,6 +57,6 @@
    3. System updates settings internally
    4. Musician stops program or continues using program for something else
 ** Use Case Diagram
-   [[./use-case-diagram.png]]
+   [[./use-case-diagram.svg]]
 * User Stories
   1. "As a musician, I want to convert this text tablature to MusicXML so I can take advantage of MusicXML features like rendering, transposing and automatic playing."

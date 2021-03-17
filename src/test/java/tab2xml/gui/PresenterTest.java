@@ -150,6 +150,12 @@ class PresenterTest {
 		assertEquals(expectedOutput, readStringHandleErrors(TEST_FILE, false));
 	}
 	
+	/**
+	 * Ensures that the system properly fails and does not read from or write to
+	 * any files when the user fails to select a file.
+	 * 
+	 * @since 2021-03-17
+	 */
 	@Test
 	final void testErrorNoSelectedFile() {
 		final ViewBot view = View.createViewBot();
