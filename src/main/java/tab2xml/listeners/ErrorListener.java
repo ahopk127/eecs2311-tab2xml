@@ -20,6 +20,7 @@ public class ErrorListener extends BaseErrorListener {
 	public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
 			String msg, RecognitionException e) {
 		errors.put(((Token) offendingSymbol), msg);
+		System.out.println(msg);
 	}
 
 	/**

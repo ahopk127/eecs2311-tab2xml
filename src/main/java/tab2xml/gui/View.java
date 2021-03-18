@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tab2xml.exceptions.ParsingWarning;
@@ -95,21 +93,6 @@ public interface View {
 	}
 	
 	/**
-	 * Enables the system look-and-feel in Swing, if it works.
-	 * 
-	 * @since 2021-03-10
-	 */
-	public static void enableSystemLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			System.err.println("Failed to enable system look-and-feel.");
-			e.printStackTrace();
-		}
-	}
-	
-	/**
 	 * Gets the text of the text tab inputted by the user. This could be typed
 	 * into a text box, or read from a file.
 	 *
@@ -175,6 +158,18 @@ public interface View {
 	 * @since 2021-02-25
 	 */
 	Optional<Path> promptForFile(FileNameExtensionFilter preferredFileType);
+	
+	/**
+	 * Prompts the user to answer a yes or no question
+	 *
+	 * @param title   title of prompt; on any GUI View this should be the title
+	 *                of the dialog
+	 * @param message message to prompt the user with
+	 * @return true if the user accepts, false if the user rejects, empty
+	 *         Optional if the user cancels
+	 * @since 2021-03-17
+	 */
+	Optional<Boolean> promptOK(String title, String message);
 	
 	/**
 	 * Sets the view's input text to {@code text}. This method is optional.

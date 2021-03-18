@@ -12,13 +12,12 @@ public class Main {
 	/**
 	 * The current version of TAB2XML.
 	 */
-	public static final String PROGRAM_VERSION = "v0.3.0a1";
+	public static final String PROGRAM_VERSION = "v0.3.0";
 	
 	/**
 	 * Executes the program using the Single Entry View.
 	 */
 	public static void main(String[] args) {
-		View.enableSystemLookAndFeel();
 		View.createView(View.ViewType.TABBED);
 	}
 }

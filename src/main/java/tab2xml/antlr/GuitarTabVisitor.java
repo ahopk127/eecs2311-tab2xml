@@ -1,4 +1,4 @@
-// Generated from .\GuitarTab.g4 by ANTLR 4.9.2
+// Generated from GuitarTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr;
 
@@ -31,24 +31,23 @@ public interface GuitarTabVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitString(GuitarTabParser.StringContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GuitarTabParser#tune}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTune(GuitarTabParser.TuneContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link GuitarTabParser#stringItems}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitStringItems(GuitarTabParser.StringItemsContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code HammerPull}
-	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
+	 * Visit a parse tree produced by {@link GuitarTabParser#fret}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitHammerPull(GuitarTabParser.HammerPullContext ctx);
+	T visitFret(GuitarTabParser.FretContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GuitarTabParser#harmonic}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHarmonic(GuitarTabParser.HarmonicContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GuitarTabParser#pulloff}.
 	 * @param ctx the parse tree
@@ -68,15 +67,16 @@ public interface GuitarTabVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSlide(GuitarTabParser.SlideContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GuitarTabParser#harmonic}.
+	 * Visit a parse tree produced by the {@code HammerPull}
+	 * labeled alternative in {@link GuitarTabParser#hampullchain}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitHarmonic(GuitarTabParser.HarmonicContext ctx);
+	T visitHammerPull(GuitarTabParser.HammerPullContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GuitarTabParser#fret}.
+	 * Visit a parse tree produced by {@link GuitarTabParser#tune}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFret(GuitarTabParser.FretContext ctx);
+	T visitTune(GuitarTabParser.TuneContext ctx);
 }

@@ -1,0 +1,65 @@
+#+TITLE: TAB2XML User Manual
+#+SUBTITLE: For Version 0.3.0
+#+DATE: 2021 March 17
+
+#+LaTeX: \newpage
+
+* Introduction and Purpose
+  The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system in many use cases.
+* System Requirements
+  - Works on all major operating systems
+  - Java version 11-15 required
+* How to Install TAB2XML
+** Eclipse
+   1. Open Eclipse, and press ~File > Import~ in the menus.
+      [[../Screenshots/eclipse-install-1.png]]
+   2. In the window that opens, select "Projects from Git", in the folder called "Git".  Then, click "Next"
+      [[../Screenshots/eclipse-install-2.png]]
+   3. Click "Clone URI" then click "Next".
+      [[../Screenshots/eclipse-install-3.png]]
+   4. Enter "~https://github.com/ahopk127/eecs2311-tab2xml.git~" in the first field ("URI"), then click "Next".  No authentication is required.
+      [[../Screenshots/eclipse-install-4.png]]
+   5. Choose where you want the program to be saved on your computer (or just use the default location), then click "Next".
+      [[../Screenshots/eclipse-install-5.png]]
+   6. Click "Next" then "Finish".  The program is now installed on your computer, but must be built using Gradle.
+      [[../Screenshots/eclipse-install-7.png]]
+   7. You will need the "Gradle Tasks" window for the next step.  If you can't find it, press ~Window > Show View > Other~ in the menu, then find "Gradle Tasks" in the Gradle folder, then click "Open".
+      [[../Screenshots/eclipse-build-2.png]]
+   8. In the "Gradle Tasks" window, double-click the green "build" item in the "build" folder.
+      [[../Screenshots/eclipse-build.png]]
+** Commandline
+   1. Use the command ~git clone https://github.com/ahopk127/eecs2311-tab2xml.git~ to clone the project to the directory of your choice
+   2. Change directory to the directory where you installed the project, then use ~./gradlew build~ to build the project.
+   #+LaTeX: \newpage
+   
+* How to Use TAB2XML
+** Convert Text Tab
+   1. Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command ~./gradlew run~.\\
+      You should see a window like this:
+      [[../Screenshots/main-interface-tabbedview-0.3.0.png]]
+   2. Input your text tab into the application.  There are multiple ways of doing this:
+      - Type or copy-and-paste your text tab into the text box.  
+      - Press the "Load from File" button then choose a file to load your text tab from a file.  
+      - Drag and drop a text tab file into the input box
+      [[../Screenshots/sample-inputs-tabbedview-0.3.0.png]]
+   3. Press the "Convert" button.  The text tab will be replaced with the corresponding MusicXML.
+      [[../Screenshots/converted-20210317-tabbedview.png]]
+   4. You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button. \\
+      Here is a screenshot of the produced MusicXML, rendered using [[https://opensheetmusicdisplay.github.io/demo/][OpenSheetMusicDisplay]]:
+      [[../Screenshots/converted-20210317-opensheetmusicdisplay.png]]
+** Other Use Cases
+   - You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
+   - After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
+   - To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" to load another text tab.
+** How to Use in Code
+   If you would like to use this project in your own program, the following code can be used to convert tab to MusicXML:
+   
+   #+BEGIN_SRC java
+     tab2xml.parser.Parser parser = new tab2xml.parser.Parser(INPUT, INSTRUMENT);  
+     String output = parser.parse();  
+   #+END_SRC
+
+   Notes:
+   - INPUT is the text tab.  It should be a ~String~, not a file.
+   - INSTRUMENT is the instrument the tab is for.  It should be an instance of ~tab2xml.parser.Instrument~.
+   - You will need to handle the checked exceptions thrown by ~Parser.parse()~

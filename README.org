@@ -1,72 +1,68 @@
-* About TAB2XML Version 0.3.0-alpha.1
-This is an application that converts text tablature to MusicXML, created as a project for EECS 2311 in 2021 Winter.
+* About TAB2XML Release 0.3.0
+  This is an application that converts text tablature to MusicXML, created as a project for EECS 2311 at York University in 2021 Winter.
 
-It is fairly easy to use, but a full instruction manual can be found at [[./Documentation/instructions.pdf]].
-
+  It is fairly easy to use, but a full user manual can be found at [[./Documentation/manual.pdf]].
 * System Requirements
   - Works on all major operating systems
   - Java version 11-15
-
 * Tools Used
   - antlr4 *version 4.9.1*
-  
 * Basic Usage
-  For full instructions as well as installation instructions, please see the [[./Documentation/instructions.pdf][instruction manual]].
+  For full instructions as well as installation instructions, please see the [[./Documentation/manual.pdf][user manual]].
 
   1. Input your text tab into the text box or press "Load From File" to load a text tab to a file.
   2. Press "Convert and Save" to convert the tab to MusicXML and save the output to a file.
-
 * Screenshots
-*The main interface* \\
-[[./Screenshots/main-interface.png]]
+  *The main interface* \\
+  [[./Screenshots/main-interface-tabbedview-0.3.0.png]]
 
-*Entering a text tab* \\
-[[./Screenshots/text-tab.png]]
+  *Entering a text tab* \\
+  [[./Screenshots/sample-inputs-tabbedview-0.3.0.png]]
 
-*Text tab converted (as of 2021-02-17)* \\
-[[./Screenshots/converted-20210217.png]]
+  *Text tab converted (as of 2021-03-17)* \\
+  [[./Screenshots/converted-20210317-tabbedview.png]]
 
+  *The above MusicXML rendered in [[https://opensheetmusicdisplay.github.io/demo/][OpenSheetMusicDisplay]]* \\
+  [[./Screenshots/converted-20210317-opensheetmusicdisplay.png]]
 * Supported features
   - hammer-on notations
   - pull-off notations
+  - grace notes
+  - repeated measures
   - hammer-on/pull-off combination sequences
   - chords
   - in-line comments (~// this is a comment~)
   - multiline comments (~/* this is a multiline comment */~)
-
 * Sample Inputs
+  - chords:
 
-- chords:
+  #+BEGIN_EXAMPLE
+  e|-----2--------|-----2--------|--0-----3--0--|--------------|--2--------0--|
+  B|--------------|--------1-----|--0-----0--3--|--------------|--------1-----|
+  G|--------------|-----------0--|-----------2--|-----2--2--4--|--------------|
+  D|-----------2--|-----0--------|--2--2--------|-----0--4-----|-----2--------|
+  A|--3--------2--|--0--------2--|--------------|--0-----2-----|--2--------0--|
+  E|--0--0--------|--------------|--------------|--------------|--------------|
+  #+END_EXAMPLE
 
-#+BEGIN_EXAMPLE
-e|-----2--------|-----2--------|--0-----3--0--|--------------|--2--------0--|
-B|--------------|--------1-----|--0-----0--3--|--------------|--------1-----|
-G|--------------|-----------0--|-----------2--|-----2--2--4--|--------------|
-D|-----------2--|-----0--------|--2--2--------|-----0--4-----|-----2--------|
-A|--3--------2--|--0--------2--|--------------|--0-----2-----|--2--------0--|
-E|--0--0--------|--------------|--------------|--------------|--------------|
-#+END_EXAMPLE
+  #+BEGIN_EXAMPLE
+  e|--------2--3--|--------------|-----------3--|-----2--------|--2-----------|
+  B|--3-----3-----|--3--0--3--0--|--------1--0--|--------------|--------1-----|
+  G|-----------2--|--------4-----|-----------0--|--2-----2-----|--------------|
+  D|-----------2--|--4--------0--|--------------|-----------2--|--4-----------|
+  A|--------------|--0-----------|--------------|-----------0--|--------------|
+  E|--------3--0--|-----3--2-----|--0-----------|--------3-----|-----------3--|
+  #+END_EXAMPLE
+  - binary actions: hammer-on/pull-off/slides:
 
-#+BEGIN_EXAMPLE
-e|--------2--3--|--------------|-----------3--|-----2--------|--2-----------|
-B|--3-----3-----|--3--0--3--0--|--------1--0--|--------------|--------1-----|
-G|-----------2--|--------4-----|-----------0--|--2-----2-----|--------------|
-D|-----------2--|--4--------0--|--------------|-----------2--|--4-----------|
-A|--------------|--0-----------|--------------|-----------0--|--------------|
-E|--------3--0--|-----3--2-----|--0-----------|--------3-----|-----------3--|
-#+END_EXAMPLE
-
-- binary actions: hammer-on/pull-off/slides:
-
-#+BEGIN_EXAMPLE
-E|--8h10p8---6---5---3---6h5-10p9-12s10-13p12-|-15p12-10p9-12s10-6p5-8p6---0---------|
-B|-----------8-------5------------------------|--------------------------8---3---2---|
-G|-------0-------3--------------10s11---------|--------------------------------3---2-|
-D|--------------------------------------------|--------------------------------------|
-A|-----------------------0--------------------|--0-------------------------------0---|
-D|--------------------------------------------|--------------------------------------|
-#+END_EXAMPLE
-
+  #+BEGIN_EXAMPLE
+  E|--8h10p8---6---5---3---6h5-10p9-12s10-13p12-|-15p12-10p9-12s10-6p5-8p6---0---------|
+  B|-----------8-------5------------------------|--------------------------8---3---2---|
+  G|-------0-------3--------------10s11---------|--------------------------------3---2-|
+  D|--------------------------------------------|--------------------------------------|
+  A|-----------------------0--------------------|--0-------------------------------0---|
+  D|--------------------------------------------|--------------------------------------|
+  #+END_EXAMPLE
 ** Corresponding rendered XML (*via OpenSheetMusicDisplay*)
    *Sample Output Chords*
    [[./Screenshots/sample-output-chords.png]]
@@ -76,12 +72,11 @@ D|--------------------------------------------|---------------------------------
 
    *Sample Output Slides*
    [[./Screenshots/sample-output-slide.png]]
-
 ** Discrepancies
-	- There are some ambiguities with token recognition and the GUI will reflect this.
-  - You should not have any spaces before the start of the text tab.
-	- Staff meta-data is not yet functional.
-
+   - There are some ambiguities with token recognition and the GUI will reflect this.
+   - The program currently only supports using one text tab at a time.
+   - You should not have any spaces before the start of the text tab.
+   - Staff meta-data is not yet functional.
 * Copyright
   Copyright (C) 2021 Adrien Hopkins, Amir Mohamad, Edward Hickman, and Sayed Mohammed.
   
@@ -96,4 +91,4 @@ D|--------------------------------------------|---------------------------------
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+  along with this program.  If not, see [[<https://www.gnu.org/licenses/>]].

@@ -6,35 +6,20 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Optional;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
-import javax.swing.text.Highlighter.HighlightPainter;
-
-import tab2xml.exceptions.ParsingWarning;
-import tab2xml.exceptions.UnparseableInputException;
-import tab2xml.model.guitar.ErrorToken;
-import tab2xml.parser.Instrument;
+import javax.swing.text.JTextComponent;
 
 /**
  * A view with a single text box, handling both input and output.
  *
  * @since 2021-01-18
  */
-final class SingleEntryView implements View {
+final class SingleEntryView extends AbstractSwingView {
 	/**
 	 * Whether the text box is storing input text or output text.
 	 *
@@ -109,19 +94,11 @@ final class SingleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public static void main(String[] args) {
-		View.enableSystemLookAndFeel();
 		View.createView(View.ViewType.SINGLE_ENTRY);
 	}
 	
-	/** The frame that the GUI is displayed on. */
-	private final JFrame frame;
-	
-	/** The presenter that handles the view's input */
-	private final Presenter presenter;
 	/** The text box that handles both input and output. */
 	private final PromptingTextArea textBox;
-	/** The dropdown box to select the instrument. */
-	private final JComboBox<Instrument> instrumentSelection;
 	/** The button that converts tab to XML. */
 	private final JButton convertButton;
 	/** The undo button for conversion. */
@@ -144,10 +121,7 @@ final class SingleEntryView implements View {
 	 * @since 2021-01-18
 	 */
 	public SingleEntryView() {
-		this.frame = new JFrame("Tab2XML");
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setResizable(false);
-		this.presenter = new Presenter(this);
 		
 		// create components
 		final JPanel mainPanel = new JPanel();
@@ -163,9 +137,9 @@ final class SingleEntryView implements View {
 				"Enter text tab or load it from a file...", 24, 80);
 		this.textBox.setBorder(new LineBorder(Color.BLACK));
 		this.textBox.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 12));
-		this.textBox.setDropTarget(new FileDragDropTarget(this.textBox));
 		this.textBox.addCaretListener(
 				e -> this.textBox.getHighlighter().removeAllHighlights());
+		this.setUpFileDragAndDrop();
 		mainPanel.add(
 				new JScrollPane(this.textBox,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -176,7 +150,7 @@ final class SingleEntryView implements View {
 		final Insets buttonInsets = new Insets(3, 8, 3, 8);
 		
 		final JButton loadFileButton = new JButton("Load From File");
-		loadFileButton.addActionListener(e -> this.presenter.loadFromFile());
+		loadFileButton.addActionListener(e -> this.presenter.loadInput());
 		buttonPanel.add(loadFileButton, gridBag(1, 0, 1, 1, buttonInsets));
 		
 		this.convertButton = new JButton("Convert");
@@ -193,14 +167,13 @@ final class SingleEntryView implements View {
 			if (this.textBoxState == State.INPUT) {
 				this.presenter.convertAndSave(false);
 			} else {
-				this.presenter.saveToFile();
+				this.presenter.saveOutput();
 			}
 		});
 		buttonPanel.add(this.saveFileButton, gridBag(4, 0, 1, 1, buttonInsets));
 		
 		// combo boxes
-		this.instrumentSelection = new JComboBox<>(Instrument.values());
-		buttonPanel.add(this.instrumentSelection,
+		buttonPanel.add(this.getInstrumentSelector(),
 				gridBag(0, 0, 1, 1, buttonInsets));
 		
 		// set the frame to INPUT state.
@@ -216,72 +189,24 @@ final class SingleEntryView implements View {
 	}
 	
 	@Override
+	protected JTextComponent getInput() {
+		return this.textBox;
+	}
+	
+	@Override
 	public String getInputText() {
 		return this.textBoxState == State.INPUT ? this.textBox.getText()
 				: this.previousInputText;
 	}
 	
 	@Override
+	protected JTextComponent getOutput() {
+		return this.textBox;
+	}
+	
+	@Override
 	public String getOutputText() {
 		return this.textBoxState == State.OUTPUT ? this.textBox.getText() : "";
-	}
-	
-	@Override
-	public Instrument getSelectedInstrument() {
-		// The only objects in this list are Instrument instances, so the cast
-		// should work.
-		return (Instrument) this.instrumentSelection.getSelectedItem();
-	}
-	
-	@Override
-	public void handleParseWarnings(Collection<ParsingWarning> warnings) {
-		// show dialog box
-		View.super.handleParseWarnings(warnings);
-		
-		// highlight position of each warning
-		final HighlightPainter painter = new DefaultHighlightPainter(
-				Color.YELLOW);
-		warnings.stream().map(ParsingWarning::getLocation)
-				.flatMap(Optional::stream)
-				.forEach(token -> this.highlightToken(token, painter));
-	}
-	
-	/**
-	 * Highlights a token in the text box.
-	 *
-	 * @param token   token to highlight
-	 * @param painter highlighting settings
-	 * @since 2021-03-05
-	 */
-	private void highlightToken(ErrorToken token, HighlightPainter painter) {
-		try {
-			this.textBox.getHighlighter().addHighlight(token.getStart(),
-					token.getStop(), painter);
-		} catch (final BadLocationException e) {
-			throw new AssertionError("Invalid token " + token, e);
-		}
-	}
-	
-	@Override
-	public void onParseError(UnparseableInputException error) {
-		// show dialog box
-		View.super.onParseError(error);
-		
-		// highlight position of each error
-		final HighlightPainter painter = new DefaultHighlightPainter(Color.RED);
-		error.getErrors().forEach(token -> this.highlightToken(token, painter));
-	}
-	
-	@Override
-	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
-		final JFileChooser fc = new JFileChooser();
-		fc.addChoosableFileFilter(preferredType);
-		fc.setFileFilter(preferredType);
-		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION)
-			return Optional.of(fc.getSelectedFile().toPath());
-		else
-			return Optional.empty();
 	}
 	
 	@Override
@@ -301,16 +226,5 @@ final class SingleEntryView implements View {
 				: this.textBox.getText();
 		this.textBox.setText(text);
 		State.OUTPUT.enable(this);
-	}
-	
-	@Override
-	public void setSelectedInstrument(Instrument instrument) {
-		this.instrumentSelection.setSelectedItem(instrument);
-	}
-	
-	@Override
-	public void showErrorMessage(String title, String message) {
-		JOptionPane.showMessageDialog(this.frame, message, title,
-				JOptionPane.ERROR_MESSAGE);
 	}
 }

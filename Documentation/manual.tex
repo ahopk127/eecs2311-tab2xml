@@ -1,4 +1,4 @@
-% Created 2021-03-15 Mon 10:07
+% Created 2021-03-17 Wed 19:37
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,32 +14,36 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\date{\today}
-\title{}
+\date{2021 March 17}
+\title{TAB2XML User Manual\\\medskip
+\large For Version 0.3.0}
 \hypersetup{
  pdfauthor={},
- pdftitle={},
+ pdftitle={TAB2XML User Manual},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 27.1 (Org mode 9.4.4)}, 
  pdflang={English}}
 \begin{document}
 
+\maketitle
 \tableofcontents
 
 \newpage
+
+\section{Introduction and Purpose}
+\label{sec:org2602793}
+The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system in many use cases.
 \section{System Requirements}
-\label{sec:org0747025}
+\label{sec:org193695d}
 \begin{itemize}
 \item Works on all major operating systems
-\item Java version 11-15
+\item Java version 11-15 required
 \end{itemize}
-\section{How to Use TAB2XML}
-\label{sec:org5d2f6e8}
-\subsection{Installation}
-\label{sec:org063bcb6}
-\subsubsection{Eclipse}
-\label{sec:orgadd54b1}
+\section{How to Install TAB2XML}
+\label{sec:org4025a7b}
+\subsection{Eclipse}
+\label{sec:orgc8e378c}
 \begin{enumerate}
 \item Open Eclipse, and press \texttt{File > Import} in the menus.
 \begin{center}
@@ -74,19 +78,23 @@
 \includegraphics[width=.9\linewidth]{../Screenshots/eclipse-build.png}
 \end{center}
 \end{enumerate}
-\subsubsection{Commandline}
-\label{sec:org733a0f1}
+\subsection{Commandline}
+\label{sec:org9df580a}
 \begin{enumerate}
 \item Use the command \texttt{git clone https://github.com/ahopk127/eecs2311-tab2xml.git} to clone the project to the directory of your choice
 \item Change directory to the directory where you installed the project, then use \texttt{./gradlew build} to build the project.
 \end{enumerate}
+\newpage
+
+\section{How to Use TAB2XML}
+\label{sec:org71ec56f}
 \subsection{Convert Text Tab}
-\label{sec:org0c2750b}
+\label{sec:org2bf8d04}
 \begin{enumerate}
-\item Run the application.  In Eclipse, double-click the green "run" item in the "application folder".  In commandline, use \texttt{gradlew run}.\\
+\item Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command \texttt{./gradlew run}.\\
 You should see a window like this:
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/main-interface.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/main-interface-tabbedview-0.3.0.png}
 \end{center}
 \item Input your text tab into the application.  There are multiple ways of doing this:
 \begin{itemize}
@@ -95,23 +103,27 @@ You should see a window like this:
 \item Drag and drop a text tab file into the input box
 \end{itemize}
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/text-tab.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/sample-inputs-tabbedview-0.3.0.png}
 \end{center}
 \item Press the "Convert" button.  The text tab will be replaced with the corresponding MusicXML.
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/converted-20210217.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/converted-20210317-tabbedview.png}
 \end{center}
-\item You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button.
+\item You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button. \\
+Here is a screenshot of the produced MusicXML, rendered using \href{https://opensheetmusicdisplay.github.io/demo/}{OpenSheetMusicDisplay}:
+\begin{center}
+\includegraphics[width=.9\linewidth]{../Screenshots/converted-20210317-opensheetmusicdisplay.png}
+\end{center}
 \end{enumerate}
 \subsection{Other Use Cases}
-\label{sec:orgb3b1f19}
+\label{sec:orgc7ac556}
 \begin{itemize}
-\item You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.  In addition, the tab in the input box will not be replaced with MusicXML, so you can edit it then convert again!
-\item After converting text tab with the "Convert" button, you can press the "Undo Conversion" button to go back to the original text tab.
+\item You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
+\item After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
 \item To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" to load another text tab.
 \end{itemize}
 \subsection{How to Use in Code}
-\label{sec:orgaec59cf}
+\label{sec:org9f626ee}
 If you would like to use this project in your own program, the following code can be used to convert tab to MusicXML:
 
 \begin{verbatim}

@@ -1,0 +1,13 @@
+@startuml
+
+actor Musician
+
+package Tab2xmlSystem {
+  usecase "Convert Tablature" as UC1
+  usecase "Change Settings" as UC2
+}
+
+Musician --> UC1
+Musician --> UC2
+
+@enduml

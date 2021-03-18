@@ -67,20 +67,20 @@ public class Processor {
 	}
 
 	public Score processGuitar() throws InvalidInputException {
-		
+
 		// TODO: REMOVE THIS
-//		System.out.println("-----------------------");
-//		System.out.println(input);
-//		System.out.println("-----------------------");
-//		
+		//		System.out.println("-----------------------");
+		//		System.out.println(input);
+		//		System.out.println("-----------------------");
+
 		input = preprocessGuitar(input);
-		final List<ErrorToken> errorTokens = new LinkedList<>();
-		
+
 		// TODO: REMOVE THIS
-//		System.out.println("-----------------------");
-//		System.out.println(input);
-//		System.out.println("-----------------------");
-//		
+		//		System.out.println("-----------------------");
+		//		System.out.println(input);
+		//		System.out.println("-----------------------");
+
+		final List<ErrorToken> errorTokens = new LinkedList<>();
 		List<Integer> positions = new LinkedList<>();
 
 		for (int i = 0; i < input.length() - 1; i++) {
@@ -116,15 +116,36 @@ public class Processor {
 			int rightComment;
 			int leftComment;
 			int leastCommentCount;
-			@SuppressWarnings("unused")
-			final StringBuilder msg = new StringBuilder();
+			final StringBuilder message = new StringBuilder();
 			final LinkedHashMap<Token, String> errors = listener.getErrors();
 
 			for (Map.Entry<Token, String> error : errors.entrySet()) {
 				Token token = error.getKey();
-				String message = error.getValue();
-
+				String msg = error.getValue();
 				ErrorToken errorToken = new ErrorToken(token.getText());
+
+				// handle error messages
+				if (msg.matches("extraneous input '-' expecting \\{(<EOF>, )?NOTE, '\\|', NEWLINE\\}")
+						|| msg.matches("missing '\\|' at '-'"))
+					message.append("Incomplete tune");
+
+				if (msg.matches("extraneous input '\\\\n' expecting \\{'\\[', 'g', '\\|', DOUBLEBAR, FRET_NUM, '-'\\}"))
+					message.append("Missing end of string");
+
+				if (msg.matches("missing FRET_NUM at '-'") || msg.matches("no viable alternative at input '\\d+..+'")
+						|| msg.matches("extraneous input '.+' expecting FRET_NUM")
+						|| msg.matches("mismatched input '.+' expecting FRET_NUM"))
+					message.append("Missing Fret");
+				
+				// one char mismatches
+				if (msg.matches("missing '.' at '.'"))
+					message.append(String.format("Expected '%s' got '%s'", msg.split("'")[1], msg.split("'")[3]));
+				
+				if (msg.matches("mismatched input '.' expecting '.'"))
+					message.append(String.format("Expected '%s' got '%s'", msg.split("'")[3], msg.split("'")[1]));
+				
+				if (msg.matches("extraneous input '.'.*"))
+					message.append(String.format("Extraneous '%s'", msg.split("'")[1]));
 
 				leftComment = 0;
 				rightComment = 0;
@@ -137,13 +158,8 @@ public class Processor {
 							leftComment++;
 					}
 				}
-				
-				// TODO: REMOVE THIS
-//				System.out.println("left: " + leftComment);
-//				System.out.println("right: " + rightComment);
 
 				leastCommentCount = 3 * (leftComment + rightComment);
-
 				start = token.getStartIndex() - (leastCommentCount) - 1;
 				stop = token.getStopIndex() - (leastCommentCount) + 1;
 				line = token.getLine() - leftComment - rightComment;
@@ -151,10 +167,11 @@ public class Processor {
 
 				errorToken.setStart(start);
 				errorToken.setStop(stop);
-				errorToken.setMessage(message);
 				errorToken.setLine(line);
 				errorToken.setColumn(column);
+				errorToken.setMessage(message.toString());
 				errorTokens.add(errorToken);
+				message.setLength(0);
 			}
 			errors.clear();
 			showErrors(errorTokens);
