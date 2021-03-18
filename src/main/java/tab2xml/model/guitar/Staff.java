@@ -203,11 +203,15 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 			if (note == null)
 				return null;
 
-			Bar[] bars = getEndRepeatBars();
+			Bar[] bars = getFirstBars();
 
+			// if the bars are repeat start, set the count and start note
 			if (setFirstRepeatNote) {
 				note.setRepeatedStart(true);
-				note.setRepeatCount(bars[0].getRepeatCount());
+				// get the next end repeat bars, we need to consider if the user didn't provide the repeat count.
+				// this by default should be 1 repeat in that case
+				Bar[] endRepeats = getEndRepeatBars();
+				note.setRepeatCount(endRepeats[0].getRepeatCount());
 				setFirstRepeatNote = false;
 			}
 
@@ -233,7 +237,9 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 
 				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStart()) {
 					setFirstRepeatNote = true;
-				} else if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
+				}
+
+				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
 					note.setRepeatedStop(true);
 				}
 
@@ -275,18 +281,47 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 			return Arrays.stream(lengths).sum();
 		}
 
-		private Bar[] getEndRepeatBars() {
+		private Bar[] getFirstBars() {
 			Bar[] bars = new Bar[numStrings];
-			for (int i = notes.size() - 1; i >= 0; i--) {
-				LinkedList<StringItem> line = notes.get(i);
-				Object obj = line.size() == 0 ? null : line.get(0);
-				if (obj != null && obj.getClass() == Bar.class) {
-					bars[i] = (Bar) obj;
-					continue;
+			for (int i = 0; i < notes.size(); i++) {
+				for (int j = 0; j < notes.get(i).size(); j++) {
+					StringItem item = notes.get(i).get(j);
+					if (item != null && item.getClass() == Bar.class) {
+						bars[i] = (Bar) item;
+						break;
+					}
 				}
-				return null;
 			}
 			return bars;
+		}
+
+		private Bar[] getEndRepeatBars() {
+			int column = 0;
+			boolean isEmpty = true;
+			for (;;) {
+				Bar[] bars = new Bar[numStrings];
+				for (int i = 0; i < notes.size(); i++) {
+					for (int j = column; j < notes.get(i).size(); j++) {
+						StringItem item = notes.get(i).get(j);
+						if (item != null && item.getClass() == Bar.class) {
+							bars[i] = (Bar) item;
+							break;
+						}
+					}
+				}
+				for (Bar bar : bars) {
+					if (bar != null) {
+						isEmpty = false;
+						break;
+					}
+				}
+				if (isEmpty)
+					return null;
+
+				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop() && bars[0].isStop())
+					return bars;
+				column++;
+			}
 		}
 	}
 

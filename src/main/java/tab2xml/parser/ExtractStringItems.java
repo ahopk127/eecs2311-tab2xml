@@ -225,17 +225,19 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		bar.setStringNum(s.getStringNum());
 		bar.setPosition(column);
 		bar.setTune(s.getTune());
-		
+
 		if (start.equals("*")) {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStop(true);
 		}
+
 		if (value.charAt(value.length() - 1) == '*') {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStart(true);
 		}
+
 		if (isNumeric(start)) {
 			bar.setRepeatCount(Integer.parseInt(start));
 			bar.setDoubleBar(true);

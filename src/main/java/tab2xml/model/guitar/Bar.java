@@ -89,12 +89,14 @@ public class Bar extends StringItem {
 	public String toString() {
 		if (isDoubleBar && !isRepeat)
 			return "||";
-		else if (isDoubleBar && isRepeat && repeatCount != 0)
+		if (isDoubleBar && isRepeat && repeatCount != 0)
 			return String.format("%d|", repeatCount);
-		else if (isDoubleBar && isRepeat && start)
+		else if (isDoubleBar && isRepeat && start && !stop)
 			return "||*";
-		else if (isDoubleBar && isRepeat && stop)
+		else if (isDoubleBar && isRepeat && stop && !start)
 			return "*||";
+		else if (isDoubleBar && isRepeat && stop && start)
+			return "*||*";
 		else
 			return "|";
 	}
