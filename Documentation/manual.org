@@ -1,5 +1,5 @@
 #+TITLE: TAB2XML User Manual
-#+SUBTITLE: For version 0.3.0
+#+SUBTITLE: For Version 0.3.0
 #+DATE: 2021 March 17
 
 #+LaTeX: \newpage
