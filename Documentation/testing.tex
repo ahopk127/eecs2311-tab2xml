@@ -1,4 +1,4 @@
-% Created 2021-03-17 Wed 15:02
+% Created 2021-03-17 Wed 19:38
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -16,7 +16,7 @@
 \usepackage{hyperref}
 \date{2021 March 17}
 \title{TAB2XML Testing Document\\\medskip
-\large For version 0.3.0}
+\large For Version 0.3.0}
 \hypersetup{
  pdfauthor={},
  pdftitle={TAB2XML Testing Document},
@@ -31,10 +31,10 @@
 
 \newpage\\
 \section{Front-End Tests}
-\label{sec:orgc7987cc}
+\label{sec:org3ac9e4b}
 Many of the front-end tests are implemented using a \texttt{ViewBot}, a class that simulates a GUI.\\
 \subsection{PresenterTest}
-\label{sec:org9cc0eb3}
+\label{sec:org245bde5}
 These test cases were derived by making one test for each important method of \texttt{Presenter}.\\
 \begin{itemize}
 \item \texttt{testConvert()}: Tests that the Presenter's convert method correctly interacts with the input (gets input text \& instrument, uses the parser to convert the tab and sets the output correctly).  It does not check that the converted MusicXML is correct - that is the backend tests' job.\\
@@ -53,7 +53,7 @@ Some text is put in the output of a ViewBot.  Then, a Presenter uses its \texttt
 
 This testing is sufficient because every method of the Presenter is covered by a test (except the constructor, which is trivial and has only one line of code).  The Presenter's methods are simple enough that only one test is necessary for each.\\
 \subsection{PromptingTextAreaTest}
-\label{sec:org551a58e}
+\label{sec:org85655b1}
 These test cases were derived by making one test case for each of the important functionalities of the \texttt{PromptingTextArea}: the colour and font of the prompt, the prompt text disappearing when the text box is focused, typing text in the box, and setting the area's font.\\
 \begin{itemize}
 \item \texttt{testAutoPromptFont()}: Tests that the PromptingTextArea correctly auto-creates prompting and non-prompting fonts.  It is implemented by setting the area's prompt font to null and then calling getPromptFont().  It expects that a newly created font is returned.\\
@@ -69,7 +69,7 @@ This test is implemented by disabling the prompt, and setting the font.  The reg
 
 This testing is sufficient because every method of the PromptingTextArea is tested at least once, and all important or complex methods have tests dedicated to them and their related methods: \texttt{testPromptColourFont} tests setRegularFont() and setPromptFont(); \texttt{testPromptTyping} tests setText() and setPromptText(); \texttt{testSetFont} tests setFont().  All other public methods are simple getters or setters, or methods that trivially call one of the tested methods.  In addition, the gain or loss of focus, an important feature of the \texttt{PromptingTextArea}, has its own dedicated testing method.\\
 \subsection{ViewTest}
-\label{sec:org83e75d8}
+\label{sec:org99c9a03}
 These tests were derived by making one test for each major method of the View interface.\\
 All tests in this section are run once per View supported by the program, and once for the ViewBot.  This ensures that all of the Views support every possible feature.  Any test in this section that requires use of an unimplemented optional method is skipped.\\
 All three of these tests are implemented by setting the paramater to some value, then comparing the value set to the value returned by the appropriate get method.\\
@@ -81,9 +81,9 @@ All three of these tests are implemented by setting the paramater to some value,
 
 This testing is sufficient because, like in the Presenter, every important method in the View interface is tested by one test, except \texttt{showErrorMessage(String, String)}.  The showErrorMessage method cannot be tested automatically (because I do not want to specify \textbf{how} an error message is shown, only that one is shown), and it is trivial enough that I am not worried about it breaking (As of the time this document was written, all implementations of this method have only one line of code).  The View's methods are also simple enough that only one test per View is needed for each method.\\
 \section{Back-End Tests}
-\label{sec:org919206d}
+\label{sec:orgaafe193}
 \subsection{ParserTest}
-\label{sec:orgcdf4323}
+\label{sec:orgea9e533}
 These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.\\
 \begin{itemize}
 \item \texttt{testScore()}: Tests that there is the correct amount of Staffs within a given Score.\\
@@ -102,7 +102,7 @@ This test was created by hard coding an array of different notes, with different
 
 This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Since the prototype is expected to handle simple tabs, only testing for the simplest components of a text tab were created. In the future this tester will have testing for more complex components, and testing for different components that the parser is not yet set up to interpret.\\
 \subsection{NoteTest}
-\label{sec:org148e285}
+\label{sec:org2685b64}
 These tests were derived to make sure that note objects, which contain valuable information about notes that can be used in the xml conversion process, can be properly created.\\
 \begin{itemize}
 \item \texttt{noteTest()}: Tests that notes have the correct name and index.\\
