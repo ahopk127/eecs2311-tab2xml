@@ -201,7 +201,7 @@ public class Processor {
 
 		final List<String> guitarMetadata = new ArrayList<>();
 
-		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?[\\|-])[^\\s]*?\\|).*$))).+\\r?\\n?)+";
+		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?[ ]*[\\|-])[^\\s]*?\\|).*$))).+\\r?\\n?)+";
 
 		StringBuilder commentedInput = new StringBuilder();
 		StringBuilder staffMeta = new StringBuilder();

@@ -70,10 +70,10 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	public StringItem visitTune(TuneContext ctx) {
 		String value = ctx.getChild(0).getText();
 		Tune tune;
-		if (!value.equals("|"))
-			tune = new Tune(value);
-		else
+		if (value.charAt(value.length() - 1) == '|')
 			tune = new Tune();
+		else
+			tune = new Tune(value);
 		tune.setStringNum(s.getStringNum());
 		return tune;
 	}
