@@ -23,8 +23,9 @@ import tab2xml.antlr.GuitarTabParser;
 import tab2xml.exceptions.InvalidInputException;
 import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.listeners.*;
-import tab2xml.model.guitar.ErrorToken;
-import tab2xml.model.guitar.Score;
+import tab2xml.model.ErrorToken;
+import tab2xml.model.Instrument;
+import tab2xml.model.Score;
 
 /**
  * A processor which works in 2 stages serializing ASCII tablature for a
@@ -57,10 +58,10 @@ public class Processor {
 		switch (instrument) {
 		case GUITAR:
 			return processGuitar();
-		case DRUM:
-			return processDrum();
 		case BASS:
 			return processBass();
+		case DRUM:
+			return processDrum();
 		default:
 			throw new UnsupportedOperationException("This instrument is not supported.");
 		}
@@ -69,16 +70,16 @@ public class Processor {
 	public Score processGuitar() throws InvalidInputException {
 
 		// TODO: REMOVE THIS
-		//		System.out.println("-----------------------");
-		//		System.out.println(input);
-		//		System.out.println("-----------------------");
+//						System.out.println("-----------------------");
+//						System.out.println(input);
+//						System.out.println("-----------------------");
 
 		input = preprocessGuitar(input);
 
 		// TODO: REMOVE THIS
-		//		System.out.println("-----------------------");
-		//		System.out.println(input);
-		//		System.out.println("-----------------------");
+//						System.out.println("-----------------------");
+//						System.out.println(input);
+//						System.out.println("-----------------------");
 
 		final List<ErrorToken> errorTokens = new LinkedList<>();
 		List<Integer> positions = new LinkedList<>();
@@ -136,14 +137,14 @@ public class Processor {
 						|| msg.matches("extraneous input '.+' expecting FRET_NUM")
 						|| msg.matches("mismatched input '.+' expecting FRET_NUM"))
 					message.append("Missing Fret");
-				
+
 				// one char mismatches
 				if (msg.matches("missing '.' at '.'"))
 					message.append(String.format("Expected '%s' got '%s'", msg.split("'")[1], msg.split("'")[3]));
-				
+
 				if (msg.matches("mismatched input '.' expecting '.'"))
 					message.append(String.format("Expected '%s' got '%s'", msg.split("'")[3], msg.split("'")[1]));
-				
+
 				if (msg.matches("extraneous input '.'.*"))
 					message.append(String.format("Extraneous '%s'", msg.split("'")[1]));
 
@@ -181,13 +182,14 @@ public class Processor {
 		return sheet;
 	}
 
-	public static Score processDrum() {
-		// TODO process the sheet for drum
-		return null;
+	public Score processBass() throws InvalidInputException {
+		// TODO: process of bass is the same as guitar for the most part. we can avoid code duplication and change the varying 
+		// other parts that are unique to bass vs guitar
+		return processGuitar();
 	}
 
-	public static Score processBass() {
-		// TODO process the sheet for bass
+	public static Score processDrum() {
+		// TODO process the sheet for drum
 		return null;
 	}
 
@@ -199,7 +201,7 @@ public class Processor {
 
 		final List<String> guitarMetadata = new ArrayList<>();
 
-		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?(\\||-)).*?\\|).*$)+)).*\\r?\\n?)+";
+		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?[\\|-])[^\\s]*?\\|).*$))).+\\r?\\n?)+";
 
 		StringBuilder commentedInput = new StringBuilder();
 		StringBuilder staffMeta = new StringBuilder();

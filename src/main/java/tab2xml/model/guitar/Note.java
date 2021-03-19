@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.model.NoteType;
+import tab2xml.model.StringItem;
 
 /**
  * An atomic note with its attributes.
@@ -30,7 +32,7 @@ public class Note extends StringItem {
 	 */
 	private boolean hasStem;
 	private String duration;
-	private String voice;
+	private String voice = "1";
 
 	/*
 	 * Technical attributes.

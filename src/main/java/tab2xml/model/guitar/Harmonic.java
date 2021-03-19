@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import tab2xml.model.StringItem;
+
 public class Harmonic extends StringItem {
 	private static final long serialVersionUID = 7485103510856786127L;
 	private Note note;

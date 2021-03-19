@@ -1,4 +1,4 @@
-package tab2xml.parser;
+package tab2xml.model;
 
 /**
  * List of supported instruments.
@@ -6,5 +6,5 @@ package tab2xml.parser;
  * @author amir
  */
 public enum Instrument {
-	GUITAR, DRUM, BASS;
+	GUITAR, BASS, DRUM;
 }

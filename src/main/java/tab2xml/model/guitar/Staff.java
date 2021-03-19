@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import tab2xml.model.StaffItem;
+import tab2xml.model.StringItem;
+
 public class Staff extends StaffItem implements Iterable<StringItem> {
 	private static final long serialVersionUID = 5418273130827075188L;
 	private List<GuitarString> strings;
@@ -203,25 +206,24 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 			if (note == null)
 				return null;
 
-			Bar[] bars = getFirstBars();
-
 			// if the bars are repeat start, set the count and start note
+			// if the count is not specified by default it is 1.
 			if (setFirstRepeatNote) {
 				note.setRepeatedStart(true);
-				// get the next end repeat bars, we need to consider if the user didn't provide the repeat count.
-				// this by default should be 1 repeat in that case
 				Bar[] endRepeats = getEndRepeatBars();
-				note.setRepeatCount(endRepeats[0].getRepeatCount());
+				if (endRepeats != null)
+					note.setRepeatCount(endRepeats[0].getRepeatCount());
 				setFirstRepeatNote = false;
 			}
+			Bar[] bars = getFirstBars();
 
 			if (pq.isEmpty() && bars != null) {
 				if (totalNotesInCurrMeasure == 0) {
 					boolean isRepeatEnd = false;
-					for (int i = 1; i < bars.length; i++) {
-						if (bars[i].isRepeat() && bars[i].isStop())
+
+					for (int i = 1; i < bars.length; i++)
+						if (bars != null && bars[i].isRepeat() && bars[i].isStop())
 							isRepeatEnd = true;
-					}
 
 					if (bars[0].isRepeat() && bars[0].isStop() && !isRepeatEnd) {
 						String value = bars[0].toString();
@@ -246,6 +248,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(x));
 				totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 				barsNotSeen--;
+
 				if (barsNotSeen == 0 || totalNotesInCurrMeasure != 0)
 					setAccumulateMeasure(accumulateMeasure + 1);
 			}
@@ -292,6 +295,9 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 					}
 				}
 			}
+			if (isEmpty(bars))
+				return null;
+
 			return bars;
 		}
 
@@ -309,19 +315,24 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 						}
 					}
 				}
-				for (Bar bar : bars) {
-					if (bar != null) {
-						isEmpty = false;
-						break;
-					}
-				}
-				if (isEmpty)
+				if (isEmpty(bars))
 					return null;
 
 				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop() && bars[0].isStop())
 					return bars;
 				column++;
 			}
+		}
+
+		private boolean isEmpty(Bar[] bars) {
+			boolean isEmpty = true;
+			for (Bar bar : bars) {
+				if (bar != null) {
+					isEmpty = false;
+					break;
+				}
+			}
+			return isEmpty;
 		}
 	}
 

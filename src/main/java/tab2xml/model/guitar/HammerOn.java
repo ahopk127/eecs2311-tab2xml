@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import tab2xml.model.StringItem;
+
 public class HammerOn extends StringItem {
 	private static final long serialVersionUID = 1578840013025953896L;
 	private Note start;

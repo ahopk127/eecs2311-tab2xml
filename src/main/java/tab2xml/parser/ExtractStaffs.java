@@ -5,9 +5,9 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import tab2xml.antlr.GuitarTabBaseVisitor;
 import tab2xml.antlr.GuitarTabParser.StaffContext;
 import tab2xml.antlr.GuitarTabParser.StringContext;
+import tab2xml.model.StaffItem;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.Staff;
-import tab2xml.model.guitar.StaffItem;
 
 /**
  * Extract staffs from parse tree.
@@ -24,6 +24,10 @@ public class ExtractStaffs extends GuitarTabBaseVisitor<StaffItem> {
 
 		staff.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
 				.forEach(c -> st.addString((GuitarString) visit(c)));
+
+		if (st.size() == 4 || st.size() == 5)
+			st.getStrings().forEach(s -> s.tune().setBass(true));
+
 		return st;
 	}
 

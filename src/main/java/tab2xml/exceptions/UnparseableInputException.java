@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import tab2xml.model.guitar.ErrorToken;
+import tab2xml.model.ErrorToken;
 
 /**
  * Input is unparseable, and the location of the error is known.

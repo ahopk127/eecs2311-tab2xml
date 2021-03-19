@@ -12,7 +12,7 @@ import tab2xml.exceptions.InvalidInputException;
 import tab2xml.exceptions.InvalidTokenException;
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
-import tab2xml.parser.Instrument;
+import tab2xml.model.Instrument;
 import tab2xml.parser.Parser;
 
 /**
@@ -83,6 +83,7 @@ public final class Presenter {
 	public boolean convert() {
 		final String input = this.view.getInputText();
 		final Instrument selectedInstrument = this.view.getSelectedInstrument();
+		
 		final Optional<String> output = this.convert(input, selectedInstrument);
 		
 		if (output.isEmpty())
@@ -107,6 +108,7 @@ public final class Presenter {
 		final Collection<ParsingWarning> warnings;
 		try {
 			final Parser parser = new Parser(input, selectedInstrument);
+			this.view.setSelectedInstrument(parser.getDetectedInstrument());
 			
 			final var output = parser.parse();
 			musicXMLOutput = output.getFirst();
@@ -214,6 +216,7 @@ public final class Presenter {
 		if (loadPath.isPresent()) {
 			final Optional<String> result = this.loadFromFile(loadPath.get());
 			result.ifPresent(this.view::setInputText);
+			result.ifPresent(res -> this.view.setSelectedInstrument(Parser.getDetectedInstrument(res)));
 			return result.isPresent();
 		} else
 			return false; // user did not provide a file

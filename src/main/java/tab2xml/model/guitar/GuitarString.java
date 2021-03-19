@@ -1,13 +1,16 @@
 package tab2xml.model.guitar;
 
 import java.util.List;
+
+import tab2xml.model.StaffItem;
+import tab2xml.model.StringItem;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class GuitarString extends StaffItem {
 	private static final long serialVersionUID = -5274699295630375450L;
 	private ArrayList<StringItem> stringItems;
-	private String tune;
 	private static int count = 0;
 	private int numMeasures;
 	private int stringNum;
@@ -20,19 +23,24 @@ public class GuitarString extends StaffItem {
 
 	public GuitarString(int stringNum) {
 		stringItems = new ArrayList<>();
+		this.stringItems.add(new Tune(stringNum));
 		this.stringNum = stringNum;
 	}
 
 	public String getTune() {
-		return tune;
+		return tune().getTune();
 	}
 
-	public void setTune(String tune) {
-		this.tune = tune;
+	public String getOctave() {
+		return tune().getOctave();
 	}
 
-	public Tune getTuneObj() {
+	public Tune tune() {
 		return (Tune) stringItems.get(0);
+	}
+
+	public void setTune(Tune tune) {
+		stringItems.set(0, (Tune) StringItem.deepClone(tune));
 	}
 
 	public int getStringNum() {
@@ -118,5 +126,10 @@ public class GuitarString extends StaffItem {
 		for (StringItem item : items)
 			add(item);
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("(t:%s o:%s #:%d", getTune(), getOctave(), getNoteCount());
 	}
 }

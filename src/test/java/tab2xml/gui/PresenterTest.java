@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import tab2xml.parser.Instrument;
+import tab2xml.model.Instrument;
 import tab2xml.parser.Parser;
 
 /**

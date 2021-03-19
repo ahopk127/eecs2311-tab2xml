@@ -8,7 +8,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
-import tab2xml.parser.Instrument;
+import tab2xml.model.Instrument;
 
 /**
  * An automated View, whose actions are controlled by the program. Can be used

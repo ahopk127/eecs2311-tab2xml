@@ -7,7 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import tab2xml.gui.View.ViewType;
-import tab2xml.parser.Instrument;
+import tab2xml.model.Instrument;
 
 /**
  * Tests related to the View.
