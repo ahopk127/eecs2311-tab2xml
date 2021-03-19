@@ -64,6 +64,7 @@ public class Note extends StringItem {
 	private boolean isGrace;
 	private boolean isRepeatedStart;
 	private boolean isRepeatedStop;
+	private boolean isDoubleBar;
 
 	/**
 	 * Construct a note object based on tune and a given fret.
@@ -279,22 +280,6 @@ public class Note extends StringItem {
 		this.measure = measure;
 	}
 
-	public boolean isStart() {
-		return isStartHammer;
-	}
-
-	public void setStart(boolean isStart) {
-		this.isStartHammer = isStart;
-	}
-
-	public boolean isStop() {
-		return isStopHammer;
-	}
-
-	public void setStop(boolean isStop) {
-		this.isStopHammer = isStop;
-	}
-
 	public boolean isStartHammer() {
 		return isStartHammer;
 	}
@@ -409,6 +394,14 @@ public class Note extends StringItem {
 
 	public void setRepeatCount(int repeatCount) {
 		this.repeatCount = repeatCount;
+	}
+
+	public boolean isDoubleBar() {
+		return isDoubleBar;
+	}
+
+	public void setDoubleBar(boolean isDoubleBar) {
+		this.isDoubleBar = isDoubleBar;
 	}
 
 	@Override

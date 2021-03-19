@@ -222,7 +222,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 					boolean isRepeatEnd = false;
 
 					for (int i = 1; i < bars.length; i++)
-						if (bars != null && bars[i].isRepeat() && bars[i].isStop())
+						if (bars[i].isRepeat() && bars[i].isStop())
 							isRepeatEnd = true;
 
 					if (bars[0].isRepeat() && bars[0].isStop() && !isRepeatEnd) {
@@ -243,6 +243,10 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 
 				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
 					note.setRepeatedStop(true);
+				}
+				
+				if (Arrays.stream(bars).filter(b -> b.isDoubleBar() && !b.isRepeat()).count() == bars.length) {
+					note.setDoubleBar(true);
 				}
 
 				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(x));
@@ -303,7 +307,6 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 
 		private Bar[] getEndRepeatBars() {
 			int column = 0;
-			boolean isEmpty = true;
 			for (;;) {
 				Bar[] bars = new Bar[numStrings];
 				for (int i = 0; i < notes.size(); i++) {

@@ -233,6 +233,15 @@ public class Transform {
 				barline.append(barStyle, repeat);
 				measures.get(currMeasure).append(barline);
 			}
+
+			if (currNote.isDoubleBar()) {
+				XMLElement barline = new XMLElement("barline", musicSheet);
+				barline.setAttribute("location", "right");
+				XMLElement barStyle = new XMLElement("bar-style", musicSheet);
+				barStyle.setText("light-heavy");
+				barline.append(barStyle);
+				measures.get(currMeasure).append(barline);
+			}
 		}
 	}
 
