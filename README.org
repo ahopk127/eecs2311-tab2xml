@@ -33,7 +33,7 @@
   - chords
   - in-line comments (~// this is a comment~)
   - multiline comments (~/* this is a multiline comment */~)
-* Sample Inputs
+* Sample Tabs
   - chords:
 
   #+BEGIN_EXAMPLE
@@ -43,9 +43,7 @@
   D|-----------2--|-----0--------|--2--2--------|-----0--4-----|-----2--------|
   A|--3--------2--|--0--------2--|--------------|--0-----2-----|--2--------0--|
   E|--0--0--------|--------------|--------------|--------------|--------------|
-  #+END_EXAMPLE
 
-  #+BEGIN_EXAMPLE
   e|--------2--3--|--------------|-----------3--|-----2--------|--2-----------|
   B|--3-----3-----|--3--0--3--0--|--------1--0--|--------------|--------1-----|
   G|-----------2--|--------4-----|-----------0--|--2-----2-----|--------------|
@@ -70,13 +68,11 @@
    *Sample Output Binary Actions*
    [[./Screenshots/sample-output-binary.png]]
 
-   *Sample Output Slides*
-   [[./Screenshots/sample-output-slide.png]]
 ** Discrepancies
    - There are some ambiguities with token recognition and the GUI will reflect this.
    - The program currently only supports using one text tab at a time.
-   - You should not have any spaces before the start of the text tab.
-   - Staff meta-data is not yet functional.
+   - Staff metadata is supported but is not yet a functional component.
+   - drum tabs are not supported.
 * Copyright
   Copyright (C) 2021 Adrien Hopkins, Amir Mohamad, Edward Hickman, and Sayed Mohammed.
   
