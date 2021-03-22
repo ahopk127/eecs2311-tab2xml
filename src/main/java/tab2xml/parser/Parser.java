@@ -35,8 +35,7 @@ public class Parser {
 	 * 
 	 */
 	public Parser(String input, Instrument instrument) throws InvalidInputException {
-		// TODO: let user optionally select the instrument
-		this.processor = new Processor(input, getDetectedInstrument(input));
+		this.processor = new Processor(input, instrument);
 		this.instrument = getDetectedInstrument(input);
 		this.sheet = this.processor.process();
 	}

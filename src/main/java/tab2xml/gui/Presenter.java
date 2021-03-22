@@ -180,6 +180,17 @@ public final class Presenter {
 	}
 	
 	/**
+	 * Detects the instrument of the view's input text and sets the View's
+	 * selected instrument.
+	 * 
+	 * @since 2021-03-22
+	 */
+	public void detectInstrument() {
+		this.view.setSelectedInstrument(
+				Parser.getDetectedInstrument(this.view.getInputText()));
+	}
+	
+	/**
 	 * Gets and returns the text from the provided file and puts it into the
 	 * view's input. If an I/O error occurs, it is shown using
 	 * {@link View#showErrorMessage} and an empty Optional is returned.
@@ -207,7 +218,7 @@ public final class Presenter {
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
 	 * @return true if loading was successful
-	 * 													
+	 * 
 	 * @since 2021-02-25
 	 */
 	public boolean loadInput() {
@@ -216,7 +227,6 @@ public final class Presenter {
 		if (loadPath.isPresent()) {
 			final Optional<String> result = this.loadFromFile(loadPath.get());
 			result.ifPresent(this.view::setInputText);
-			result.ifPresent(res -> this.view.setSelectedInstrument(Parser.getDetectedInstrument(res)));
 			return result.isPresent();
 		} else
 			return false; // user did not provide a file

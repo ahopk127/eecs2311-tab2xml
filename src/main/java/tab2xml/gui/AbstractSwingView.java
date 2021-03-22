@@ -95,7 +95,6 @@ public abstract class AbstractSwingView implements View {
 	
 	private static final HighlightPainter ERROR_PAINTER = new DefaultHighlightPainter(
 			Color.RED);
-	
 	private static final HighlightPainter WARNING_PAINTER = new DefaultHighlightPainter(
 			Color.YELLOW);
 	

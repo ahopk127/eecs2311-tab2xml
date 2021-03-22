@@ -9,6 +9,11 @@ interface View {
   +{abstract} showErrorMessage(String, String)
 }
 
+interface NarrowingView {
+  +{abstract} getNarrowedText() : String
+  +{abstract} setNarrowedText(String)
+}
+
 class Presenter {
   -View view
 
@@ -41,7 +46,9 @@ abstract class AbstractSwingView {
 Presenter "1" o-- View
 AbstractSwingView "1" o-- Presenter
 View <|-- AbstractSwingView
+View <|-- NarrowingView
 AbstractSwingView <|-- TabbedView
+NarrowingView <|-- TabbedView
 AbstractSwingView <|-- SingleEntryView
 View <|-- ViewBot
 
