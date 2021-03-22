@@ -10,11 +10,12 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
+import tab2xml.model.Instrument;
+import tab2xml.model.Score;
+import tab2xml.model.StringItem;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.Note;
-import tab2xml.model.guitar.Score;
 import tab2xml.model.guitar.Staff;
-import tab2xml.model.guitar.StringItem;
 import tab2xml.model.guitar.Tune;
 
 class ParserTest {
@@ -30,10 +31,10 @@ class ParserTest {
 
 		for (int i = 1; i <= strings.length; i++) {
 			strings[i - 1] = new GuitarString(i);
-			strings[i - 1].setTune(Tune.standardTuning[(i - 1) % 6][0]);
 		}
 
 		int index;
+		
 
 		// same string: insertion at random orders
 		for (int i = 1; i <= NUM_NOTES; i++) {

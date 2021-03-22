@@ -1,21 +1,40 @@
 package tab2xml.model.guitar;
 
+import tab2xml.model.StringItem;
+
 public class Tune extends StringItem {
 	private static final long serialVersionUID = 7283815230989809053L;
-	public static String standardTuning[][] = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
-			{ "E", "2" } };
+	public static String standardTuning[][] = { { "E", "2" }, { "A", "2" }, { "D", "3" }, { "G", "3" }, { "B", "3" },
+			{ "E", "4" } };
 
 	private String tune;
-	private boolean isStandard;
 	private int stringNum;
+	private boolean isStandard;
+	private boolean isBass;
 
-	public Tune(String tune, boolean isStandard) {
+	public Tune() {
+		this.isStandard = true;
+	}
+
+	public Tune(String tune) {
 		this.tune = tune;
-		this.isStandard = isStandard;
+	}
+
+	public Tune(int stringNum) {
+		this();
+		this.stringNum = stringNum;
 	}
 
 	public String getTune() {
-		return tune;
+		if (!isStandard)
+			return tune;
+		return standardTuning[(6 - stringNum) % 6][0];
+	}
+
+	public String getOctave() {
+		if (isBass)
+			return String.valueOf(Integer.parseInt(standardTuning[(6 - stringNum) % 6][1]) - 1);
+		return standardTuning[(6 - stringNum) % 6][1];
 	}
 
 	public boolean isStandard() {
@@ -24,6 +43,14 @@ public class Tune extends StringItem {
 
 	public void setStringNum(int stringNum) {
 		this.stringNum = stringNum;
+	}
+
+	public boolean isBass() {
+		return isBass;
+	}
+
+	public void setBass(boolean isBass) {
+		this.isBass = isBass;
 	}
 
 	@Override

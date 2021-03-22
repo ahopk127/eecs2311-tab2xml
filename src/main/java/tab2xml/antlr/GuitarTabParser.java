@@ -134,7 +134,7 @@ public class GuitarTabParser extends Parser {
 			setState(25);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NOTE) | (1L << BAR) | (1L << NEWLINE))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << NOTE) | (1L << BAR) | (1L << SPACE) | (1L << NEWLINE))) != 0)) {
 				{
 				{
 				setState(22);
@@ -295,8 +295,8 @@ public class GuitarTabParser extends Parser {
 	public final StringContext string() throws RecognitionException {
 		StringContext _localctx = new StringContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_string);
-		int _la;
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(47);
@@ -305,17 +305,19 @@ public class GuitarTabParser extends Parser {
 			stringItems();
 			setState(52);
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==SPACE) {
-				{
-				{
-				setState(49);
-				match(SPACE);
-				}
+			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(49);
+					match(SPACE);
+					}
+					} 
 				}
 				setState(54);
 				_errHandler.sync(this);
-				_la = _input.LA(1);
+				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			}
 			setState(56);
 			_errHandler.sync(this);
@@ -895,6 +897,10 @@ public class GuitarTabParser extends Parser {
 	public static class TuneContext extends ParserRuleContext {
 		public TerminalNode BAR() { return getToken(GuitarTabParser.BAR, 0); }
 		public TerminalNode NOTE() { return getToken(GuitarTabParser.NOTE, 0); }
+		public List<TerminalNode> SPACE() { return getTokens(GuitarTabParser.SPACE); }
+		public TerminalNode SPACE(int i) {
+			return getToken(GuitarTabParser.SPACE, i);
+		}
 		public TuneContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -931,7 +937,37 @@ public class GuitarTabParser extends Parser {
 				}
 			}
 
-			setState(115);
+			setState(116);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+			case 1:
+				{
+				setState(115);
+				match(SPACE);
+				}
+				break;
+			}
+			setState(119);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
+			case 1:
+				{
+				setState(118);
+				match(SPACE);
+				}
+				break;
+			}
+			setState(122);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==SPACE) {
+				{
+				setState(121);
+				match(SPACE);
+				}
+			}
+
+			setState(124);
 			match(BAR);
 			}
 		}
@@ -947,36 +983,39 @@ public class GuitarTabParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21x\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
-		"\f\t\f\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\3\3\7\3\"\n\3\f\3\16\3"+
-		"%\13\3\3\3\6\3(\n\3\r\3\16\3)\3\3\7\3-\n\3\f\3\16\3\60\13\3\3\4\3\4\3"+
-		"\4\7\4\65\n\4\f\4\16\48\13\4\3\4\5\4;\n\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5"+
-		"\3\5\3\5\6\5F\n\5\r\5\16\5G\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\b\5\bS\n"+
-		"\b\3\b\3\b\3\b\3\b\3\t\5\tZ\n\t\3\t\3\t\3\t\3\t\3\n\5\na\n\n\3\n\3\n\3"+
-		"\n\3\n\3\13\5\13h\n\13\3\13\3\13\3\13\3\13\3\13\6\13o\n\13\r\13\16\13"+
-		"p\3\f\5\ft\n\f\3\f\3\f\3\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\4\3\2\n"+
-		"\13\3\2\6\7\2\u0081\2\33\3\2\2\2\4#\3\2\2\2\6\61\3\2\2\2\bE\3\2\2\2\n"+
-		"K\3\2\2\2\fM\3\2\2\2\16R\3\2\2\2\20Y\3\2\2\2\22`\3\2\2\2\24g\3\2\2\2\26"+
-		"s\3\2\2\2\30\32\5\4\3\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34"+
-		"\3\2\2\2\34\36\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2\2 \"\7\17"+
-		"\2\2! \3\2\2\2\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\'\3\2\2\2%#\3\2\2\2&(\5"+
-		"\6\4\2\'&\3\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+-\7\17\2\2"+
-		",+\3\2\2\2-\60\3\2\2\2.,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\62"+
-		"\5\26\f\2\62\66\5\b\5\2\63\65\7\16\2\2\64\63\3\2\2\2\658\3\2\2\2\66\64"+
-		"\3\2\2\2\66\67\3\2\2\2\67:\3\2\2\28\66\3\2\2\29;\7\17\2\2:9\3\2\2\2:;"+
-		"\3\2\2\2;\7\3\2\2\2<F\5\n\6\2=F\5\f\7\2>F\5\16\b\2?F\5\20\t\2@F\5\22\n"+
-		"\2AF\5\24\13\2BF\7\n\2\2CF\7\13\2\2DF\7\r\2\2E<\3\2\2\2E=\3\2\2\2E>\3"+
-		"\2\2\2E?\3\2\2\2E@\3\2\2\2EA\3\2\2\2EB\3\2\2\2EC\3\2\2\2ED\3\2\2\2FG\3"+
-		"\2\2\2GE\3\2\2\2GH\3\2\2\2HI\3\2\2\2IJ\t\2\2\2J\t\3\2\2\2KL\7\f\2\2L\13"+
-		"\3\2\2\2MN\7\3\2\2NO\5\n\6\2OP\7\4\2\2P\r\3\2\2\2QS\7\5\2\2RQ\3\2\2\2"+
-		"RS\3\2\2\2ST\3\2\2\2TU\5\n\6\2UV\7\6\2\2VW\5\n\6\2W\17\3\2\2\2XZ\7\5\2"+
-		"\2YX\3\2\2\2YZ\3\2\2\2Z[\3\2\2\2[\\\5\n\6\2\\]\7\7\2\2]^\5\n\6\2^\21\3"+
-		"\2\2\2_a\7\5\2\2`_\3\2\2\2`a\3\2\2\2ab\3\2\2\2bc\5\n\6\2cd\7\b\2\2de\5"+
-		"\n\6\2e\23\3\2\2\2fh\7\5\2\2gf\3\2\2\2gh\3\2\2\2hi\3\2\2\2ij\5\n\6\2j"+
-		"k\t\3\2\2kn\5\n\6\2lm\t\3\2\2mo\5\n\6\2nl\3\2\2\2op\3\2\2\2pn\3\2\2\2"+
-		"pq\3\2\2\2q\25\3\2\2\2rt\7\t\2\2sr\3\2\2\2st\3\2\2\2tu\3\2\2\2uv\7\n\2"+
-		"\2v\27\3\2\2\2\20\33#).\66:EGRY`gps";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21\u0081\4\2\t\2"+
+		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
+		"\t\13\4\f\t\f\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\3\3\7\3\"\n\3\f"+
+		"\3\16\3%\13\3\3\3\6\3(\n\3\r\3\16\3)\3\3\7\3-\n\3\f\3\16\3\60\13\3\3\4"+
+		"\3\4\3\4\7\4\65\n\4\f\4\16\48\13\4\3\4\5\4;\n\4\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\3\5\3\5\6\5F\n\5\r\5\16\5G\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\b"+
+		"\5\bS\n\b\3\b\3\b\3\b\3\b\3\t\5\tZ\n\t\3\t\3\t\3\t\3\t\3\n\5\na\n\n\3"+
+		"\n\3\n\3\n\3\n\3\13\5\13h\n\13\3\13\3\13\3\13\3\13\3\13\6\13o\n\13\r\13"+
+		"\16\13p\3\f\5\ft\n\f\3\f\5\fw\n\f\3\f\5\fz\n\f\3\f\5\f}\n\f\3\f\3\f\3"+
+		"\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\4\3\2\n\13\3\2\6\7\2\u008d\2\33"+
+		"\3\2\2\2\4#\3\2\2\2\6\61\3\2\2\2\bE\3\2\2\2\nK\3\2\2\2\fM\3\2\2\2\16R"+
+		"\3\2\2\2\20Y\3\2\2\2\22`\3\2\2\2\24g\3\2\2\2\26s\3\2\2\2\30\32\5\4\3\2"+
+		"\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\36\3\2\2\2"+
+		"\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2\2 \"\7\17\2\2! \3\2\2\2\"%\3\2"+
+		"\2\2#!\3\2\2\2#$\3\2\2\2$\'\3\2\2\2%#\3\2\2\2&(\5\6\4\2\'&\3\2\2\2()\3"+
+		"\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+-\7\17\2\2,+\3\2\2\2-\60\3\2\2\2"+
+		".,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\62\5\26\f\2\62\66\5\b\5"+
+		"\2\63\65\7\16\2\2\64\63\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2"+
+		"\2\67:\3\2\2\28\66\3\2\2\29;\7\17\2\2:9\3\2\2\2:;\3\2\2\2;\7\3\2\2\2<"+
+		"F\5\n\6\2=F\5\f\7\2>F\5\16\b\2?F\5\20\t\2@F\5\22\n\2AF\5\24\13\2BF\7\n"+
+		"\2\2CF\7\13\2\2DF\7\r\2\2E<\3\2\2\2E=\3\2\2\2E>\3\2\2\2E?\3\2\2\2E@\3"+
+		"\2\2\2EA\3\2\2\2EB\3\2\2\2EC\3\2\2\2ED\3\2\2\2FG\3\2\2\2GE\3\2\2\2GH\3"+
+		"\2\2\2HI\3\2\2\2IJ\t\2\2\2J\t\3\2\2\2KL\7\f\2\2L\13\3\2\2\2MN\7\3\2\2"+
+		"NO\5\n\6\2OP\7\4\2\2P\r\3\2\2\2QS\7\5\2\2RQ\3\2\2\2RS\3\2\2\2ST\3\2\2"+
+		"\2TU\5\n\6\2UV\7\6\2\2VW\5\n\6\2W\17\3\2\2\2XZ\7\5\2\2YX\3\2\2\2YZ\3\2"+
+		"\2\2Z[\3\2\2\2[\\\5\n\6\2\\]\7\7\2\2]^\5\n\6\2^\21\3\2\2\2_a\7\5\2\2`"+
+		"_\3\2\2\2`a\3\2\2\2ab\3\2\2\2bc\5\n\6\2cd\7\b\2\2de\5\n\6\2e\23\3\2\2"+
+		"\2fh\7\5\2\2gf\3\2\2\2gh\3\2\2\2hi\3\2\2\2ij\5\n\6\2jk\t\3\2\2kn\5\n\6"+
+		"\2lm\t\3\2\2mo\5\n\6\2nl\3\2\2\2op\3\2\2\2pn\3\2\2\2pq\3\2\2\2q\25\3\2"+
+		"\2\2rt\7\t\2\2sr\3\2\2\2st\3\2\2\2tv\3\2\2\2uw\7\16\2\2vu\3\2\2\2vw\3"+
+		"\2\2\2wy\3\2\2\2xz\7\16\2\2yx\3\2\2\2yz\3\2\2\2z|\3\2\2\2{}\7\16\2\2|"+
+		"{\3\2\2\2|}\3\2\2\2}~\3\2\2\2~\177\7\n\2\2\177\27\3\2\2\2\23\33#).\66"+
+		":EGRY`gpsvy|";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

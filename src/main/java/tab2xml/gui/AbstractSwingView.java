@@ -31,8 +31,8 @@ import javax.swing.text.JTextComponent;
 import tab2xml.Main;
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
-import tab2xml.model.guitar.ErrorToken;
-import tab2xml.parser.Instrument;
+import tab2xml.model.ErrorToken;
+import tab2xml.model.Instrument;
 
 /**
  * A graphical View implemented in Swing.

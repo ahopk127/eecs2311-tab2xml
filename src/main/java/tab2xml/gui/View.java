@@ -9,7 +9,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
-import tab2xml.parser.Instrument;
+import tab2xml.model.Instrument;
 
 /**
  * A view for the Tab2XML application. This class will control all interaction

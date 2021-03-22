@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import tab2xml.model.StringItem;
+
 public class Slide extends StringItem {
 	private static final long serialVersionUID = 328697200069305169L;
 	private Note start;

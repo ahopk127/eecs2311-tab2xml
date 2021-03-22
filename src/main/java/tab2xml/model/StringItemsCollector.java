@@ -1,4 +1,4 @@
-package tab2xml.model.guitar;
+package tab2xml.model;
 
 import java.util.List;
 

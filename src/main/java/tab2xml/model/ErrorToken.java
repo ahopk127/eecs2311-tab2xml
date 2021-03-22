@@ -1,4 +1,4 @@
-package tab2xml.model.guitar;
+package tab2xml.model;
 
 /**
  * An error token for invalid inputs when parsing.

@@ -8,13 +8,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 
-import tab2xml.parser.Instrument;
 import tab2xml.Main;
+import tab2xml.model.Instrument;
+import tab2xml.model.Score;
+import tab2xml.model.StringItem;
+import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.Note;
-import tab2xml.model.guitar.Score;
 import tab2xml.model.guitar.Staff;
-import tab2xml.model.guitar.StringItem;
-import tab2xml.model.guitar.Tune;
 
 /**
  * The transformer which generates the XML output as a string.
@@ -47,13 +47,11 @@ public class Transform {
 
 		switch (instrument) {
 		case GUITAR:
-			generateGuitar();
+		case BASS:
+			generateGuitarBass();
 			break;
 		case DRUM:
 			generateDrum();
-			break;
-		case BASS:
-			generateBass();
 			break;
 		default:
 			throw new IllegalArgumentException("Unsupported instrument: " + instrument);
@@ -70,10 +68,10 @@ public class Transform {
 	}
 
 	/**
-	 * Generate XML from data for selected instrument, Guitar.
+	 * Generate XML from data for selected instrument, Guitar or Bass.
 	 * 
 	 */
-	private void generateGuitar() {
+	private void generateGuitarBass() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
 		setDefaults(root);
 		XMLElement part1 = new XMLElement("part", musicSheet);
@@ -131,19 +129,18 @@ public class Transform {
 
 			XMLElement pitch = new XMLElement("pitch", musicSheet);
 			XMLElement step = new XMLElement("step", musicSheet);
-			step.setText(currNote.getStep());
-			pitch.append(step);
+			XMLElement alter = null;
 
 			if (currNote.getStep().contains("#")) {
 				step.setText(currNote.getStep().substring(0, 1));
-				XMLElement alter = new XMLElement("alter", musicSheet);
+				alter = new XMLElement("alter", musicSheet);
 				alter.setText("1");
-				pitch.append(alter);
-			}
+			} else
+				step.setText(currNote.getStep());
 
 			XMLElement octave = new XMLElement("octave", musicSheet);
 			octave.setText(currNote.getOctave());
-			pitch.append(step, octave);
+			pitch.append(step, alter, octave);
 
 			XMLElement duration = new XMLElement("duration", musicSheet);
 			duration.setText(currNote.getDuration());
@@ -236,6 +233,15 @@ public class Transform {
 				barline.append(barStyle, repeat);
 				measures.get(currMeasure).append(barline);
 			}
+
+			if (currNote.isDoubleBar()) {
+				XMLElement barline = new XMLElement("barline", musicSheet);
+				barline.setAttribute("location", "right");
+				XMLElement barStyle = new XMLElement("bar-style", musicSheet);
+				barStyle.setText("light-heavy");
+				barline.append(barStyle);
+				measures.get(currMeasure).append(barline);
+			}
 		}
 	}
 
@@ -326,14 +332,14 @@ public class Transform {
 		staffLines.setText(staff.stringCount());
 		staffDetails.append(staffLines);
 		int numStrings = staff.size();
-
-		for (int i = 0; i < numStrings; i++) {
+		for (int i = numStrings - 1; i >= 0; i--) {
+			GuitarString s = staff.getStrings().get(i);
 			XMLElement staffTuning = new XMLElement("staff-tuning", musicSheet);
-			staffTuning.setAttribute("line", Integer.toString(i + 1));
+			staffTuning.setAttribute("line", String.valueOf(numStrings - s.getStringNum() + 1));
 			XMLElement tuningStep = new XMLElement("tuning-step", musicSheet);
-			tuningStep.setText(staff.getStrings().get(i).getTune());
+			tuningStep.setText(s.getTune());
 			XMLElement tuningOctave = new XMLElement("tuning-octave", musicSheet);
-			tuningOctave.setText(Tune.standardTuning[5 - (i % 6)][1]);
+			tuningOctave.setText(s.getOctave());
 			staffTuning.append(tuningStep, tuningOctave);
 			staffDetails.append(staffTuning);
 		}
@@ -346,14 +352,6 @@ public class Transform {
 	 * 
 	 */
 	private void generateDrum() {
-		generateSamplePlaceHolder();
-	}
-
-	/**
-	 * Generate XML from score for selected instrument, Bass.
-	 * 
-	 */
-	private void generateBass() {
 		generateSamplePlaceHolder();
 	}
 

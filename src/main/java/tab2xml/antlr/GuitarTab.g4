@@ -54,7 +54,7 @@ hampullchain
 	;
 
 tune
-	: NOTE? BAR
+	: NOTE? SPACE? SPACE? SPACE? BAR
 	;
 
 /* Tokens */

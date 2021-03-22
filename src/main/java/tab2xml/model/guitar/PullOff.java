@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import tab2xml.model.StringItem;
+
 public class PullOff extends StringItem {
 	private static final long serialVersionUID = -216451585018707396L;
 	private Note start;

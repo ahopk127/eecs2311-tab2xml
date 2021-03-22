@@ -15,7 +15,7 @@ public class XMLElement {
 	/**
 	 * Construct an element with a specified tag and its corresponding music sheet.
 	 * 
-	 * @param tag the name of the element
+	 * @param tag        the name of the element
 	 * @param musicSheet the music sheet corresponding to this element
 	 */
 	public XMLElement(String tag, MusicSheet musicSheet) {
@@ -38,13 +38,14 @@ public class XMLElement {
 	 */
 	public void append(XMLElement... elements) {
 		for (XMLElement e : elements)
-			element.appendChild(e.getElement());
+			if (e != null)
+				element.appendChild(e.getElement());
 	}
 
 	/**
 	 * Set the value of a specified attribute of this element.
 	 * 
-	 * @param name the attribute for tag
+	 * @param name  the attribute for tag
 	 * @param value the value of the specified attribute
 	 */
 	public void setAttribute(String name, String value) {

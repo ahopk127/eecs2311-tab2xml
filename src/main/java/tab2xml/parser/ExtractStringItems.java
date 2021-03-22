@@ -19,7 +19,8 @@ import tab2xml.antlr.GuitarTabParser.SlideContext;
 import tab2xml.antlr.GuitarTabParser.StringContext;
 import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.antlr.GuitarTabParser.TuneContext;
-
+import tab2xml.model.StringItem;
+import tab2xml.model.StringItemsCollector;
 import tab2xml.model.guitar.Bar;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.HammerOn;
@@ -28,8 +29,6 @@ import tab2xml.model.guitar.Harmonic;
 import tab2xml.model.guitar.Note;
 import tab2xml.model.guitar.PullOff;
 import tab2xml.model.guitar.Slide;
-import tab2xml.model.guitar.StringItem;
-import tab2xml.model.guitar.StringItemsCollector;
 import tab2xml.model.guitar.Tune;
 
 /**
@@ -54,8 +53,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		List<StringItem> visited = new ArrayList<>();
 
 		Tune tune = (Tune) visit(sc.getChild(0));
-		string.setTune(tune.getTune());
-		visited.add(tune);
+		s.add(tune);
 		visited.add(visit(sc.getChild(1)));
 
 		for (StringItem item : visited) {
@@ -72,10 +70,10 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	public StringItem visitTune(TuneContext ctx) {
 		String value = ctx.getChild(0).getText();
 		Tune tune;
-		if (!value.equals("|"))
-			tune = new Tune(value, false);
+		if (value.charAt(value.length() - 1) == '|')
+			tune = new Tune();
 		else
-			tune = new Tune(Tune.standardTuning[(s.getStringNum() - 1) % 6][0], true);
+			tune = new Tune(value);
 		tune.setStringNum(s.getStringNum());
 		return tune;
 	}
@@ -206,7 +204,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		Note note = new Note(s.getTune(), value);
 		note.setPosition(column);
 		note.setString(Integer.toString(s.getStringNum()));
-		note.setOctave(Tune.standardTuning[(s.getStringNum() - 1) % 6][1]);
+		note.setOctave(s.getOctave());
 		return note;
 	}
 
@@ -225,17 +223,19 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		bar.setStringNum(s.getStringNum());
 		bar.setPosition(column);
 		bar.setTune(s.getTune());
-		
+
 		if (start.equals("*")) {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStop(true);
 		}
+
 		if (value.charAt(value.length() - 1) == '*') {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStart(true);
 		}
+
 		if (isNumeric(start)) {
 			bar.setRepeatCount(Integer.parseInt(start));
 			bar.setDoubleBar(true);
