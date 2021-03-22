@@ -73,7 +73,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 		if (value.charAt(value.length() - 1) == '|')
 			tune = new Tune();
 		else
-			tune = new Tune(value);
+			tune = new Tune(value.toUpperCase());
 		tune.setStringNum(s.getStringNum());
 		return tune;
 	}
