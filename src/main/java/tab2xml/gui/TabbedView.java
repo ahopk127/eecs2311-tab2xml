@@ -3,18 +3,24 @@ package tab2xml.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
+
+import com.ibm.icu.text.NumberFormat;
 
 /**
  * A view that shows input and output in separate text boxes, in tabs.
@@ -104,6 +110,81 @@ final class TabbedView extends AbstractSwingView {
 		final JButton saveInput = new JButton("Save Input");
 		saveInput.addActionListener(e -> this.presenter.saveInput());
 		inputButtonPanel.add(saveInput);
+		
+		// ----- INPUT EDITING -----
+		final JPanel editingTab = new JPanel(new BorderLayout());
+		this.inputOutputPane.addTab("Input Editing", editingTab);
+		
+		final JTextArea editingArea = new JTextArea(24, 80);
+		editingArea.setBorder(new LineBorder(Color.BLACK));
+		editingTab.add(
+				new JScrollPane(editingArea,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
+		
+		final JPanel editingPanel = new JPanel(new GridBagLayout());
+		editingTab.add(editingPanel, BorderLayout.SOUTH);
+		
+		final JPanel measureSelectionPanel = new JPanel();
+		editingPanel.add(measureSelectionPanel, gridBag(0, 0));
+		
+		final JLabel measureLabel = new JLabel("Measure Range:");
+		measureSelectionPanel.add(measureLabel);
+		
+		final JTextField measureStart = new JFormattedTextField(
+				NumberFormat.getIntegerInstance());
+		measureStart.setColumns(5);
+		measureSelectionPanel.add(measureStart);
+		
+		final JLabel dashLabel = new JLabel("-");
+		measureSelectionPanel.add(dashLabel);
+		
+		final JTextField measureEnd = new JFormattedTextField(
+				NumberFormat.getIntegerInstance());
+		measureEnd.setColumns(5);
+		measureSelectionPanel.add(measureEnd);
+		
+		final JButton editMeasureButton = new JButton("Edit");
+		measureSelectionPanel.add(editMeasureButton);
+		
+		final JButton doneEditingButton = new JButton("Done");
+		measureSelectionPanel.add(doneEditingButton);
+		
+		final JPanel metadataPanel = new JPanel(new GridBagLayout());
+		metadataPanel.setBorder(new TitledBorder("Metadata"));
+		editingPanel.add(metadataPanel, gridBag(0, 1));
+		
+		final JLabel titleLabel = new JLabel("Title:");
+		metadataPanel.add(titleLabel, gridBag(0, 0, 1, 1, LABEL_INSETS));
+		
+		final JTextField titleField = new JTextField(40);
+		metadataPanel.add(titleField, gridBag(1, 0, 3, 1, LABEL_INSETS));
+		
+		final JButton setTitleButton = new JButton("Set Title");
+		metadataPanel.add(setTitleButton, gridBag(4, 0, 1, 1, LABEL_INSETS));
+		
+		final JLabel timeSignatureLabel = new JLabel("Time Signature:");
+		metadataPanel.add(timeSignatureLabel, gridBag(0, 1, 1, 1, LABEL_INSETS));
+		
+		final JPanel timeSignaturePanel = new JPanel();
+		metadataPanel.add(timeSignaturePanel, gridBag(1, 1, 3, 1, LABEL_INSETS));
+		
+		final JTextField topSignatureField = new JFormattedTextField(
+				NumberFormat.getIntegerInstance());
+		topSignatureField.setColumns(2);
+		timeSignaturePanel.add(topSignatureField);
+		
+		final JLabel colonLabel = new JLabel(":");
+		timeSignaturePanel.add(colonLabel);
+		
+		final JTextField bottomSignatureField = new JFormattedTextField(
+				NumberFormat.getIntegerInstance());
+		bottomSignatureField.setColumns(2);
+		timeSignaturePanel.add(bottomSignatureField);
+		
+		final JButton setSignatureButton = new JButton("Set Time Signature");
+		metadataPanel.add(setSignatureButton, gridBag(4, 1, 1, 1, LABEL_INSETS));
 		
 		// ----- OUTPUT -----
 		final JPanel outputPanel = new JPanel(new BorderLayout());

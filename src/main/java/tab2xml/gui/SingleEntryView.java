@@ -3,7 +3,6 @@ package tab2xml.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
@@ -49,43 +48,6 @@ final class SingleEntryView extends AbstractSwingView {
 		 * Enables this state in the given view.
 		 */
 		public abstract void enable(SingleEntryView v);
-	}
-	
-	/**
-	 * Creates a {@code GridBagConstraints} object.
-	 *
-	 * @since 2021-01-18
-	 */
-	private static GridBagConstraints gridBag(int x, int y) {
-		final GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = x;
-		gbc.gridy = y;
-		return gbc;
-	}
-	
-	/**
-	 * Creates a {@code GridBagConstraints} object.
-	 *
-	 * @since 2021-01-18
-	 */
-	private static GridBagConstraints gridBag(int x, int y, int width,
-			int height) {
-		final GridBagConstraints gbc = gridBag(x, y);
-		gbc.gridwidth = width;
-		gbc.gridheight = height;
-		return gbc;
-	}
-	
-	/**
-	 * Creates a {@code GridBagConstraints} object.
-	 *
-	 * @since 2021-02-25
-	 */
-	private static GridBagConstraints gridBag(int x, int y, int width,
-			int height, Insets insets) {
-		final GridBagConstraints gbc = gridBag(x, y, width, height);
-		gbc.insets = insets;
-		return gbc;
 	}
 	
 	/**

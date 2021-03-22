@@ -2,7 +2,6 @@ package tab2xml.gui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
@@ -20,30 +19,6 @@ import javax.swing.text.JTextComponent;
  * @since 2021-01-18
  */
 final class DoubleEntryView extends AbstractSwingView {
-	/**
-	 * Creates a {@code GridBagConstraints} object.
-	 *
-	 * @since 2021-01-18
-	 */
-	private static GridBagConstraints gridBag(int x, int y) {
-		return gridBag(x, y, 1, 1);
-	}
-	
-	/**
-	 * Creates a {@code GridBagConstraints} object.
-	 *
-	 * @since 2021-01-18
-	 */
-	private static GridBagConstraints gridBag(int x, int y, int width,
-			int height) {
-		final GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = x;
-		gbc.gridy = y;
-		gbc.gridwidth = width;
-		gbc.gridheight = height;
-		return gbc;
-	}
-	
 	/**
 	 * Creates and opens a View.
 	 *
