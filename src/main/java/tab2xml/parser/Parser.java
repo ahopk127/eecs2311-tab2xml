@@ -119,17 +119,23 @@ public class Parser {
 	}
 
 	public static Instrument getDetectedInstrument(String input) {
-		String guitarPattern = "(^(?!((^(?!(([a-gA-G]#?)?[\\|-])[^\s]*?\\|).*$))).+\r?\n?){6,}";
-		String bassPattern = "(^(?!([a-gA-G])?#?[\\|-])\r?\n)?(^(?!((^(?!(([a-gA-G]#?)?[\\|-])[^\s]*?\\|).*$))).+\r?\n?){4,5}(^(?!([a-gA-G])?#?[\\|-])\r?\n)?";
-		String drumPattern = "(^(?!((^(?!(([CRDHxoST12MFBf]{2})(\\||-)).*?\\|).*$)+)).*\\r?\\n?)+";
+		StringBuilder tab = new StringBuilder(input);
+		tab.insert(0, "\n");
+		tab.insert(tab.length(), "\n");
+
+		final String OUTLIER = "(^(?!([a-gA-G]#?)?[\\|-][^\r\n]*[\\|-]\r?\n?).*\r?\n?)";
+		final String STRING = "(^(?!((^(?!(([a-gA-G]#?)?[\\|-])[^\r\n]*\\|).*$))).+\r?\n?)";
+		String guitarPattern = STRING + "{6,}";		
+		String bassPattern = OUTLIER + STRING + "{4,5}" + OUTLIER;
+		String drumPattern = "(^(?!((^(?!(([ABCcDdEHhLMPRST12]{2})[\\|-]).*\\|).*)+)).*\r?\n?)+";
 
 		Pattern gP = Pattern.compile(guitarPattern, Pattern.MULTILINE);
 		Pattern bP = Pattern.compile(bassPattern, Pattern.MULTILINE);
 		Pattern dP = Pattern.compile(drumPattern, Pattern.MULTILINE);
-
-		Matcher gM = gP.matcher(input);
-		Matcher bM = bP.matcher(input);
-		Matcher dM = dP.matcher(input);
+		
+		Matcher gM = gP.matcher(tab.toString());
+		Matcher bM = bP.matcher(tab.toString());
+		Matcher dM = dP.matcher(tab.toString());
 
 		int gCount = 0, bCount = 0, dCount = 0;
 
@@ -149,7 +155,11 @@ public class Parser {
 			ins = Instrument.BASS;
 		else
 			ins = Instrument.DRUM;
-
+		
+		if (max == 0)
+			throw new UnsupportedOperationException("Can't detect instrument");
+		
+		
 		return ins;
 	}
 }

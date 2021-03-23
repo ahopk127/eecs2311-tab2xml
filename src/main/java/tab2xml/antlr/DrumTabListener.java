@@ -61,63 +61,23 @@ public interface DrumTabListener extends ParseTreeListener {
 	 */
 	void exitDrumType(DrumTabParser.DrumTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#strike}.
+	 * Enter a parse tree produced by {@link DrumTabParser#cymbal}.
 	 * @param ctx the parse tree
 	 */
-	void enterStrike(DrumTabParser.StrikeContext ctx);
+	void enterCymbal(DrumTabParser.CymbalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#strike}.
+	 * Exit a parse tree produced by {@link DrumTabParser#cymbal}.
 	 * @param ctx the parse tree
 	 */
-	void exitStrike(DrumTabParser.StrikeContext ctx);
+	void exitCymbal(DrumTabParser.CymbalContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#accent}.
+	 * Enter a parse tree produced by {@link DrumTabParser#drum}.
 	 * @param ctx the parse tree
 	 */
-	void enterAccent(DrumTabParser.AccentContext ctx);
+	void enterDrum(DrumTabParser.DrumContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#accent}.
+	 * Exit a parse tree produced by {@link DrumTabParser#drum}.
 	 * @param ctx the parse tree
 	 */
-	void exitAccent(DrumTabParser.AccentContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#ghost}.
-	 * @param ctx the parse tree
-	 */
-	void enterGhost(DrumTabParser.GhostContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#ghost}.
-	 * @param ctx the parse tree
-	 */
-	void exitGhost(DrumTabParser.GhostContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#roll}.
-	 * @param ctx the parse tree
-	 */
-	void enterRoll(DrumTabParser.RollContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#roll}.
-	 * @param ctx the parse tree
-	 */
-	void exitRoll(DrumTabParser.RollContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#choke}.
-	 * @param ctx the parse tree
-	 */
-	void enterChoke(DrumTabParser.ChokeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#choke}.
-	 * @param ctx the parse tree
-	 */
-	void exitChoke(DrumTabParser.ChokeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#flam}.
-	 * @param ctx the parse tree
-	 */
-	void enterFlam(DrumTabParser.FlamContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#flam}.
-	 * @param ctx the parse tree
-	 */
-	void exitFlam(DrumTabParser.FlamContext ctx);
+	void exitDrum(DrumTabParser.DrumContext ctx);
 }

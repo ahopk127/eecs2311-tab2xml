@@ -34,7 +34,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		return upperBeat;
 	}
 
-	public void setUpperBeat(String upperBeat) {
+	public void setBeats(String upperBeat) {
 		this.upperBeat = upperBeat;
 	}
 
@@ -42,7 +42,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 		return lowerBeat;
 	}
 
-	public void setLowerBeat(String lowerBeat) {
+	public void setBeatType(String lowerBeat) {
 		this.lowerBeat = lowerBeat;
 	}
 
@@ -185,7 +185,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 					totalNotesInCurrMeasure--;
 
 					if (note.isGrace()) {
-						while (((Note) notes.get(y).get(x)).isGrace()) {
+						while (notes.get(y).get(x).getClass() != Bar.class && ((Note) notes.get(y).get(x)).isGrace()) {
 							Note gNote = ((Note) notes.get(y).get(x));
 							gNote.setGrace(false);
 							gNote.setMeasure(accumulateMeasure);
@@ -244,7 +244,7 @@ public class Staff extends StaffItem implements Iterable<StringItem> {
 				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
 					note.setRepeatedStop(true);
 				}
-				
+
 				if (Arrays.stream(bars).filter(b -> b.isDoubleBar() && !b.isRepeat()).count() == bars.length) {
 					note.setDoubleBar(true);
 				}

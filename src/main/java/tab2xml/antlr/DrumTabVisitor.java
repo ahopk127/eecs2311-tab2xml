@@ -44,39 +44,15 @@ public interface DrumTabVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDrumType(DrumTabParser.DrumTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#strike}.
+	 * Visit a parse tree produced by {@link DrumTabParser#cymbal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStrike(DrumTabParser.StrikeContext ctx);
+	T visitCymbal(DrumTabParser.CymbalContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#accent}.
+	 * Visit a parse tree produced by {@link DrumTabParser#drum}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAccent(DrumTabParser.AccentContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#ghost}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGhost(DrumTabParser.GhostContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#roll}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRoll(DrumTabParser.RollContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#choke}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitChoke(DrumTabParser.ChokeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#flam}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFlam(DrumTabParser.FlamContext ctx);
+	T visitDrum(DrumTabParser.DrumContext ctx);
 }

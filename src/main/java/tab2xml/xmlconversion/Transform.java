@@ -27,7 +27,8 @@ public class Transform {
 	private Document doc;
 	private DocumentBuilder dBuilder;
 	private DocumentBuilderFactory dbFactory;
-
+	private Instrument instrument;
+	
 	/**
 	 * Construct a transformer that accepts a specified score and an instrument.
 	 * 
@@ -44,7 +45,7 @@ public class Transform {
 			e.printStackTrace();
 		}
 		this.musicSheet = new MusicSheet(doc, dBuilder, dbFactory);
-
+		this.instrument = instrument;
 		switch (instrument) {
 		case GUITAR:
 		case BASS:
@@ -89,9 +90,11 @@ public class Transform {
 		}
 
 		Staff staff = sheet.getStaffs().get(0);
-		staff.setUpperBeat("4");
-		staff.setLowerBeat("4");
-		setStaffDefaults(staff, measures.get(0));
+		
+		// if not selected by user set to default
+		staff.setBeats("4");
+		staff.setBeatType("4");
+		setStaffDefaultsGuitarBass(staff, measures.get(0));
 
 		for (Staff st : sheet.getStaffs()) {
 			for (StringItem item : st) {
@@ -288,11 +291,30 @@ public class Transform {
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");
 		XMLElement partName = new XMLElement("part-name", musicSheet);
-		partName.setText("Classical Guitar");
-
-		scorePart.append(partName);
+		partName.setText(instrument.getName());
+		
+		switch (instrument) {
+		case GUITAR:
+		case BASS:
+			scorePart.append(partName);
+			break;
+		case DRUM:
+			int p = 0;
+			for (int i = 36; i <= 65; i++) {
+				if (i == 40)
+					continue;
+				XMLElement scoreInstrument = new XMLElement("score-instrument-name", musicSheet);
+				scoreInstrument.setAttribute("id", String.format("P1-I%d", i));
+				XMLElement instrumentName = new XMLElement("instrument-name", musicSheet);
+				instrumentName.setText(Instrument.drumSet[p++][0]);
+				scoreInstrument.append(instrumentName);
+				partList.append(scoreInstrument);
+			}
+			break;
+		default:
+			break;
+		}
 		partList.append(scorePart);
-
 		root.append(work, partList);
 	}
 
@@ -302,7 +324,7 @@ public class Transform {
 	 * @param staff   the first staff of the score
 	 * @param measure first measure to append the staff attributes to
 	 */
-	private void setStaffDefaults(Staff staff, XMLElement measure) {
+	private void setStaffDefaultsGuitarBass(Staff staff, XMLElement measure) {
 		XMLElement attributes = new XMLElement("attributes", musicSheet);
 
 		XMLElement divisions = new XMLElement("divisions", musicSheet);
@@ -352,20 +374,10 @@ public class Transform {
 	 * 
 	 */
 	private void generateDrum() {
-		generateSamplePlaceHolder();
-	}
-
-	/* template XML placeholder */
-	private void generateSamplePlaceHolder() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
-		musicSheet.append(root);
-		int measureCount = 10;
-		for (int i = 0; i < measureCount; i++) {
-			XMLElement measure = new XMLElement("measure", musicSheet);
-			root.append(measure);
-			XMLElement note = new XMLElement("note", musicSheet);
-			note.setText("sample attributes of note " + i);
-			measure.append(note);
-		}
+		setDefaults(root);
+		XMLElement part1 = new XMLElement("part", musicSheet);
+		part1.setAttribute("id", "P1");
+		root.append(part1);
 	}
 }

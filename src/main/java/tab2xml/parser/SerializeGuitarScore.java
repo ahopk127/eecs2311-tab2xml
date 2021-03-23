@@ -13,12 +13,11 @@ import tab2xml.model.guitar.Staff;
  * @author amir
  *
  */
-public class SerializeScore extends GuitarTabBaseVisitor<Score> {
-
+public class SerializeGuitarScore extends GuitarTabBaseVisitor<Score> {
 	@Override
 	public Score visitSheet(SheetContext ctx) {
 		Score score = new Score();
-		ExtractStaffs visitor = new ExtractStaffs();
+		ExtractGuitarStaffs visitor = new ExtractGuitarStaffs();
 		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
 				.forEach(c -> score.addStaff((Staff) visitor.visit(c)));
 		return score;

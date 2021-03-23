@@ -79,73 +79,25 @@ public class DrumTabBaseListener implements DrumTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStrike(DrumTabParser.StrikeContext ctx) { }
+	@Override public void enterCymbal(DrumTabParser.CymbalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStrike(DrumTabParser.StrikeContext ctx) { }
+	@Override public void exitCymbal(DrumTabParser.CymbalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAccent(DrumTabParser.AccentContext ctx) { }
+	@Override public void enterDrum(DrumTabParser.DrumContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAccent(DrumTabParser.AccentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterGhost(DrumTabParser.GhostContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitGhost(DrumTabParser.GhostContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterRoll(DrumTabParser.RollContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitRoll(DrumTabParser.RollContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterChoke(DrumTabParser.ChokeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitChoke(DrumTabParser.ChokeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFlam(DrumTabParser.FlamContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFlam(DrumTabParser.FlamContext ctx) { }
+	@Override public void exitDrum(DrumTabParser.DrumContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

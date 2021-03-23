@@ -126,6 +126,10 @@ public final class Presenter {
 			e.printStackTrace();
 			this.view.showErrorMessage("Error: Invalid Token", e.getMessage());
 			return Optional.empty();
+		} catch (final UnsupportedOperationException e) {
+			e.printStackTrace();
+			this.view.showErrorMessage("Unsupported Operation", e.getMessage());
+			return Optional.empty();
 		} catch (final Exception e) {
 			e.printStackTrace();
 			this.view.showErrorMessage("Error",

@@ -19,54 +19,69 @@ line
 
 lineItems
 	:(HYPHEN 
-	| strike
-	| accent
-	| ghost
-	| roll
-	| choke
-	| flam
+	| cymbal
+	| drum
 	| BAR)+	BAR		
 	;	
 	
 drumType
-	: TYPE? BAR        
+	: TYPE? BAR          
 	;
+
+cymbal: CYMBALS;
+
+drum: DRUMS;
+
+/* Tokens */
 	
-strike
-	: STRIKES		
-	;
-
-accent 
-	: ACCENTS			
-	;
-
-ghost
-	: 'g'			
-	;
-
-roll
-	: 'd'				
-	;
+CYMBALS
+	: 'x'	
+	| 'X'
+	| 'o'
+	| '#'
+	| 'c'
+	| 'b'	
+	; 
 	
-choke
-	: '#'
+
+DRUMS
+	: 'o'
+	| 'O'
+	| 'g'
+	| 'f'
+	| 'd'
 	;
-flam
-	: 'f'
-	;
+
 	
 /* Tokens */
 
 TYPE         
-	: ('CC' | 'SD' | 'HH' | 'HT' | 'MT' | 'BD' | 't' | 'T' | 'FT' | 'F' | 'B' | 'C' | 'R' | 'H' |'S'| 'Hf' | 'FH')
-	;
-	
-STRIKES
-	: ('x' | 'o')
-	;
-	
-ACCENTS
-	: ('X' | 'O')
+	:('Bd' // base drum 1
+	| 'BD' // base drum 2
+	| 'SS' // side stick
+	| 'SD' // snare drum 
+	| 'ES' // electric  snare
+	| 'T1' // low floor tom
+	| 'CH' // closed  hi-hat
+	| 'T2' // high floor tom
+	| 'PH' // pedal hi-hat
+	| 'LT' // low tom
+	| 'HH' // open hi-hat 
+	| 'LM' // low-mid tom
+	| 'MT' // hi-mid tom
+	| 'Cc' // crash cymbal 1
+	| 'HT' // high tom
+	| 'Rd' // ride cymbal 1
+	| 'Ch'   // chinese cymbal
+	| 'RB' // ride bell
+	| 'T'  // tambourine
+	| 'SC' // splash cymbal
+	| 'CB' // cowbell
+	| 'CC' // crash cymbal 2
+	| 'RD' // ride cymbal 2
+	| 'HC' // open high conga
+	| 'LC' // low conga
+	)
 	;
 	
 BAR
@@ -74,7 +89,7 @@ BAR
 	;
 	
 HYPHEN 
-	: '-' -> channel(HIDDEN)
+	: '-' 
 	;
 	
 SPACE
@@ -82,13 +97,14 @@ SPACE
 	;
 
 NEWLINE
-	: SPACE* ('\r\n' | '\n')
+	: SPACE* '\r'? '\n'
 	;
-	
+
 MULTI_COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
+    : '/*' .*? '*/' -> channel(HIDDEN)
     ;
 
 LINE_COMMENT
-    :   '//' ~[\r\n]* -> channel(HIDDEN)
+    : '//' ~[\r\n]* -> channel(HIDDEN)
     ;
+    

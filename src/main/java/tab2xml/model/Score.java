@@ -18,7 +18,7 @@ import tab2xml.antlr.GuitarTabParser;
 import tab2xml.listeners.ErrorListener;
 import tab2xml.model.Score;
 import tab2xml.model.guitar.Staff;
-import tab2xml.parser.SerializeScore;
+import tab2xml.parser.SerializeGuitarScore;
 
 /**
  * A representation of a score sheet.
@@ -27,11 +27,27 @@ import tab2xml.parser.SerializeScore;
  *
  */
 public class Score {
+	
+	/* Default values of a score */
+	/**
+	 * The default beats.
+	 */
+	public final int DEFAULT_BEATS = 4;
+	/**
+	 * The default beat type of every score.
+	 */
+	public final int DEFAULT_BEATTYPE = 4;
+	
+	/**
+	 * The default number of divisions per quarter note.
+	 */
+	public final int DEFAULT_DIVISION = 2;
+	////////////////////////////////////////////////////
+	
 	private List<Staff> staffs;
 
 	/**
 	 * Construct an empty score.
-	 * 
 	 */
 	public Score() {
 		this.staffs = new ArrayList<>();
@@ -65,6 +81,11 @@ public class Score {
 		return staffs;
 	}
 
+	/**
+	 * Return a count of all the notes in this score.
+	 * 
+	 * @return the number of notes in this score
+	 */
 	public int getNoteCount() {
 		int total = 0;
 		for (Staff staff : staffs)
@@ -155,7 +176,7 @@ public class Score {
 
 			ParseTree root = parser.sheet();
 
-			SerializeScore ss = new SerializeScore();
+			SerializeGuitarScore ss = new SerializeGuitarScore();
 			Score sheet = ss.visit(root);
 
 			System.out.println("staffs: " + sheet.size());

@@ -14,8 +14,8 @@ import tab2xml.model.guitar.Staff;
  * 
  * @author amir
  */
-public class ExtractStaffs extends GuitarTabBaseVisitor<StaffItem> {
-	public ExtractStaffs() {
+public class ExtractGuitarStaffs extends GuitarTabBaseVisitor<StaffItem> {
+	public ExtractGuitarStaffs() {
 	}
 
 	@Override
