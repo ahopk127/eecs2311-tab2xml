@@ -33,4 +33,9 @@ public abstract class StaffItem implements Serializable {
 			return null;
 		}
 	}
+
+	/**
+	 * @return get the total notes in this staff item.
+	 */
+	public abstract int getNoteCount();
 }

@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 
 import tab2xml.model.Instrument;
 import tab2xml.model.Score;
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 import tab2xml.model.guitar.GuitarString;
-import tab2xml.model.guitar.Note;
-import tab2xml.model.guitar.Staff;
+import tab2xml.model.guitar.GuitarNote;
+import tab2xml.model.guitar.GuitarStaff;
 import tab2xml.model.guitar.Tune;
 
 class ParserTest {
@@ -26,7 +26,7 @@ class ParserTest {
 		final int NUM_NOTES = 12;
 		final Random RAND = new Random();
 
-		StringItem[] stringItems = new StringItem[NUM_NOTES];
+		LineItem[] stringItems = new LineItem[NUM_NOTES];
 		GuitarString[] strings = new GuitarString[6];
 
 		for (int i = 1; i <= strings.length; i++) {
@@ -34,11 +34,10 @@ class ParserTest {
 		}
 
 		int index;
-		
 
 		// same string: insertion at random orders
 		for (int i = 1; i <= NUM_NOTES; i++) {
-			Note note = new Note(strings[0], String.valueOf(i));
+			GuitarNote note = new GuitarNote(strings[0], String.valueOf(i));
 			note.setPosition(i);
 
 			do {
@@ -54,7 +53,7 @@ class ParserTest {
 
 		// different strings: insertion at random orders
 		for (int i = 1; i <= NUM_NOTES; i++) {
-			Note note = new Note(strings[(i - 1) % strings.length], String.valueOf(i));
+			GuitarNote note = new GuitarNote(strings[(i - 1) % strings.length], String.valueOf(i));
 			note.setPosition(i);
 
 			do {
@@ -94,19 +93,19 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				Staff staff = staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (StringItem item : staff) {
+				for (LineItem item : staff) {
 					if (item == null)
 						continue;
-					final Note note = (Note) item;
+					final GuitarNote note = (GuitarNote) item;
 					assertEquals(exNoteData[j][0], note.getFret());
 					assertEquals(exNoteData[j][1], note.getStep());
 					j++;
@@ -154,19 +153,19 @@ class ParserTest {
 			assertEquals(4, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				Staff staff = staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (StringItem item : staff) {
+				for (LineItem item : staff) {
 					if (item == null)
 						continue;
-					final Note note = (Note) item;
+					final GuitarNote note = (GuitarNote) item;
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -190,27 +189,26 @@ class ParserTest {
 		final Instrument instrument = Instrument.GUITAR;
 
 		// noteCount, numStrings, numMeasures, ...
-		final int[][] exStaffData = { { 30, 6, 2 }, { 37, 6, 2 }, { 34, 6, 2 } };
+		final int[][] exStaffData = { { 31, 6, 2 }, { 37, 6, 2 }, { 34, 6, 2 } };
 
 		// fret, step, ...
-		final String[][][] exNoteData = {
-				{ { "0", "D" }, { "10", "A" }, { "7", "A" }, { "8", "F" }, { "10", "A" }, { "7", "A" }, { "7", "D" },
-						{ "7", "E" }, { "8", "G" }, { "6", "F" }, { "0", "A" }, { "5", "E" }, { "6", "F" },
-						{ "8", "G" }, { "5", "E" }, { "3", "D" }, { "0", "D" }, { "6", "F" }, { "7", "A" },
-						{ "7", "D" }, { "7", "F#" }, { "7", "A" }, { "5", "C" }, { "5", "D" }, { "7", "A" },
-						{ "5", "C" }, { "7", "F#" }, { "5", "A" }, { "8", "C" }, { "11", "D#" }, { "10", "D" } },
+		final String[][][] exNoteData = { { { "0", "D" }, { "8", "A#" }, { "0", "D" }, { "7", "A" }, { "8", "F" },
+				{ "10", "A" }, { "7", "A" }, { "7", "D" }, { "7", "E" }, { "8", "G" }, { "6", "F" }, { "0", "A" },
+				{ "5", "E" }, { "6", "F" }, { "8", "G" }, { "5", "E" }, { "3", "D" }, { "0", "D" }, { "6", "F" },
+				{ "7", "A" }, { "7", "D" }, { "7", "F#" }, { "7", "A" }, { "5", "C" }, { "5", "D" }, { "7", "A" },
+				{ "5", "C" }, { "7", "F#" }, { "5", "A" }, { "8", "C" }, { "11", "D#" }, { "10", "D" }, },
 				{ { "8", "C" }, { "10", "D" }, { "0", "G" }, { "8", "C" }, { "8", "G" }, { "6", "A#" }, { "3", "A#" },
 						{ "5", "A" }, { "5", "E" }, { "3", "G" }, { "0", "A" }, { "6", "A#" }, { "5", "A" },
 						{ "10", "D" }, { "9", "C#" }, { "12", "E" }, { "10", "D" }, { "13", "F" }, { "12", "E" },
 						{ "0", "A" }, { "15", "G" }, { "12", "E" }, { "10", "D" }, { "9", "C#" }, { "12", "E" },
 						{ "10", "D" }, { "6", "A#" }, { "5", "A" }, { "8", "C" }, { "6", "A#" }, { "8", "G" },
-						{ "0", "E" }, { "3", "D" }, { "3", "A#" }, { "0", "A" }, { "2", "C#" }, { "2", "A" } },
+						{ "0", "E" }, { "3", "D" }, { "3", "A#" }, { "0", "A" }, { "2", "C#" }, { "2", "A" }, },
 				{ { "6", "A#" }, { "8", "C" }, { "6", "A#" }, { "0", "A" }, { "5", "A" }, { "6", "C#" }, { "5", "E" },
 						{ "7", "A" }, { "6", "C#" }, { "5", "E" }, { "0", "A" }, { "9", "C#" }, { "6", "A#" },
 						{ "8", "G" }, { "3", "D" }, { "0", "E" }, { "3", "A#" }, { "0", "G" }, { "0", "A" },
 						{ "2", "E" }, { "2", "A" }, { "2", "C#" }, { "10", "A" }, { "0", "E" }, { "9", "C#" },
 						{ "12", "E" }, { "0", "A" }, { "6", "A#" }, { "3", "G" }, { "5", "E" }, { "3", "D" },
-						{ "3", "A#" }, { "0", "G" }, { "2", "E" } } };
+						{ "3", "A#" }, { "0", "G" }, { "2", "E" }, }, };
 
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
@@ -224,19 +222,19 @@ class ParserTest {
 			assertEquals(6, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				Staff staff = staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (StringItem item : staff) {
+				for (LineItem item : staff) {
 					if (item == null)
 						continue;
-					final Note note = (Note) item;
+					final GuitarNote note = (GuitarNote) item;
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -279,19 +277,19 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				Staff staff = staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (StringItem item : staff) {
+				for (LineItem item : staff) {
 					if (item == null)
 						continue;
-					final Note note = (Note) item;
+					final GuitarNote note = (GuitarNote) item;
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -334,19 +332,19 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				Staff staff = staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (StringItem item : staff) {
+				for (LineItem item : staff) {
 					if (item == null)
 						continue;
-					final Note note = (Note) item;
+					final GuitarNote note = (GuitarNote) item;
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;

@@ -2,19 +2,19 @@ package tab2xml.model;
 
 import java.util.List;
 
-public class StringItemsCollector extends StringItem {
+public class StringItemsCollector extends LineItem {
 	private static final long serialVersionUID = -5896057496942602721L;
-	private List<StringItem> stringItems;
+	private List<LineItem> stringItems;
 
-	public StringItemsCollector(List<StringItem> stringItems) {
+	public StringItemsCollector(List<LineItem> stringItems) {
 		this.stringItems = stringItems;
 	}
 
-	public List<StringItem> getStringItems() {
+	public List<LineItem> getStringItems() {
 		return stringItems;
 	}
 
-	public void add(StringItem item) {
+	public void add(LineItem item) {
 		if (item != null)
 			stringItems.add(item);
 	}
@@ -25,7 +25,7 @@ public class StringItemsCollector extends StringItem {
 	}
 
 	@Override
-	public int getStringNum() {
+	public int getLineNum() {
 		return 0;
 	}
 	

@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class Harmonic extends StringItem {
+public class Harmonic extends LineItem {
 	private static final long serialVersionUID = 7485103510856786127L;
-	private Note note;
+	private GuitarNote note;
 	
-	public Harmonic(Note note) {
+	public Harmonic(GuitarNote note) {
 		this.note = note;
 	}
 	
@@ -19,9 +19,9 @@ public class Harmonic extends StringItem {
 		return this.getNotes().size();
 	}
 	
-	public Collection<? extends StringItem> getNotes() {
-		final List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(this.note));
+	public Collection<? extends LineItem> getNotes() {
+		final List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(this.note));
 		return notes;
 	}
 	
@@ -31,8 +31,8 @@ public class Harmonic extends StringItem {
 	}
 
 	@Override
-	public int getStringNum() {
-		return note.getStringNum();
+	public int getLineNum() {
+		return note.getLineNum();
 	}
 	
 	@Override

@@ -17,7 +17,8 @@ import tab2xml.antlr.GuitarTabLexer;
 import tab2xml.antlr.GuitarTabParser;
 import tab2xml.listeners.ErrorListener;
 import tab2xml.model.Score;
-import tab2xml.model.guitar.Staff;
+import tab2xml.model.guitar.GuitarNote;
+import tab2xml.model.guitar.GuitarStaff;
 import tab2xml.parser.SerializeGuitarScore;
 
 /**
@@ -27,31 +28,30 @@ import tab2xml.parser.SerializeGuitarScore;
  *
  */
 public class Score {
-	
-	/* Default values of a score */
+
+	/* Default values guitar */
 	/**
 	 * The default beats.
 	 */
-	public final int DEFAULT_BEATS = 4;
+	public final static int DEFAULT_BEATS = 4;
 	/**
 	 * The default beat type of every score.
 	 */
-	public final int DEFAULT_BEATTYPE = 4;
-	
+	public final static int DEFAULT_BEATTYPE = 4;
+
 	/**
 	 * The default number of divisions per quarter note.
 	 */
-	public final int DEFAULT_DIVISION = 2;
-	////////////////////////////////////////////////////
-	
-	private List<Staff> staffs;
+	public final static int DEFAULT_DIVISION = 2;
+
+	private List<GuitarStaff> staffs;
 
 	/**
 	 * Construct an empty score.
 	 */
 	public Score() {
 		this.staffs = new ArrayList<>();
-		Staff.setAccumulateMeasure(0);
+		GuitarStaff.setAccumulateMeasure(0);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class Score {
 	 * 
 	 * @param s the staff to add to this score
 	 */
-	public void addStaff(Staff s) {
+	public void addStaff(GuitarStaff s) {
 		this.staffs.add(s);
 	}
 
@@ -77,7 +77,7 @@ public class Score {
 	 * 
 	 * @return the list of staffs in this score
 	 */
-	public List<Staff> getStaffs() {
+	public List<GuitarStaff> getStaffs() {
 		return staffs;
 	}
 
@@ -88,7 +88,7 @@ public class Score {
 	 */
 	public int getNoteCount() {
 		int total = 0;
-		for (Staff staff : staffs)
+		for (GuitarStaff staff : staffs)
 			total += staff.getNoteCount();
 		return total;
 	}
@@ -101,7 +101,7 @@ public class Score {
 	public int numberOfMeasures() {
 		int count = 0;
 		for (int i = 0; i < staffs.size(); i++) {
-			Staff staff = staffs.get(i);
+			GuitarStaff staff = staffs.get(i);
 			count += staff.numberOfMeasures();
 		}
 		return count;
@@ -113,14 +113,24 @@ public class Score {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (Staff staff : staffs) {
-			for (StringItem item : staff) {
+		sb.append("{");
+		for (GuitarStaff staff : staffs) {
+			sb.append("{");
+			for (LineItem item : staff) {
+				sb.append("{\"");
+
+				if (item.getClass() == GuitarNote.class) {
+					sb.append(((GuitarNote) item).getFret());
+					sb.append("\",");
+				}
+				sb.append("\"");
 				sb.append(item.toString());
-				sb.append(" ");
+				sb.append("\"},");
 			}
-			sb.append("\n");
+			sb.append("},");
 			sb.append("\n");
 		}
+		sb.append("}");
 		return sb.toString();
 	}
 
@@ -141,21 +151,10 @@ public class Score {
 				+ "D|--0-------------------------------|-0-------------------------------||\r\n" + "\r\n"
 				+ "-----------------------";
 
-		String input2 = "E|---------------------------|-15p12-10p9-12p10-6p5-8p6-----|\r\n"
-				+ "B|---------------------------|--------------------------8-5-|\r\n"
-				+ "G|---------------------------|------------------------------|\r\n"
-				+ "D|--[7]----------------------|------------------------------|\r\n"
-				+ "A|--[7]----------------------|------------------------------|\r\n"
-				+ "D|--[7]----------------------|------------------------------|\r\n"
-				+ "\r\n"
-				+ "\r\n"
-				+ "|-----------0-----||----------0--------4|----------0--------4|\r\n"
-				+ "|---------0---0---||----------0--------||----------0--------||\r\n"
-				+ "|-------1-------1-||*---------1-------*||*---------1-------*||\r\n"
-				+ "|-----2-----------||*---------2-------*||*---------2-------*||\r\n"
-				+ "|---2-------------||------2---2--------||------2---2--------||\r\n"
-				+ "|-0---------------||--0-------0--------||--0-------0--------||\r\n"
-				+ "";
+		String input2 = "|-----------0-----||----------0--------4|\r\n"
+				+ "|---------0---0---||----------0--------||\r\n" + "|-------1-------1-||*---------1-------*||\r\n"
+				+ "|-----2-----------||*---------2-------*||\r\n" + "|---2-------------||------2---2--------||\r\n"
+				+ "|-0---------------||--0-------0--------||";
 
 		InputStream stream = new ByteArrayInputStream(input2.getBytes(StandardCharsets.UTF_8));
 		GuitarTabLexer lexer = null;

@@ -215,11 +215,10 @@ public class Processor {
 
 		input += "\n";
 		final List<String> guitarMetadata = new ArrayList<>();
-		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?[ ]*[\\|-])[^\\s]*?\\|).*$))).+\\r?\\n?)+";
 		StringBuilder commentedInput = new StringBuilder();
 		StringBuilder staffMeta = new StringBuilder();
-		Pattern staffPattern = Pattern.compile(pattern, Pattern.MULTILINE);
-		Matcher staffMatcher = staffPattern.matcher(input);
+		
+		Matcher staffMatcher = Parser.guitarPattern.matcher(input);
 
 		int count = 0;
 		int prevIndex = 0;

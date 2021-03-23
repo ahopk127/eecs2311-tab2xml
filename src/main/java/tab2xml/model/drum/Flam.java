@@ -4,39 +4,41 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import tab2xml.model.guitar.Note;
-import tab2xml.model.StringItem;
+import tab2xml.model.guitar.GuitarNote;
+import tab2xml.model.LineItem;
 
-public class Flam extends StringItem{
+public class Flam extends LineItem {
 
-private Note note;
-	
-	public Flam(Note note) {
+	private GuitarNote note;
+
+	public Flam(GuitarNote note) {
 		this.note = note;
 	}
-	
-	public Collection<? extends StringItem> getNotes() {
+
+	public Collection<? extends LineItem> getNotes() {
 		// might be wrong flams are weird
-		final List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(this.note));
-		notes.add((StringItem) StringItem.deepClone(this.note));
+		final List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(this.note));
+		notes.add((LineItem) LineItem.deepClone(this.note));
 		return notes;
 	}
-	
+
 	public int getNoteCount() {
 		return getNotes().size();
 	}
+
 	@Override
 	public double getPosition() {
-		
+
 		return note.getPosition();
 	}
+
 	@Override
-	public int getStringNum() {
-		
-		return note.getStringNum();
+	public int getLineNum() {
+
+		return note.getLineNum();
 	}
-	
+
 	@Override
 	public String toString() {
 		if (this.note == null)

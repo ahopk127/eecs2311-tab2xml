@@ -11,14 +11,14 @@ import java.io.Serializable;
  * 
  * @author amir
  */
-public abstract class StringItem implements Serializable, Comparable<StringItem> {
+public abstract class LineItem implements Serializable, Comparable<LineItem> {
 	private static final long serialVersionUID = 3470299774150433578L;
 
 	/**
-	 * Construct a deep copy clone of a {@code StringItem} using serialization.
+	 * Construct a deep copy clone of a {@code LineItem} using serialization.
 	 * 
-	 * @param object the object of type {@code StringItem} to deep copy
-	 * @return
+	 * @param object the object of type {@code LineItem} to deep copy.
+	 * @return a clone of the specified {@code LineItem} object.
 	 */
 	public static Object deepClone(Object object) {
 		try {
@@ -35,23 +35,23 @@ public abstract class StringItem implements Serializable, Comparable<StringItem>
 	}
 
 	/**
-	 * Return the column position of this string item on the staff.
+	 * Return the column position of this line item on the staff.
 	 * 
-	 * @return the position of this string item
+	 * @return the position of this line item.
 	 */
 	public abstract double getPosition();
 
 	/**
 	 * Return the string number of this item.
 	 * 
-	 * @return the string which this item is on
+	 * @return the line number which this item is on.
 	 */
-	public abstract int getStringNum();
+	public abstract int getLineNum();
 
 	/**
-	 * Return the string number of notes in this item.
+	 * Return the number of notes in this line item.
 	 * 
-	 * @return the number of notes in this item
+	 * @return the number of notes in this item.
 	 */
 	public abstract int getNoteCount();
 
@@ -59,11 +59,11 @@ public abstract class StringItem implements Serializable, Comparable<StringItem>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int compareTo(StringItem o) {
+	public int compareTo(LineItem o) {
 		if (this.getPosition() == o.getPosition()) {
-			if (this.getStringNum() == o.getStringNum())
+			if (this.getLineNum() == o.getLineNum())
 				return 0;
-			return o.getStringNum() - this.getStringNum();
+			return o.getLineNum() - this.getLineNum();
 		}
 		return Double.compare(this.getPosition(), o.getPosition());
 	}

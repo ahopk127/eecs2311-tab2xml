@@ -1,8 +1,8 @@
 package tab2xml.model.guitar;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class Bar extends StringItem {
+public class Bar extends LineItem {
 	private static final long serialVersionUID = 6758542578259875168L;
 	private int position;
 	private int stringNum;
@@ -78,7 +78,7 @@ public class Bar extends StringItem {
 	}
 
 	@Override
-	public int getStringNum() {
+	public int getLineNum() {
 		return stringNum;
 	}
 

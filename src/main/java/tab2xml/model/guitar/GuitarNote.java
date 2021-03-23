@@ -5,66 +5,40 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import tab2xml.exceptions.InvalidTokenException;
+
 import tab2xml.model.NoteType;
-import tab2xml.model.StringItem;
+import tab2xml.model.Note;
 
 /**
- * An atomic note with its attributes.
+ * A guitar note and its attributes.
  * 
  * @author amir
  */
-public class Note extends StringItem {
+public class GuitarNote extends Note {
 	private static final long serialVersionUID = -7423778159486375067L;
 
-	/**
-	 * The note type of this note.
-	 */
-	private NoteType note;
-
-	/*
-	 * Pitch attributes.
-	 */
-	private String step;
-	private String octave;
-
-	/*
-	 * Additional attributes.
-	 */
-	private boolean hasStem;
-	private String duration;
-	private String voice = "1";
-
-	/*
-	 * Technical attributes.
-	 */
-	private String string;
+	/*Technical attributes*/
 	private String fret;
-	private int type;
 
-	private double position;
-	private int measure;
-	private int repeatCount;
+	/* Functional attributes*/
 	private String tune;
-
 	private boolean isChord;
 	private boolean isStartHammer;
 	private boolean isStopHammer;
-
 	private boolean isStartPull;
 	private boolean isStopPull;
-
 	private boolean isStartChain;
+	private List<GuitarNote> middle;
 	private boolean isStopChain;
-	private List<Note> middle;
-
 	private boolean isStartSlide;
 	private boolean isStopSlide;
-
 	private boolean isHarmonic;
 	private boolean isGrace;
 	private boolean isRepeatedStart;
 	private boolean isRepeatedStop;
 	private boolean isDoubleBar;
+
+	/*************************/
 
 	/**
 	 * Construct a note object based on tune and a given fret.
@@ -72,10 +46,10 @@ public class Note extends StringItem {
 	 * @param tune the tune of the string this note is on
 	 * @param fret the fret of this note
 	 */
-	public Note(String tune, String fret) {
+	public GuitarNote(String tune, String fret) {
 		this.tune = tune;
 		this.fret = fret;
-		this.note = setNoteType();
+		setNoteType();
 	}
 
 	/**
@@ -83,80 +57,15 @@ public class Note extends StringItem {
 	 * 
 	 * @param type the type of this note
 	 */
-	public Note(NoteType type) {
-		// TODO REMOVE THIS CONSTURCTOR
-		this.note = type;
-		this.step = type.getValue();
+	public GuitarNote(NoteType type) {
+		super(type);
 	}
 
-	public Note(GuitarString guitarString, String fret) {
-		this.fret = fret;
+	public GuitarNote(GuitarString guitarString, String fret) {
 		this.tune = guitarString.getTune();
-		this.note = setNoteType();
-		this.string = Integer.toString(guitarString.getStringNum());
-	}
-
-	/**
-	 * The position of this note within all the 12 notes.
-	 * 
-	 * @return the index of this note within {@code NoteType}
-	 */
-	public int getIndex() {
-		return note.ordinal();
-	}
-
-	/**
-	 * Return the stem attribute of this note.
-	 * 
-	 * @return the stem attribute of this note
-	 */
-	public boolean hasStem() {
-		return hasStem;
-	}
-
-	/**
-	 * Set the stem attribute to the specified note.
-	 * 
-	 * @param hasStem the value to set the stem attribute
-	 */
-	public void setHasStem(boolean hasStem) {
-		this.hasStem = hasStem;
-	}
-
-	/**
-	 * Return the duration attribute of this note.
-	 * 
-	 * @return the duration attribute of this note
-	 */
-	public String getDuration() {
-		return duration;
-	}
-
-	/**
-	 * Set the duration attribute to the specified value.
-	 * 
-	 * @param duration the value to set the octave attribute
-	 */
-	public void setDuration(String duration) {
-		this.duration = duration;
-	}
-
-	/**
-	 * Return the octave attribute of this note.
-	 * 
-	 * @return the octave attribute of this note
-	 */
-	public String getOctave() {
-		return octave;
-	}
-
-	/**
-	 * Set the octave attribute to the specified value.
-	 * 
-	 * @param octave the value to set the octave attribute
-	 */
-	public void setOctave(String octave) {
-		this.octave = octave;
+		this.fret = fret;
+		this.setLine(guitarString.getStringNum());
+		setNoteType();
 	}
 
 	/**
@@ -165,16 +74,7 @@ public class Note extends StringItem {
 	 * @return the string attribute of this note
 	 */
 	public String getString() {
-		return string;
-	}
-
-	/**
-	 * Set the string attribute to the specified value.
-	 * 
-	 * @param string the value to set the string attribute
-	 */
-	public void setString(String string) {
-		this.string = string;
+		return getLine();
 	}
 
 	/**
@@ -195,73 +95,12 @@ public class Note extends StringItem {
 		this.fret = fret;
 	}
 
-	/**
-	 * Set the voice attribute to the specified value.
-	 * 
-	 * @param voice the value to set the voice attribute
-	 */
-	public void setVoice(String voice) {
-		this.voice = voice;
+	public String getTune() {
+		return tune;
 	}
 
-	/**
-	 * Return the voice attribute of this note.
-	 * 
-	 * @return the voice attribute of this note
-	 */
-	public String getVoice() {
-		return voice;
-	}
-
-	/**
-	 * Return the type attribute of this note.
-	 * 
-	 * @return the type attribute of this note
-	 */
-	public String getType() {
-		switch (type) {
-		case 16:
-			return "sixteenth";
-		case 8:
-			return "eighth";
-		case 4:
-			return "quarter";
-		case 2:
-			return "half";
-		default:
-			return "whole";
-		}
-	}
-
-	/**
-	 * Return the type of this note.
-	 * 
-	 * @param type the type of this note (<em>A, B, C,..</em>) as defined by
-	 *             {@code NoteType}
-	 */
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	/**
-	 * Return the note type of this note.
-	 * 
-	 * @return the note type of this note
-	 */
-	public NoteType getNoteType() {
-		return note;
-	}
-
-	public void setPosition(double position) {
-		this.position = position;
-	}
-
-	public String getStep() {
-		return step;
-	}
-
-	public void setStep(String step) {
-		this.step = step;
+	public void setTune(String tune) {
+		this.tune = tune;
 	}
 
 	public boolean isChord() {
@@ -270,14 +109,6 @@ public class Note extends StringItem {
 
 	public void setChord(boolean isChord) {
 		this.isChord = isChord;
-	}
-
-	public int getMeasure() {
-		return measure;
-	}
-
-	public void setMeasure(int measure) {
-		this.measure = measure;
 	}
 
 	public boolean isStartHammer() {
@@ -320,6 +151,14 @@ public class Note extends StringItem {
 		this.isStartChain = isStartChain;
 	}
 
+	public List<GuitarNote> getMiddle() {
+		return middle;
+	}
+
+	public void setMiddle(List<GuitarNote> middle) {
+		this.middle = middle;
+	}
+
 	public boolean isStopChain() {
 		return isStopChain;
 	}
@@ -342,18 +181,6 @@ public class Note extends StringItem {
 
 	public void setStopSlide(boolean isStopSlide) {
 		this.isStopSlide = isStopSlide;
-	}
-
-	public List<Note> getMiddle() {
-		return middle;
-	}
-
-	public void setMiddle(List<Note> middle) {
-		this.middle = middle;
-	}
-
-	public boolean isMiddle() {
-		return middle.contains(this);
 	}
 
 	public boolean isHarmonic() {
@@ -388,45 +215,12 @@ public class Note extends StringItem {
 		this.isRepeatedStop = isRepeatedStop;
 	}
 
-	public int getRepeatCount() {
-		return repeatCount;
-	}
-
-	public void setRepeatCount(int repeatCount) {
-		this.repeatCount = repeatCount;
-	}
-
 	public boolean isDoubleBar() {
 		return isDoubleBar;
 	}
 
 	public void setDoubleBar(boolean isDoubleBar) {
 		this.isDoubleBar = isDoubleBar;
-	}
-
-	@Override
-	public double getPosition() {
-		return position;
-	}
-
-	@Override
-	public int getStringNum() {
-		return Integer.parseInt(string);
-	}
-
-	@Override
-	public int getNoteCount() {
-		return 1;
-	}
-
-	/**
-	 * Return the string representation of this note.
-	 * 
-	 * @return the string of this note's value
-	 */
-	@Override
-	public String toString() {
-		return step;
 	}
 
 	/**
@@ -438,7 +232,7 @@ public class Note extends StringItem {
 	 * @throws InvalidTokenException if the parsed note type doesn't match the
 	 *                               parsed step
 	 */
-	public static Note toNote(String input, int string) throws InvalidTokenException {
+	public static GuitarNote toNote(String input, int string) throws InvalidTokenException {
 		Pattern p = Pattern.compile("^[a-gA-G]\\d+$");
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException("The Note is invalid.");
@@ -447,12 +241,12 @@ public class Note extends StringItem {
 		tune = tune.toUpperCase();
 		String fret = input.substring(1);
 
-		Note note = new Note(Note.getNoteType(tune));
+		GuitarNote note = new GuitarNote(GuitarNote.getNoteType(tune));
 		int index = (note.getIndex() + Integer.parseInt(fret)) % 12;
 
 		NoteType noteType = NoteType.values()[index];
-		Note noteResult = new Note(noteType);
-		noteResult.setString(Integer.toString(string));
+		GuitarNote noteResult = new GuitarNote(noteType);
+		noteResult.setLine(string);
 		return noteResult;
 	}
 
@@ -478,7 +272,8 @@ public class Note extends StringItem {
 	 * @throws InvalidTokenException if the parsed note type doesn't match the
 	 *                               parsed step
 	 */
-	private NoteType setNoteType() {
+	@Override
+	protected void setNoteType() {
 		String tune = this.tune;
 		tune = tune.toUpperCase();
 		int fretNum = Integer.parseInt(fret);
@@ -489,12 +284,22 @@ public class Note extends StringItem {
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException("The Note is invalid.");
 
-		int oldIndex = Note.getNoteType(tune).ordinal();
+		int oldIndex = GuitarNote.getNoteType(tune).ordinal();
 		int index = (oldIndex + fretNum) % 12;
 
 		NoteType noteType = NoteType.values()[index];
 		setStep(noteType.getValue());
 
-		return noteType;
+		this.note = noteType;
+	}
+
+	/**
+	 * Return the string representation of this note.
+	 * 
+	 * @return the string of this note's value
+	 */
+	@Override
+	public String toString() {
+		return step;
 	}
 }

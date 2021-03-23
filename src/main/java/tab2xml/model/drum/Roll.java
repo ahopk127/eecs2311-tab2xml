@@ -1,8 +1,8 @@
 package tab2xml.model.drum;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class Roll extends StringItem{
+public class Roll extends LineItem{
 
 	@Override
 	public double getPosition() {
@@ -11,7 +11,7 @@ public class Roll extends StringItem{
 	}
 
 	@Override
-	public int getStringNum() {
+	public int getLineNum() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

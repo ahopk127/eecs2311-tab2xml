@@ -220,7 +220,7 @@ public final class Presenter {
 		if (loadPath.isPresent()) {
 			final Optional<String> result = this.loadFromFile(loadPath.get());
 			result.ifPresent(this.view::setInputText);
-			result.ifPresent(res -> this.view.setSelectedInstrument(Parser.getDetectedInstrument(res)));
+			//result.ifPresent(res -> this.view.setSelectedInstrument(Parser.getDetectedInstrument(res)));
 			return result.isPresent();
 		} else
 			return false; // user did not provide a file

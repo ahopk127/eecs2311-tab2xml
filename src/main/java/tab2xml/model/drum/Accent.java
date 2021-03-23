@@ -5,18 +5,18 @@ import java.util.Collection;
 import java.util.List;
 
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class Accent extends StringItem{
-private Note note;
+public class Accent extends LineItem{
+private DrumNote note;
 	
-	public Accent(Note note) {
+	public Accent(DrumNote note) {
 		this.note = note;
 	}
 	
-	public Collection<? extends StringItem> getNotes() {
-		final List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(this.note));
+	public Collection<? extends LineItem> getNotes() {
+		final List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(this.note));
 		return notes;
 	}
 	
@@ -29,9 +29,9 @@ private Note note;
 		return note.getPosition();
 	}
 	@Override
-	public int getStringNum() {
+	public int getLineNum() {
 		
-		return note.getStringNum();
+		return note.getLineNum();
 	}
 	
 	@Override

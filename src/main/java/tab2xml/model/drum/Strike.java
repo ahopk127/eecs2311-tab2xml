@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import tab2xml.model.drum.Note;
-import tab2xml.model.StringItem;
+import tab2xml.model.drum.DrumNote;
+import tab2xml.model.LineItem;
 
-public class Strike extends StringItem{
-	private Note note;
+public class Strike extends LineItem{
+	private DrumNote note;
 	
-	public Strike(Note note) {
+	public Strike(DrumNote note) {
 		this.note = note;
 	}
 	
-	public Collection<? extends StringItem> getNotes() {
-		final List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(this.note));
+	public Collection<? extends LineItem> getNotes() {
+		final List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(this.note));
 		return notes;
 	}
 	
@@ -29,9 +29,9 @@ public class Strike extends StringItem{
 		return note.getPosition();
 	}
 	@Override
-	public int getStringNum() {
+	public int getLineNum() {
 		
-		return note.getStringNum();
+		return note.getLineNum();
 	}
 	
 	@Override

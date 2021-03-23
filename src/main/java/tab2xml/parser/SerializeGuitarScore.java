@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 import tab2xml.antlr.GuitarTabBaseVisitor;
 import tab2xml.antlr.GuitarTabParser.SheetContext;
 import tab2xml.model.Score;
-import tab2xml.model.guitar.Staff;
+import tab2xml.model.guitar.GuitarStaff;
 
 /**
  * Serialize a score into a list of staffs.
@@ -19,7 +19,7 @@ public class SerializeGuitarScore extends GuitarTabBaseVisitor<Score> {
 		Score score = new Score();
 		ExtractGuitarStaffs visitor = new ExtractGuitarStaffs();
 		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
-				.forEach(c -> score.addStaff((Staff) visitor.visit(c)));
+				.forEach(c -> score.addStaff((GuitarStaff) visitor.visit(c)));
 		return score;
 	}
 }
