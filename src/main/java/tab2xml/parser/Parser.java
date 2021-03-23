@@ -3,6 +3,7 @@ package tab2xml.parser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,9 +48,8 @@ public class Parser {
 	 * 
 	 */
 	public Parser(String input, Instrument instrument) throws InvalidInputException {
-		// TODO: let user optionally select the instrument
-		this.processor = new Processor(input, getDetectedInstrument(input));
-		this.instrument = getDetectedInstrument(input);
+		this.processor = new Processor(input, instrument);
+		this.instrument = instrument;
 		this.sheet = this.processor.process();
 	}
 
@@ -130,7 +130,9 @@ public class Parser {
 		return this.instrument;
 	}
 
-	public static Instrument getDetectedInstrument(String input) {
+	// returns an empty Optional if no instrument is detected,
+	// otherwise returns the detected instrument
+	public static Optional<Instrument> getDetectedInstrument(String input) {
 		StringBuilder tab = new StringBuilder(input);
 		tab.insert(0, "\n");
 		tab.insert(tab.length(), "\n");
@@ -158,8 +160,8 @@ public class Parser {
 			ins = Instrument.DRUM;
 		
 		if (max == 0)
-			throw new UnsupportedOperationException("Can't detect instrument");
-		
-		return ins;
+			return Optional.empty();
+		else
+			return Optional.of(ins);
 	}
 }

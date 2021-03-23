@@ -216,7 +216,7 @@ class PresenterTest {
 		final Presenter presenter = new Presenter(view);
 		final Path TEST_FILE = TEST_FILES.resolve("test-read.txt");
 		final String expected = readStringHandleErrors(TEST_FILE);
-		//TODO: change test file-test fails
+		
 		view.setSelectedFile(TEST_FILE);
 		presenter.loadInput();
 		
