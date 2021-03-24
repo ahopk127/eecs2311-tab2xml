@@ -38,7 +38,7 @@ public class DrumStaff extends Staff {
 		private int x = 0;
 		private int y;
 		private int barsNotSeen;
-		private int numStrings;
+		private int numLines;
 		private int lengths[];
 		private int totalNotesInCurrMeasure;
 		private int totalNotesInStaff;
@@ -55,8 +55,8 @@ public class DrumStaff extends Staff {
 			notes = staff.toList();
 			y = staff.size() - 1;
 			barsNotSeen = staff.numberOfMeasures();
-			numStrings = staff.size();
-			lengths = new int[numStrings];
+			numLines = staff.size();
+			lengths = new int[numLines];
 			Arrays.fill(lengths, -1);
 			collecting = true;
 			setFirstRepeatNote = false;
@@ -194,7 +194,7 @@ public class DrumStaff extends Staff {
 		}
 
 		private Bar[] getFirstBars() {
-			Bar[] bars = new Bar[numStrings];
+			Bar[] bars = new Bar[numLines];
 			for (int i = 0; i < notes.size(); i++) {
 				for (int j = 0; j < notes.get(i).size(); j++) {
 					LineItem item = notes.get(i).get(j);
@@ -213,7 +213,7 @@ public class DrumStaff extends Staff {
 		private Bar[] getEndRepeatBars() {
 			int column = 0;
 			for (;;) {
-				Bar[] bars = new Bar[numStrings];
+				Bar[] bars = new Bar[numLines];
 				for (int i = 0; i < notes.size(); i++) {
 					for (int j = column; j < notes.get(i).size(); j++) {
 						LineItem item = notes.get(i).get(j);
