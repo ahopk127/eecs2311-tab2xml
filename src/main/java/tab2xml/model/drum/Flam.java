@@ -9,9 +9,9 @@ import tab2xml.model.LineItem;
 
 public class Flam extends LineItem {
 
-	private GuitarNote note;
+	private DrumNote note;
 
-	public Flam(GuitarNote note) {
+	public Flam(DrumNote note) {
 		this.note = note;
 	}
 
