@@ -3,6 +3,10 @@ package tab2xml.model.drum;
 import tab2xml.model.LineItem;
 
 public class DrumType extends LineItem {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 382303579699360922L;
 	private String drumType;
 	private int stringNum;
 
