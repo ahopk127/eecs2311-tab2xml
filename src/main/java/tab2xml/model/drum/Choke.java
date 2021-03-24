@@ -1,26 +1,21 @@
 package tab2xml.model.drum;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import tab2xml.model.LineItem;
 
 public class Choke extends LineItem {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3057323644358297293L;
 	private DrumNote note;
 
 	public Choke(DrumNote note) {
 		this.note = note;
 	}
 
-	public Collection<? extends LineItem> getNotes() {
-		final List<LineItem> notes = new ArrayList<>();
-		notes.add((LineItem) LineItem.deepClone(this.note));
-		return notes;
-	}
 
 	public int getNoteCount() {
-		return getNotes().size();
+		return 1;
 	}
 
 	@Override

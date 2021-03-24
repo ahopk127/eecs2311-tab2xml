@@ -1,27 +1,21 @@
 package tab2xml.model.drum;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-
 import tab2xml.model.LineItem;
 
 public class Accent extends LineItem{
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6425568262366908657L;
 private DrumNote note;
 	
 	public Accent(DrumNote note) {
 		this.note = note;
 	}
 	
-	public Collection<? extends LineItem> getNotes() {
-		final List<LineItem> notes = new ArrayList<>();
-		notes.add((LineItem) LineItem.deepClone(this.note));
-		return notes;
-	}
 	
 	public int getNoteCount() {
-		return getNotes().size();
+		return 1;
 	}
 	
 	@Override
