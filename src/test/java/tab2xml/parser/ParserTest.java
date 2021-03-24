@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import tab2xml.model.Instrument;
 import tab2xml.model.Score;
+import tab2xml.model.Staff;
 import tab2xml.model.LineItem;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.GuitarNote;
@@ -93,10 +94,10 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<GuitarStaff> staffs = score.getStaffs();
+			final List<Staff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = staffs.get(i);
+				GuitarStaff staff = (GuitarStaff) staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -153,10 +154,10 @@ class ParserTest {
 			assertEquals(4, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<GuitarStaff> staffs = score.getStaffs();
+			final List<Staff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = staffs.get(i);
+				GuitarStaff staff = (GuitarStaff) staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -222,10 +223,10 @@ class ParserTest {
 			assertEquals(6, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<GuitarStaff> staffs = score.getStaffs();
+			final List<Staff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = staffs.get(i);
+				GuitarStaff staff = (GuitarStaff) staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -277,10 +278,10 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<GuitarStaff> staffs = score.getStaffs();
+			final List<Staff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = staffs.get(i);
+				GuitarStaff staff = (GuitarStaff) staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -332,10 +333,10 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<GuitarStaff> staffs = score.getStaffs();
+			final List<Staff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = staffs.get(i);
+				GuitarStaff staff = (GuitarStaff) staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());

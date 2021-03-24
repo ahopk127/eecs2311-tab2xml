@@ -23,6 +23,7 @@ private DrumNote note;
 	public int getNoteCount() {
 		return getNotes().size();
 	}
+	
 	@Override
 	public double getPosition() {
 		

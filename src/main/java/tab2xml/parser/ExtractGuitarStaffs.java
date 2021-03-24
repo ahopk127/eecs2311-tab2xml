@@ -11,7 +11,7 @@ import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.GuitarStaff;
 
 /**
- * Extract staffs from parse tree.
+ * Extract staffs from guitar parse tree.
  * 
  * @author amir
  */

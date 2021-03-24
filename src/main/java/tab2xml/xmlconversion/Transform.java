@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import tab2xml.Main;
 import tab2xml.model.Instrument;
 import tab2xml.model.Score;
+import tab2xml.model.Staff;
 import tab2xml.model.LineItem;
 import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.GuitarStaff;
@@ -88,14 +89,14 @@ public class Transform {
 			measures.add(measure);
 		}
 
-		GuitarStaff staff = sheet.getStaffs().get(0);
+		GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);
 
 		// if not selected by user set to default
 		staff.setBeats("4");
 		staff.setBeatType("4");
 		setStaffDefaultsGuitarBass(staff, measures.get(0));
 
-		for (GuitarStaff st : sheet.getStaffs()) {
+		for (Staff st : sheet.getStaffs()) {
 			for (LineItem item : st) {
 				GuitarNote note = (GuitarNote) item;
 				if (note == null)
@@ -305,7 +306,7 @@ public class Transform {
 				XMLElement scoreInstrument = new XMLElement("score-instrument-name", musicSheet);
 				scoreInstrument.setAttribute("id", String.format("P1-I%d", i));
 				XMLElement instrumentName = new XMLElement("instrument-name", musicSheet);
-				instrumentName.setText(Instrument.drumSet[p++][0]);
+				instrumentName.setText(Instrument.drumSet[p++][1]);
 				scoreInstrument.append(instrumentName);
 				partList.append(scoreInstrument);
 			}
@@ -404,7 +405,7 @@ public class Transform {
 			measures.add(measure);
 		}
 
-		GuitarStaff staff = sheet.getStaffs().get(0);
+		GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);
 		// if not selected by user set to default
 		staff.setBeats("4");
 		staff.setBeatType("4");

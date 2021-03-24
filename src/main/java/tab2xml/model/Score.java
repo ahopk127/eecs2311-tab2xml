@@ -44,7 +44,7 @@ public class Score {
 	 */
 	public final static int DEFAULT_DIVISION = 2;
 
-	private List<GuitarStaff> staffs;
+	private List<Staff> staffs;
 
 	/**
 	 * Construct an empty score.
@@ -59,7 +59,7 @@ public class Score {
 	 * 
 	 * @param s the staff to add to this score
 	 */
-	public void addStaff(GuitarStaff s) {
+	public void addStaff(Staff s) {
 		this.staffs.add(s);
 	}
 
@@ -77,7 +77,7 @@ public class Score {
 	 * 
 	 * @return the list of staffs in this score
 	 */
-	public List<GuitarStaff> getStaffs() {
+	public List<Staff> getStaffs() {
 		return staffs;
 	}
 
@@ -88,7 +88,7 @@ public class Score {
 	 */
 	public int getNoteCount() {
 		int total = 0;
-		for (GuitarStaff staff : staffs)
+		for (Staff staff : staffs)
 			total += staff.getNoteCount();
 		return total;
 	}
@@ -101,7 +101,7 @@ public class Score {
 	public int numberOfMeasures() {
 		int count = 0;
 		for (int i = 0; i < staffs.size(); i++) {
-			GuitarStaff staff = staffs.get(i);
+			Staff staff = staffs.get(i);
 			count += staff.numberOfMeasures();
 		}
 		return count;
@@ -114,7 +114,7 @@ public class Score {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
-		for (GuitarStaff staff : staffs) {
+		for (Staff staff : staffs) {
 			sb.append("{");
 			for (LineItem item : staff) {
 				sb.append("{\"");
@@ -151,10 +151,12 @@ public class Score {
 				+ "D|--0-------------------------------|-0-------------------------------||\r\n" + "\r\n"
 				+ "-----------------------";
 
-		String input2 = "|-----------0-----||----------0--------4|\r\n"
-				+ "|---------0---0---||----------0--------||\r\n" + "|-------1-------1-||*---------1-------*||\r\n"
-				+ "|-----2-----------||*---------2-------*||\r\n" + "|---2-------------||------2---2--------||\r\n"
-				+ "|-0---------------||--0-------0--------||";
+		String input2 = "E|--------------------------------------|---------------------------5-8-11--10|\r\n"
+				+ "B|-------------10-----------8p6-5h6-8p5-|-3h6-------7-------------7-----------|\r\n"
+				+ "G|------------------7-------------------|-------7-------5-------5-------------|\r\n"
+				+ "D|---------7--------7-------------------|-------7-------7-----7---------------|\r\n"
+				+ "A|--------------8-------7-------0-------|-------------------5-----------------|\r\n"
+				+ "D|--0p8--0------------------------------|---0---------------------------------|";
 
 		InputStream stream = new ByteArrayInputStream(input2.getBytes(StandardCharsets.UTF_8));
 		GuitarTabLexer lexer = null;

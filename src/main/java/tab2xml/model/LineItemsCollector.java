@@ -2,21 +2,21 @@ package tab2xml.model;
 
 import java.util.List;
 
-public class StringItemsCollector extends LineItem {
+public class LineItemsCollector extends LineItem {
 	private static final long serialVersionUID = -5896057496942602721L;
-	private List<LineItem> stringItems;
+	private List<LineItem> lineItems;
 
-	public StringItemsCollector(List<LineItem> stringItems) {
-		this.stringItems = stringItems;
+	public LineItemsCollector(List<LineItem> stringItems) {
+		this.lineItems = stringItems;
 	}
 
 	public List<LineItem> getStringItems() {
-		return stringItems;
+		return lineItems;
 	}
 
 	public void add(LineItem item) {
 		if (item != null)
-			stringItems.add(item);
+			lineItems.add(item);
 	}
 
 	@Override
@@ -26,11 +26,11 @@ public class StringItemsCollector extends LineItem {
 
 	@Override
 	public int getLineNum() {
-		return 0;
+		return -1;
 	}
 	
 	@Override
 	public int getNoteCount() {
-		return 0;
+		return -1;
 	}
 }

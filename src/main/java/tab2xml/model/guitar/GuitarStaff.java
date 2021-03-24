@@ -143,12 +143,16 @@ public class GuitarStaff extends Staff {
 							isRepeatEnd = true;
 
 					if (bars[0].isRepeat() && bars[0].isStop() && !isRepeatEnd) {
+						//TODO: remove this
+						System.out.println("We reached the end");
+
 						String value = bars[0].toString();
 						String fret = value.substring(0, value.indexOf("|"));
 						double position = bars[0].getPosition() - 1;
 						GuitarNote newNote = new GuitarNote(bars[0].getTune(), fret);
 						newNote.setPosition(position);
 						newNote.setLine(bars[0].getLineNum());
+						newNote.setMeasure(accumulateMeasure);
 						pq.add(newNote);
 						totalNotesInStaff++;
 					}

@@ -20,7 +20,7 @@ import tab2xml.antlr.GuitarTabParser.StringContext;
 import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.antlr.GuitarTabParser.TuneContext;
 import tab2xml.model.LineItem;
-import tab2xml.model.StringItemsCollector;
+import tab2xml.model.LineItemsCollector;
 import tab2xml.model.guitar.Bar;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.HammerOn;
@@ -59,8 +59,8 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		for (LineItem item : visited) {
 			if (item.getClass() == Tune.class)
 				string.add(item);
-			else if (item.getClass() == StringItemsCollector.class) {
-				StringItemsCollector coll = (StringItemsCollector) item;
+			else if (item.getClass() == LineItemsCollector.class) {
+				LineItemsCollector coll = (LineItemsCollector) item;
 				string.addAll(coll.getStringItems());
 			}
 		}
@@ -80,7 +80,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 	@Override
 	public LineItem visitStringItems(StringItemsContext ctx) {
-		StringItemsCollector coll = new StringItemsCollector(new ArrayList<LineItem>());
+		LineItemsCollector coll = new LineItemsCollector(new ArrayList<LineItem>());
 		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() == TerminalNodeImpl.class
 				&& Pattern.matches("\\*?(\\||\\d+)\\||\\|\\*?", c.getText())).count();
 		s.setNumMeasures(numMeasures);

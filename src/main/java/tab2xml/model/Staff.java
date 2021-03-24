@@ -111,13 +111,11 @@ public abstract class Staff extends StaffItem implements Iterable<LineItem> {
 	 */
 	public List<LinkedList<LineItem>> toList() {
 		List<LinkedList<LineItem>> res = new ArrayList<>();
-
 		for (GuitarString s : this.getStrings()) {
 			LinkedList<LineItem> notes = new LinkedList<>();
 			notes.addAll(s.getNotes());
 			res.add(notes);
 		}
-
 		return res;
 	}
 	
