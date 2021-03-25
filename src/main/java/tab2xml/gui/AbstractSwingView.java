@@ -354,7 +354,7 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 
+	 * 				
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {

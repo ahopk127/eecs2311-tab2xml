@@ -29,6 +29,12 @@ public final class Presenter {
 			"MusicXML (*.xml)", "xml");
 	
 	/**
+	 * If this is false, an error will occur upon trying to save an empty input
+	 * or output. If this is true, these operations will be allowed.
+	 */
+	private static final boolean ALLOW_EMPTY_SAVING = false;
+	
+	/**
 	 * If the provided filepath has no extension, returns this path with the
 	 * extension {@code preferredExtension}. Otherwise, return the original
 	 * filepath.
@@ -104,6 +110,13 @@ public final class Presenter {
 	 */
 	private Optional<String> convert(String input,
 			Instrument selectedInstrument) {
+		if (input.isBlank()) {
+			this.view.showErrorMessage("Error: Empty Input",
+					"Please input your text tab before converting.");
+			return Optional.empty();
+		}
+		
+		// convert tab
 		final String musicXMLOutput;
 		final Collection<ParsingWarning> warnings;
 		try {
@@ -212,7 +225,7 @@ public final class Presenter {
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
 	 * @return true if loading was successful
-	 * 
+	 * 													
 	 * @since 2021-02-25
 	 */
 	public boolean loadInput() {
@@ -238,6 +251,12 @@ public final class Presenter {
 	 * @since 2021-03-15
 	 */
 	public boolean saveInput() {
+		if (!ALLOW_EMPTY_SAVING && this.view.getInputText().isBlank()) {
+			this.view.showErrorMessage("Empty Saving Error",
+					"Cannot save empty input to a file.");
+			return false;
+		}
+		
 		final Optional<Path> savePathInput = this.view
 				.promptForFile(TEXT_TAB_FILE, true)
 				.map(path -> withPreferredExtension(path, "txt"));
@@ -258,6 +277,12 @@ public final class Presenter {
 	 * @since 2021-02-25
 	 */
 	public boolean saveOutput() {
+		if (!ALLOW_EMPTY_SAVING && this.view.getOutputText().isBlank()) {
+			this.view.showErrorMessage("Empty Saving Error",
+					"Cannot save empty output to a file.");
+			return false;
+		}
+		
 		final Optional<Path> savePathOutput = this.view
 				.promptForFile(MUSICXML_FILE, true)
 				.map(path -> withPreferredExtension(path, "xml"));
