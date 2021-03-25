@@ -1,4 +1,4 @@
-// Generated from GuitarTab.g4 by ANTLR 4.9.2
+// Generated from tab2xml\antlr\GuitarTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr;
 

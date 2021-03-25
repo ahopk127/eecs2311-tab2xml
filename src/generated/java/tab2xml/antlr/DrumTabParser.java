@@ -1,7 +1,6 @@
-// Generated from DrumTab.g4 by ANTLR 4.9.2
+// Generated from tab2xml\antlr\DrumTab.g4 by ANTLR 4.9.2
 
 	package tab2xml.antlr; 
-	
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;

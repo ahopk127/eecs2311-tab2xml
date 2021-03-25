@@ -26,11 +26,11 @@ public class Parser {
 	private final Processor processor;
 	private final Instrument instrument;
 	private final Score sheet;
-	
+
 	/*General patterns for each instrument*/
 	public static final String OUTLIER = "(^(?!([a-gA-G]#?)?[ ]*[\\|-][^\r\n]*[\\|-]\r?\n?).*\r?\n?)";
 	public static final String STRING = "(^(?!((^(?!(([a-gA-G]#?)?[ ]*[\\|-])[^\r\n]*\\|).*$))).+\r?\n?)";
-	public static final String gP = STRING + "{6,}";		
+	public static final String gP = STRING + "{6,}";
 	public static final String bP = OUTLIER + STRING + "{4,5}" + OUTLIER;
 	public static final String dP = "(^(?!((^(?!(([ABCcDdEHhLMPRST12]{2})[\\|-]).*\\|).*)+)).*\r?\n?)+";
 
@@ -38,7 +38,6 @@ public class Parser {
 	public static final Pattern bassPattern = Pattern.compile(bP, Pattern.MULTILINE);
 	public static final Pattern drumPattern = Pattern.compile(dP, Pattern.MULTILINE);
 
-	
 	/**
 	 * Construct a parser with specified tablature and instrument.
 	 * 
@@ -141,7 +140,7 @@ public class Parser {
 		Matcher bM = bassPattern.matcher(tab.toString());
 		Matcher dM = drumPattern.matcher(tab.toString());
 		int gCount = 0, bCount = 0, dCount = 0;
-		
+
 		while (gM.find())
 			gCount++;
 		while (bM.find())
@@ -158,7 +157,7 @@ public class Parser {
 			ins = Instrument.BASS;
 		else
 			ins = Instrument.DRUM;
-		
+
 		if (max == 0)
 			return Optional.empty();
 		else

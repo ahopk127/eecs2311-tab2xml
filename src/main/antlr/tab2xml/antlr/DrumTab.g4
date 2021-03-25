@@ -2,7 +2,6 @@ grammar DrumTab;
 
 @header{
 	package tab2xml.antlr; 
-	
 }
 
 sheet

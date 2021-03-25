@@ -1,30 +1,54 @@
 plugins {
-	id 'application'
-	id 'antlr'
-	id 'jacoco'
+    id "java"
+    id "application"
+    id "antlr"
+    id "jacoco"
 }
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_11
 }
 
+mainClassName = 'tab2xml.Main'
+
 repositories {
-	mavenLocal()
     mavenCentral()
+	mavenLocal()
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-	implementation "org.antlr:antlr4:4.9.1"
-	compile "org.antlr:antlr4-runtime:4.9.1"
+	antlr "org.antlr:antlr4:4.9.2"
+	implementation "org.antlr:antlr4-runtime:4.9.2"
 }
 
 generateGrammarSource {
-    outputDirectory = file("src/main/java/tab2xml/antlr")
+	println "Generating grammar sources..."
     maxHeapSize = "64m"
-    arguments += ["-visitor", "-long-messages"]
+    arguments += [ "-visitor", 
+    			   "-listener",
+                   "-long-messages"]
+    outputDirectory = file("${projectDir}/src/generated/java")
+}
+
+clean {
+    delete file("${projectDir}/src/generated/java/tab2xml")
+}
+
+sourceSets {
+    generated{
+        java.srcDir "${projectDir}/src/generated/java/"
+    }
+
+    main {
+        java.srcDirs += "${projectDir}/src/generated/java/"
+    }
+}
+
+compileJava {
+    dependsOn generateGrammarSource
 }
 
 jacoco {
@@ -46,5 +70,3 @@ jacocoTestReport {
 
 run {
 }
-
-mainClassName = 'tab2xml.Main'

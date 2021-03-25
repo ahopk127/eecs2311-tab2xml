@@ -27,7 +27,7 @@ public class Transform {
 	private DocumentBuilder dBuilder;
 	private DocumentBuilderFactory dbFactory;
 	private Instrument instrument;
-	
+
 	/**
 	 * Construct a transformer that accepts a specified score and an instrument.
 	 * 
@@ -89,7 +89,7 @@ public class Transform {
 		}
 
 		GuitarStaff staff = sheet.getStaffs().get(0);
-		
+
 		// if not selected by user set to default
 		staff.setBeats("4");
 		staff.setBeatType("4");
@@ -291,7 +291,7 @@ public class Transform {
 		scorePart.setAttribute("id", "P1");
 		XMLElement partName = new XMLElement("part-name", musicSheet);
 		partName.setText(instrument.getName());
-		
+
 		switch (instrument) {
 		case GUITAR:
 		case BASS:
@@ -335,7 +335,7 @@ public class Transform {
 
 		XMLElement time = new XMLElement("time", musicSheet);
 		XMLElement beats = new XMLElement("beats", musicSheet);
-		beats.setText(staff.getBeats());
+		beats.setText("4");
 		XMLElement beatType = new XMLElement("beat-type", musicSheet);
 		beatType.setText(staff.getBeatType());
 		time.append(beats, beatType);
@@ -346,7 +346,7 @@ public class Transform {
 		XMLElement line = new XMLElement("line", musicSheet);
 		line.setText("5");
 		clef.append(sign, line);
-
+		attributes.append(divisions, key, time, clef);
 		measure.append(attributes);
 	}
 
@@ -379,9 +379,10 @@ public class Transform {
 		XMLElement line = new XMLElement("line", musicSheet);
 		line.setText("2");
 		clef.append(sign, line);
-
+		attributes.append(divisions, time, clef);
 		measure.append(attributes);
 	}
+
 	/**
 	 * Generate XML from score for selected instrument, Drum.
 	 * 
@@ -392,7 +393,7 @@ public class Transform {
 		XMLElement part1 = new XMLElement("part", musicSheet);
 		part1.setAttribute("id", "P1");
 		root.append(part1);
-		
+
 		int measureCount = sheet.numberOfMeasures();
 		ArrayList<XMLElement> measures = new ArrayList<>();
 		measures.ensureCapacity(measureCount);
@@ -402,12 +403,12 @@ public class Transform {
 			measure.setAttribute("number", Integer.toString(i + 1));
 			measures.add(measure);
 		}
-		
+
 		GuitarStaff staff = sheet.getStaffs().get(0);
 		// if not selected by user set to default
 		staff.setBeats("4");
 		staff.setBeatType("4");
 		setStaffDefaultsGuitarBass(staff, measures.get(0));
-		
+
 	}
 }
