@@ -1,81 +1,95 @@
 package tab2xml.model.guitar;
 
 import java.util.List;
-
-import tab2xml.model.StaffItem;
-import tab2xml.model.StringItem;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class GuitarString extends StaffItem {
+import tab2xml.model.Line;
+import tab2xml.model.LineItem;
+
+/**
+ * A representation of a guitar string.
+ * 
+ * @author amir
+ */
+public class GuitarString extends Line {
 	private static final long serialVersionUID = -5274699295630375450L;
-	private ArrayList<StringItem> stringItems;
-	private static int count = 0;
-	private int numMeasures;
 	private int stringNum;
 
+	/**
+	 * Construct an empty string(with string number grouped by staffs).
+	 */
 	public GuitarString() {
-		stringItems = new ArrayList<>();
-		setCount(count + 1);
-		this.stringNum = getCount();
+		super();
+		this.stringNum = getLine();
 	}
 
+	/**
+	 * Construct an empty string with a specified string number. Since no tuning is
+	 * provide, standard tune will be used.
+	 * 
+	 * @param stringNum the string number of this string.
+	 */
 	public GuitarString(int stringNum) {
-		stringItems = new ArrayList<>();
-		this.stringItems.add(new Tune(stringNum));
+		super(stringNum);
+		lineItems.add(new Tune(stringNum));
 		this.stringNum = stringNum;
 	}
 
-	public String getTune() {
-		return tune().getTune();
-	}
-
+	/**
+	 * @return the octave of this line.
+	 */
 	public String getOctave() {
 		return tune().getOctave();
 	}
 
+	/**
+	 * @return the tune step of this string.
+	 */
+	public String getTune() {
+		return tune().getTune();
+	}
+
+	/**
+	 * @return the {@code Tune} of this string.
+	 */
 	public Tune tune() {
-		return (Tune) stringItems.get(0);
+		return (Tune) lineItems.get(0);
 	}
 
+	/**
+	 * Set the tune of this string with a specified tune object.
+	 * 
+	 * @param tune the {@code Tune} object to set the {@code Tune} of this string.
+	 */
 	public void setTune(Tune tune) {
-		stringItems.set(0, (Tune) StringItem.deepClone(tune));
+		lineItems.set(0, (Tune) LineItem.deepClone(tune));
 	}
 
+	/**
+	 * @return the string number of this string.
+	 */
 	public int getStringNum() {
 		return stringNum;
 	}
 
+	/**
+	 * Set the string number of this string.
+	 * 
+	 * @param stringNum the value to set the string number.
+	 */
 	public void setStringNum(int stringNum) {
 		this.stringNum = stringNum;
 	}
 
-	public int getNumMeasures() {
-		return numMeasures;
-	}
+	/**
+	 * @return a list of notes in this string.
+	 */
+	@Override
+	public Collection<? extends LineItem> getNotes() {
+		List<LineItem> notes = new ArrayList<>();
 
-	public void setNumMeasures(int numMeasures) {
-		this.numMeasures = numMeasures;
-	}
-
-	public int getNoteCount() {
-		int total = 0;
-		for (int i = 1; i < stringItems.size(); i++) {
-			StringItem item = stringItems.get(i);
-			total += item.getNoteCount();
-		}
-		return total;
-	}
-
-	public ArrayList<StringItem> getItems() {
-		return stringItems;
-	}
-
-	public Collection<? extends StringItem> getNotes() {
-		List<StringItem> notes = new ArrayList<>();
-
-		for (StringItem item : stringItems) {
+		for (LineItem item : lineItems) {
 			if (item.getClass() == Slide.class) {
 				Slide sl = (Slide) item;
 				notes.addAll(sl.getNotes());
@@ -96,40 +110,23 @@ public class GuitarString extends StaffItem {
 				Harmonic h = (Harmonic) item;
 				notes.addAll(h.getNotes());
 
-			} else if (item.getClass() == Note.class) {
-				Note note = (Note) item;
-				notes.add((StringItem) StringItem.deepClone(note));
+			} else if (item.getClass() == GuitarNote.class) {
+				GuitarNote note = (GuitarNote) item;
+				notes.add((LineItem) LineItem.deepClone(note));
 
 			} else if (item.getClass() == Bar.class) {
 				Bar bar = (Bar) item;
-				notes.add((StringItem) StringItem.deepClone(bar));
+				notes.add((LineItem) LineItem.deepClone(bar));
 			}
 		}
 		return notes;
 	}
 
-	public static int getCount() {
-		return count;
-	}
-
-	public static void setCount(int count) {
-		GuitarString.count = count;
-	}
-
-	public boolean add(StringItem item) {
-		if (item != null)
-			stringItems.add(item);
-		return true;
-	}
-
-	public boolean addAll(List<StringItem> items) {
-		for (StringItem item : items)
-			add(item);
-		return true;
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
-		return String.format("(t:%s o:%s #:%d", getTune(), getOctave(), getNoteCount());
+		return String.format("%s%s-%d", getTune(), getOctave(), getNoteCount());
 	}
 }

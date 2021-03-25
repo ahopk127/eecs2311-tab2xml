@@ -4,38 +4,38 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class HammerPull extends StringItem {
+public class HammerPull extends LineItem {
 	private static final long serialVersionUID = -1117048664217523691L;
-	private Note start;
-	private Note stop;
-	private List<Note> middle;
+	private GuitarNote start;
+	private GuitarNote stop;
+	private List<GuitarNote> middle;
 
-	public HammerPull(Note start, List<Note> middle, Note stop) {
+	public HammerPull(GuitarNote start, List<GuitarNote> middle, GuitarNote stop) {
 		this.start = start;
 		this.stop = stop;
 		this.middle = middle;
 	}
 
-	public Note getStart() {
+	public GuitarNote getStart() {
 		return start;
 	}
 
-	public Note getStop() {
+	public GuitarNote getStop() {
 		return stop;
 	}
 
-	public List<Note> getMiddle() {
+	public List<GuitarNote> getMiddle() {
 		return middle;
 	}
 
-	public Collection<? extends StringItem> getNotes() {
-		List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(start));
-		for (StringItem note : middle)
-			notes.add((StringItem) StringItem.deepClone(note));
-		notes.add((StringItem) StringItem.deepClone(stop));
+	public Collection<? extends LineItem> getNotes() {
+		List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(start));
+		for (LineItem note : middle)
+			notes.add((LineItem) LineItem.deepClone(note));
+		notes.add((LineItem) LineItem.deepClone(stop));
 		return notes;
 	}
 
@@ -45,8 +45,8 @@ public class HammerPull extends StringItem {
 	}
 
 	@Override
-	public int getStringNum() {
-		return start.getStringNum();
+	public int getLineNum() {
+		return start.getLineNum();
 	}
 
 	@Override
@@ -61,8 +61,8 @@ public class HammerPull extends StringItem {
 		StringBuilder sb = new StringBuilder();
 		sb.append(start.getStep());
 		sb.append(" ");
-		for (StringItem item : middle) {
-			sb.append(((Note) item).getStep());
+		for (LineItem item : middle) {
+			sb.append(((GuitarNote) item).getStep());
 			sb.append(" ");
 		}
 		sb.append(stop.getStep());

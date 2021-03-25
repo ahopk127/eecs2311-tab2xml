@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class PullOff extends StringItem {
+public class PullOff extends LineItem {
 	private static final long serialVersionUID = -216451585018707396L;
-	private Note start;
-	private Note stop;
+	private GuitarNote start;
+	private GuitarNote stop;
 	
-	public PullOff(Note start, Note stop) {
+	public PullOff(GuitarNote start, GuitarNote stop) {
 		this.start = start;
 		this.stop = stop;
 	}
@@ -21,10 +21,10 @@ public class PullOff extends StringItem {
 		return this.getNotes().size();
 	}
 	
-	public Collection<? extends StringItem> getNotes() {
-		final List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(this.start));
-		notes.add((StringItem) StringItem.deepClone(this.stop));
+	public Collection<? extends LineItem> getNotes() {
+		final List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(this.start));
+		notes.add((LineItem) LineItem.deepClone(this.stop));
 		return notes;
 	}
 
@@ -33,17 +33,17 @@ public class PullOff extends StringItem {
 		return start.getPosition();
 	}
 	
-	public Note getStart() {
+	public GuitarNote getStart() {
 		return this.start;
 	}
 	
-	public Note getStop() {
+	public GuitarNote getStop() {
 		return this.stop;
 	}
 	
 	@Override
-	public int getStringNum() {
-		return this.start.getStringNum();
+	public int getLineNum() {
+		return this.start.getLineNum();
 	}
 	
 	@Override

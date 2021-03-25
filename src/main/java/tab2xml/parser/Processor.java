@@ -36,6 +36,8 @@ import tab2xml.model.Score;
 public class Processor {
 	private String input;
 	private Instrument instrument;
+	private static final SerializeGuitarScore sgs = new SerializeGuitarScore();
+	private static final SerializeDrumScore sds = new SerializeDrumScore();
 
 	/**
 	 * Construct a processor object for an input string and instrument.
@@ -68,26 +70,35 @@ public class Processor {
 	}
 
 	public Score processGuitar() throws InvalidInputException {
-
-		// TODO: REMOVE THIS
-//						System.out.println("-----------------------");
-//						System.out.println(input);
-//						System.out.println("-----------------------");
-
-		input = preprocessGuitar(input);
-
-		// TODO: REMOVE THIS
-//						System.out.println("-----------------------");
-//						System.out.println(input);
-//						System.out.println("-----------------------");
-
 		final List<ErrorToken> errorTokens = new LinkedList<>();
-		List<Integer> positions = new LinkedList<>();
 
+		if (input == null || input.length() == 0) {
+			ErrorToken errorToken = new ErrorToken();
+			errorToken.setStart(0);
+			errorToken.setStop(0);
+			errorToken.setLine(0);
+			errorToken.setColumn(0);
+			errorToken.setMessage("Empty input");
+			errorTokens.add(errorToken);
+		}
+
+		if (!errorTokens.isEmpty())
+			showErrors(errorTokens);
+
+		// TODO: REMOVE THIS
+		//						System.out.println("-----------------------");
+		//						System.out.println(input);
+		//						System.out.println("-----------------------");
+		input = preprocessGuitar(input);
+		// TODO: REMOVE THIS
+		//						System.out.println("-----------------------");
+		//						System.out.println(input);
+		//						System.out.println("-----------------------");
+
+		List<Integer> positions = new LinkedList<>();
 		for (int i = 0; i < input.length() - 1; i++) {
 			char c1 = input.charAt(i);
 			char c2 = input.charAt(i + 1);
-
 			if ((c1 == 47 && c2 == 42) || (c1 == 42 && c2 == 47))
 				positions.add(i);
 		}
@@ -133,10 +144,12 @@ public class Processor {
 				if (msg.matches("extraneous input '\\\\n' expecting \\{'\\[', 'g', '\\|', DOUBLEBAR, FRET_NUM, '-'\\}"))
 					message.append("Missing end of string");
 
-				if (msg.matches("missing FRET_NUM at '-'") || msg.matches("no viable alternative at input '\\d+..+'")
-						|| msg.matches("extraneous input '.+' expecting FRET_NUM")
+				if (msg.matches("missing FRET_NUM at '-'") || msg.matches("extraneous input '.+' expecting FRET_NUM")
 						|| msg.matches("mismatched input '.+' expecting FRET_NUM"))
 					message.append("Missing Fret");
+				
+				if (msg.matches("no viable alternative at input '\\d+..+'"))
+					message.append("Invalid input");
 
 				// one char mismatches
 				if (msg.matches("missing '.' at '.'"))
@@ -147,6 +160,10 @@ public class Processor {
 
 				if (msg.matches("extraneous input '.'.*"))
 					message.append(String.format("Extraneous '%s'", msg.split("'")[1]));
+
+				// if none of those errors are caught, notify invalid input
+				if (message.length() == 0)
+					message.append("Invalid input");
 
 				leftComment = 0;
 				rightComment = 0;
@@ -177,8 +194,7 @@ public class Processor {
 			errors.clear();
 			showErrors(errorTokens);
 		}
-		SerializeScore ss = new SerializeScore();
-		Score sheet = ss.visit(root);
+		Score sheet = sgs.visit(root);
 		return sheet;
 	}
 
@@ -198,16 +214,11 @@ public class Processor {
 			return "";
 
 		input += "\n";
-
 		final List<String> guitarMetadata = new ArrayList<>();
-
-		String pattern = "(^(?!((^(?!(([a-gA-G]#?)?[ ]*[\\|-])[^\\s]*?\\|).*$))).+\\r?\\n?)+";
-
 		StringBuilder commentedInput = new StringBuilder();
 		StringBuilder staffMeta = new StringBuilder();
-
-		Pattern staffPattern = Pattern.compile(pattern, Pattern.MULTILINE);
-		Matcher staffMatcher = staffPattern.matcher(input);
+		
+		Matcher staffMatcher = Parser.guitarPattern.matcher(input);
 
 		int count = 0;
 		int prevIndex = 0;

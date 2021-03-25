@@ -14,17 +14,18 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import tab2xml.exceptions.InvalidTokenException;
 import tab2xml.model.NoteType;
-import tab2xml.model.guitar.Note;
+import tab2xml.model.guitar.GuitarNote;
 
 class NoteTest {
 
 	static Stream<Arguments> noteNames() {
-		return Stream.of(Arguments.of(new Note(NoteType.A), "A", 0), Arguments.of(new Note(NoteType.AS), "A#", 1),
-				Arguments.of(new Note(NoteType.B), "B", 2), Arguments.of(new Note(NoteType.C), "C", 3),
-				Arguments.of(new Note(NoteType.CS), "C#", 4), Arguments.of(new Note(NoteType.D), "D", 5),
-				Arguments.of(new Note(NoteType.DS), "D#", 6), Arguments.of(new Note(NoteType.E), "E", 7),
-				Arguments.of(new Note(NoteType.F), "F", 8), Arguments.of(new Note(NoteType.FS), "F#", 9),
-				Arguments.of(new Note(NoteType.G), "G", 10), Arguments.of(new Note(NoteType.GS), "G#", 11));
+		return Stream.of(Arguments.of(new GuitarNote(NoteType.A), "A", 0),
+				Arguments.of(new GuitarNote(NoteType.AS), "A#", 1), Arguments.of(new GuitarNote(NoteType.B), "B", 2),
+				Arguments.of(new GuitarNote(NoteType.C), "C", 3), Arguments.of(new GuitarNote(NoteType.CS), "C#", 4),
+				Arguments.of(new GuitarNote(NoteType.D), "D", 5), Arguments.of(new GuitarNote(NoteType.DS), "D#", 6),
+				Arguments.of(new GuitarNote(NoteType.E), "E", 7), Arguments.of(new GuitarNote(NoteType.F), "F", 8),
+				Arguments.of(new GuitarNote(NoteType.FS), "F#", 9), Arguments.of(new GuitarNote(NoteType.G), "G", 10),
+				Arguments.of(new GuitarNote(NoteType.GS), "G#", 11));
 	}
 
 	/**
@@ -37,17 +38,17 @@ class NoteTest {
 	 */
 	@ParameterizedTest
 	@MethodSource("noteNames")
-	void noteTest(Note note, String expectedName, int expectedIndex) {
+	void noteTest(GuitarNote note, String expectedName, int expectedIndex) {
 		assertEquals(expectedName, note.getStep());
-		assertEquals(expectedName, note.getNoteType().getValue());
+		assertEquals(expectedName, note.getNote().getValue());
 		assertEquals(expectedIndex, note.getIndex());
 	}
 
 	/**
 	 * Tests that notes are correctly converted.
 	 * 
-	 * @param note          note to test
-	 * @param expectedName  expected name of note
+	 * @param note         note to test
+	 * @param expectedName expected name of note
 	 * @since 2021-02-24
 	 */
 	static Stream<Arguments> toNoteTest() {
@@ -63,7 +64,7 @@ class NoteTest {
 	@ParameterizedTest
 	@MethodSource("toNoteTest")
 	void testToNote(String input, String expected) throws InvalidTokenException {
-		assertEquals(expected, Note.toNote(input, 0).getStep());
+		assertEquals(expected, GuitarNote.toNote(input, 0).getStep());
 	}
 
 	/**
@@ -71,9 +72,9 @@ class NoteTest {
 	 * @throws InvalidTokenException
 	 */
 	@ParameterizedTest
-	@ValueSource(strings = {"x0", "20", "#2", "E1E", "9E"})
+	@ValueSource(strings = { "x0", "20", "#2", "E1E", "9E", "", "--", "hadfs", "2193", "   12", "E  12" })
 	void testToNote(String input) throws InvalidTokenException {
-		InputMismatchException thrown = assertThrows(InputMismatchException.class, () -> Note.toNote(input, 0),
+		InputMismatchException thrown = assertThrows(InputMismatchException.class, () -> GuitarNote.toNote(input, 0),
 				"The Note is invalid.");
 		assertTrue(thrown.getMessage().contains("The Note is invalid."));
 	}

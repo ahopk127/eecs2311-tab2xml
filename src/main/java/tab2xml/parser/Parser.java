@@ -3,6 +3,7 @@ package tab2xml.parser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,17 @@ public class Parser {
 	private final Instrument instrument;
 	private final Score sheet;
 
+	/*General patterns for each instrument*/
+	public static final String OUTLIER = "(^(?!([a-gA-G]#?)?[ ]*[\\|-][^\r\n]*[\\|-]\r?\n?).*\r?\n?)";
+	public static final String STRING = "(^(?!((^(?!(([a-gA-G]#?)?[ ]*[\\|-])[^\r\n]*\\|).*$))).+\r?\n?)";
+	public static final String gP = STRING + "{6,}";
+	public static final String bP = OUTLIER + STRING + "{4,5}" + OUTLIER;
+	public static final String dP = "(^(?!((^(?!(([ABCcDdEHhLMPRST12]{2})[\\|-]).*\\|).*)+)).*\r?\n?)+";
+
+	public static final Pattern guitarPattern = Pattern.compile(gP, Pattern.MULTILINE);
+	public static final Pattern bassPattern = Pattern.compile(bP, Pattern.MULTILINE);
+	public static final Pattern drumPattern = Pattern.compile(dP, Pattern.MULTILINE);
+
 	/**
 	 * Construct a parser with specified tablature and instrument.
 	 * 
@@ -36,7 +48,7 @@ public class Parser {
 	 */
 	public Parser(String input, Instrument instrument) throws InvalidInputException {
 		this.processor = new Processor(input, instrument);
-		this.instrument = getDetectedInstrument(input);
+		this.instrument = instrument;
 		this.sheet = this.processor.process();
 	}
 
@@ -117,19 +129,16 @@ public class Parser {
 		return this.instrument;
 	}
 
-	public static Instrument getDetectedInstrument(String input) {
-		String guitarPattern = "(^(?!((^(?!(([a-gA-G]#?)?[\\|-])[^\s]*?\\|).*$))).+\r?\n?){6,}";
-		String bassPattern = "(^(?!([a-gA-G])?#?[\\|-])\r?\n)?(^(?!((^(?!(([a-gA-G]#?)?[\\|-])[^\s]*?\\|).*$))).+\r?\n?){4,5}(^(?!([a-gA-G])?#?[\\|-])\r?\n)?";
-		String drumPattern = "(^(?!((^(?!(([CRDHxoST12MFBf]{2})(\\||-)).*?\\|).*$)+)).*\\r?\\n?)+";
+	// returns an empty Optional if no instrument is detected,
+	// otherwise returns the detected instrument
+	public static Optional<Instrument> getDetectedInstrument(String input) {
+		StringBuilder tab = new StringBuilder(input);
+		tab.insert(0, "\n");
+		tab.insert(tab.length(), "\n");
 
-		Pattern gP = Pattern.compile(guitarPattern, Pattern.MULTILINE);
-		Pattern bP = Pattern.compile(bassPattern, Pattern.MULTILINE);
-		Pattern dP = Pattern.compile(drumPattern, Pattern.MULTILINE);
-
-		Matcher gM = gP.matcher(input);
-		Matcher bM = bP.matcher(input);
-		Matcher dM = dP.matcher(input);
-
+		Matcher gM = guitarPattern.matcher(tab.toString());
+		Matcher bM = bassPattern.matcher(tab.toString());
+		Matcher dM = drumPattern.matcher(tab.toString());
 		int gCount = 0, bCount = 0, dCount = 0;
 
 		while (gM.find())
@@ -149,6 +158,9 @@ public class Parser {
 		else
 			ins = Instrument.DRUM;
 
-		return ins;
+		if (max == 0)
+			return Optional.empty();
+		else
+			return Optional.of(ins);
 	}
 }

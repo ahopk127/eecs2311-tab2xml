@@ -29,6 +29,12 @@ public final class Presenter {
 			"MusicXML (*.xml)", "xml");
 	
 	/**
+	 * If this is false, an error will occur upon trying to save an empty input
+	 * or output. If this is true, these operations will be allowed.
+	 */
+	private static final boolean ALLOW_EMPTY_SAVING = false;
+	
+	/**
 	 * If the provided filepath has no extension, returns this path with the
 	 * extension {@code preferredExtension}. Otherwise, return the original
 	 * filepath.
@@ -104,6 +110,13 @@ public final class Presenter {
 	 */
 	private Optional<String> convert(String input,
 			Instrument selectedInstrument) {
+		if (input.isBlank()) {
+			this.view.showErrorMessage("Error: Empty Input",
+					"Please input your text tab before converting.");
+			return Optional.empty();
+		}
+		
+		// convert tab
 		final String musicXMLOutput;
 		final Collection<ParsingWarning> warnings;
 		try {
@@ -125,6 +138,10 @@ public final class Presenter {
 		} catch (final InvalidTokenException e) {
 			e.printStackTrace();
 			this.view.showErrorMessage("Error: Invalid Token", e.getMessage());
+			return Optional.empty();
+		} catch (final UnsupportedOperationException e) {
+			e.printStackTrace();
+			this.view.showErrorMessage("Unsupported Operation", e.getMessage());
 			return Optional.empty();
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -169,7 +186,8 @@ public final class Presenter {
 		}
 		
 		// get file to save to
-		final Optional<Path> savePath = this.view.promptForFile(MUSICXML_FILE)
+		final Optional<Path> savePath = this.view
+				.promptForFile(MUSICXML_FILE, true)
 				.map(path -> withPreferredExtension(path, "xml"));
 		
 		// save to file
@@ -186,8 +204,8 @@ public final class Presenter {
 	 * @since 2021-03-22
 	 */
 	public void detectInstrument() {
-		this.view.setSelectedInstrument(
-				Parser.getDetectedInstrument(this.view.getInputText()));
+		Parser.getDetectedInstrument(this.view.getInputText())
+				.ifPresent(this.view::setSelectedInstrument);
 	}
 	
 	/**
@@ -222,7 +240,8 @@ public final class Presenter {
 	 * @since 2021-02-25
 	 */
 	public boolean loadInput() {
-		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE);
+		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE,
+				false);
 		
 		if (loadPath.isPresent()) {
 			final Optional<String> result = this.loadFromFile(loadPath.get());
@@ -241,8 +260,14 @@ public final class Presenter {
 	 * @since 2021-03-15
 	 */
 	public boolean saveInput() {
+		if (!ALLOW_EMPTY_SAVING && this.view.getInputText().isBlank()) {
+			this.view.showErrorMessage("Empty Saving Error",
+					"Cannot save empty input to a file.");
+			return false;
+		}
+		
 		final Optional<Path> savePathInput = this.view
-				.promptForFile(TEXT_TAB_FILE)
+				.promptForFile(TEXT_TAB_FILE, true)
 				.map(path -> withPreferredExtension(path, "txt"));
 		
 		if (savePathInput.isPresent())
@@ -261,8 +286,14 @@ public final class Presenter {
 	 * @since 2021-02-25
 	 */
 	public boolean saveOutput() {
+		if (!ALLOW_EMPTY_SAVING && this.view.getOutputText().isBlank()) {
+			this.view.showErrorMessage("Empty Saving Error",
+					"Cannot save empty output to a file.");
+			return false;
+		}
+		
 		final Optional<Path> savePathOutput = this.view
-				.promptForFile(MUSICXML_FILE)
+				.promptForFile(MUSICXML_FILE, true)
 				.map(path -> withPreferredExtension(path, "xml"));
 		
 		if (savePathOutput.isPresent())
