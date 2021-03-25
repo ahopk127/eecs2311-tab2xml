@@ -90,7 +90,8 @@ public final class ViewBot implements View {
 	}
 	
 	@Override
-	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
+	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType,
+			boolean forSave) {
 		return Optional.ofNullable(this.selectedFile);
 	}
 	

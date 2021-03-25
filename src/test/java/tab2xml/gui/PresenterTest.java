@@ -170,7 +170,8 @@ class PresenterTest {
 		
 		// simulate not selecting a file
 		view.setSelectedFile(null);
-		assertFalse(view.promptForFile(null).isPresent());
+		assertFalse(view.promptForFile(null, false).isPresent());
+		assertFalse(view.promptForFile(null, true).isPresent());
 		
 		// ensure that load/save operations cancel without an error
 		assertFalse(presenter.loadInput());

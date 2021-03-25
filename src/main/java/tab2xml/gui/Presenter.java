@@ -173,7 +173,8 @@ public final class Presenter {
 		}
 		
 		// get file to save to
-		final Optional<Path> savePath = this.view.promptForFile(MUSICXML_FILE)
+		final Optional<Path> savePath = this.view
+				.promptForFile(MUSICXML_FILE, true)
 				.map(path -> withPreferredExtension(path, "xml"));
 		
 		// save to file
@@ -211,11 +212,12 @@ public final class Presenter {
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
 	 * @return true if loading was successful
-	 * 													
+	 * 
 	 * @since 2021-02-25
 	 */
 	public boolean loadInput() {
-		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE);
+		final Optional<Path> loadPath = this.view.promptForFile(TEXT_TAB_FILE,
+				false);
 		
 		if (loadPath.isPresent()) {
 			final Optional<String> result = this.loadFromFile(loadPath.get());
@@ -237,7 +239,7 @@ public final class Presenter {
 	 */
 	public boolean saveInput() {
 		final Optional<Path> savePathInput = this.view
-				.promptForFile(TEXT_TAB_FILE)
+				.promptForFile(TEXT_TAB_FILE, true)
 				.map(path -> withPreferredExtension(path, "txt"));
 		
 		if (savePathInput.isPresent())
@@ -257,7 +259,7 @@ public final class Presenter {
 	 */
 	public boolean saveOutput() {
 		final Optional<Path> savePathOutput = this.view
-				.promptForFile(MUSICXML_FILE)
+				.promptForFile(MUSICXML_FILE, true)
 				.map(path -> withPreferredExtension(path, "xml"));
 		
 		if (savePathOutput.isPresent())
