@@ -2,6 +2,8 @@
 ** Unreleased
 *** Added
     - Created inital draft of design document
+    - Added the ability to narrow down to measures (only works in simple cases)
+    - Added the ability to set the output score's title
 *** Changed
     - Tweaked manual to clarify how to use TAB2XML in code
     - You can no longer convert or save with an empty input/output.
