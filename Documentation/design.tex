@@ -1,4 +1,4 @@
-% Created 2021-03-26 Fri 12:39
+% Created 2021-03-26 Fri 12:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -33,13 +33,13 @@
 \newpage
 
 \section{Front End Design}
-\label{sec:orge544ad9}
+\label{sec:orgfdbdaad}
 \emph{All TAB2XML front-end code is located in the \texttt{tab2xml.gui} package.}
 \subsection{Front End Classes}
-\label{sec:orgfd5f9e1}
+\label{sec:org1bac85b}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{./frontend-class-diagram.png}
+\includegraphics[width=.9\linewidth]{./Diagrams/frontend-class-diagram.png}
 \caption{A class diagram for the frontend of TAB2XML.}
 \end{figure}
 
@@ -51,10 +51,10 @@ The \texttt{Presenter} is the part of the frontend that interacts with the backe
 
 The rationale behind this design is to reduce the effort involved in creating a new GUI.  If it extends \texttt{AbstractSwingView}, creating a new View is as simple as making a "mockup" Swing GUI and implementing two trivial methods.  This makes it easy to work with multiple GUIs at once (allowing the customer to choose which they prefer).  This design was especially important in the beginning of development, because I could prototype different GUI ideas with the customer using fully functional applications.
 \subsection{Converting Text Tabs}
-\label{sec:org68346e1}
+\label{sec:orgc486af5}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{./convert-and-save.png}
+\includegraphics[width=.9\linewidth]{./Diagrams/convert-and-save.png}
 \caption{A sequence diagram for the "Convert and Save" operation}
 \end{figure}
 

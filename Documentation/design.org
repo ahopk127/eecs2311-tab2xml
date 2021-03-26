@@ -9,7 +9,7 @@
   /All TAB2XML front-end code is located in the ~tab2xml.gui~ package./
 ** Front End Classes
    #+CAPTION: A class diagram for the frontend of TAB2XML.
-   [[./frontend-class-diagram.png]]
+   [[./Diagrams/frontend-class-diagram.png]]
 
    The frontend of TAB2XML is designed using the [[https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter][MVP]] paradigm.  It is divided into two main parts, the ~View~ and the ~Presenter~.
 
@@ -20,7 +20,7 @@
    The rationale behind this design is to reduce the effort involved in creating a new GUI.  If it extends ~AbstractSwingView~, creating a new View is as simple as making a "mockup" Swing GUI and implementing two trivial methods.  This makes it easy to work with multiple GUIs at once (allowing the customer to choose which they prefer).  This design was especially important in the beginning of development, because I could prototype different GUI ideas with the customer using fully functional applications.
 ** Converting Text Tabs
    #+CAPTION: A sequence diagram for the "Convert and Save" operation
-   [[./convert-and-save.png]]
+   [[./Diagrams/convert-and-save.png]]
 
    Here is how the "Convert and Save" operation works:
    1. The user inputs the tab into the input text box (by typing, copy-and-pasting, the "Load from File" button or dragging and dropping a file).
