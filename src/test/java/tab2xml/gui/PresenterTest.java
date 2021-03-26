@@ -167,6 +167,8 @@ class PresenterTest {
 		view.setSelectedInstrument(Instrument.GUITAR);
 		view.setInputText(
 				readStringHandleErrors(TEST_FILES.resolve("example-e-major.txt")));
+		// set output text to avoid errors
+		view.setOutputText("Testing text");
 		
 		// simulate not selecting a file
 		view.setSelectedFile(null);

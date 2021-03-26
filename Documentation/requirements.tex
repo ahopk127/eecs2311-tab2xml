@@ -1,4 +1,4 @@
-% Created 2021-03-17 Wed 12:24
+% Created 2021-03-26 Fri 12:45
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,7 +14,7 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\date{2021 March 17}
+\date{2021 March 26}
 \title{TAB2XML System Requirements}
 \hypersetup{
  pdfauthor={},
@@ -30,12 +30,12 @@
 
 \newpage
 \section{Introduction}
-\label{sec:org099750a}
+\label{sec:org1539541}
 TAB2XML is a system that can convert text tablature to MusicXML.  It is being created for the purpose of allowing people to take advantage of MusicXML's many features, such as rendering, transposing and automatic playing.  Its primary audience is musicians.
 \section{Functional Requirements}
-\label{sec:org2c13d39}
+\label{sec:org0a4ddba}
 \subsection{Functionality}
-\label{sec:org04d80b5}
+\label{sec:orgbdd3dd3}
 \begin{itemize}
 \item Must convert text tablature to MusicXML tablature
 \item Must be able to read guitar, drum and bass text tabs
@@ -50,7 +50,7 @@ TAB2XML is a system that can convert text tablature to MusicXML.  It is being cr
 \item Must support grace notes
 \end{itemize}
 \subsection{Usability}
-\label{sec:org7c381f1}
+\label{sec:org72d44df}
 \begin{itemize}
 \item Must have an intuitive visual interface
 \item Must be able to accept copy-pasted text or text read from a file
@@ -59,31 +59,31 @@ TAB2XML is a system that can convert text tablature to MusicXML.  It is being cr
 \item Must deal with errors in a user-friendly way
 \end{itemize}
 \section{Non-Functional Requirements}
-\label{sec:orga2c5c4f}
+\label{sec:org4990bda}
 \begin{itemize}
 \item Should have an API that can be used by other programs
 \end{itemize}
 \subsection{Reliability}
-\label{sec:orgf43cf03}
+\label{sec:orgd0ae41e}
 \begin{itemize}
 \item Must be able to work with lots of variation in the format of the text tab
 \item The converted MusicXML tablature must be error free
 \end{itemize}
 \subsection{Performance}
-\label{sec:org1c1d954}
+\label{sec:org6a09106}
 \begin{itemize}
 \item Must convert the text tab in a reasonable amount of time
 \end{itemize}
 \subsection{Supportability}
-\label{sec:org732bddd}
+\label{sec:org4b34046}
 \begin{itemize}
 \item Should allow the user to configure their preferences for how they want the drums sheet music to be displayed (selecting the value and noteheads). Can have a default notation but should be able to be customized through preferences
 \item Must be testable via automated testing
 \end{itemize}
 \section{Use Cases}
-\label{sec:orga8c2a24}
+\label{sec:org96e609f}
 \subsection{Convert Text Tab}
-\label{sec:orgab2047b}
+\label{sec:orgcd3c7e5}
 Primary Actor: Musician \\
 Goal: The musician has a text tab, and they want a MusicXML file \\
 Success Scenario:
@@ -98,12 +98,28 @@ Success Scenario:
 \item Musician closes program
 \end{enumerate}
 \subsubsection{Extensions}
-\label{sec:org68ca057}
-3a. If system cannot identify instrument, musician can choose instrument manually. \\
+\label{sec:orgb034cd9}
+3a. If system cannot identify instrument, or it identifies the wrong instrument, musician can choose instrument manually. \\
 5a. If text tab is unrecognizable, notify musician and restart at step 2 \\
-6a. If output is not satisfactory, let musician edit input text tab then restart at step 3
+\subsection{Edit Text Tab}
+\label{sec:orgbffcebf}
+Primary Actor: Musician \\
+Goal: The musician has an incorrect text tab, and they want to make it correct. \\
+Success Scenario:
+\begin{enumerate}
+\item Musician starts program
+\item Musician inputs the text tab
+\item System identifies what instrument it is for
+\item Musician tells system to convert text tab
+\item System identifies errors in text tab, and also converts tab.
+\item Musician edits text tab to fix identified errors
+\item (Optional) Musician converts text tab to MusicXML (scenario of \ref{sec:orgcd3c7e5}, start at step 3)
+\end{enumerate}
+\subsubsection{Extensions}
+\label{sec:orgedfda25}
+3a. If system cannot identify instrument, or it identifies the wrong instrument, musician can choose instrument manually. \\
 \subsection{Change Settings}
-\label{sec:orge514a33}
+\label{sec:org143404d}
 Primary Actor: Musician \\
 Success Scenario:
 \begin{enumerate}
@@ -113,12 +129,12 @@ Success Scenario:
 \item Musician stops program or continues using program for something else
 \end{enumerate}
 \subsection{Use Case Diagram}
-\label{sec:org6b9ce36}
+\label{sec:org8d18639}
 \begin{center}
-\includegraphics[width=.9\linewidth]{./use-case-diagram.png}
+\includegraphics[width=.9\linewidth]{./Diagrams/use-case-diagram.png}
 \end{center}
 \section{User Stories}
-\label{sec:org4e590c0}
+\label{sec:org3b759f5}
 \begin{enumerate}
 \item "As a musician, I want to convert this text tablature to MusicXML so I can take advantage of MusicXML features like rendering, transposing and automatic playing."
 \end{enumerate}

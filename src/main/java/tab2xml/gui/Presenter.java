@@ -123,7 +123,7 @@ public final class Presenter {
 			final Parser parser = new Parser(input, selectedInstrument);
 			this.view.setSelectedInstrument(parser.getDetectedInstrument());
 			
-			final var output = parser.parse();
+			final var output = parser.parse(this.view.getMetadata());
 			musicXMLOutput = output.getFirst();
 			warnings = output.getSecond();
 			
@@ -198,6 +198,21 @@ public final class Presenter {
 	}
 	
 	/**
+	 * Detects the instrument of the view's input text and sets the View's
+	 * selected instrument.
+	 * 
+	 * @return true if an instrument was detected, false otherwise
+	 * 
+	 * @since 2021-03-22
+	 */
+	public boolean detectInstrument() {
+		final Optional<Instrument> detectedInstrument = Parser
+				.getDetectedInstrument(this.view.getInputText());
+		detectedInstrument.ifPresent(this.view::setSelectedInstrument);
+		return detectedInstrument.isPresent();
+	}
+	
+	/**
 	 * Gets and returns the text from the provided file and puts it into the
 	 * view's input. If an I/O error occurs, it is shown using
 	 * {@link View#showErrorMessage} and an empty Optional is returned.
@@ -235,8 +250,6 @@ public final class Presenter {
 		if (loadPath.isPresent()) {
 			final Optional<String> result = this.loadFromFile(loadPath.get());
 			result.ifPresent(this.view::setInputText);
-			result.ifPresent(res -> Parser.getDetectedInstrument(res)
-					.ifPresent(this.view::setSelectedInstrument));
 			return result.isPresent();
 		} else
 			return false; // user did not provide a file

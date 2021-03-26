@@ -1,5 +1,5 @@
 #+TITLE: TAB2XML User Manual
-#+SUBTITLE: For Version 0.4.0-alpha.1
+#+SUBTITLE: For Version 0.3.0
 #+DATE: 2021 March 17
 
 #+LaTeX: \newpage
@@ -60,6 +60,6 @@
    #+END_SRC
 
    Notes:
-   - INPUT is the text tab.  It should be a ~String~, not a file.
+   - INPUT is the text tab.  It should be a ~String~ containing the contents of the tablature, not a file or a filepath.
    - INSTRUMENT is the instrument the tab is for.  It should be an instance of ~tab2xml.parser.Instrument~.
-   - You will need to handle the checked exceptions thrown by ~Parser.parse()~
+   - You will need to add a try-catch statement to handle the checked exceptions thrown by ~Parser.parse()~.

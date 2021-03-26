@@ -1,6 +1,8 @@
 package tab2xml.gui;
 
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -111,6 +113,43 @@ public abstract class AbstractSwingView implements View {
 			System.err.println("Failed to enable system look-and-feel.");
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-01-18
+	 */
+	public static GridBagConstraints gridBag(int x, int y) {
+		final GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = x;
+		gbc.gridy = y;
+		return gbc;
+	}
+	
+	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-01-18
+	 */
+	public static GridBagConstraints gridBag(int x, int y, int width,
+			int height) {
+		final GridBagConstraints gbc = gridBag(x, y);
+		gbc.gridwidth = width;
+		gbc.gridheight = height;
+		return gbc;
+	}
+	
+	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-02-25
+	 */
+	public static GridBagConstraints gridBag(int x, int y, int width, int height,
+			Insets insets) {
+		final GridBagConstraints gbc = gridBag(x, y, width, height);
+		gbc.insets = insets;
+		return gbc;
 	}
 	
 	/**
@@ -354,7 +393,7 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 				
+	 * 
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {

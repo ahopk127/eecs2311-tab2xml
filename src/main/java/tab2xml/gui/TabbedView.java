@@ -16,12 +16,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 
+import tab2xml.xmlconversion.XMLMetadata;
+
 /**
  * A view that shows input and output in separate text boxes, in tabs.
  *
  * @since 2021-03-10
  */
-final class TabbedView extends AbstractSwingView {
+final class TabbedView extends AbstractSwingView implements NarrowingView {
 	/**
 	 * The insets used for prompt labels
 	 */
@@ -42,6 +44,8 @@ final class TabbedView extends AbstractSwingView {
 	
 	// INPUT COMPONENTS
 	private final JTextComponent input;
+	private final JTextComponent narrowedInput;
+	private final EditingPanel editingPanel;
 	
 	// OUTPUT COMPONENTS
 	private final JTextComponent output;
@@ -68,6 +72,8 @@ final class TabbedView extends AbstractSwingView {
 		this.input = new JTextArea(24, 80);
 		this.input.setBorder(new LineBorder(Color.BLACK));
 		this.setUpFileDragAndDrop();
+		this.input.addCaretListener(new RateLimitedCaretListener(
+				e -> this.presenter.detectInstrument(), 1000));
 		inputPanel.add(
 				new JScrollPane(this.input,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -91,7 +97,7 @@ final class TabbedView extends AbstractSwingView {
 		final JButton convertButton = new JButton("Convert");
 		convertButton.addActionListener(e -> {
 			if (this.presenter.convert()) {
-				this.inputOutputPane.setSelectedIndex(1); // output
+				this.inputOutputPane.setSelectedIndex(2); // output
 			}
 		});
 		inputButtonPanel.add(convertButton);
@@ -104,6 +110,21 @@ final class TabbedView extends AbstractSwingView {
 		final JButton saveInput = new JButton("Save Input");
 		saveInput.addActionListener(e -> this.presenter.saveInput());
 		inputButtonPanel.add(saveInput);
+		
+		// ----- INPUT EDITING -----
+		final JPanel editingTab = new JPanel(new BorderLayout());
+		this.inputOutputPane.addTab("Input Editing", editingTab);
+		
+		this.narrowedInput = new JTextArea(24, 80);
+		this.narrowedInput.setBorder(new LineBorder(Color.BLACK));
+		editingTab.add(
+				new JScrollPane(this.narrowedInput,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
+		
+		this.editingPanel = new EditingPanel(this);
+		editingTab.add(this.editingPanel, BorderLayout.SOUTH);
 		
 		// ----- OUTPUT -----
 		final JPanel outputPanel = new JPanel(new BorderLayout());
@@ -150,7 +171,22 @@ final class TabbedView extends AbstractSwingView {
 	}
 	
 	@Override
+	public XMLMetadata getMetadata() {
+		return XMLMetadata.fromTitle(this.editingPanel.getTitle());
+	}
+	
+	@Override
+	public String getNarrowedText() {
+		return this.narrowedInput.getText();
+	}
+	
+	@Override
 	protected JTextComponent getOutput() {
 		return this.output;
+	}
+	
+	@Override
+	public void setNarrowedText(String text) {
+		this.narrowedInput.setText(text);
 	}
 }

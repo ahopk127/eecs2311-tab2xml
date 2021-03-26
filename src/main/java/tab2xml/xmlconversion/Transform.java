@@ -27,6 +27,7 @@ public class Transform {
 	private Document doc;
 	private DocumentBuilder dBuilder;
 	private DocumentBuilderFactory dbFactory;
+	private XMLMetadata metadata;
 	private Instrument instrument;
 
 	/**
@@ -34,8 +35,9 @@ public class Transform {
 	 * 
 	 * @param sheet      the score retrieved by the parser
 	 * @param instrument the type of instrument corresponding to this score
+	 * @param metadata   the metadata that should be applied to the XML
 	 */
-	public Transform(Score sheet, Instrument instrument) {
+	public Transform(Score sheet, Instrument instrument, XMLMetadata metadata) {
 		this.sheet = sheet;
 		this.dbFactory = DocumentBuilderFactory.newInstance();
 		try {
@@ -46,6 +48,7 @@ public class Transform {
 		}
 		this.musicSheet = new MusicSheet(doc, dBuilder, dbFactory);
 		this.instrument = instrument;
+		this.metadata = metadata;
 		switch (instrument) {
 		case GUITAR:
 		case BASS:
@@ -286,7 +289,7 @@ public class Transform {
 		XMLElement work = new XMLElement("work", musicSheet);
 		XMLElement workTitle = new XMLElement("work-title", musicSheet);
 		work.append(workTitle);
-		workTitle.setText("TAB2XML " + Main.PROGRAM_VERSION + " - Group 2");
+		workTitle.setText(metadata.getTitle());
 		XMLElement partList = new XMLElement("part-list", musicSheet);
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");

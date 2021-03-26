@@ -14,6 +14,7 @@ import tab2xml.exceptions.ParsingWarning;
 import tab2xml.model.Instrument;
 import tab2xml.model.Score;
 import tab2xml.xmlconversion.Transform;
+import tab2xml.xmlconversion.XMLMetadata;
 
 /**
  * The parser is responsible for delegating extraction from data based on
@@ -55,24 +56,38 @@ public class Parser {
 	/**
 	 * Parse the data by instrument.
 	 * 
+	 * @param metadata XML metadata
 	 * @return an XML conversion of the input plus any warnings raised during
 	 *         parsing
 	 * @throws InvalidInputException if invalid input is parsed
 	 * @throws InvalidTokenException if invalid token is parsed
 	 * 
 	 */
-	public ImmutablePair<String, Collection<ParsingWarning>> parse()
+	public ImmutablePair<String, Collection<ParsingWarning>> parse(XMLMetadata metadata)
 			throws InvalidInputException, InvalidTokenException {
 		switch (this.instrument) {
 		case GUITAR:
-			return this.parseGuitar();
+			return this.parseGuitar(metadata);
 		case BASS:
-			return this.parseBass();
+			return this.parseBass(metadata);
 		case DRUM:
-			return this.parseDrum();
+			return this.parseDrum(metadata);
 		default:
 			throw new UnsupportedOperationException("Instrument " + this.instrument + " not supported.");
 		}
+	}
+
+	/**
+	 * Parse the data by instrument.  Uses default XML metadata.
+	 * 
+	 * @return an XML conversion of the input plus any warnings raised during
+	 *         parsing
+	 * @throws InvalidInputException if invalid input is parsed
+	 * @throws InvalidTokenException if invalid token is parsed
+	 * 
+	 */
+	public ImmutablePair<String, Collection<ParsingWarning>> parse() throws InvalidInputException, InvalidTokenException {
+		return this.parse(XMLMetadata.fromDefaultTitle());	
 	}
 
 	/**
@@ -83,9 +98,9 @@ public class Parser {
 	 * @throws InvalidInputException if invalid input is parsed.
 	 * @throws InvalidTokenException if invalid token is parsed.
 	 */
-	private ImmutablePair<String, Collection<ParsingWarning>> parseGuitar() {
+	private ImmutablePair<String, Collection<ParsingWarning>> parseGuitar(XMLMetadata metadata) {
 		String xmlOutput;
-		final Transform tf = new Transform(this.sheet, this.instrument);
+		final Transform tf = new Transform(this.sheet, this.instrument, metadata);
 		xmlOutput = tf.toXML();
 
 		// TODO: ADD WARNINGS from guitar score data
@@ -102,9 +117,9 @@ public class Parser {
 	 * @throws InvalidTokenException if invalid token is parsed.
 	 * 
 	 */
-	private ImmutablePair<String, Collection<ParsingWarning>> parseBass() {
+	private ImmutablePair<String, Collection<ParsingWarning>> parseBass(XMLMetadata metadata) {
 		String xmlOutput;
-		final Transform tf = new Transform(this.sheet, this.instrument);
+		final Transform tf = new Transform(this.sheet, this.instrument, metadata);
 		xmlOutput = tf.toXML();
 
 		// TODO: ADD WARNINGS from bass score data
@@ -121,7 +136,7 @@ public class Parser {
 	 * @throws InvalidTokenException if invalid token is parsed.
 	 * 
 	 */
-	private ImmutablePair<String, Collection<ParsingWarning>> parseDrum() {
+	private ImmutablePair<String, Collection<ParsingWarning>> parseDrum(XMLMetadata metadata) {
 		throw new UnsupportedOperationException("Support not yet added for drums.");
 	}
 

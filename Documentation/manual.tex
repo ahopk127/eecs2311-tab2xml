@@ -1,4 +1,4 @@
-% Created 2021-03-17 Wed 19:37
+% Created 2021-03-26 Fri 11:35
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -32,18 +32,18 @@
 \newpage
 
 \section{Introduction and Purpose}
-\label{sec:org2602793}
+\label{sec:org26f0d1c}
 The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system in many use cases.
 \section{System Requirements}
-\label{sec:org193695d}
+\label{sec:org2f9e005}
 \begin{itemize}
 \item Works on all major operating systems
 \item Java version 11-15 required
 \end{itemize}
 \section{How to Install TAB2XML}
-\label{sec:org4025a7b}
+\label{sec:orgd6e915d}
 \subsection{Eclipse}
-\label{sec:orgc8e378c}
+\label{sec:org46874e6}
 \begin{enumerate}
 \item Open Eclipse, and press \texttt{File > Import} in the menus.
 \begin{center}
@@ -79,7 +79,7 @@ The TAB2XML system can be used to convert text tablature into MusicXML.  This do
 \end{center}
 \end{enumerate}
 \subsection{Commandline}
-\label{sec:org9df580a}
+\label{sec:orga213108}
 \begin{enumerate}
 \item Use the command \texttt{git clone https://github.com/ahopk127/eecs2311-tab2xml.git} to clone the project to the directory of your choice
 \item Change directory to the directory where you installed the project, then use \texttt{./gradlew build} to build the project.
@@ -87,9 +87,9 @@ The TAB2XML system can be used to convert text tablature into MusicXML.  This do
 \newpage
 
 \section{How to Use TAB2XML}
-\label{sec:org71ec56f}
+\label{sec:org20eeb36}
 \subsection{Convert Text Tab}
-\label{sec:org2bf8d04}
+\label{sec:org1485f73}
 \begin{enumerate}
 \item Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command \texttt{./gradlew run}.\\
 You should see a window like this:
@@ -116,14 +116,14 @@ Here is a screenshot of the produced MusicXML, rendered using \href{https://open
 \end{center}
 \end{enumerate}
 \subsection{Other Use Cases}
-\label{sec:orgc7ac556}
+\label{sec:orgd4f2fe4}
 \begin{itemize}
 \item You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
 \item After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
 \item To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" to load another text tab.
 \end{itemize}
 \subsection{How to Use in Code}
-\label{sec:org9f626ee}
+\label{sec:org760bf0d}
 If you would like to use this project in your own program, the following code can be used to convert tab to MusicXML:
 
 \begin{verbatim}
@@ -133,8 +133,8 @@ String output = parser.parse();
 
 Notes:
 \begin{itemize}
-\item INPUT is the text tab.  It should be a \texttt{String}, not a file.
+\item INPUT is the text tab.  It should be a \texttt{String} containing the contents of the tablature, not a file or a filepath.
 \item INSTRUMENT is the instrument the tab is for.  It should be an instance of \texttt{tab2xml.parser.Instrument}.
-\item You will need to handle the checked exceptions thrown by \texttt{Parser.parse()}
+\item You will need to add a try-catch statement to handle the checked exceptions thrown by \texttt{Parser.parse()}.
 \end{itemize}
 \end{document}
