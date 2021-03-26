@@ -63,18 +63,18 @@ NOTE
 	: [a-gA-G]'#'?
 	;
 	
-BAR
-	: '|'
-	;
-	
-DOUBLEBAR
-	: '*'? (BAR | FRET_NUM) '|''*'?
-	;
-	
 FRET_NUM
 	: [0-9]+
 	;
-	
+
+DOUBLEBAR
+	: '*'? (BAR | FRET_NUM) '|''|'?'*'?
+	;
+
+BAR
+	: '|'
+	;	
+		
 HYPHEN 
 	: '-' 
 	;

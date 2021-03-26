@@ -11,6 +11,7 @@ import tab2xml.model.LineItem;
 
 public class GuitarStaff extends Staff {
 	private static final long serialVersionUID = 5418273130827075188L;
+	public static final int DEFAULT_NUM_STRINGS = 6;
 
 	public GuitarStaff() {
 	}
@@ -33,14 +34,14 @@ public class GuitarStaff extends Staff {
 	public class StaffIterator implements Iterator<LineItem> {
 		private List<LinkedList<LineItem>> notes;
 		private PriorityQueue<LineItem> pq;
-		private int x = 0;
+		private final int X = 0;
 		private int y;
-		private int barsNotSeen;
 		private int numStrings;
 		private int lengths[];
 		private int totalNotesInCurrMeasure;
 		private int totalNotesInStaff;
 		private boolean collecting;
+		private boolean remaining;
 		private boolean setFirstRepeatNote;
 		private GuitarNote previousNote = null;
 
@@ -52,11 +53,11 @@ public class GuitarStaff extends Staff {
 		public StaffIterator(GuitarStaff staff) {
 			notes = staff.toList();
 			y = staff.size() - 1;
-			barsNotSeen = staff.numberOfMeasures();
 			numStrings = staff.size();
 			lengths = new int[numStrings];
 			Arrays.fill(lengths, -1);
 			collecting = true;
+			remaining = false;
 			setFirstRepeatNote = false;
 			totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 			totalNotesInStaff = staff.getNoteCount();
@@ -68,7 +69,7 @@ public class GuitarStaff extends Staff {
 		 */
 		@Override
 		public boolean hasNext() {
-			return totalNotesInStaff-- > 0;
+			return totalNotesInStaff-- > 0 || totalNotesInCurrMeasure != 0;
 		}
 
 		/**
@@ -78,7 +79,7 @@ public class GuitarStaff extends Staff {
 		 */
 		@Override
 		public LineItem next() {
-			// TODO: figure out how to calculate duration and type??
+			// while collecting notes from current measure
 			while ((pq.isEmpty() || collecting) && totalNotesInCurrMeasure != 0) {
 				collecting = true;
 
@@ -90,7 +91,7 @@ public class GuitarStaff extends Staff {
 					continue;
 				}
 
-				LineItem item = notes.get(y).get(x);
+				LineItem item = notes.get(y).get(X);
 
 				if (item.getClass() == GuitarNote.class) {
 					GuitarNote note = (GuitarNote) item;
@@ -101,9 +102,9 @@ public class GuitarStaff extends Staff {
 					totalNotesInCurrMeasure--;
 
 					if (note.isGrace()) {
-						while (notes.get(y).get(x).getClass() != Bar.class
-								&& ((GuitarNote) notes.get(y).get(x)).isGrace()) {
-							GuitarNote gNote = ((GuitarNote) notes.get(y).get(x));
+						while (notes.get(y).get(X).getClass() != Bar.class
+								&& ((GuitarNote) notes.get(y).get(X)).isGrace()) {
+							GuitarNote gNote = ((GuitarNote) notes.get(y).get(X));
 							gNote.setGrace(false);
 							gNote.setMeasure(accumulateMeasure);
 							pq.add(gNote);
@@ -115,67 +116,75 @@ public class GuitarStaff extends Staff {
 				}
 				y++;
 			}
+			// there are notes remaining after collection, and totalNotesInCurrMeasure == 0 by variant
 			collecting = false;
 			y = 0;
 
 			GuitarNote note = (GuitarNote) pq.poll();
-
 			if (note == null)
 				return null;
 
-			// if the bars are repeat start, set the count and start note
-			// if the count is not specified by default it is 1.
+			if (totalNotesInCurrMeasure != 0)
+				totalNotesInCurrMeasure--;
+
 			if (setFirstRepeatNote) {
 				note.setRepeatedStart(true);
 				Bar[] endRepeats = getEndRepeatBars();
-				if (endRepeats != null)
-					note.setRepeatCount(endRepeats[0].getRepeatCount());
+				if (endRepeats != null) {
+					int c = endRepeats[0].getRepeatCount();
+					note.setRepeatCount((c == -1 ? 1 : c));
+				}
 				setFirstRepeatNote = false;
 			}
-			Bar[] bars = getFirstBars();
 
-			if (pq.isEmpty() && bars != null) {
-				if (totalNotesInCurrMeasure == 0) {
-					boolean isRepeatEnd = false;
+			// if there are no notes in queue
+			if (pq.isEmpty()) {
+				Bar[] bars = getFirstBars();
 
-					for (int i = 1; i < bars.length; i++)
-						if (bars[i].isRepeat() && bars[i].isStop())
-							isRepeatEnd = true;
+				if (isFretEndBars(bars)) {
+					for (int i = 0; i < bars.length; i++) {
+						if (!bars[i].isFretEndBar() && !bars[i].isFretEndDoubleBar())
+							continue;
 
-					if (bars[0].isRepeat() && bars[0].isStop() && !isRepeatEnd) {
-						//TODO: remove this
-						System.out.println("We reached the end");
-
-						String value = bars[0].toString();
+						// extract the fret from the bar
+						String value = bars[i].toString();
 						String fret = value.substring(0, value.indexOf("|"));
-						double position = bars[0].getPosition() - 1;
-						GuitarNote newNote = new GuitarNote(bars[0].getTune(), fret);
+						double position = bars[i].getPosition() + fret.length() - 1;
+						GuitarNote newNote = new GuitarNote(bars[i].getTune(), fret);
 						newNote.setPosition(position);
-						newNote.setLine(bars[0].getLineNum());
+						newNote.setLine(bars[i].getLineNum());
 						newNote.setMeasure(accumulateMeasure);
+						newNote.setPosition(position);
+
+						// add new note to the queue and increase notes left count
 						pq.add(newNote);
 						totalNotesInStaff++;
+						totalNotesInCurrMeasure++;
+						remaining = true;
 					}
-				}
+					for (Bar bar : bars)
+						bar.resetFretEndBars();
+				} else
+					remaining = false;
 
-				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStart()) {
+				if (isRepeatBegin(bars) && !remaining) {
 					setFirstRepeatNote = true;
 				}
 
-				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
+				// last note passes
+				if (isRepeatEnd(bars)) {
 					note.setRepeatedStop(true);
 				}
 
-				if (Arrays.stream(bars).filter(b -> b.isDoubleBar() && !b.isRepeat()).count() == bars.length) {
+				if (isJustDoubleBars(bars)) {
 					note.setDoubleBar(true);
 				}
 
-				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(x));
-				totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
-				barsNotSeen--;
-
-				if (barsNotSeen == 0 || totalNotesInCurrMeasure != 0)
+				if (totalNotesInCurrMeasure == 0 && !remaining) {
+					notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(X));
+					totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 					setAccumulateMeasure(accumulateMeasure + 1);
+				}
 			}
 
 			if (previousNote != null && note.getPosition() == previousNote.getPosition()) {
@@ -240,10 +249,41 @@ public class GuitarStaff extends Staff {
 				if (isEmpty(bars))
 					return null;
 
-				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop() && bars[0].isStop())
+				if (isRepeatEnd(bars))
 					return bars;
 				column++;
 			}
+		}
+
+		private boolean isRepeatBegin(Bar[] bars) {
+			if (bars == null || bars.length == 0)
+				return false;
+			return bars[2].isStartBar() && bars[3].isStartBar();
+		}
+
+		private boolean isRepeatEnd(Bar[] bars) {
+			if (bars == null || bars.length == 0)
+				return false;
+			return bars[2].isStopBar() && bars[3].isStopBar();
+		}
+
+		private boolean isJustDoubleBars(Bar[] bars) {
+			if (bars == null || bars.length == 0)
+				return false;
+			for (int i = 0; i < bars.length; i++)
+				if (!bars[i].isDoubleBar())
+					return false;
+			return true;
+		}
+
+		private boolean isFretEndBars(Bar[] bars) {
+			if (bars == null || bars.length == 0)
+				return false;
+			boolean repeatEnds = isRepeatEnd(bars);
+			for (int i = 0; i < bars.length; i++)
+				if ((bars[i].isFretEndBar() || bars[i].isFretEndDoubleBar()) && !repeatEnds)
+					return true;
+			return false;
 		}
 
 		private boolean isEmpty(Bar[] bars) {

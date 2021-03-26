@@ -144,15 +144,15 @@ public class DrumStaff extends Staff {
 					}
 				}
 
-				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStart()) {
+				if (bars[2].hasDoubleBar() && bars[2].isRepeat() && bars[2].isStart()) {
 					setFirstRepeatNote = true;
 				}
 
-				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
+				if (bars[2].hasDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
 					note.setRepeatedStop(true);
 				}
 
-				if (Arrays.stream(bars).filter(b -> b.isDoubleBar() && !b.isRepeat()).count() == bars.length) {
+				if (Arrays.stream(bars).filter(b -> b.hasDoubleBar() && !b.isRepeat()).count() == bars.length) {
 					note.setDoubleBar(true);
 				}
 
@@ -226,7 +226,7 @@ public class DrumStaff extends Staff {
 				if (isEmpty(bars))
 					return null;
 
-				if (bars[2].isDoubleBar() && bars[2].isRepeat() && bars[2].isStop() && bars[0].isStop())
+				if (bars[2].hasDoubleBar() && bars[2].isRepeat() && bars[2].isStop() && bars[0].isStop())
 					return bars;
 				column++;
 			}

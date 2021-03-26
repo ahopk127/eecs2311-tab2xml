@@ -81,8 +81,8 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 	@Override
 	public LineItem visitStringItems(StringItemsContext ctx) {
 		LineItemsCollector coll = new LineItemsCollector(new ArrayList<LineItem>());
-		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() == TerminalNodeImpl.class
-				&& Pattern.matches("\\*?(\\||\\d+)\\||\\|\\*?", c.getText())).count();
+		int numMeasures = (int) ctx.children.stream()
+				.filter(c -> c.getClass() == TerminalNodeImpl.class && c.getText().matches(Bar.pattern())).count();
 		s.setNumMeasures(numMeasures);
 		ctx.children.stream().forEach(c -> coll.add(visit(c)));
 		return coll;
@@ -217,30 +217,37 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 		String value = token.getText();
 		String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine() + value.length();
+		int column = token.getCharPositionInLine();
 
 		Bar bar = new Bar();
 		bar.setStringNum(s.getStringNum());
 		bar.setPosition(column);
 		bar.setTune(s.getTune());
 
+		// end repeat *||
 		if (start.equals("*")) {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStop(true);
 		}
 
+		// start repeat: ||*
 		if (value.charAt(value.length() - 1) == '*') {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStart(true);
 		}
 
+		// n|
 		if (isNumeric(start)) {
 			bar.setRepeatCount(Integer.parseInt(start));
-			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStop(true);
+
+			// n||
+			if (value.substring(value.indexOf("|"), value.length()).equals("||")) {
+				bar.setDoubleBar(true);
+			}
 		}
 
 		if (value.equals("||"))

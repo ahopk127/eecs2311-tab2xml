@@ -3,10 +3,6 @@ package tab2xml.model.drum;
 import tab2xml.model.LineItem;
 
 public class Flam extends LineItem {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1650809271375302772L;
 	private DrumNote note;
 

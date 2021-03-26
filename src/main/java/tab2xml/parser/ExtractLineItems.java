@@ -2,7 +2,6 @@ package tab2xml.parser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.tree.TerminalNodeImpl;
 
@@ -16,6 +15,7 @@ import tab2xml.model.LineItem;
 import tab2xml.model.LineItemsCollector;
 import tab2xml.model.drum.DrumLine;
 import tab2xml.model.drum.DrumType;
+import tab2xml.model.guitar.Bar;
 
 public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 	private DrumLine line;
@@ -41,8 +41,8 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 	@Override
 	public LineItem visitLineItems(LineItemsContext ctx) {
 		LineItemsCollector coll = new LineItemsCollector(new ArrayList<LineItem>());
-		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() == TerminalNodeImpl.class
-				&& Pattern.matches("\\*?(\\||\\d+)\\||\\|\\*?", c.getText())).count();
+		int numMeasures = (int) ctx.children.stream()
+				.filter(c -> c.getClass() == TerminalNodeImpl.class && c.getText().matches(Bar.pattern())).count();
 		line.setNumMeasures(numMeasures);
 		ctx.children.stream().forEach(c -> coll.add(visit(c)));
 		return coll;

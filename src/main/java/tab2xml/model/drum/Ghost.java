@@ -3,11 +3,6 @@ package tab2xml.model.drum;
 import tab2xml.model.LineItem;
 
 public class Ghost extends LineItem {
-
-	/**
-	 * 
-	 */
-
 	private static final long serialVersionUID = 6023707654846459611L;
 	private DrumNote note;
 

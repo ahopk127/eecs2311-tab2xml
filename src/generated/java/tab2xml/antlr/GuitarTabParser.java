@@ -19,8 +19,8 @@ public class GuitarTabParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, NOTE=7, BAR=8, DOUBLEBAR=9, 
-		FRET_NUM=10, HYPHEN=11, SPACE=12, NEWLINE=13, MULTI_COMMENT=14, LINE_COMMENT=15;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, NOTE=7, FRET_NUM=8, DOUBLEBAR=9, 
+		BAR=10, HYPHEN=11, SPACE=12, NEWLINE=13, MULTI_COMMENT=14, LINE_COMMENT=15;
 	public static final int
 		RULE_sheet = 0, RULE_staff = 1, RULE_string = 2, RULE_stringItems = 3, 
 		RULE_fret = 4, RULE_harmonic = 5, RULE_pulloff = 6, RULE_hammeron = 7, 
@@ -35,15 +35,15 @@ public class GuitarTabParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'['", "']'", "'g'", "'p'", "'h'", "'s'", null, "'|'", null, null, 
+			null, "'['", "']'", "'g'", "'p'", "'h'", "'s'", null, null, null, "'|'", 
 			"'-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, null, null, "NOTE", "BAR", "DOUBLEBAR", 
-			"FRET_NUM", "HYPHEN", "SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
+			null, null, null, null, null, null, null, "NOTE", "FRET_NUM", "DOUBLEBAR", 
+			"BAR", "HYPHEN", "SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -494,7 +494,7 @@ public class GuitarTabParser extends Parser {
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 			setState(71);
 			_la = _input.LA(1);
-			if ( !(_la==BAR || _la==DOUBLEBAR) ) {
+			if ( !(_la==DOUBLEBAR || _la==BAR) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -992,7 +992,7 @@ public class GuitarTabParser extends Parser {
 		"\5\bS\n\b\3\b\3\b\3\b\3\b\3\t\5\tZ\n\t\3\t\3\t\3\t\3\t\3\n\5\na\n\n\3"+
 		"\n\3\n\3\n\3\n\3\13\5\13h\n\13\3\13\3\13\3\13\3\13\3\13\6\13o\n\13\r\13"+
 		"\16\13p\3\f\5\ft\n\f\3\f\5\fw\n\f\3\f\5\fz\n\f\3\f\5\f}\n\f\3\f\3\f\3"+
-		"\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\4\3\2\n\13\3\2\6\7\2\u008d\2\33"+
+		"\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\4\3\2\13\f\3\2\6\7\2\u008d\2\33"+
 		"\3\2\2\2\4#\3\2\2\2\6\61\3\2\2\2\bE\3\2\2\2\nK\3\2\2\2\fM\3\2\2\2\16R"+
 		"\3\2\2\2\20Y\3\2\2\2\22`\3\2\2\2\24g\3\2\2\2\26s\3\2\2\2\30\32\5\4\3\2"+
 		"\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\36\3\2\2\2"+
@@ -1002,10 +1002,10 @@ public class GuitarTabParser extends Parser {
 		".,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\62\5\26\f\2\62\66\5\b\5"+
 		"\2\63\65\7\16\2\2\64\63\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2"+
 		"\2\67:\3\2\2\28\66\3\2\2\29;\7\17\2\2:9\3\2\2\2:;\3\2\2\2;\7\3\2\2\2<"+
-		"F\5\n\6\2=F\5\f\7\2>F\5\16\b\2?F\5\20\t\2@F\5\22\n\2AF\5\24\13\2BF\7\n"+
+		"F\5\n\6\2=F\5\f\7\2>F\5\16\b\2?F\5\20\t\2@F\5\22\n\2AF\5\24\13\2BF\7\f"+
 		"\2\2CF\7\13\2\2DF\7\r\2\2E<\3\2\2\2E=\3\2\2\2E>\3\2\2\2E?\3\2\2\2E@\3"+
 		"\2\2\2EA\3\2\2\2EB\3\2\2\2EC\3\2\2\2ED\3\2\2\2FG\3\2\2\2GE\3\2\2\2GH\3"+
-		"\2\2\2HI\3\2\2\2IJ\t\2\2\2J\t\3\2\2\2KL\7\f\2\2L\13\3\2\2\2MN\7\3\2\2"+
+		"\2\2\2HI\3\2\2\2IJ\t\2\2\2J\t\3\2\2\2KL\7\n\2\2L\13\3\2\2\2MN\7\3\2\2"+
 		"NO\5\n\6\2OP\7\4\2\2P\r\3\2\2\2QS\7\5\2\2RQ\3\2\2\2RS\3\2\2\2ST\3\2\2"+
 		"\2TU\5\n\6\2UV\7\6\2\2VW\5\n\6\2W\17\3\2\2\2XZ\7\5\2\2YX\3\2\2\2YZ\3\2"+
 		"\2\2Z[\3\2\2\2[\\\5\n\6\2\\]\7\7\2\2]^\5\n\6\2^\21\3\2\2\2_a\7\5\2\2`"+
@@ -1014,7 +1014,7 @@ public class GuitarTabParser extends Parser {
 		"\2lm\t\3\2\2mo\5\n\6\2nl\3\2\2\2op\3\2\2\2pn\3\2\2\2pq\3\2\2\2q\25\3\2"+
 		"\2\2rt\7\t\2\2sr\3\2\2\2st\3\2\2\2tv\3\2\2\2uw\7\16\2\2vu\3\2\2\2vw\3"+
 		"\2\2\2wy\3\2\2\2xz\7\16\2\2yx\3\2\2\2yz\3\2\2\2z|\3\2\2\2{}\7\16\2\2|"+
-		"{\3\2\2\2|}\3\2\2\2}~\3\2\2\2~\177\7\n\2\2\177\27\3\2\2\2\23\33#).\66"+
+		"{\3\2\2\2|}\3\2\2\2}~\3\2\2\2~\177\7\f\2\2\177\27\3\2\2\2\23\33#).\66"+
 		":EGRY`gpsvy|";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());

@@ -3,9 +3,6 @@ package tab2xml.model.drum;
 import tab2xml.model.LineItem;
 
 public class Choke extends LineItem {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3057323644358297293L;
 	private DrumNote note;
 

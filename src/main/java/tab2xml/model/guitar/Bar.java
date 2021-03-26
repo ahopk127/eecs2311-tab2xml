@@ -1,9 +1,14 @@
 package tab2xml.model.guitar;
 
+import java.util.regex.Pattern;
+
 import tab2xml.model.LineItem;
 
 public class Bar extends LineItem {
 	private static final long serialVersionUID = 6758542578259875168L;
+
+	/** Pattern that matches bars. */
+	public static final Pattern pattern = Pattern.compile("\\*?(\\||\\d+)?\\|\\|?\\*?");
 	private int position;
 	private int stringNum;
 	private int repeatCount;
@@ -14,6 +19,7 @@ public class Bar extends LineItem {
 	private String tune;
 
 	public Bar() {
+		this.repeatCount = -1;
 	}
 
 	public void setPosition(int position) {
@@ -32,7 +38,7 @@ public class Bar extends LineItem {
 		this.repeatCount = repeatCount;
 	}
 
-	public boolean isDoubleBar() {
+	public boolean hasDoubleBar() {
 		return isDoubleBar;
 	}
 
@@ -72,6 +78,44 @@ public class Bar extends LineItem {
 		this.tune = tune;
 	}
 
+	public void resetFretEndBars() {
+		this.stop = false;
+		this.repeatCount = -1;
+	}
+
+	public boolean isDoubleBar() {
+		return isDoubleBar && !isRepeat && !start && !stop && repeatCount == -1;
+	}
+
+	public boolean isFretEndBar() {
+		return !isDoubleBar && isRepeat && stop && repeatCount != -1;
+	}
+
+	public boolean isFretEndDoubleBar() {
+		return isDoubleBar && isRepeat && stop && repeatCount != -1;
+	}
+
+	public boolean isStartBar() {
+		return isDoubleBar && isRepeat && start && !stop;
+	}
+
+	public boolean isStopBar() {
+		return isDoubleBar && isRepeat && !start && stop && repeatCount == -1;
+	}
+
+	public boolean isStartStopBar() {
+		return isDoubleBar && isRepeat && start && stop && repeatCount == -1;
+	}
+
+	public boolean isRegularBar() {
+		return !isDoubleBar() && !isFretEndBar() && !isFretEndDoubleBar() && !isStartBar() && !isStopBar()
+				&& !isStartStopBar();
+	}
+
+	public static String pattern() {
+		return Bar.pattern.pattern();
+	}
+
 	@Override
 	public double getPosition() {
 		return position;
@@ -89,15 +133,17 @@ public class Bar extends LineItem {
 
 	@Override
 	public String toString() {
-		if (isDoubleBar && !isRepeat)
+		if (isDoubleBar())
 			return "||";
-		if (isDoubleBar && isRepeat && repeatCount != 0)
+		else if (isFretEndBar())
 			return String.format("%d|", repeatCount);
-		else if (isDoubleBar && isRepeat && start && !stop)
+		else if (isFretEndDoubleBar())
+			return String.format("%d||", repeatCount);
+		else if (isStartBar())
 			return "||*";
-		else if (isDoubleBar && isRepeat && stop && !start)
+		else if (isStopBar())
 			return "*||";
-		else if (isDoubleBar && isRepeat && stop && start)
+		else if (isStartStopBar())
 			return "*||*";
 		else
 			return "|";
