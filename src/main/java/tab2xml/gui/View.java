@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.model.Instrument;
+import tab2xml.xmlconversion.XMLMetadata;
 
 /**
  * A view for the Tab2XML application. This class will control all interaction
@@ -101,6 +102,14 @@ public interface View {
 	String getInputText();
 	
 	/**
+	 * @return title of score inputted by user
+	 * @since 2021-03-26
+	 */
+	default XMLMetadata getMetadata() {
+		return XMLMetadata.fromDefaultTitle();
+	}
+	
+	/**
 	 * Gets the text outputted to the user. This method is optional.
 	 * <p>
 	 * <b>Implementation Note:</b> This method is only used by the file-writing
@@ -156,7 +165,7 @@ public interface View {
 	 *                          the filter.
 	 * @param forSave           whether the prompt is for saving a file
 	 *                          ({@code true}) or loading a file ({@code false})
-	 *									
+	 * 									
 	 * @since 2021-02-25
 	 */
 	Optional<Path> promptForFile(FileNameExtensionFilter preferredFileType,

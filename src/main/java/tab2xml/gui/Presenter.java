@@ -123,7 +123,7 @@ public final class Presenter {
 			final Parser parser = new Parser(input, selectedInstrument);
 			this.view.setSelectedInstrument(parser.getDetectedInstrument());
 			
-			final var output = parser.parse();
+			final var output = parser.parse(this.view.getMetadata());
 			musicXMLOutput = output.getFirst();
 			warnings = output.getSecond();
 			
@@ -240,7 +240,7 @@ public final class Presenter {
 	 * @throws UnsupportedOperationException if the view does not support
 	 *                                       {@link View#setInputText}
 	 * @return true if loading was successful
-	 * 
+	 * 													
 	 * @since 2021-02-25
 	 */
 	public boolean loadInput() {

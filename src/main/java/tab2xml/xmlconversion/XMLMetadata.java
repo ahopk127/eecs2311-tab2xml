@@ -36,7 +36,7 @@ public final class XMLMetadata {
 		 * @since 2021-03-22
 		 */
 		public Builder() {
-			this("Untitled Score");
+			this(DEFAULT_TITLE);
 		}
 		
 		/**
@@ -56,7 +56,7 @@ public final class XMLMetadata {
 		 * @since 2021-03-22
 		 */
 		public XMLMetadata build() {
-			throw new UnsupportedOperationException("Not implemented yet");
+			return new XMLMetadata(this.title, null);
 		}
 		
 		/**
@@ -70,6 +70,29 @@ public final class XMLMetadata {
 			this.title = title;
 			return this;
 		}
+	}
+	
+	/** The default title for a score */
+	public static final String DEFAULT_TITLE = "Untitled Score";
+	
+	/**
+	 * @return {@code XMLMetadata} instance with default title and nothing else
+	 * @since 2021-03-26
+	 */
+	public static final XMLMetadata fromDefaultTitle() {
+		return new Builder().build();
+	}
+	
+	/**
+	 * Returns an {@code XMLMetadata} instance with data about the provided title
+	 * and nothing else.
+	 *
+	 * @param title title to use
+	 * @return instance
+	 * @since 2021-03-26
+	 */
+	public static final XMLMetadata fromTitle(String title) {
+		return new Builder(title).build();
 	}
 	
 	/**
@@ -97,7 +120,7 @@ public final class XMLMetadata {
 	 * @since 2021-03-22
 	 */
 	public final Map<IntRange, TimeSignature> getTimeSignatures() {
-		return this.timeSignatures;
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 	
 	/**

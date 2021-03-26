@@ -16,6 +16,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 
+import tab2xml.xmlconversion.XMLMetadata;
+
 /**
  * A view that shows input and output in separate text boxes, in tabs.
  *
@@ -43,6 +45,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	// INPUT COMPONENTS
 	private final JTextComponent input;
 	private final JTextComponent narrowedInput;
+	private final EditingPanel editingPanel;
 	
 	// OUTPUT COMPONENTS
 	private final JTextComponent output;
@@ -120,8 +123,8 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
 				BorderLayout.CENTER);
 		
-		final JPanel editingPanel = new EditingPanel(this);
-		editingTab.add(editingPanel, BorderLayout.SOUTH);
+		this.editingPanel = new EditingPanel(this);
+		editingTab.add(this.editingPanel, BorderLayout.SOUTH);
 		
 		// ----- OUTPUT -----
 		final JPanel outputPanel = new JPanel(new BorderLayout());
@@ -165,6 +168,11 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	@Override
 	protected JTextComponent getInput() {
 		return this.input;
+	}
+	
+	@Override
+	public XMLMetadata getMetadata() {
+		return XMLMetadata.fromTitle(this.editingPanel.getTitle());
 	}
 	
 	@Override
