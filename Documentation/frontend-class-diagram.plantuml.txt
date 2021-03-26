@@ -19,6 +19,7 @@ class Presenter {
 
   -convert(String, Instrument) : Optional<String>
   +convert() : boolean
+  +detectInstrument() : boolean
   +loadInput() : boolean
   -loadFromFile(Path) : Optional<String>
   +saveInput() : boolean

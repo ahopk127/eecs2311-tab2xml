@@ -201,11 +201,15 @@ public final class Presenter {
 	 * Detects the instrument of the view's input text and sets the View's
 	 * selected instrument.
 	 * 
+	 * @return true if an instrument was detected, false otherwise
+	 * 
 	 * @since 2021-03-22
 	 */
-	public void detectInstrument() {
-		Parser.getDetectedInstrument(this.view.getInputText())
-				.ifPresent(this.view::setSelectedInstrument);
+	public boolean detectInstrument() {
+		final Optional<Instrument> detectedInstrument = Parser
+				.getDetectedInstrument(this.view.getInputText());
+		detectedInstrument.ifPresent(this.view::setSelectedInstrument);
+		return detectedInstrument.isPresent();
 	}
 	
 	/**

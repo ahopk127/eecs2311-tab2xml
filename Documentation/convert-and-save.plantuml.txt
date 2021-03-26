@@ -1,6 +1,10 @@
 @startuml
 
 User -> View : Input text tab into text box
+View -> Presenter : Call detectInstrument()
+Presenter -> Parser : Call getDetectedInstrument()
+Presenter <-- Parser : return detected instrument
+View <-- Presenter : Update selected instrument
 User -> View : Click "Convert and Save"
 View -> Presenter : Call convertAndSave()
 View -> Presenter : provide input text

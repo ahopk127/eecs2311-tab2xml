@@ -1,4 +1,15 @@
 * Changelog
+** Unreleased
+*** Added
+    - Created inital draft of design document
+*** Changed
+    - Tweaked manual to clarify how to use TAB2XML in code
+    - You can no longer convert or save with an empty input/output.
+*** Fixed
+    - #13 Wrong Input & Output Instrument Name
+    - #21 Could not save output on MacOS
+    - #29 Could not build on older Java versions because "text blocks are a preview feature"
+    - Fixed many more bugs
 ** [0.4.0-alpha.1] - [2021-03-22 Mon] (Week 9)
 *** Changed
     - Updated README

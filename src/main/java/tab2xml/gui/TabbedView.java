@@ -94,7 +94,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		final JButton convertButton = new JButton("Convert");
 		convertButton.addActionListener(e -> {
 			if (this.presenter.convert()) {
-				this.inputOutputPane.setSelectedIndex(1); // output
+				this.inputOutputPane.setSelectedIndex(2); // output
 			}
 		});
 		inputButtonPanel.add(convertButton);
