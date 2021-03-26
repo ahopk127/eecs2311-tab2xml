@@ -154,10 +154,13 @@ public interface View {
 	 *                          but the returned file does not have to match this
 	 *                          filter. For example, JFileChoosers can simply use
 	 *                          the filter.
-	 *
+	 * @param forSave           whether the prompt is for saving a file
+	 *                          ({@code true}) or loading a file ({@code false})
+	 *									
 	 * @since 2021-02-25
 	 */
-	Optional<Path> promptForFile(FileNameExtensionFilter preferredFileType);
+	Optional<Path> promptForFile(FileNameExtensionFilter preferredFileType,
+			boolean forSave);
 	
 	/**
 	 * Prompts the user to answer a yes or no question

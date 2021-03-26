@@ -5,6 +5,10 @@ plugins {
     id "jacoco"
 }
 
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+}
+
 mainClassName = 'tab2xml.Main'
 
 repositories {
