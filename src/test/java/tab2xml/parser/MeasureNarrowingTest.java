@@ -1,10 +1,10 @@
-package tab2xml.model;
+package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static tab2xml.model.MeasureNarrowing.bottomRightCorner;
-import static tab2xml.model.MeasureNarrowing.extractMeasureRange;
-import static tab2xml.model.MeasureNarrowing.replaceMeasureRange;
-import static tab2xml.model.MeasureNarrowing.topLeftCorner;
+import static tab2xml.parser.MeasureNarrowing.bottomRightCorner;
+import static tab2xml.parser.MeasureNarrowing.extractMeasureRange;
+import static tab2xml.parser.MeasureNarrowing.replaceMeasureRange;
+import static tab2xml.parser.MeasureNarrowing.topLeftCorner;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +12,8 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
-import tab2xml.model.MeasureNarrowing.StringPosition;
+import tab2xml.parser.MeasureNarrowing;
+import tab2xml.parser.MeasureNarrowing.StringPosition;
 
 /**
  * Test for {@link MeasureNarrowing}.

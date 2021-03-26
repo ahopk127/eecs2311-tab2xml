@@ -1,4 +1,4 @@
-package tab2xml.model;
+package tab2xml.parser;
 
 import java.util.Comparator;
 import java.util.Objects;
@@ -21,7 +21,8 @@ import java.util.Objects;
  * <li>This class currently does not work with tabs split into multiple
  * "sections" separated by a newline. They must be all in a line.
  * </ul>
- *
+ * 
+ * @author Adrien Hopkins
  * @since 2021-03-22
  */
 public final class MeasureNarrowing {
@@ -235,7 +236,8 @@ public final class MeasureNarrowing {
 	}
 	
 	/**
-	 * Extracts a rectangular region from a String. For example, if s is:
+	 * Replaces a rectangular region in a String, returning the new String. For
+	 * example, if s is:
 	 *
 	 * <pre>
 	 * e|-----2--------|-----2--------|--0-----3--0--|--------------|--2--------0--|
@@ -268,7 +270,7 @@ public final class MeasureNarrowing {
 	 * E|--0--0--------|--------------|--------------|--------------|--------------|
 	 * </pre>
 	 *
-	 * @param s            string to extract from
+	 * @param s            string to replace rectangle in
 	 * @param beginRow     row of top-left corner of rectangle
 	 * @param beginCol     column of top-left corner of rectangle
 	 * @param endRow       row of bottom-right corner of rectangle

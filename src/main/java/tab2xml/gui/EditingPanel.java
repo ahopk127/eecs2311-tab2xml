@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-import tab2xml.model.MeasureNarrowing;
+import tab2xml.parser.MeasureNarrowing;
 import tab2xml.xmlconversion.XMLMetadata;
 
 /**
