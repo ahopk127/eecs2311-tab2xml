@@ -25,7 +25,7 @@ import tab2xml.model.guitar.GuitarString;
  * 
  * @author amir
  */
-public class Transform<T extends Staff<? extends Line, ? extends Note>> {
+public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends Note>> {
     private final Score<T> sheet;
     MusicSheet musicSheet;
     private Document doc;

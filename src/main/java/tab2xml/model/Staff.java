@@ -18,7 +18,7 @@ import tab2xml.model.guitar.Tune;
  * 
  * @author amir
  */
-public abstract class Staff<E extends Line, T extends Note> extends ScoreItem<T> {
+public abstract class Staff<E extends Line<?>, T extends Note> extends ScoreItem<T> {
     private static final long serialVersionUID = -1721480917571243686L;
 
     /* General defaults of staffs */

@@ -14,7 +14,7 @@ import tab2xml.model.guitar.Tune;
  * 
  * @author amir
  */
-public class DrumLine extends Line {
+public class DrumLine extends Line<DrumNote> {
     private static final long serialVersionUID = 3885940852032675744L;
     private int lineNum;
 

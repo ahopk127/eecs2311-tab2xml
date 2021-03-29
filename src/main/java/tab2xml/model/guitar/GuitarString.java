@@ -13,7 +13,7 @@ import tab2xml.model.LineItem;
  * 
  * @author amir
  */
-public class GuitarString extends Line {
+public class GuitarString extends Line<GuitarNote> {
     private static final long serialVersionUID = -5274699295630375450L;
     private int stringNum;
 

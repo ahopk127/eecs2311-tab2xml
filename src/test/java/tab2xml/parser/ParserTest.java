@@ -93,16 +93,20 @@ class ParserTest {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test0.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument);
-			final Score score = processor.process();
+			
+			// The processor's instrument is set to GUITAR.
+			// Because of that, process() will always return Score<GuitarStaff>
+			@SuppressWarnings("unchecked")
+			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
 
 			assertEquals(1, score.size());
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = (GuitarStaff) staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -154,16 +158,20 @@ class ParserTest {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument);
-			final Score score = processor.process();
+
+			// The processor's instrument is set to GUITAR.
+			// Because of that, process() will always return Score<GuitarStaff>
+			@SuppressWarnings("unchecked")
+			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
 
 			assertEquals(2, score.size());
 			assertEquals(4, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = (GuitarStaff) staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -224,16 +232,20 @@ class ParserTest {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test2.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument);
-			final Score score = processor.process();
+			
+			// The processor's instrument is set to GUITAR.
+			// Because of that, process() will always return Score<GuitarStaff>
+			@SuppressWarnings("unchecked")
+			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
 
 			assertEquals(3, score.size());
 			assertEquals(6, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = (GuitarStaff) staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -280,16 +292,20 @@ class ParserTest {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test3.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument);
-			final Score score = processor.process();
+
+			// The processor's instrument is set to GUITAR.
+			// Because of that, process() will always return Score<GuitarStaff>
+			@SuppressWarnings("unchecked")
+			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
 
 			assertEquals(1, score.size());
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = (GuitarStaff) staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());
@@ -336,16 +352,20 @@ class ParserTest {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test4.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument);
-			final Score score = processor.process();
+
+			// The processor's instrument is set to GUITAR.
+			// Because of that, process() will always return Score<GuitarStaff>
+			@SuppressWarnings("unchecked")
+			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
 
 			assertEquals(1, score.size());
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
+			final List<GuitarStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
-				GuitarStaff staff = (GuitarStaff) staffs.get(i);
+				GuitarStaff staff = staffs.get(i);
 
 				assertEquals(exStaffData[i][0], staff.getNoteCount());
 				assertEquals(exStaffData[i][1], staff.size());

@@ -15,7 +15,7 @@ import tab2xml.model.guitar.GuitarNote;
  * 
  * @author amir s
  */
-public class Score<E extends Staff<? extends Line, ? extends Note>> implements Iterable<E> {
+public class Score<E extends Staff<? extends Line<?>, ? extends Note>> implements Iterable<E> {
 
     /* Default values guitar */
     /**

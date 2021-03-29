@@ -9,7 +9,7 @@ import java.util.List;
  * 
  * @author amir
  */
-public abstract class Line extends ScoreItem {
+public abstract class Line<T> extends ScoreItem<T> {
     private static final long serialVersionUID = 4752002711545090298L;
     protected ArrayList<LineItem> lineItems;
     protected static int line = 0;
