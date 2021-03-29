@@ -2,6 +2,7 @@ package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -11,16 +12,20 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 import tab2xml.model.Instrument;
+import tab2xml.model.Line;
 import tab2xml.model.Score;
 import tab2xml.model.Staff;
 import tab2xml.model.LineItem;
+import tab2xml.model.Note;
 import tab2xml.model.guitar.GuitarString;
+import tab2xml.xmlconversion.ValidateXML;
 import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.GuitarStaff;
-import tab2xml.model.guitar.Tune;
 
 class ParserTest {
-	private static final Path TEST_FILES = Path.of("src", "test", "resources");
+	static final Path TEST_FILES = Path.of("src", "test", "resources");
+	static final File MUSICXML_XSD = TEST_FILES.resolve("musicxml.xsd").toFile();
+	static final ValidateXML validator = new ValidateXML(MUSICXML_XSD);
 
 	@Test
 	void stringItemCompareTo() {
@@ -39,7 +44,7 @@ class ParserTest {
 		// same string: insertion at random orders
 		for (int i = 1; i <= NUM_NOTES; i++) {
 			GuitarNote note = new GuitarNote(strings[0], String.valueOf(i));
-			note.setPosition(i);
+			note.setColumn(i);
 
 			do {
 				index = RAND.nextInt(NUM_NOTES);
@@ -55,7 +60,7 @@ class ParserTest {
 		// different strings: insertion at random orders
 		for (int i = 1; i <= NUM_NOTES; i++) {
 			GuitarNote note = new GuitarNote(strings[(i - 1) % strings.length], String.valueOf(i));
-			note.setPosition(i);
+			note.setColumn(i);
 
 			do {
 				index = RAND.nextInt(NUM_NOTES);
@@ -94,7 +99,7 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
 				GuitarStaff staff = (GuitarStaff) staffs.get(i);
@@ -116,6 +121,7 @@ class ParserTest {
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
 			final String xml = output.getFirst();
+			//assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -154,7 +160,7 @@ class ParserTest {
 			assertEquals(4, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
 				GuitarStaff staff = (GuitarStaff) staffs.get(i);
@@ -176,6 +182,7 @@ class ParserTest {
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
 			final String xml = output.getFirst();
+			//assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -223,7 +230,7 @@ class ParserTest {
 			assertEquals(6, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
 				GuitarStaff staff = (GuitarStaff) staffs.get(i);
@@ -245,6 +252,7 @@ class ParserTest {
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
 			final String xml = output.getFirst();
+			//assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -278,7 +286,7 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
 				GuitarStaff staff = (GuitarStaff) staffs.get(i);
@@ -300,6 +308,7 @@ class ParserTest {
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
 			final String xml = output.getFirst();
+			//assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -333,7 +342,7 @@ class ParserTest {
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
 
-			final List<Staff> staffs = score.getStaffs();
+			final List<Staff<? extends Line, ? extends Note>> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
 				GuitarStaff staff = (GuitarStaff) staffs.get(i);
@@ -355,6 +364,7 @@ class ParserTest {
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
 			final String xml = output.getFirst();
+			//assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();

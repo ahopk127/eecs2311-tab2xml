@@ -295,36 +295,67 @@ public class GuitarTabParser extends Parser {
 	public final StringContext string() throws RecognitionException {
 		StringContext _localctx = new StringContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_string);
+		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(47);
-			tune();
-			setState(48);
-			stringItems();
-			setState(52);
+			setState(50);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(49);
+					setState(47);
 					match(SPACE);
 					}
 					} 
 				}
-				setState(54);
+				setState(52);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,4,_ctx);
 			}
-			setState(56);
+			setState(53);
+			tune();
+			setState(57);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
+			_la = _input.LA(1);
+			while (_la==SPACE) {
+				{
+				{
+				setState(54);
+				match(SPACE);
+				}
+				}
+				setState(59);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			setState(60);
+			stringItems();
+			setState(64);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(61);
+					match(SPACE);
+					}
+					} 
+				}
+				setState(66);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
+			}
+			setState(68);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 			case 1:
 				{
-				setState(55);
+				setState(67);
 				match(NEWLINE);
 				}
 				break;
@@ -418,67 +449,67 @@ public class GuitarTabParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(67); 
+			setState(79); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
 				switch (_alt) {
 				case 1:
 					{
-					setState(67);
+					setState(79);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
 					case 1:
 						{
-						setState(58);
+						setState(70);
 						fret();
 						}
 						break;
 					case 2:
 						{
-						setState(59);
+						setState(71);
 						harmonic();
 						}
 						break;
 					case 3:
 						{
-						setState(60);
+						setState(72);
 						pulloff();
 						}
 						break;
 					case 4:
 						{
-						setState(61);
+						setState(73);
 						hammeron();
 						}
 						break;
 					case 5:
 						{
-						setState(62);
+						setState(74);
 						slide();
 						}
 						break;
 					case 6:
 						{
-						setState(63);
+						setState(75);
 						hampullchain();
 						}
 						break;
 					case 7:
 						{
-						setState(64);
+						setState(76);
 						match(BAR);
 						}
 						break;
 					case 8:
 						{
-						setState(65);
+						setState(77);
 						match(DOUBLEBAR);
 						}
 						break;
 					case 9:
 						{
-						setState(66);
+						setState(78);
 						match(HYPHEN);
 						}
 						break;
@@ -488,11 +519,11 @@ public class GuitarTabParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(69); 
+				setState(81); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			setState(71);
+			setState(83);
 			_la = _input.LA(1);
 			if ( !(_la==DOUBLEBAR || _la==BAR) ) {
 			_errHandler.recoverInline(this);
@@ -542,7 +573,7 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(73);
+			setState(85);
 			match(FRET_NUM);
 			}
 		}
@@ -586,11 +617,11 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(75);
+			setState(87);
 			match(T__0);
-			setState(76);
+			setState(88);
 			fret();
-			setState(77);
+			setState(89);
 			match(T__1);
 			}
 		}
@@ -638,21 +669,21 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(80);
+			setState(92);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__2) {
 				{
-				setState(79);
+				setState(91);
 				match(T__2);
 				}
 			}
 
-			setState(82);
+			setState(94);
 			fret();
-			setState(83);
+			setState(95);
 			match(T__3);
-			setState(84);
+			setState(96);
 			fret();
 			}
 		}
@@ -700,21 +731,21 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(87);
+			setState(99);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__2) {
 				{
-				setState(86);
+				setState(98);
 				match(T__2);
 				}
 			}
 
-			setState(89);
+			setState(101);
 			fret();
-			setState(90);
+			setState(102);
 			match(T__4);
-			setState(91);
+			setState(103);
 			fret();
 			}
 		}
@@ -762,21 +793,21 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(94);
+			setState(106);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__2) {
 				{
-				setState(93);
+				setState(105);
 				match(T__2);
 				}
 			}
 
-			setState(96);
+			setState(108);
 			fret();
-			setState(97);
+			setState(109);
 			match(T__5);
-			setState(98);
+			setState(110);
 			fret();
 			}
 		}
@@ -833,19 +864,19 @@ public class GuitarTabParser extends Parser {
 			_localctx = new HammerPullContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(101);
+			setState(113);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__2) {
 				{
-				setState(100);
+				setState(112);
 				match(T__2);
 				}
 			}
 
-			setState(103);
+			setState(115);
 			fret();
-			setState(104);
+			setState(116);
 			_la = _input.LA(1);
 			if ( !(_la==T__3 || _la==T__4) ) {
 			_errHandler.recoverInline(this);
@@ -855,15 +886,15 @@ public class GuitarTabParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(105);
+			setState(117);
 			fret();
-			setState(108); 
+			setState(120); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(106);
+				setState(118);
 				_la = _input.LA(1);
 				if ( !(_la==T__3 || _la==T__4) ) {
 				_errHandler.recoverInline(this);
@@ -873,11 +904,11 @@ public class GuitarTabParser extends Parser {
 					_errHandler.reportMatch(this);
 					consume();
 				}
-				setState(107);
+				setState(119);
 				fret();
 				}
 				}
-				setState(110); 
+				setState(122); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__3 || _la==T__4 );
@@ -927,47 +958,47 @@ public class GuitarTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(113);
+			setState(125);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==NOTE) {
 				{
-				setState(112);
+				setState(124);
 				match(NOTE);
 				}
 			}
 
-			setState(116);
+			setState(128);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
 			case 1:
 				{
-				setState(115);
+				setState(127);
 				match(SPACE);
 				}
 				break;
 			}
-			setState(119);
+			setState(131);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
 			case 1:
 				{
-				setState(118);
+				setState(130);
 				match(SPACE);
 				}
 				break;
 			}
-			setState(122);
+			setState(134);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SPACE) {
 				{
-				setState(121);
+				setState(133);
 				match(SPACE);
 				}
 			}
 
-			setState(124);
+			setState(136);
 			match(BAR);
 			}
 		}
@@ -983,39 +1014,44 @@ public class GuitarTabParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21\u0081\4\2\t\2"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21\u008d\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\3\2\7\2\32\n\2\f\2\16\2\35\13\2\3\2\3\2\3\3\7\3\"\n\3\f"+
 		"\3\16\3%\13\3\3\3\6\3(\n\3\r\3\16\3)\3\3\7\3-\n\3\f\3\16\3\60\13\3\3\4"+
-		"\3\4\3\4\7\4\65\n\4\f\4\16\48\13\4\3\4\5\4;\n\4\3\5\3\5\3\5\3\5\3\5\3"+
-		"\5\3\5\3\5\3\5\6\5F\n\5\r\5\16\5G\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\b"+
-		"\5\bS\n\b\3\b\3\b\3\b\3\b\3\t\5\tZ\n\t\3\t\3\t\3\t\3\t\3\n\5\na\n\n\3"+
-		"\n\3\n\3\n\3\n\3\13\5\13h\n\13\3\13\3\13\3\13\3\13\3\13\6\13o\n\13\r\13"+
-		"\16\13p\3\f\5\ft\n\f\3\f\5\fw\n\f\3\f\5\fz\n\f\3\f\5\f}\n\f\3\f\3\f\3"+
-		"\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\4\3\2\13\f\3\2\6\7\2\u008d\2\33"+
-		"\3\2\2\2\4#\3\2\2\2\6\61\3\2\2\2\bE\3\2\2\2\nK\3\2\2\2\fM\3\2\2\2\16R"+
-		"\3\2\2\2\20Y\3\2\2\2\22`\3\2\2\2\24g\3\2\2\2\26s\3\2\2\2\30\32\5\4\3\2"+
-		"\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\36\3\2\2\2"+
-		"\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2\2 \"\7\17\2\2! \3\2\2\2\"%\3\2"+
-		"\2\2#!\3\2\2\2#$\3\2\2\2$\'\3\2\2\2%#\3\2\2\2&(\5\6\4\2\'&\3\2\2\2()\3"+
-		"\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+-\7\17\2\2,+\3\2\2\2-\60\3\2\2\2"+
-		".,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\62\5\26\f\2\62\66\5\b\5"+
-		"\2\63\65\7\16\2\2\64\63\3\2\2\2\658\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2"+
-		"\2\67:\3\2\2\28\66\3\2\2\29;\7\17\2\2:9\3\2\2\2:;\3\2\2\2;\7\3\2\2\2<"+
-		"F\5\n\6\2=F\5\f\7\2>F\5\16\b\2?F\5\20\t\2@F\5\22\n\2AF\5\24\13\2BF\7\f"+
-		"\2\2CF\7\13\2\2DF\7\r\2\2E<\3\2\2\2E=\3\2\2\2E>\3\2\2\2E?\3\2\2\2E@\3"+
-		"\2\2\2EA\3\2\2\2EB\3\2\2\2EC\3\2\2\2ED\3\2\2\2FG\3\2\2\2GE\3\2\2\2GH\3"+
-		"\2\2\2HI\3\2\2\2IJ\t\2\2\2J\t\3\2\2\2KL\7\n\2\2L\13\3\2\2\2MN\7\3\2\2"+
-		"NO\5\n\6\2OP\7\4\2\2P\r\3\2\2\2QS\7\5\2\2RQ\3\2\2\2RS\3\2\2\2ST\3\2\2"+
-		"\2TU\5\n\6\2UV\7\6\2\2VW\5\n\6\2W\17\3\2\2\2XZ\7\5\2\2YX\3\2\2\2YZ\3\2"+
-		"\2\2Z[\3\2\2\2[\\\5\n\6\2\\]\7\7\2\2]^\5\n\6\2^\21\3\2\2\2_a\7\5\2\2`"+
-		"_\3\2\2\2`a\3\2\2\2ab\3\2\2\2bc\5\n\6\2cd\7\b\2\2de\5\n\6\2e\23\3\2\2"+
-		"\2fh\7\5\2\2gf\3\2\2\2gh\3\2\2\2hi\3\2\2\2ij\5\n\6\2jk\t\3\2\2kn\5\n\6"+
-		"\2lm\t\3\2\2mo\5\n\6\2nl\3\2\2\2op\3\2\2\2pn\3\2\2\2pq\3\2\2\2q\25\3\2"+
-		"\2\2rt\7\t\2\2sr\3\2\2\2st\3\2\2\2tv\3\2\2\2uw\7\16\2\2vu\3\2\2\2vw\3"+
-		"\2\2\2wy\3\2\2\2xz\7\16\2\2yx\3\2\2\2yz\3\2\2\2z|\3\2\2\2{}\7\16\2\2|"+
-		"{\3\2\2\2|}\3\2\2\2}~\3\2\2\2~\177\7\f\2\2\177\27\3\2\2\2\23\33#).\66"+
-		":EGRY`gpsvy|";
+		"\7\4\63\n\4\f\4\16\4\66\13\4\3\4\3\4\7\4:\n\4\f\4\16\4=\13\4\3\4\3\4\7"+
+		"\4A\n\4\f\4\16\4D\13\4\3\4\5\4G\n\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\6\5R\n\5\r\5\16\5S\3\5\3\5\3\6\3\6\3\7\3\7\3\7\3\7\3\b\5\b_\n\b\3\b"+
+		"\3\b\3\b\3\b\3\t\5\tf\n\t\3\t\3\t\3\t\3\t\3\n\5\nm\n\n\3\n\3\n\3\n\3\n"+
+		"\3\13\5\13t\n\13\3\13\3\13\3\13\3\13\3\13\6\13{\n\13\r\13\16\13|\3\f\5"+
+		"\f\u0080\n\f\3\f\5\f\u0083\n\f\3\f\5\f\u0086\n\f\3\f\5\f\u0089\n\f\3\f"+
+		"\3\f\3\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\4\3\2\13\f\3\2\6\7\2\u009b"+
+		"\2\33\3\2\2\2\4#\3\2\2\2\6\64\3\2\2\2\bQ\3\2\2\2\nW\3\2\2\2\fY\3\2\2\2"+
+		"\16^\3\2\2\2\20e\3\2\2\2\22l\3\2\2\2\24s\3\2\2\2\26\177\3\2\2\2\30\32"+
+		"\5\4\3\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\36"+
+		"\3\2\2\2\35\33\3\2\2\2\36\37\7\2\2\3\37\3\3\2\2\2 \"\7\17\2\2! \3\2\2"+
+		"\2\"%\3\2\2\2#!\3\2\2\2#$\3\2\2\2$\'\3\2\2\2%#\3\2\2\2&(\5\6\4\2\'&\3"+
+		"\2\2\2()\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*.\3\2\2\2+-\7\17\2\2,+\3\2\2\2-"+
+		"\60\3\2\2\2.,\3\2\2\2./\3\2\2\2/\5\3\2\2\2\60.\3\2\2\2\61\63\7\16\2\2"+
+		"\62\61\3\2\2\2\63\66\3\2\2\2\64\62\3\2\2\2\64\65\3\2\2\2\65\67\3\2\2\2"+
+		"\66\64\3\2\2\2\67;\5\26\f\28:\7\16\2\298\3\2\2\2:=\3\2\2\2;9\3\2\2\2;"+
+		"<\3\2\2\2<>\3\2\2\2=;\3\2\2\2>B\5\b\5\2?A\7\16\2\2@?\3\2\2\2AD\3\2\2\2"+
+		"B@\3\2\2\2BC\3\2\2\2CF\3\2\2\2DB\3\2\2\2EG\7\17\2\2FE\3\2\2\2FG\3\2\2"+
+		"\2G\7\3\2\2\2HR\5\n\6\2IR\5\f\7\2JR\5\16\b\2KR\5\20\t\2LR\5\22\n\2MR\5"+
+		"\24\13\2NR\7\f\2\2OR\7\13\2\2PR\7\r\2\2QH\3\2\2\2QI\3\2\2\2QJ\3\2\2\2"+
+		"QK\3\2\2\2QL\3\2\2\2QM\3\2\2\2QN\3\2\2\2QO\3\2\2\2QP\3\2\2\2RS\3\2\2\2"+
+		"SQ\3\2\2\2ST\3\2\2\2TU\3\2\2\2UV\t\2\2\2V\t\3\2\2\2WX\7\n\2\2X\13\3\2"+
+		"\2\2YZ\7\3\2\2Z[\5\n\6\2[\\\7\4\2\2\\\r\3\2\2\2]_\7\5\2\2^]\3\2\2\2^_"+
+		"\3\2\2\2_`\3\2\2\2`a\5\n\6\2ab\7\6\2\2bc\5\n\6\2c\17\3\2\2\2df\7\5\2\2"+
+		"ed\3\2\2\2ef\3\2\2\2fg\3\2\2\2gh\5\n\6\2hi\7\7\2\2ij\5\n\6\2j\21\3\2\2"+
+		"\2km\7\5\2\2lk\3\2\2\2lm\3\2\2\2mn\3\2\2\2no\5\n\6\2op\7\b\2\2pq\5\n\6"+
+		"\2q\23\3\2\2\2rt\7\5\2\2sr\3\2\2\2st\3\2\2\2tu\3\2\2\2uv\5\n\6\2vw\t\3"+
+		"\2\2wz\5\n\6\2xy\t\3\2\2y{\5\n\6\2zx\3\2\2\2{|\3\2\2\2|z\3\2\2\2|}\3\2"+
+		"\2\2}\25\3\2\2\2~\u0080\7\t\2\2\177~\3\2\2\2\177\u0080\3\2\2\2\u0080\u0082"+
+		"\3\2\2\2\u0081\u0083\7\16\2\2\u0082\u0081\3\2\2\2\u0082\u0083\3\2\2\2"+
+		"\u0083\u0085\3\2\2\2\u0084\u0086\7\16\2\2\u0085\u0084\3\2\2\2\u0085\u0086"+
+		"\3\2\2\2\u0086\u0088\3\2\2\2\u0087\u0089\7\16\2\2\u0088\u0087\3\2\2\2"+
+		"\u0088\u0089\3\2\2\2\u0089\u008a\3\2\2\2\u008a\u008b\7\f\2\2\u008b\27"+
+		"\3\2\2\2\25\33#).\64;BFQS^els|\177\u0082\u0085\u0088";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

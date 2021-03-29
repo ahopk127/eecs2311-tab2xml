@@ -4,7 +4,7 @@ import tab2xml.antlr.DrumTabBaseVisitor;
 import tab2xml.antlr.DrumTabParser.LineContext;
 import tab2xml.antlr.DrumTabParser.StaffContext;
 
-import tab2xml.model.StaffItem;
+import tab2xml.model.ScoreItem;
 import tab2xml.model.drum.DrumLine;
 import tab2xml.model.drum.DrumStaff;
 
@@ -13,22 +13,22 @@ import tab2xml.model.drum.DrumStaff;
  * 
  * @author amir
  */
-public class ExtractDrumStaffs extends DrumTabBaseVisitor<StaffItem> {
-	public ExtractDrumStaffs() {
-	}
+public class ExtractDrumStaffs extends DrumTabBaseVisitor<ScoreItem> {
+    public ExtractDrumStaffs() {
+    }
 
-	@Override
-	public StaffItem visitStaff(StaffContext ctx) {
-		DrumStaff st = new DrumStaff();
-		return st;
-	}
+    @Override
+    public ScoreItem visitStaff(StaffContext ctx) {
+	DrumStaff st = new DrumStaff();
+	return st;
+    }
 
-	@Override
-	public StaffItem visitLine(LineContext ctx) {
-		DrumLine line = new DrumLine();
-		@SuppressWarnings("unused")
-		ExtractLineItems es = new ExtractLineItems(line, ctx);
-		return line;
-	}
+    @Override
+    public ScoreItem visitLine(LineContext ctx) {
+	DrumLine line = new DrumLine();
+	@SuppressWarnings("unused")
+	ExtractLineItems es = new ExtractLineItems(line, ctx);
+	return line;
+    }
 
 }

@@ -1,174 +1,246 @@
 package tab2xml.model;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.nio.charset.StandardCharsets;
-
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-
-import tab2xml.antlr.GuitarTabLexer;
-import tab2xml.antlr.GuitarTabParser;
-import tab2xml.listeners.ErrorListener;
+import tab2xml.ImmutablePair;
 import tab2xml.model.Score;
+import tab2xml.model.drum.DrumNote;
 import tab2xml.model.guitar.GuitarNote;
-import tab2xml.model.guitar.GuitarStaff;
-import tab2xml.parser.SerializeGuitarScore;
 
 /**
- * A representation of a score sheet.
+ * A representation of a score.
  * 
- * @author amir
- *
+ * @author amir s
  */
-public class Score {
+public class Score<E extends Staff<? extends Line, ? extends Note>> implements Iterable<E> {
 
-	/* Default values guitar */
-	/**
-	 * The default beats.
-	 */
-	public final static int DEFAULT_BEATS = 4;
-	/**
-	 * The default beat type of every score.
-	 */
-	public final static int DEFAULT_BEATTYPE = 4;
+    /* Default values guitar */
+    /**
+     * The default beats.
+     */
+    public final static int DEFAULT_BEATS = 4;
+    /**
+     * The default beat type of every score.
+     */
+    public final static int DEFAULT_BEATTYPE = 4;
+    /**
+     * The default number of divisions per quarter note.
+     */
+    public final static int DEFAULT_DIVISION = 2;
 
-	/**
-	 * The default number of divisions per quarter note.
-	 */
-	public final static int DEFAULT_DIVISION = 2;
+    private List<E> staffs;
+    private List<Measure<? extends Note>> measures;
+    private static int accumulateMeasure = 0;
+    private static int accumulateMeasureScore = 0;
 
-	private List<Staff> staffs;
+    /**
+     * Construct an empty score.
+     */
+    public Score() {
+	this.staffs = new ArrayList<>();
+	this.measures = new LinkedList<>();
+	Score.setAccumulateMeasure(0);
+	Score.setAccumulateMeasureScore(0);
+    }
 
-	/**
-	 * Construct an empty score.
-	 */
-	public Score() {
-		this.staffs = new ArrayList<>();
-		GuitarStaff.setAccumulateMeasure(0);
+    /**
+     * Add a specified staff, <b>s></b> to this score.
+     * 
+     * @param s the staff to add to this score
+     */
+    public boolean addStaff(E s) {
+	if (s != null)
+	    this.staffs.add(s);
+	return true;
+    }
+
+    /**
+     * Return the total number of staffs in this score.
+     * 
+     * @return the number of staffs in this score
+     */
+    public int size() {
+	return staffs.size();
+    }
+
+    /**
+     * Return a list of staffs.
+     * 
+     * @return the list of staffs in this score
+     */
+    public List<E> getStaffs() {
+	return staffs;
+    }
+
+    public List<Measure<? extends Note>> getMeasures() {
+	return measures;
+    }
+
+    /**
+     * Return a count of all the notes in this score.
+     * 
+     * @return the number of notes in this score
+     */
+    public int getNoteCount() {
+	int total = 0;
+	for (E staff : staffs)
+	    total += staff.getNoteCount();
+	return total;
+    }
+
+    /**
+     * Return the number of measures in this score.
+     * 
+     * @return the number of measures in this score
+     */
+    public int numberOfMeasures() {
+	int count = 0;
+	for (int i = 0; i < staffs.size(); i++) {
+	    E staff = staffs.get(i);
+	    count += staff.numberOfMeasures();
 	}
+	return count;
+    }
 
-	/**
-	 * Add a specified staff, <b>s></b> to this score.
-	 * 
-	 * @param s the staff to add to this score
-	 */
-	public void addStaff(Staff s) {
-		this.staffs.add(s);
+    /**
+     * Process the staff data to measures.
+     */
+    public void processMeasures() {
+	for (E st : staffs) {
+	    Iterator<? extends Measure<? extends Note>> itr = st.measureIterator();
+	    while (itr.hasNext()) {
+		measures.add(itr.next());
+	    }
 	}
+    }
 
-	/**
-	 * Return the total number of staffs in this score.
-	 * 
-	 * @return the number of staffs in this score
-	 */
-	public int size() {
-		return staffs.size();
-	}
+    /**
+     * Return the bounds of the measure at a specified index. In the form
+     * {@code ImmutablePair<UpperRange, LowerRange>}
+     * 
+     * @param index the index of the desired measure.
+     * @return a range object containing the bounds of the measure in the input
+     *         stream.
+     */
+    public ImmutablePair<Range, Range> getMeasure(int index) {
+	return measures.get(index).getRange();
+    }
 
-	/**
-	 * Return a list of staffs.
-	 * 
-	 * @return the list of staffs in this score
-	 */
-	public List<Staff> getStaffs() {
-		return staffs;
-	}
+    /**
+     * Get the accumulate measure of the score.
+     */
+    public static int getAccumulateMeasureScore() {
+	return accumulateMeasureScore;
+    }
 
-	/**
-	 * Return a count of all the notes in this score.
-	 * 
-	 * @return the number of notes in this score
-	 */
-	public int getNoteCount() {
-		int total = 0;
-		for (Staff staff : staffs)
-			total += staff.getNoteCount();
-		return total;
-	}
+    /**
+     * @param accumulateMeasureScore the accumulateMeasureScore to set
+     */
+    public static void setAccumulateMeasureScore(int accumulateMeasureScore) {
+	Score.accumulateMeasureScore = accumulateMeasureScore;
+    }
 
-	/**
-	 * Return the number of measures in this score.
-	 * 
-	 * @return the number of measures in this score
-	 */
-	public int numberOfMeasures() {
-		int count = 0;
-		for (int i = 0; i < staffs.size(); i++) {
-			Staff staff = staffs.get(i);
-			count += staff.numberOfMeasures();
+    /**
+     * Get the accumulate measure.
+     * 
+     * @return the value of the accumulating measure count.
+     */
+    public static int getAccumulateMeasure() {
+	return accumulateMeasure;
+    }
+
+    /**
+     * Accumulating measure count.
+     * 
+     * @param accumulateMeasure the static variable that keeps track of measure
+     *                          count.
+     */
+    public static void setAccumulateMeasure(int accumulateMeasure) {
+	Score.accumulateMeasure = accumulateMeasure;
+    }
+
+    public Iterator<Measure<? extends Note>> measureIterator() {
+	return new MeasureIterator<Measure<? extends Note>>(this.getMeasures());
+    }
+
+    /**
+     * Iterate over the staffs in this score.
+     */
+    @Override
+    public Iterator<E> iterator() {
+	return new ScoreIterator<E>(this.getStaffs());
+    }
+
+    /**
+     * Return an array of staffs data. To use when verifying correctness in unit
+     * tests.
+     */
+    @Override
+    public String toString() {
+	StringBuilder sb = new StringBuilder();
+	sb.append("{");
+	for (E staff : staffs) {
+	    sb.append("{");
+	    for (LineItem item : staff) {
+		sb.append("{\"");
+		if (item == null)
+		    sb.append("null");
+		if (item.getClass() == GuitarNote.class) {
+		    sb.append(((GuitarNote) item).getFret());
+		    sb.append("\",");
+		    sb.append("\"");
+		    sb.append(item.toString());
+		    sb.append("\"},");
+		} else if (item.getClass() == DrumNote.class) {
+		    sb.append(item.toString());
+		    sb.append("\"}");
 		}
-		return count;
+	    }
+	    sb.append("},");
+	    sb.append("\n");
+	}
+	sb.append("}");
+	return sb.toString();
+    }
+
+    private static final class ScoreIterator<T> implements Iterator<T> {
+	int index = 0;
+	List<T> staffs;
+
+	public ScoreIterator(List<T> staffs) {
+	    this.staffs = staffs;
 	}
 
-	/**
-	 * Return an array of staffs data. To use when verifying correctness in unit
-	 * tests.
-	 */
 	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		for (Staff staff : staffs) {
-			sb.append("{");
-			for (LineItem item : staff) {
-				sb.append("{\"");
-				if (item == null)
-					continue;
-				if (item.getClass() == GuitarNote.class) {
-					sb.append(((GuitarNote) item).getFret());
-					sb.append("\",");
-				}
-				sb.append("\"");
-				sb.append(item.toString());
-				sb.append("\"},");
-			}
-			sb.append("},");
-			sb.append("\n");
-		}
-		sb.append("}");
-		return sb.toString();
+	public boolean hasNext() {
+	    return index < staffs.size();
 	}
 
-	public static void main(String[] args) {
-		String input = "|-----------0---8||-0---------------|\r\n"
-				+ "|---------0---0--||-0---------------|\r\n"
-				+ "|-------1-------1||-1---------------|\r\n"
-				+ "|-----2--------10||-2---------------|\r\n"
-				+ "|---2------------||-2---------------|\r\n"
-				+ "|-0--------------||-0---------------|";
-
-		InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-		GuitarTabLexer lexer = null;
-		try {
-			lexer = new GuitarTabLexer(CharStreams.fromStream(stream, StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (lexer != null) {
-
-			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			GuitarTabParser parser = new GuitarTabParser(tokens);
-
-			ErrorListener listener = new ErrorListener();
-
-			parser.removeErrorListeners();
-			parser.addErrorListener(listener);
-
-			ParseTree root = parser.sheet();
-
-			SerializeGuitarScore ss = new SerializeGuitarScore();
-			Score sheet = ss.visit(root);
-
-			System.out.println("staffs: " + sheet.size());
-			System.out.println(sheet.toString());
-			System.out.println(sheet.numberOfMeasures());
-		}
+	@Override
+	public T next() {
+	    return staffs.get(index++);
 	}
+    }
+
+    private static final class MeasureIterator<T> implements Iterator<T> {
+	int index = 0;
+	List<T> measures;
+
+	public MeasureIterator(List<T> measures) {
+	    this.measures = measures;
+	}
+
+	@Override
+	public boolean hasNext() {
+	    return index < measures.size();
+	}
+
+	@Override
+	public T next() {
+	    return measures.get(index++);
+	}
+    }
 }

@@ -18,72 +18,72 @@ import org.w3c.dom.Document;
  * @author amir
  */
 public class MusicSheet {
-	private Document doc;
-	private DocumentBuilder dBuilder;
-	private DocumentBuilderFactory dbFactory;
+    private Document doc;
+    private DocumentBuilder dBuilder;
+    private DocumentBuilderFactory dbFactory;
 
-	/**
-	 * Construct a music sheet with a specified document.
-	 * 
-	 * @param doc the document of the music sheet
-	 * @param db  an instance of a document builder
-	 * @param dbf an instance of a document builder factory
-	 */
-	public MusicSheet(Document doc, DocumentBuilder db, DocumentBuilderFactory dbf) {
-		this.dbFactory = DocumentBuilderFactory.newInstance();
+    /**
+     * Construct a music sheet with a specified document.
+     * 
+     * @param doc the document of the music sheet
+     * @param db  an instance of a document builder
+     * @param dbf an instance of a document builder factory
+     */
+    public MusicSheet(Document doc, DocumentBuilder db, DocumentBuilderFactory dbf) {
+	this.dbFactory = DocumentBuilderFactory.newInstance();
 
-		try {
-			this.dBuilder = dbFactory.newDocumentBuilder();
-			this.doc = dBuilder.newDocument();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
+	try {
+	    this.dBuilder = dbFactory.newDocumentBuilder();
+	    this.doc = dBuilder.newDocument();
+	} catch (ParserConfigurationException e) {
+	    e.printStackTrace();
 	}
+    }
 
-	/**
-	 * Appends an XML element to the music sheet.
-	 * 
-	 * @param e element to append to the document
-	 */
-	public void append(XMLElement e) {
-		this.doc.appendChild(e.getElement());
+    /**
+     * Appends an XML element to the music sheet.
+     * 
+     * @param e element to append to the document
+     */
+    public void append(XMLElement e) {
+	this.doc.appendChild(e.getElement());
+    }
+
+    /**
+     * Returns a reference to this musicsheet's document.
+     * 
+     * @return the XML document of this music sheet
+     */
+    public Document getDoc() {
+	return this.doc;
+    }
+
+    /**
+     * This method transforms the current music sheet to XML as a string.
+     * 
+     * @return XML representation of the XML document as a string
+     */
+    public String toXML() {
+	String xml;
+	try {
+	    TransformerFactory tf = TransformerFactory.newInstance();
+	    Transformer transformer = tf.newTransformer();
+	    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+	    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+	    transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//Recordare//DTD MusicXML 3.1 Partwise//EN");
+	    transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://www.musicxml.org/dtds/partwise.dtd");
+	    StringWriter sw = new StringWriter();
+	    transformer.transform(new DOMSource(doc), new StreamResult(sw));
+
+	    String output = sw.getBuffer().toString().replace("\n|\r", "");
+	    xml = output;
+
+	} catch (Exception e) {
+	    xml = "error converting input.";
+	    e.printStackTrace();
 	}
-
-	/**
-	 * Returns a reference to this musicsheet's document.
-	 * 
-	 * @return the XML document of this music sheet
-	 */
-	public Document getDoc() {
-		return this.doc;
-	}
-
-	/**
-	 * This method transforms the current music sheet to XML as a string.
-	 * 
-	 * @return XML representation of the XML document as a string
-	 */
-	public String toXML() {
-		String xml;
-		try {
-			TransformerFactory tf = TransformerFactory.newInstance();
-			Transformer transformer = tf.newTransformer();
-			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-			transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "-//Recordare//DTD MusicXML 3.1 Partwise//EN");
-			transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "http://www.musicxml.org/dtds/partwise.dtd");
-			StringWriter sw = new StringWriter();
-			transformer.transform(new DOMSource(doc), new StreamResult(sw));
-
-			String output = sw.getBuffer().toString().replace("\n|\r", "");
-			xml = output;
-
-		} catch (Exception e) {
-			xml = "error converting input.";
-			e.printStackTrace();
-		}
-		return xml;
-	}
+	return xml;
+    }
 }

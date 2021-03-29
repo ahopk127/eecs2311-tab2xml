@@ -13,7 +13,7 @@ staff
 	;
 
 string
-	: tune stringItems SPACE* NEWLINE?
+	: SPACE* tune SPACE* stringItems SPACE* NEWLINE?
 	;
 
 

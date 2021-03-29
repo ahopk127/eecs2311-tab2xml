@@ -7,16 +7,15 @@ import tab2xml.antlr.DrumTabParser.SheetContext;
 import tab2xml.model.Score;
 import tab2xml.model.drum.DrumStaff;
 
-public class SerializeDrumScore extends DrumTabBaseVisitor<Score>{
+public class SerializeDrumScore extends DrumTabBaseVisitor<Score<DrumStaff>> {
 
-	@Override
-	public Score visitSheet(SheetContext ctx) {
-		Score score = new Score();
-		ExtractDrumStaffs visitor = new ExtractDrumStaffs();
-		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
-				.forEach(c -> score.addStaff((DrumStaff) visitor.visit(c)));
-		return score;
-	}
-	
-	
+    @Override
+    public Score<DrumStaff> visitSheet(SheetContext ctx) {
+	Score<DrumStaff> score = new Score<>();
+	ExtractDrumStaffs visitor = new ExtractDrumStaffs();
+	ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
+		.forEach(c -> score.addStaff((DrumStaff) visitor.visit(c)));
+	return score;
+    }
+
 }
