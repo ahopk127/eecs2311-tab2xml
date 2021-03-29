@@ -14,12 +14,12 @@ import tab2xml.model.guitar.GuitarStaff;
  *
  */
 public class SerializeGuitarScore extends GuitarTabBaseVisitor<Score<GuitarStaff>> {
-    @Override
-    public Score<GuitarStaff> visitSheet(SheetContext ctx) {
-	Score<GuitarStaff> score = new Score<>();
-	ExtractGuitarStaffs visitor = new ExtractGuitarStaffs();
-	ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
-		.forEach(c -> score.addStaff((GuitarStaff) visitor.visit(c)));
-	return score;
-    }
+	@Override
+	public Score<GuitarStaff> visitSheet(SheetContext ctx) {
+		Score<GuitarStaff> score = new Score<>();
+		ExtractGuitarStaffs visitor = new ExtractGuitarStaffs();
+		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
+				.forEach(c -> score.addStaff((GuitarStaff) visitor.visit(c)));
+		return score;
+	}
 }

@@ -18,45 +18,45 @@ import tab2xml.model.drum.DrumType;
 import tab2xml.model.guitar.Bar;
 
 public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
-    private DrumLine line;
-    private final static double EPSILON = 0.001;
+	private DrumLine line;
+	private final static double EPSILON = 0.001;
 
-    public ExtractLineItems(DrumLine line, LineContext lc) {
-	this.line = line;
-	List<LineItem> visited = new ArrayList<>();
+	public ExtractLineItems(DrumLine line, LineContext lc) {
+		this.line = line;
+		List<LineItem> visited = new ArrayList<>();
 
-	DrumType type = new DrumType();
-	for (LineItem item : visited) {
-	    // TODO: collectLineItms
+		DrumType type = new DrumType();
+		for (LineItem item : visited) {
+			// TODO: collectLineItms
+		}
 	}
-    }
 
-    @Override
-    public LineItem visitDrumType(DrumTypeContext ctx) {
-	String value = ctx.getChild(0).getText();
-	DrumType type = new DrumType(value);
-	return type;
-    }
+	@Override
+	public LineItem visitDrumType(DrumTypeContext ctx) {
+		String value = ctx.getChild(0).getText();
+		DrumType type = new DrumType(value);
+		return type;
+	}
 
-    @Override
-    public LineItem visitLineItems(LineItemsContext ctx) {
-	LineItemsCollector coll = new LineItemsCollector(new ArrayList<LineItem>());
-	int numMeasures = (int) ctx.children.stream()
-		.filter(c -> c.getClass() == TerminalNodeImpl.class && c.getText().matches(Bar.pattern())).count();
-	line.setNumMeasures(numMeasures);
-	ctx.children.stream().forEach(c -> coll.add(visit(c)));
-	return coll;
-    }
+	@Override
+	public LineItem visitLineItems(LineItemsContext ctx) {
+		LineItemsCollector coll = new LineItemsCollector(new ArrayList<LineItem>());
+		int numMeasures = (int) ctx.children.stream()
+				.filter(c -> c.getClass() == TerminalNodeImpl.class && c.getText().matches(Bar.pattern())).count();
+		line.setNumMeasures(numMeasures);
+		ctx.children.stream().forEach(c -> coll.add(visit(c)));
+		return coll;
+	}
 
-    @Override
-    public LineItem visitCymbal(CymbalContext ctx) {
-	// TODO logic of cymbals
-	return super.visitCymbal(ctx);
-    }
+	@Override
+	public LineItem visitCymbal(CymbalContext ctx) {
+		// TODO logic of cymbals
+		return super.visitCymbal(ctx);
+	}
 
-    @Override
-    public LineItem visitDrum(DrumContext ctx) {
-	// TODO logic of drums
-	return super.visitDrum(ctx);
-    }
+	@Override
+	public LineItem visitDrum(DrumContext ctx) {
+		// TODO logic of drums
+		return super.visitDrum(ctx);
+	}
 }
