@@ -24,6 +24,12 @@ dependencies {
 	implementation "org.antlr:antlr4-runtime:4.9.2"
 }
 
+jar {
+	manifest {
+		attributes 'Main-Class': mainClassName
+	}
+}
+
 generateGrammarSource {
 	println "Generating grammar sources..."
     maxHeapSize = "64m"
