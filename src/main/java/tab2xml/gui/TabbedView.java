@@ -103,6 +103,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		saveInput.addActionListener(e -> this.presenter.saveInput());
 		inputButtonPanel.add(saveInput);
 		
+		// input text box
 		this.input = new JTextArea(24, 80);
 		this.input.setBorder(new LineBorder(Color.BLACK));
 		this.setUpFileDragAndDrop();
@@ -153,6 +154,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		saveToFile.addActionListener(e -> this.presenter.saveOutput());
 		outputButtonPanel.add(saveToFile);
 		
+		// output text box
 		this.output = new JTextArea(24, 80);
 		this.output.setBorder(new LineBorder(Color.BLACK));
 		this.output.addCaretListener(e -> {
