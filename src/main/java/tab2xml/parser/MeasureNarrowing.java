@@ -282,11 +282,47 @@ public final class MeasureNarrowing {
 	}
 	
 	/**
+	 * Takes a text tab and splits it into lines, returning only the ones
+	 * important for text tab narrowing.
+	 *
+	 * @param textTab tab to split
+	 * @return important lines
+	 * @since 2021-03-29
+	 */
+	private static String[] getImportantLines(String textTab) {
+		final String[] lines = textTab.split(ROW_END);
+		
+		final List<String> filteredLines = new ArrayList<>();
+		
+		// add each line to filteredLines, if it is important
+		for (int i = 0; i < lines.length; i++) {
+			if (isMeasureLine(lines[i])) {
+				filteredLines.add(lines[i]);
+				
+			} else if (i > 0 && isMeasureLine(lines[i - 1])) {
+				// keep a blank line separator between measure lines
+				filteredLines.add("");
+			}
+		}
+		
+		// remove excess blank lines from beginning and end
+		while (filteredLines.size() > 0 && "".equals(filteredLines.get(0))) {
+			filteredLines.remove(0);
+		}
+		while (filteredLines.size() > 0
+				&& "".equals(filteredLines.get(filteredLines.size() - 1))) {
+			filteredLines.remove(filteredLines.size() - 1);
+		}
+		
+		return filteredLines.toArray(new String[0]);
+	}
+	
+	/**
 	 * @return true if {@code line} contains measure text
 	 * @since 2021-03-29
 	 */
 	private static boolean isMeasureLine(String line) {
-		return line.contains("|");
+		return line.contains("|-") || line.contains("-|");
 	}
 	
 	/**
@@ -297,7 +333,7 @@ public final class MeasureNarrowing {
 	 * @since 2021-03-29
 	 */
 	static String linearize(String textTab) {
-		final String[] oldLines = textTab.split(ROW_END);
+		final String[] oldLines = getImportantLines(textTab);
 		
 		// determine number of strings/lines in tab
 		int numLines = -1;

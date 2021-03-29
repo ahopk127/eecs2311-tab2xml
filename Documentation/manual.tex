@@ -1,4 +1,4 @@
-% Created 2021-03-29 Mon 18:09
+% Created 2021-03-29 Mon 18:38
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -32,18 +32,18 @@
 \newpage
 
 \section{Introduction and Purpose}
-\label{sec:orgb7c69ab}
+\label{sec:org26d0659}
 The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system in many use cases.
 \section{System Requirements}
-\label{sec:org630f173}
+\label{sec:org43f628f}
 \begin{itemize}
 \item Works on all major operating systems
 \item Java version 11-15 required
 \end{itemize}
 \section{How to Install TAB2XML}
-\label{sec:org07da17a}
+\label{sec:orge420008}
 \subsection{Eclipse}
-\label{sec:org359c11a}
+\label{sec:orge81d13f}
 \begin{enumerate}
 \item Open Eclipse, and press \texttt{File > Import} in the menus.
 \begin{center}
@@ -79,7 +79,7 @@ The TAB2XML system can be used to convert text tablature into MusicXML.  This do
 \end{center}
 \end{enumerate}
 \subsection{Commandline}
-\label{sec:org38c5ec9}
+\label{sec:orgb664432}
 \begin{enumerate}
 \item Use the command \texttt{git clone https://github.com/ahopk127/eecs2311-tab2xml.git} to clone the project to the directory of your choice
 \item Change directory to the directory where you installed the project, then use \texttt{./gradlew build} to build the project.
@@ -87,9 +87,9 @@ The TAB2XML system can be used to convert text tablature into MusicXML.  This do
 \newpage
 
 \section{How to Use TAB2XML}
-\label{sec:org49441d7}
+\label{sec:org2c0fe25}
 \subsection{Convert Text Tab}
-\label{sec:org18e79e5}
+\label{sec:org48d0c32}
 \begin{enumerate}
 \item Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command \texttt{./gradlew run}.\\
 You should see a window like this:
@@ -116,7 +116,7 @@ Here is a screenshot of the produced MusicXML, rendered using \href{https://open
 \end{center}
 \end{enumerate}
 \subsection{Editing Text Tabs}
-\label{sec:org5a18bc4}
+\label{sec:orgedab8c8}
 After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
 
 You can use the "Input Editing" tab for more precise editing of the input.  This view also allows you to set metadata such as the title of the output score.  The view should look like this:
@@ -125,16 +125,16 @@ You can use the "Input Editing" tab for more precise editing of the input.  This
 \end{center}
 The primary feature of this view is editing a single measure or a range of measures from the input tab.  To do this, select the range of measures to edit in the text boxes provided, then click "Edit".  The measure(s) will appear in the large text box.  Edit the measure(s), then press the "Done" button to apply the changes to the input text.
 
-\textbf{Warning}: this system is not as sophisticated as the parser, and is known to sometimes fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again.
-\textbf{Warning}: editing a measure region then saving it will remove any decorations from the tab.
+Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again.
+\textbf{Warning}: Editing a measure region then saving it will remove any decorations from the tab.
 \subsection{Other Use Cases}
-\label{sec:orgc245ca6}
+\label{sec:orgb177fc0}
 \begin{itemize}
 \item You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
 \item To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" to load another text tab.
 \end{itemize}
 \subsection{How to Use in Code}
-\label{sec:org87c227b}
+\label{sec:org2e9fe5b}
 If you would like to use this project in your own program, the following code can be used to convert tab to MusicXML:
 
 \begin{verbatim}

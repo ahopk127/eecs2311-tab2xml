@@ -181,7 +181,7 @@ final class EditingPanel extends JPanel {
 		this.view.setNarrowedText("");
 		this.view.setInputText(editedInput);
 		
-		this.doneEditingButton.setEnabled(true);
+		this.doneEditingButton.setEnabled(false);
 	}
 	
 	/**
@@ -198,7 +198,7 @@ final class EditingPanel extends JPanel {
 				this.view.getInputText(), measureStart, measureEnd);
 		this.view.setNarrowedText(measureText);
 		
-		this.doneEditingButton.setEnabled(false);
+		this.doneEditingButton.setEnabled(true);
 	}
 	
 	/**

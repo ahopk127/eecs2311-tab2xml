@@ -38,6 +38,8 @@ class MeasureNarrowingTest {
 	private static final String tab2Modified = loadTestFile(
 			"test2-modified.txt");
 	private static final String tab4 = loadTestFile("test4.txt");
+	private static final String caprichoArabeTab = loadTestFile(
+			"Capricho Arabe.txt");
 	
 	/**
 	 * Loads from a test file.
@@ -76,6 +78,24 @@ class MeasureNarrowingTest {
 	@Test
 	final void testDelinearize() {
 		assertEquals(tab2, delinearize(tab2Linearized, 90));
+	}
+	
+	/**
+	 * Tests extracting complex decorated measures (Capricho Arabe tab)
+	 * 
+	 * @since 2021-03-29
+	 */
+	@Test
+	final void testExtractDecoratedMeasure() {
+		final String measure24 = String.join("\n",
+				"|---------------------------------||",
+				"|-----3-------3-------4-------2---||",
+				"|---------------------0-------2---||",
+				"|-----3-------3---------------2---||",
+				"|---------1---------------0-------||",
+				"|-0---------------1---------------||", "");
+		
+		assertEquals(measure24, extractMeasureRange(caprichoArabeTab, 24, 24));
 	}
 	
 	/**

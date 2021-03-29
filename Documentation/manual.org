@@ -54,8 +54,8 @@
    [[../Screenshots/input-editing-tabbedview-0.4.0.png]]
    The primary feature of this view is editing a single measure or a range of measures from the input tab.  To do this, select the range of measures to edit in the text boxes provided, then click "Edit".  The measure(s) will appear in the large text box.  Edit the measure(s), then press the "Done" button to apply the changes to the input text.
 
-   *Warning*: this system is not as sophisticated as the parser, and is known to sometimes fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again.
-   *Warning*: editing a measure region then saving it will remove any decorations from the tab.
+   Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again.
+   *Warning*: Editing a measure region then saving it will remove any decorations from the tab.
 ** Other Use Cases
    - You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
    - To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" to load another text tab.
