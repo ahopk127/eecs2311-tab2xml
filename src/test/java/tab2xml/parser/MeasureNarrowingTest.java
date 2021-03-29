@@ -27,9 +27,9 @@ class MeasureNarrowingTest {
 	 * Test files.
 	 */
 	private static final Path TEST_FILES = Path.of("src", "test", "resources");
+	
 	// Sample tabs
 	private static final String tab1 = loadTestFile("readme-sample-1.txt");
-	
 	private static final String tab1Modified = loadTestFile(
 			"readme-sample-1-modified.txt");
 	private static final String tab2 = loadTestFile("test2.txt");
@@ -57,12 +57,22 @@ class MeasureNarrowingTest {
 		}
 	}
 	
+	/**
+	 * Tests that {@link MeasureNarrowing#bottomRightCorner} works properly.
+	 * 
+	 * @since 2021-03-29
+	 */
 	@Test
 	final void testBottomRightCorner() {
 		assertEquals(new StringPosition(5, 16), bottomRightCorner(tab1, 1));
 		assertEquals(new StringPosition(5, 31), bottomRightCorner(tab1, 2));
 	}
 	
+	/**
+	 * Tests that {@link MeasureNarrowing#delinearize} works properly.
+	 * 
+	 * @since 2021-03-29
+	 */
 	@Test
 	final void testDelinearize() {
 		assertEquals(tab2, delinearize(tab2Linearized, 90));
@@ -85,6 +95,11 @@ class MeasureNarrowingTest {
 		assertEquals(measure3, extractMeasureRange(tab1, 3, 3));
 	}
 	
+	/**
+	 * Tests extracting complex measures and ranges.
+	 * 
+	 * @since 2021-03-29
+	 */
 	@Test
 	final void testExtractMultilineMeasure() {
 		final String measure23 = String.join("\n",
@@ -99,6 +114,11 @@ class MeasureNarrowingTest {
 		assertEquals(measure23, extractMeasureRange(tab2, 2, 3));
 	}
 	
+	/**
+	 * Tests extracting repeated measures
+	 * 
+	 * @since 2021-03-29
+	 */
 	@Test
 	final void testExtractRepeatedMeasure() {
 		final String measure2 = String.join("\n", "||----------0--------4|",
@@ -109,6 +129,11 @@ class MeasureNarrowingTest {
 		assertEquals(measure2, extractMeasureRange(tab4, 2, 2));
 	}
 	
+	/**
+	 * Tests {@link MeasureNarrowing#linearize}.
+	 * 
+	 * @since 2021-03-29
+	 */
 	@Test
 	final void testLinearize() {
 		assertEquals(tab2Linearized, linearize(tab2));
@@ -136,6 +161,11 @@ class MeasureNarrowingTest {
 		assertEquals(tab1Modified, measure24Modified);
 	}
 	
+	/**
+	 * Tests replacing complex measures and ranges.
+	 * 
+	 * @since 2021-03-29
+	 */
 	@Test
 	final void testReplaceMultilineMeasure() {
 		final String newMeasure23 = String.join("\n",
@@ -155,6 +185,11 @@ class MeasureNarrowingTest {
 		assertEquals(tab2Modified, replaceMeasureRange(tab2, 2, 3, newMeasure23));
 	}
 	
+	/**
+	 * Tests {@link MeasureNarrowing#topLeftCorner}.
+	 * 
+	 * @since 2021-03-29
+	 */
 	@Test
 	final void testTopLeftCorner() {
 		assertEquals(new StringPosition(0, 1), topLeftCorner(tab1, 1));

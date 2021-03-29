@@ -356,6 +356,10 @@ public final class MeasureNarrowing {
 	/**
 	 * Accepts a text tab, and returns the text tab with a set of measures
 	 * replaced. The new measure text should have '|' on both sides.
+	 * 
+	 * <p>
+	 * <b>Warning: this method will replace any text that is not part of a
+	 * measure or tuning (i.e. text on non-measure lines).</b>
 	 *
 	 * @param textTab        original text tab
 	 * @param measureStart   first measure to replace, inclusive
