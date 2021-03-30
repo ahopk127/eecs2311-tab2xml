@@ -107,8 +107,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		this.input = new JTextArea(24, 80);
 		this.input.setBorder(new LineBorder(Color.BLACK));
 		this.setUpFileDragAndDrop();
-		this.input.addCaretListener(new RateLimitedCaretListener(
-				e -> this.presenter.detectInstrument(), 1000));
+		this.input.addCaretListener(e -> this.presenter.detectInstrument());
 		this.input.addCaretListener(e -> {
 			final boolean inputBlank = this.input.getText().isBlank();
 			convertButton.setEnabled(!inputBlank);
