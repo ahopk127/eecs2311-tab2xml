@@ -24,6 +24,12 @@ dependencies {
 	implementation "org.antlr:antlr4-runtime:4.9.2"
 }
 
+jar {
+	manifest {
+		attributes 'Main-Class': mainClassName
+	}
+}
+
 generateGrammarSource {
 	println "Generating grammar sources..."
     maxHeapSize = "64m"
@@ -67,6 +73,18 @@ test {
 jacocoTestReport {
 	dependsOn test
 }
+
+task debug {
+	group = "application"
+	description = "Runs this project in debug mode on prot 2311"
+	doFirst {
+		application {
+			applicationDefaultJvmArgs = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=2311']
+		}
+	}
+}
+
+debug.finalizedBy run
 
 run {
 }

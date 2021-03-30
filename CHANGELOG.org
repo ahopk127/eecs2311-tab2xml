@@ -2,15 +2,18 @@
 ** Unreleased
 *** Added
     - Created inital draft of design document
-    - Added the ability to narrow down to measures (only works in simple cases)
+    - Added the ability to narrow down to measures
     - Added the ability to set the output score's title
 *** Changed
     - Tweaked manual to clarify how to use TAB2XML in code
-    - You can no longer convert or save with an empty input/output.
+    - TabbedView's buttons become disabled when they shouldn't be pressed
+    - You can no longer convert or save with an empty input/output
+    - Changed the internal representation of measures to allow for calculating note duration
 *** Fixed
     - #13 Wrong Input & Output Instrument Name
     - #21 Could not save output on MacOS
     - #29 Could not build on older Java versions because "text blocks are a preview feature"
+    - Could not export to JAR, even though Gradle generates one
     - Fixed many more bugs
 ** [0.4.0-alpha.1] - [2021-03-22 Mon] (Week 9)
 *** Changed

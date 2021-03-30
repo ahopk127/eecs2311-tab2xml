@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.CaretEvent;
 
 import tab2xml.parser.MeasureNarrowing;
 import tab2xml.xmlconversion.XMLMetadata;
@@ -77,6 +78,10 @@ final class EditingPanel extends JPanel {
 	/** Text field describing the score title */
 	private final JTextField titleField;
 	
+	// control buttons
+	private final JButton editMeasureButton;
+	private final JButton doneEditingButton;
+	
 	/**
 	 * Creates the editing panel.
 	 * 
@@ -101,6 +106,7 @@ final class EditingPanel extends JPanel {
 		this.measureStart = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
 		this.measureStart.setColumns(5);
+		this.measureStart.addCaretListener(this::onMeasureEntryUpdate);
 		measureSelectionPanel.add(this.measureStart);
 		
 		final JLabel dashLabel = new JLabel("-");
@@ -109,15 +115,18 @@ final class EditingPanel extends JPanel {
 		this.measureEnd = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
 		this.measureEnd.setColumns(5);
+		this.measureEnd.addCaretListener(this::onMeasureEntryUpdate);
 		measureSelectionPanel.add(this.measureEnd);
 		
-		final JButton editMeasureButton = new JButton("Edit");
-		editMeasureButton.addActionListener(this::editMeasures);
-		measureSelectionPanel.add(editMeasureButton);
+		this.editMeasureButton = new JButton("Edit");
+		this.editMeasureButton.setEnabled(false);
+		this.editMeasureButton.addActionListener(this::editMeasures);
+		measureSelectionPanel.add(this.editMeasureButton);
 		
-		final JButton doneEditingButton = new JButton("Done");
-		doneEditingButton.addActionListener(this::doneEditing);
-		measureSelectionPanel.add(doneEditingButton);
+		this.doneEditingButton = new JButton("Done");
+		this.doneEditingButton.setEnabled(false);
+		this.doneEditingButton.addActionListener(this::doneEditing);
+		measureSelectionPanel.add(this.doneEditingButton);
 		
 		final JPanel metadataPanel = new JPanel(new GridBagLayout());
 		metadataPanel.setBorder(new TitledBorder("Metadata"));
@@ -151,7 +160,8 @@ final class EditingPanel extends JPanel {
 		bottomSignatureField.setColumns(2);
 		timeSignaturePanel.add(bottomSignatureField);
 		
-		final JButton setSignatureButton = new JButton("Set Time Signature");
+		final JButton setSignatureButton = new JButton(
+				"Set Time Signature for Measure(s)");
 		metadataPanel.add(setSignatureButton, gridBag(4, 1, 1, 1, INSETS));
 	}
 	
@@ -170,6 +180,8 @@ final class EditingPanel extends JPanel {
 				this.view.getNarrowedText());
 		this.view.setNarrowedText("");
 		this.view.setInputText(editedInput);
+		
+		this.doneEditingButton.setEnabled(false);
 	}
 	
 	/**
@@ -185,6 +197,8 @@ final class EditingPanel extends JPanel {
 		final String measureText = MeasureNarrowing.extractMeasureRange(
 				this.view.getInputText(), measureStart, measureEnd);
 		this.view.setNarrowedText(measureText);
+		
+		this.doneEditingButton.setEnabled(true);
 	}
 	
 	/**
@@ -194,5 +208,17 @@ final class EditingPanel extends JPanel {
 	public String getTitle() {
 		final String title = this.titleField.getText();
 		return title.isBlank() ? XMLMetadata.DEFAULT_TITLE : title;
+	}
+	
+	/**
+	 * Runs whenever the measure entries are edited
+	 *
+	 * @param e editing action
+	 * @since 2021-03-29
+	 */
+	private void onMeasureEntryUpdate(CaretEvent e) {
+		final boolean measuresEntered = !(this.measureStart.getText().isEmpty()
+				|| this.measureEnd.getText().isEmpty());
+		this.editMeasureButton.setEnabled(measuresEntered);
 	}
 }

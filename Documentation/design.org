@@ -13,7 +13,7 @@
 
    The frontend of TAB2XML is designed using the [[https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter][MVP]] paradigm.  It is divided into two main parts, the ~View~ and the ~Presenter~.
 
-   The ~View~ is the part of the frontend that interacts with the user (the GUI).  It is handled by the ~View~ interface; the GUIs for TAB2XML implement the View interface.  In addition, all Views that represent a Swing GUI are subclasses of the skeletal implementation ~AbsractSwingView~, which reduces the effort needed to make a View.  Currently, there are four concrete classes implementing ~View~: ~TabbedView~, ~SingleEntryView~, ~DoubleEntryView~ and ~ViewBot~ (a mock view used for testing).  The ~NarrowingView~ interface represents Views that additionally support TAB2XML's tab-narrowing functionality.
+   The ~View~ is the part of the frontend that interacts with the user (the GUI).  It is handled by the ~View~ interface; the GUIs for TAB2XML implement the View interface.  In addition, all Views that represent a Swing GUI are subclasses of the skeletal implementation ~AbsractSwingView~, which reduces the effort needed to make a View.  Currently, there are four concrete classes implementing ~View~: ~TabbedView~ (currently the one in use), ~SingleEntryView~, ~DoubleEntryView~ and ~ViewBot~ (a mock view used for testing).  The ~NarrowingView~ interface represents Views that additionally support TAB2XML's tab-narrowing functionality.
 
    The ~Presenter~ is the part of the frontend that interacts with the backend code.  It is a single class, not an interface that has multiple implementations.  It implements behaviours such as converting a tab, loading from a file and detecting the instrument of the input tab.  It uses the View interface's public methods to interact with the view.  This means that the View's buttons can simply be linked to call the Presenter's methods, instead of having to implement the method in the View.  All of the Presenter's methods return either a ~boolean~ or an ~Optional~ to describe whether they succeeded or not.
 
@@ -35,3 +35,7 @@
    10. The ~Presenter~ calls the ~View~'s ~promptForFile~ method to prompt the user for the desired destination file.
    11. The ~Presenter~ calls ~Files.writeString~ to write the text tab to the selected file.
    12. The ~View~ displays any errors that occurred during the file-saving operation.
+** Front End Maintenance
+   To create a new GUI, simply make your GUI handled by a class that extends ~View~.  It should also have a ~Presenter~ field instantiated using ~new Presenter(this)~.  You must implement all of the ~View~'s methods, which is much easier if you extend ~AbstractSwingView~.  Then, you can call the presenter's methods within the GUI, and your GUI will be fully connected to the TAB2XML backend.
+
+   To modify the look of an existing View such as ~TabbedView~ (or add/remove components), simply modify its constructor (you may have to edit the other methods, if they are broken by the change).  If you are adding a new feature that should exist in every Swing View, consider instead adding it to ~AbstractSwingView~, as this will make it available for every View.
