@@ -10,6 +10,7 @@ public class Strike extends LineItem {
 		this.note = note;
 	}
 
+	@Override
 	public int getNoteCount() {
 		return 1;
 	}

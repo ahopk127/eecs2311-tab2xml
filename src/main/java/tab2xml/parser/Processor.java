@@ -262,7 +262,7 @@ public class Processor {
 		}
 
 		if (lexer == null)
-			return new Score<GuitarStaff>();
+			return new Score<>();
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		GuitarTabParser parser = new GuitarTabParser(tokens);

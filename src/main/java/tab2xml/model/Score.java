@@ -163,7 +163,7 @@ public class Score<E extends Staff<? extends Line<?>, ? extends Note>> implement
 	}
 
 	public Iterator<Measure<? extends Note>> measureIterator() {
-		return new MeasureIterator<Measure<? extends Note>>(this.getMeasures());
+		return new MeasureIterator<>(this.getMeasures());
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class Score<E extends Staff<? extends Line<?>, ? extends Note>> implement
 	 */
 	@Override
 	public Iterator<E> iterator() {
-		return new ScoreIterator<E>(this.getStaffs());
+		return new ScoreIterator<>(this.getStaffs());
 	}
 
 	/**
@@ -186,9 +186,9 @@ public class Score<E extends Staff<? extends Line<?>, ? extends Note>> implement
 			sb.append("{");
 			for (LineItem item : staff) {
 				sb.append("{\"");
-				if (item == null)
+				if (item == null) {
 					sb.append("null");
-				if (item.getClass() == GuitarNote.class) {
+				} else if (item.getClass() == GuitarNote.class) {
 					sb.append(((GuitarNote) item).getFret());
 					sb.append("\",");
 					sb.append("\"");

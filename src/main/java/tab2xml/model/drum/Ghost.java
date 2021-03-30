@@ -10,6 +10,7 @@ public class Ghost extends LineItem {
 		this.note = note;
 	}
 
+	@Override
 	public int getNoteCount() {
 		return 1;
 	}

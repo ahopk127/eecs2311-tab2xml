@@ -7,7 +7,6 @@ import java.util.Iterator;
 
 import tab2xml.model.Line;
 import tab2xml.model.LineItem;
-import tab2xml.model.guitar.Tune;
 
 /**
  * A representation of a drum line in drum tablature.

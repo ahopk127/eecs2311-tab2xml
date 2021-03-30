@@ -131,6 +131,7 @@ public abstract class Note extends LineItem {
 		this.repeatCount = repeatCount;
 	}
 
+	@Override
 	public void setColumn(double column) {
 		this.column = column;
 	}

@@ -12,11 +12,8 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 import tab2xml.model.Instrument;
-import tab2xml.model.Line;
 import tab2xml.model.Score;
-import tab2xml.model.Staff;
 import tab2xml.model.LineItem;
-import tab2xml.model.Note;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.xmlconversion.ValidateXML;
 import tab2xml.model.guitar.GuitarNote;
@@ -124,6 +121,7 @@ class ParserTest {
 
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
+			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
 			//assertTrue(validator.validate(xml));
 
@@ -189,6 +187,7 @@ class ParserTest {
 
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
+			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
 			//assertTrue(validator.validate(xml));
 
@@ -263,6 +262,7 @@ class ParserTest {
 
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
+			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
 			//assertTrue(validator.validate(xml));
 
@@ -323,6 +323,7 @@ class ParserTest {
 
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
+			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
 			//assertTrue(validator.validate(xml));
 
@@ -383,6 +384,7 @@ class ParserTest {
 
 			final Parser parser = new Parser(input, instrument);
 			final var output = parser.parse();
+			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
 			//assertTrue(validator.validate(xml));
 

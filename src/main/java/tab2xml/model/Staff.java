@@ -200,7 +200,7 @@ public abstract class Staff<E extends Line<?>, T extends Note> extends ScoreItem
 		for (int i = 0; i < list.size(); i++) {
 			for (int j = 0; j < list.get(i).size(); j++) {
 				LineItem item = list.get(i).get(j);
-				if ((item != null && item.getClass() == Bar.class || item.getClass() == Tune.class)
+				if ((item != null && (item.getClass() == Bar.class || item.getClass() == Tune.class))
 						&& count++ == index) {
 					if (item.getClass() == Tune.class) {
 						Bar bar = new Bar();

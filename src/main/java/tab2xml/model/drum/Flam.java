@@ -10,6 +10,7 @@ public class Flam extends LineItem {
 		this.note = note;
 	}
 
+	@Override
 	public int getNoteCount() {
 		return 2;
 	}
