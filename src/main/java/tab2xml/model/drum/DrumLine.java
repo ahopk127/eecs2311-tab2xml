@@ -40,21 +40,21 @@ public class DrumLine extends Line<DrumNote> {
 	 * @return the octave of this drum line's drum part.
 	 */
 	public String getOctave() {
-		return drumtype().getOctave();
+		return null;
 	}
 
 	/**
 	 * @return the step of this drum line's drum part.
 	 */
 	public String getDrumStep() {
-		return drumtype().getTune();
+		return drumtype().getDrumType();
 	}
 
 	/**
 	 * @return the {@code DrumType} of this drum line.
 	 */
-	public Tune drumtype() {
-		return (Tune) lineItems.get(0);
+	public DrumType drumtype() {
+		return (DrumType) lineItems.get(0);
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class DrumLine extends Line<DrumNote> {
 	 * @param drumType the {@code DrumType} object to set the {@code DrumType} of
 	 *                 this drum line.
 	 */
-	public void setDrumType(Tune drumType) {
-		lineItems.set(0, (Tune) LineItem.deepClone(drumType));
+	public void setDrumType(DrumType drumType) {
+		lineItems.set(0, (DrumType) LineItem.deepClone(drumType));
 	}
 
 	/**

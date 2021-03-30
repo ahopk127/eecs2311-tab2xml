@@ -104,7 +104,7 @@ public abstract class Note extends LineItem {
 	}
 
 	public String getVoice() {
-		return voice;
+		return "1";
 	}
 
 	public void setVoice(String voice) {

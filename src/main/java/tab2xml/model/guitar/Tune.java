@@ -4,8 +4,8 @@ import tab2xml.model.LineItem;
 
 public class Tune extends LineItem {
 	private static final long serialVersionUID = 7283815230989809053L;
-	public static String standardTuning[][] = { { "E", "2" }, { "A", "2" }, { "D", "3" }, { "G", "3" }, { "B", "3" },
-			{ "E", "4" } };
+	public static String standardTuning[][] = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
+			{ "E", "2" } };
 
 	private String tune;
 	private boolean isStandard;
@@ -25,16 +25,16 @@ public class Tune extends LineItem {
 	}
 
 	public String getTune() {
-		if (isBass)
-			return standardTuning[((lineNum - 1) % 4)][0];
 		if (!isStandard)
 			return tune;
+		if (isBass)
+			return standardTuning[((lineNum - 1) % 4) + 2][0];
 		return standardTuning[(lineNum - 1) % 6][0];
 	}
 
 	public String getOctave() {
 		if (isBass)
-			return String.valueOf(Integer.parseInt(standardTuning[((lineNum - 1) % 4)][1]) - 1);
+			return String.valueOf(Integer.parseInt(standardTuning[((lineNum - 1) % 4) + 2][1]) - 1);
 		return standardTuning[(lineNum - 1) % 6][1];
 	}
 

@@ -16,6 +16,9 @@ public class Bar extends LineItem {
 	private boolean stop;
 	private String tune;
 
+	private double rightPos;
+	private double leftPos;
+
 	public Bar() {
 		this.repeatCount = -1;
 	}
@@ -100,6 +103,22 @@ public class Bar extends LineItem {
 	public boolean isRegularBar() {
 		return !isDoubleBar() && !isFretEndBar() && !isFretEndDoubleBar() && !isStartBar() && !isStopBar()
 				&& !isStartStopBar();
+	}
+
+	public double rightPos() {
+		return rightPos;
+	}
+
+	public void setRightPos(double rightPos) {
+		this.rightPos = rightPos;
+	}
+
+	public double leftPos() {
+		return leftPos;
+	}
+
+	public void setLeftPos(double leftPos) {
+		this.leftPos = leftPos;
 	}
 
 	public static String pattern() {

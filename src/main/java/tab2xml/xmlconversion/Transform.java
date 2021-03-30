@@ -3,6 +3,8 @@ package tab2xml.xmlconversion;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -303,6 +305,21 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		switch (instrument) {
 		case GUITAR:
 			scorePart.append(partName);
+			XMLElement scoreInstrumentG = new XMLElement("score-instrument", musicSheet);
+			scoreInstrumentG.setAttribute("id", String.format("P1-I%d", 1));
+			XMLElement instrumentNameG = new XMLElement("instrument-name", musicSheet);
+			instrumentNameG.setText("Classical Guitar (Tablature)");
+			scoreInstrumentG.append(instrumentNameG);
+			scorePart.append(scoreInstrumentG);
+
+			XMLElement midiDeviceG = new XMLElement("midi-device", musicSheet);
+			midiDeviceG.setText("");
+			midiDeviceG.setAttribute("id", String.format("P1-I%d", 1));
+			midiDeviceG.setAttribute("port", "1");
+			scorePart.append(midiDeviceG);
+			XMLElement midiInstrumentG = midiInstrument(String.format("P1-I%d", 1), "1", "25", "", "78.7402", "0");
+			scorePart.append(midiInstrumentG);
+			
 			break;
 		case BASS:
 			scorePart.append(partName);
@@ -312,12 +329,14 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 			instrumentNameB.setText("Bass Guitar (Tablature)");
 			scoreInstrumentB.append(instrumentNameB);
 			scorePart.append(scoreInstrumentB);
-			
-			XMLElement midiDevice = new XMLElement("midi-device", musicSheet);
-			midiDevice.setAttribute("id", String.format("P1-I%d", 1));
-			scorePart.append(midiDevice);
-			XMLElement midiInstrument = midiInstrument(String.format("P1-I%d", 1), "35", "35", "", "78.7402", "0");
-			scorePart.append(midiInstrument);
+
+			XMLElement midiDeviceB = new XMLElement("midi-device", musicSheet);
+			midiDeviceB.setText("");
+			midiDeviceB.setAttribute("id", String.format("P1-I%d", 1));
+			midiDeviceB.setAttribute("port", "1");
+			scorePart.append(midiDeviceB);
+			XMLElement midiInstrumentB = midiInstrument(String.format("P1-I%d", 1), "1", "35", "", "78.7402", "0");
+			scorePart.append(midiInstrumentB);
 			
 			break;
 		case DRUM:
@@ -332,6 +351,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 				scoreInstrumentD.append(instrumentNameD);
 				scorePart.append(scoreInstrumentD);
 			}
+			
 			break;
 		default:
 			break;
@@ -375,7 +395,9 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		staffLines.setText(staff.lineCount());
 		staffDetails.append(staffLines);
 
-		for (GuitarString s : staff.getLines()) {
+		List<GuitarString> list = staff.getLines();
+		Collections.reverse(list);
+		for (GuitarString s : list) {
 			System.out.println("String: " + s.toString());
 			XMLElement staffTuning = new XMLElement("staff-tuning", musicSheet);
 			staffTuning.setAttribute("line", String.valueOf(s.getStringNum()));
@@ -427,22 +449,24 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 			String pan) {
 		XMLElement midiInstrument = new XMLElement("midi-instrument", musicSheet);
 		midiInstrument.setAttribute("id", id);
-		XMLElement midiChannel = new XMLElement("midid-channel", musicSheet);
+		XMLElement midiChannel = new XMLElement("midi-channel", musicSheet);
 		midiChannel.setText(channel);
 		XMLElement midiProgram = new XMLElement("midi-program", musicSheet);
 		midiProgram.setText(program);
 		XMLElement unPitchedA = null;
-		
-		if (unPitched == null || unPitched.length() == 0) {
+
+		if (unPitched != null && unPitched.length() != 0) {
 			unPitchedA = new XMLElement("midi-unpitched", musicSheet);
 			unPitchedA.setText(unPitched);
 		}
 		XMLElement volumeA = new XMLElement("volume", musicSheet);
 		volumeA.setText(volume);
 		XMLElement panA = new XMLElement("pan", musicSheet);
+		panA.setText(pan);
 		midiInstrument.append(midiChannel, midiProgram, unPitchedA, volumeA, panA);
 		return midiInstrument;
 	}
+
 	/**
 	 * Generate XML from score for selected instrument, Drum.
 	 * 

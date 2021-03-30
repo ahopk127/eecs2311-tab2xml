@@ -229,13 +229,15 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 		String value = token.getText();
 		String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine();
+		int column = token.getCharPositionInLine() + value.length();
 
 		Bar bar = new Bar();
 		bar.setLineNum(s.getStringNum());
 		bar.setColumn(column);
-		bar.setPosition(token.getTokenIndex() + value.length() - 2);
+		bar.setPosition(token.getTokenIndex() + value.length());
 		bar.setTune(s.getTune());
+		bar.setRightPos(column);
+		bar.setLeftPos(column - ((column - value.length() < 0)|| column == 1 ? 0 : value.length()) + 1);
 
 		// end repeat *||
 		if (start.equals("*")) {

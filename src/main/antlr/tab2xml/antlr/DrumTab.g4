@@ -36,13 +36,12 @@ drum: DRUMS;
 CYMBALS
 	: 'x'	
 	| 'X'
-	| 'o'
+	| 'o' // only hi-hat can be o - open hi-hat
 	| '#'
 	| 'c'
 	| 'b'	
 	; 
 	
-
 DRUMS
 	: 'o'
 	| 'O'

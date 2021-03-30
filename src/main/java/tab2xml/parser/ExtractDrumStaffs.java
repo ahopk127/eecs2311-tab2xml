@@ -28,6 +28,7 @@ public class ExtractDrumStaffs extends DrumTabBaseVisitor<ScoreItem<DrumNote>> {
 	@Override
 	public ScoreItem<DrumNote> visitStaff(StaffContext ctx) {
 		final DrumStaff st = new DrumStaff();
+		// do stuff and get staff info
 		return st;
 	}
 

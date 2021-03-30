@@ -33,8 +33,14 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 
 		for (E n : durationNotes) {
 			E next = durationNotes.higher(n);
-			if (next ==  null)
+			if (next ==  null) {
+				Range pairRange = new Range(this);
+				pairRange.setStart(n.getColumn());
+				pairRange.setStop(this.range.getFirst().getStop());
+				double width = width() / pairRange.size();
+				n.setDurationVal(duration(width));
 				continue;
+			}
 			Range pairRange = new Range(this);
 			pairRange.setStart(n.getColumn());
 			pairRange.setStop(next.getColumn());

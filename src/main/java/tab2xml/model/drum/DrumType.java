@@ -18,15 +18,47 @@ public class DrumType extends LineItem {
 	public String getDrumType() {
 		return drumType;
 	}
-
-	public static String getDrumType(String input) {
+	
+	public static String getDrumID(int abreviation) {
 		for (int i = 0; i < Instrument.drumSet.length; i++) {
-			if (Instrument.drumSet[i][0].equals(input) || Instrument.drumSet[i][1].equals(input))
+			if (Instrument.drumSet[i][1].equals(abreviation) || Instrument.drumSet[i][2].equals(abreviation))
 				return Instrument.drumSet[i][0];
 		}
 		return "";
 	}
 
+	public static String getDrumType(int ID) {
+		for (int i = 0; i < Instrument.drumSet.length; i++) {
+			if (Instrument.drumSet[i][0].equals(String.valueOf(ID)) || Instrument.drumSet[i][1].equals(String.valueOf(ID)))
+				return Instrument.drumSet[i][1];
+		}
+		return "";
+	}
+	
+	public static String getDrumName(int ID) {
+		for (int i = 0; i < Instrument.drumSet.length; i++) {
+			if (Instrument.drumSet[i][0].equals(String.valueOf(ID)) || Instrument.drumSet[i][1].equals(String.valueOf(ID)))
+				return Instrument.drumSet[i][2];
+		}
+		return "";
+	}
+	
+	public static String getDrumStep(int ID) {
+		for (int i = 0; i < Instrument.drumSet.length; i++) {
+			if (Instrument.drumSet[i][0].equals(String.valueOf(ID)) || Instrument.drumSet[i][1].equals(String.valueOf(ID)))
+				return Instrument.drumSet[i][3];
+		}
+		return "";
+	}
+	
+	public static String getDrumOctave(String input) {
+		for (int i = 0; i < Instrument.drumSet.length; i++) {
+			if (Instrument.drumSet[i][0].equals(input) || Instrument.drumSet[i][1].equals(input))
+				return Instrument.drumSet[i][4];
+		}
+		return "";
+	}
+	
 	@Override
 	public int length() {
 		return toString().length();

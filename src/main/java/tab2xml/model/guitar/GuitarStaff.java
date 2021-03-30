@@ -77,9 +77,9 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 			Bar[] barsStart = getFirstBarsAt(startPosition, staff);
 			Bar[] barsEnd = getFirstBarsAt(stopPosition, staff);
 
-			Range upperRange = new Range(barsStart[0].getPosition(), barsEnd[0].getPosition());
-			Range bottomRange = new Range(barsStart[barsEnd.length - 1].getPosition(),
-					barsEnd[barsEnd.length - 1].getPosition());
+			Range upperRange = new Range(barsStart[0].rightPos(), barsEnd[0].leftPos());
+			Range bottomRange = new Range(barsStart[barsEnd.length - 1].rightPos(),
+					barsEnd[barsEnd.length - 1].leftPos());
 			ImmutablePair<Range, Range> range = ImmutablePair.of(upperRange, bottomRange);
 
 			Measure<GuitarNote> measure = new Measure<>(Score.getAccumulateMeasureScore(), range);

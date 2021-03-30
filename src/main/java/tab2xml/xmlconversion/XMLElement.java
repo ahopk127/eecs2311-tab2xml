@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 public class XMLElement {
 	private Document doc;
 	private Element element;
-
+	
 	/**
 	 * Construct an element with a specified tag and its corresponding music sheet.
 	 * 
