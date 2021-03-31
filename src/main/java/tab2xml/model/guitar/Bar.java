@@ -14,7 +14,7 @@ public class Bar extends LineItem {
 	private boolean isRepeat;
 	private boolean start;
 	private boolean stop;
-	private String tune;
+	private Tune tune;
 
 	private double rightPos;
 	private double leftPos;
@@ -63,11 +63,11 @@ public class Bar extends LineItem {
 		this.stop = stop;
 	}
 
-	public String getTune() {
+	public Tune getTune() {
 		return tune;
 	}
 
-	public void setTune(String tune) {
+	public void setTune(Tune tune) {
 		this.tune = tune;
 	}
 

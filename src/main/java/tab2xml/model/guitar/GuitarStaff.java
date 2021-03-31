@@ -133,7 +133,6 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 		private boolean remaining;
 		private boolean setFirstRepeatNote;
 		private GuitarNote previousNote = null;
-		private GuitarNote chordBase = null;
 
 		/**
 		 * Construct a staff iterator.
@@ -244,10 +243,11 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 						String value = bars[i].toString();
 						String fret = value.substring(0, value.indexOf("|"));
 						double position = bars[i].getColumn() + fret.length() - 1;
-						GuitarNote newNote = new GuitarNote(bars[i].getTune(), fret);
+						GuitarNote newNote = new GuitarNote(bars[i].getTune().getTune(), fret);
 						newNote.setColumn(position);
 						newNote.setLineNum(bars[i].getLineNum());
 						newNote.setMeasure(Score.getAccumulateMeasure());
+						newNote.setOctave(bars[i].getTune().getOctave());
 
 						// add new note to the queue and increase notes left count
 						pq.add(newNote);

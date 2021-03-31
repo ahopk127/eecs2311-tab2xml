@@ -196,9 +196,10 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 				notations.append(slide);
 			} else if (currNote.isHarmonic()) {
 				XMLElement harmonic = new XMLElement("harmonic", musicSheet);
-				XMLElement artificial = new XMLElement("artificial", musicSheet);
-				XMLElement basePitch = new XMLElement("basePitch", musicSheet);
-				harmonic.append(artificial, basePitch);
+				harmonic.setAttribute("default-x", "3");
+				harmonic.setAttribute("default-y", "24");
+				harmonic.setAttribute("placement", "above");
+				harmonic.setAttribute("print-object", "yes");
 				technical.append(harmonic);
 			}
 
@@ -319,7 +320,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 			scorePart.append(midiDeviceG);
 			XMLElement midiInstrumentG = midiInstrument(String.format("P1-I%d", 1), "1", "25", "", "78.7402", "0");
 			scorePart.append(midiInstrumentG);
-			
+
 			break;
 		case BASS:
 			scorePart.append(partName);
@@ -337,7 +338,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 			scorePart.append(midiDeviceB);
 			XMLElement midiInstrumentB = midiInstrument(String.format("P1-I%d", 1), "1", "35", "", "78.7402", "0");
 			scorePart.append(midiInstrumentB);
-			
+
 			break;
 		case DRUM:
 			int p = 0;
@@ -351,7 +352,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 				scoreInstrumentD.append(instrumentNameD);
 				scorePart.append(scoreInstrumentD);
 			}
-			
+
 			break;
 		default:
 			break;
@@ -396,11 +397,13 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		staffDetails.append(staffLines);
 
 		List<GuitarString> list = staff.getLines();
+
+		int i = 1;
 		Collections.reverse(list);
 		for (GuitarString s : list) {
 			System.out.println("String: " + s.toString());
 			XMLElement staffTuning = new XMLElement("staff-tuning", musicSheet);
-			staffTuning.setAttribute("line", String.valueOf(s.getStringNum()));
+			staffTuning.setAttribute("line", String.valueOf(i++));
 			XMLElement tuningStep = new XMLElement("tuning-step", musicSheet);
 			tuningStep.setText(s.getTune());
 			XMLElement tuningOctave = new XMLElement("tuning-octave", musicSheet);

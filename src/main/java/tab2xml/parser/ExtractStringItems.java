@@ -235,7 +235,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		bar.setLineNum(s.getStringNum());
 		bar.setColumn(column);
 		bar.setPosition(token.getTokenIndex() + value.length());
-		bar.setTune(s.getTune());
+		bar.setTune(s.tune());
 		bar.setRightPos(column);
 		bar.setLeftPos(column - ((column - value.length() < 0)|| column == 1 ? 0 : value.length()) + 1);
 

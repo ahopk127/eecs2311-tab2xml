@@ -50,8 +50,12 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 
 		for (E n : notes) {
 			for (E n2 : durationNotes) {
-				if (n.getColumn() == n2.getColumn())
-					n.setDurationVal(n2.getDurationVal());	
+				if (n.getColumn() == n2.getColumn()) {
+					n.setDurationVal(n2.getDurationVal());
+					if (n.getNotes().size() > 0)
+						n.getNotes().forEach(group -> group.setDurationVal(n2.getDurationVal()));
+				}
+					
 			}
 		}
 	}

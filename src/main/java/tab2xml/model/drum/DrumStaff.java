@@ -135,13 +135,7 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 							isRepeatEnd = true;
 
 					if (bars[0].isRepeat() && bars[0].isStop() && !isRepeatEnd) {
-						String value = bars[0].toString();
-						String fret = value.substring(0, value.indexOf("|"));
-						double position = bars[0].getColumn() - 1;
-						DrumNote newNote = new DrumNote(bars[0].getTune(), fret);
-						newNote.setColumn(position);
-						newNote.setLineNum(bars[0].getLineNum());
-						pq.add(newNote);
+
 						totalNotesInStaff++;
 					}
 				}

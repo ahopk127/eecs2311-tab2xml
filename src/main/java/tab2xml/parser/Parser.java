@@ -32,7 +32,7 @@ public class Parser {
 	public static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ ]*[|-])[^\r\n]*\\|).*$))).+\r?\n?)";
 	public static final String GP = STRING + "{6,}";
 	public static final String BP = "(" + OUTLIER + "|\r?\n)" + "(" + STRING + "{4,5})" + "(" + OUTLIER + "|\r?\n)";
-	public static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEHhLMPRST12]{2})[\\|-]).*\\|).*)+)).*\r?\n?)+";
+	public  static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEHhLMPRST12]{2})[\\|-]).*\\|).*)+)).*\r?\n?)+";
 
 	public static final Pattern outlierPlucked = Pattern.compile(OUTLIER_MULTI, Pattern.MULTILINE);
 	public static final Pattern guitarPattern = Pattern.compile(GP, Pattern.MULTILINE);

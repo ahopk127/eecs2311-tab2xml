@@ -2,8 +2,6 @@ package tab2xml.model.guitar;
 
 import java.util.Collection;
 import java.util.InputMismatchException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import tab2xml.exceptions.InvalidTokenException;
@@ -30,7 +28,6 @@ public class GuitarNote extends Note {
 	private boolean isStartPull;
 	private boolean isStopPull;
 	private boolean isStartChain;
-	private List<GuitarNote> notes;
 	private boolean isStopChain;
 	private boolean isStartSlide;
 	private boolean isStopSlide;
@@ -49,7 +46,6 @@ public class GuitarNote extends Note {
 	 * @param fret the fret of this note
 	 */
 	public GuitarNote(String tune, String fret) {
-		this.notes = new LinkedList<>();
 		this.tune = tune;
 		this.fret = fret;
 		setNoteType();
@@ -62,13 +58,10 @@ public class GuitarNote extends Note {
 	 */
 	public GuitarNote(NoteType type) {
 		super(type);
-		this.notes = new LinkedList<>();
 	}
 
 	public GuitarNote(GuitarString guitarString, String fret) {
-		this.notes = new LinkedList<>();
-		this.tune = guitarString.getTune();
-		this.fret = fret;
+		this(guitarString.getTune(), fret);
 		this.setLineNum(guitarString.getStringNum());
 		setNoteType();
 	}
@@ -164,12 +157,8 @@ public class GuitarNote extends Note {
 
 	public boolean add(GuitarNote note) {
 		if (note != null)
-			this.notes.add(note);
+			this.getNotes().add(note);
 		return true;
-	}
-
-	public List<GuitarNote> getNotes() {
-		return notes;
 	}
 
 	public boolean isStopChain() {
@@ -235,6 +224,7 @@ public class GuitarNote extends Note {
 	public void setDoubleBar(boolean isDoubleBar) {
 		this.isDoubleBar = isDoubleBar;
 	}
+
 
 	/**
 	 * Construct a note from the ASCII tablature.

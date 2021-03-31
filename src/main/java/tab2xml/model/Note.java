@@ -1,5 +1,10 @@
 package tab2xml.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import tab2xml.model.guitar.GuitarNote;
+
 public abstract class Note extends LineItem {
 	private static final long serialVersionUID = -1924142088563071902L;
 
@@ -22,8 +27,10 @@ public abstract class Note extends LineItem {
 	private int repeatCount;
 	private boolean lastInMeasure;
 	private double durationVal;
+	private List<GuitarNote> notes;
 
 	public Note() {
+		this.notes = new LinkedList<>();
 	}
 
 	/**
@@ -32,6 +39,7 @@ public abstract class Note extends LineItem {
 	 * @param type the type of note to create.
 	 */
 	public Note(NoteType type) {
+		this();
 		this.note = type;
 		this.step = type.getValue();
 	}
@@ -71,19 +79,20 @@ public abstract class Note extends LineItem {
 	}
 
 	public String getDuration() {
-		return String.valueOf((int)(Staff.DEFAULT_BEATS / getDurationVal() * Staff.DEFAULT_DIVISION));
+		int value = (int) (Staff.DEFAULT_BEATS / getDurationVal() * Staff.DEFAULT_DIVISION);
+		return String.valueOf((value <= 0 ? 1 : value));
 	}
 
 	public void setDurationVal(double duration) {
 		this.durationVal = duration;
 	}
-	
+
 	public double getDurationVal() {
 		return durationVal;
 	}
 
 	public String getType() {
-		switch ((int)(durationVal)) {
+		switch ((int) (durationVal)) {
 		case 128:
 			return "128th";
 		case 64:
@@ -154,6 +163,10 @@ public abstract class Note extends LineItem {
 				return type;
 		}
 		return null;
+	}
+
+	public List<GuitarNote> getNotes() {
+		return notes;
 	}
 
 	@Override

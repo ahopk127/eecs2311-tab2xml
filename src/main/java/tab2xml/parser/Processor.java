@@ -71,7 +71,7 @@ public class Processor {
 			System.out.print(outlierMatcher.group(0));
 			System.out.println(String.format("end-group::%d", 0));
 
-			if (outlierMatcher.group(0).matches(Parser.COMMENTS))
+			if (outlierMatcher.group(0).matches(Parser.COMMENTS) || outlierMatcher.group(0).matches("[\r\n]+"))
 				continue;
 
 			commented.insert(outlierMatcher.start() + offset, leftComment);
@@ -141,7 +141,7 @@ public class Processor {
 			System.out.print(outlierMatcher.group(0));
 			System.out.println(String.format("end-group::%d", 0));
 
-			if (outlierMatcher.group(0).matches(Parser.COMMENTS))
+			if (outlierMatcher.group(0).matches(Parser.COMMENTS) || outlierMatcher.group(0).matches("^((?=\r?\n)[ \t]*)"))
 				continue;
 
 			commented.insert(outlierMatcher.start() + offset, leftComment);
@@ -170,7 +170,7 @@ public class Processor {
 		return commented.toString();
 	}
 
-	public static Score<DrumStaff> processDrum() {
+	private static Score<DrumStaff> processDrum() {
 		// TODO process the sheet for drum
 		return null;
 	}
@@ -221,7 +221,7 @@ public class Processor {
 		}
 	}
 
-	public Score<GuitarStaff> processBass() throws InvalidInputException {
+	private Score<GuitarStaff> processBass() throws InvalidInputException {
 		// TODO: process of bass is the same as guitar for the most part. we can
 		// avoid
 		// code duplication and change the varying
@@ -229,7 +229,7 @@ public class Processor {
 		return this.processGuitar();
 	}
 
-	public Score<GuitarStaff> processGuitar() throws InvalidInputException {
+	private Score<GuitarStaff> processGuitar() throws InvalidInputException {
 		final List<ErrorToken> errorTokens = new LinkedList<>();
 
 		if (input == null || input.length() == 0) {
