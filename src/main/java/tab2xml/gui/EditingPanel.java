@@ -193,6 +193,51 @@ final class EditingPanel extends JPanel {
 	}
 	
 	/**
+	 * Checks for any input errors
+	 *
+	 * @param checkTimeSignature whether time signature errors should be checked
+	 * @return whether the input is correct (there are no errors)
+	 * @since 2021-03-31
+	 */
+	private boolean checkInputErrors(boolean checkTimeSignature) {
+		final int measureStart, measureEnd, top, bottom;
+		try {
+			measureStart = Integer.valueOf(this.measureStart.getText());
+			measureEnd = Integer.valueOf(this.measureEnd.getText());
+			if (checkTimeSignature) {
+				top = Integer.valueOf(this.topSignatureField.getText());
+				bottom = Integer.valueOf(this.bottomSignatureField.getText());
+			} else {
+				top = -1;
+				bottom = -1;
+			}
+		} catch (final NumberFormatException e) {
+			this.view.showErrorMessage("Number Parsing Exception",
+					"One of the measure or time signature fields is not a number!");
+			return false;
+		}
+		
+		if (measureStart <= 0) {
+			this.view.showErrorMessage("Measure Range Error",
+					"Start measure must be positive");
+		} else if (measureEnd <= 0) {
+			this.view.showErrorMessage("Measure Range Error",
+					"End measure must be positive");
+		} else if (measureStart > measureEnd) {
+			this.view.showErrorMessage("Measure Range Error",
+					"Start measure must be before or equal to end measure.");
+		} else if (checkTimeSignature && top <= 0) {
+			this.view.showErrorMessage("Time Signature Error",
+					"Top numeral of time signature must be positive");
+		} else if (checkTimeSignature && bottom <= 0) {
+			this.view.showErrorMessage("Time Signature Error",
+					"Bottom numeral of time signature must be positive");
+		} else
+			return true;
+		return false;
+	}
+	
+	/**
 	 * Runs whenever the "Done" button is pressed.
 	 *
 	 * @param e button-press action
@@ -221,17 +266,19 @@ final class EditingPanel extends JPanel {
 	 * @since 2021-03-22
 	 */
 	private void editMeasures(ActionEvent e) {
-		final int measureStart = Integer.valueOf(this.measureStart.getText());
-		final int measureEnd = Integer.valueOf(this.measureEnd.getText());
-		
-		final String measureText = MeasureNarrowing.extractMeasureRange(
-				this.view.getInputText(), measureStart, measureEnd);
-		this.view.setNarrowedText(measureText);
-		
-		this.doneEditingButton.setEnabled(true);
-		this.measureStart.setEditable(false);
-		this.measureEnd.setEditable(false);
-		this.isNarrowing = true;
+		if (this.checkInputErrors(false)) {
+			final int measureStart = Integer.valueOf(this.measureStart.getText());
+			final int measureEnd = Integer.valueOf(this.measureEnd.getText());
+			
+			final String measureText = MeasureNarrowing.extractMeasureRange(
+					this.view.getInputText(), measureStart, measureEnd);
+			this.view.setNarrowedText(measureText);
+			
+			this.doneEditingButton.setEnabled(true);
+			this.measureStart.setEditable(false);
+			this.measureEnd.setEditable(false);
+			this.isNarrowing = true;
+		}
 	}
 	
 	/**
@@ -266,10 +313,11 @@ final class EditingPanel extends JPanel {
 	private void onEntryUpdate(CaretEvent e) {
 		final boolean measuresEntered = !(this.measureStart.getText().isBlank()
 				|| this.measureEnd.getText().isBlank());
-		final boolean signatureEntered = !(this.topSignatureField.getText()
-				.isBlank() || this.bottomSignatureField.getText().isBlank());
+//		final boolean signatureEntered = !(this.topSignatureField.getText()
+//				.isBlank() || this.bottomSignatureField.getText().isBlank());
 		this.editMeasureButton.setEnabled(measuresEntered);
-		this.setSignatureButton.setEnabled(measuresEntered && signatureEntered);
+		// signatures not implemented yet
+//		this.setSignatureButton.setEnabled(measuresEntered && signatureEntered);
 	}
 	
 	/**
@@ -286,12 +334,15 @@ final class EditingPanel extends JPanel {
 		 * that's a good thing.
 		 */
 		
-		final int measureStart = Integer.valueOf(this.measureStart.getText());
-		final int measureEnd = Integer.valueOf(this.measureEnd.getText());
-		final int top = Integer.valueOf(this.topSignatureField.getText());
-		final int bottom = Integer.valueOf(this.bottomSignatureField.getText());
-		
-		this.metadataBuilder.setTimeSignature(measureStart, measureEnd,
-				TimeSignature.valueOf(top, bottom));
+		if (this.checkInputErrors(true)) {
+			final int measureStart = Integer.valueOf(this.measureStart.getText());
+			final int measureEnd = Integer.valueOf(this.measureEnd.getText());
+			final int top = Integer.valueOf(this.topSignatureField.getText());
+			final int bottom = Integer
+					.valueOf(this.bottomSignatureField.getText());
+			
+			this.metadataBuilder.setTimeSignature(measureStart, measureEnd,
+					TimeSignature.valueOf(top, bottom));
+		}
 	}
 }
