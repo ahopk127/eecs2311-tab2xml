@@ -44,6 +44,19 @@ public final class IntRange extends AbstractSet<Integer> {
 	}
 	
 	/**
+	 * Gets an {@code IntRange}
+	 *
+	 * @param beginningInclusive beginning of range, inclusive
+	 * @param endExclusive       end of range, exclusive
+	 * @return int range
+	 * @throws IllegalArgumentException if beginning is less than end
+	 * @since 2021-03-31
+	 */
+	public static IntRange valueOf(int beginningInclusive, int endExclusive) {
+		return new IntRange(beginningInclusive, endExclusive);
+	}
+	
+	/**
 	 * The first element in the range.
 	 */
 	private final int beginningInclusive;
@@ -58,7 +71,7 @@ public final class IntRange extends AbstractSet<Integer> {
 	 * @throws IllegalArgumentException if beginning is less than end
 	 * @since 2021-03-22
 	 */
-	public IntRange(int beginningInclusive, int endExclusive) {
+	private IntRange(int beginningInclusive, int endExclusive) {
 		if (beginningInclusive > endExclusive)
 			throw new IllegalArgumentException(
 					"Beginning must be less than or equal to end");

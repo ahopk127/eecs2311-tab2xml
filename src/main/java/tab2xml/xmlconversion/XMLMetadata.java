@@ -1,5 +1,7 @@
 package tab2xml.xmlconversion;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,8 +30,7 @@ public final class XMLMetadata {
 		private Optional<String> composer;
 		
 		/**
-		 * Time signature data. Each time signature is represented by an entry
-		 * mapping the measure it begins on to the time signature
+		 * Time signature data. Each measure is mapped to a time signature.
 		 */
 		private final SortedMap<Integer, TimeSignature> timeSignatures;
 		
@@ -51,6 +52,7 @@ public final class XMLMetadata {
 		 */
 		public Builder(String title) {
 			this.title = Objects.requireNonNull(title, "title may not be null");
+			this.composer = Optional.empty();
 			this.timeSignatures = new TreeMap<>();
 		}
 		
@@ -60,7 +62,8 @@ public final class XMLMetadata {
 		 * @since 2021-03-22
 		 */
 		public XMLMetadata build() {
-			return new XMLMetadata(this.title, this.composer, null);
+			return new XMLMetadata(this.title, this.composer,
+					new TreeMap<>(this.timeSignatures));
 		}
 		
 		/**
@@ -86,7 +89,10 @@ public final class XMLMetadata {
 		 */
 		public Builder setTimeSignature(int start, int stop,
 				TimeSignature signature) {
-			throw new UnsupportedOperationException("Not implemented yet");
+			for (int measure = start; measure <= stop; measure++) {
+				this.timeSignatures.put(measure, signature);
+			}
+			return this;
 		}
 		
 		/**
@@ -136,7 +142,12 @@ public final class XMLMetadata {
 	/**
 	 * Time signature data
 	 */
-	private final Map<IntRange, TimeSignature> timeSignatures;
+	private final SortedMap<Integer, TimeSignature> timeSignatures;
+	
+	/**
+	 * Time signature data in int-range form
+	 */
+	private transient Map<IntRange, TimeSignature> timeSignatureRanges = null;
 	
 	/**
 	 * @param title          title of score
@@ -144,7 +155,7 @@ public final class XMLMetadata {
 	 * @since 2021-03-22
 	 */
 	private XMLMetadata(String title, Optional<String> composer,
-			Map<IntRange, TimeSignature> timeSignatures) {
+			SortedMap<Integer, TimeSignature> timeSignatures) {
 		this.title = title;
 		this.composer = composer;
 		this.timeSignatures = timeSignatures;
@@ -163,7 +174,37 @@ public final class XMLMetadata {
 	 * @since 2021-03-31
 	 */
 	public final Map<IntRange, TimeSignature> getTimeSignatureRanges() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		if (this.timeSignatureRanges == null) {
+			final Map<IntRange, TimeSignature> timeSignatureRanges = new HashMap<>();
+			TimeSignature prevSignature = null;
+			int prevRangeBeginning = 1;
+			final int maxValue = this.timeSignatures.keySet().stream()
+					.mapToInt(Integer::intValue).max().orElse(0);
+			
+			// iterating over values, calculating the ranges
+			for (int i = 1; i <= maxValue; i++) {
+				final TimeSignature currentSignature = this.timeSignatures.get(i);
+				
+				if (i != 1 && !Objects.equals(currentSignature, prevSignature)) {
+					// put previous range into map
+					final IntRange range = IntRange.valueOf(prevRangeBeginning, i);
+					timeSignatureRanges.put(range, prevSignature);
+					prevRangeBeginning = i;
+				}
+				
+				prevSignature = currentSignature;
+			}
+			
+			// put in last range
+			final IntRange range = IntRange.valueOf(prevRangeBeginning, maxValue + 1);
+			timeSignatureRanges.put(range, prevSignature);
+			
+			// store map for later
+			this.timeSignatureRanges = Collections
+					.unmodifiableMap(timeSignatureRanges);
+		}
+		
+		return this.timeSignatureRanges;
 	}
 	
 	/**
@@ -171,7 +212,7 @@ public final class XMLMetadata {
 	 * @since 2021-03-22
 	 */
 	public final Map<Integer, TimeSignature> getTimeSignatures() {
-		throw new UnsupportedOperationException("Not implemented yet");
+		return Collections.unmodifiableMap(this.timeSignatures);
 	}
 	
 	/**
