@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.CaretEvent;
 
+import tab2xml.model.TimeSignature;
 import tab2xml.parser.MeasureNarrowing;
 import tab2xml.xmlconversion.XMLMetadata;
 
@@ -77,10 +78,23 @@ final class EditingPanel extends JPanel {
 	private final JTextField measureEnd;
 	/** Text field describing the score title */
 	private final JTextField titleField;
+	/** Text field describing the score composer */
+	private final JTextField composerField;
+	/** Field for top part of time signature */
+	private final JTextField topSignatureField;
+	/** Field for bottom part of time signature */
+	private final JTextField bottomSignatureField;
 	
 	// control buttons
 	private final JButton editMeasureButton;
 	private final JButton doneEditingButton;
+	private final JButton setSignatureButton;
+	
+	/** Whether or not narrowing is currently being used */
+	private boolean isNarrowing = false;
+	
+	// metadata obtained from view
+	private final XMLMetadata.Builder metadataBuilder;
 	
 	/**
 	 * Creates the editing panel.
@@ -95,6 +109,7 @@ final class EditingPanel extends JPanel {
 	public EditingPanel(NarrowingView view) {
 		super(new GridBagLayout());
 		
+		this.metadataBuilder = new XMLMetadata.Builder();
 		this.view = view;
 		
 		final JPanel measureSelectionPanel = new JPanel();
@@ -106,7 +121,7 @@ final class EditingPanel extends JPanel {
 		this.measureStart = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
 		this.measureStart.setColumns(5);
-		this.measureStart.addCaretListener(this::onMeasureEntryUpdate);
+		this.measureStart.addCaretListener(this::onEntryUpdate);
 		measureSelectionPanel.add(this.measureStart);
 		
 		final JLabel dashLabel = new JLabel("-");
@@ -115,7 +130,7 @@ final class EditingPanel extends JPanel {
 		this.measureEnd = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
 		this.measureEnd.setColumns(5);
-		this.measureEnd.addCaretListener(this::onMeasureEntryUpdate);
+		this.measureEnd.addCaretListener(this::onEntryUpdate);
 		measureSelectionPanel.add(this.measureEnd);
 		
 		this.editMeasureButton = new JButton("Edit");
@@ -136,33 +151,90 @@ final class EditingPanel extends JPanel {
 		metadataPanel.add(titleLabel, gridBag(0, 0, 1, 1, INSETS));
 		
 		this.titleField = new JTextField(40);
-		metadataPanel.add(this.titleField, gridBag(1, 0, 4, 1, INSETS));
+		metadataPanel.add(this.titleField, gridBag(1, 0, 2, 1, INSETS));
+		
+		final JLabel composerLabel = new JLabel("Composer:");
+		metadataPanel.add(composerLabel, gridBag(0, 1, 1, 1, INSETS));
+		
+		this.composerField = new JTextField(40);
+		metadataPanel.add(this.composerField, gridBag(1, 1, 2, 1, INSETS));
 		
 //		final JButton setTitleButton = new JButton("Set Title");
 //		metadataPanel.add(setTitleButton, gridBag(4, 0, 1, 1, INSETS));
 		
 		final JLabel timeSignatureLabel = new JLabel("Time Signature:");
-		metadataPanel.add(timeSignatureLabel, gridBag(0, 1, 1, 1, INSETS));
+		metadataPanel.add(timeSignatureLabel, gridBag(0, 2, 1, 1, INSETS));
 		
 		final JPanel timeSignaturePanel = new JPanel();
-		metadataPanel.add(timeSignaturePanel, gridBag(1, 1, 3, 1, INSETS));
+		metadataPanel.add(timeSignaturePanel, gridBag(1, 2, 1, 1, INSETS));
 		
-		final JTextField topSignatureField = new JFormattedTextField(
+		this.topSignatureField = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
-		topSignatureField.setColumns(2);
-		timeSignaturePanel.add(topSignatureField);
+		this.topSignatureField.setColumns(2);
+		this.topSignatureField.setText("4");
+		this.topSignatureField.addCaretListener(this::onEntryUpdate);
+		timeSignaturePanel.add(this.topSignatureField);
 		
 		final JLabel colonLabel = new JLabel(":");
 		timeSignaturePanel.add(colonLabel);
 		
-		final JTextField bottomSignatureField = new JFormattedTextField(
+		this.bottomSignatureField = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
-		bottomSignatureField.setColumns(2);
-		timeSignaturePanel.add(bottomSignatureField);
+		this.bottomSignatureField.setColumns(2);
+		this.bottomSignatureField.setText("4");
+		this.bottomSignatureField.addCaretListener(this::onEntryUpdate);
+		timeSignaturePanel.add(this.bottomSignatureField);
 		
-		final JButton setSignatureButton = new JButton(
+		this.setSignatureButton = new JButton(
 				"Set Time Signature for Measure(s)");
-		metadataPanel.add(setSignatureButton, gridBag(4, 1, 1, 1, INSETS));
+		this.setSignatureButton.setEnabled(false);
+		this.setSignatureButton.addActionListener(this::setTimeSignature);
+		metadataPanel.add(this.setSignatureButton, gridBag(2, 2, 1, 1, INSETS));
+	}
+	
+	/**
+	 * Checks for any input errors
+	 *
+	 * @param checkTimeSignature whether time signature errors should be checked
+	 * @return whether the input is correct (there are no errors)
+	 * @since 2021-03-31
+	 */
+	private boolean checkInputErrors(boolean checkTimeSignature) {
+		final int measureStart, measureEnd, top, bottom;
+		try {
+			measureStart = Integer.valueOf(this.measureStart.getText());
+			measureEnd = Integer.valueOf(this.measureEnd.getText());
+			if (checkTimeSignature) {
+				top = Integer.valueOf(this.topSignatureField.getText());
+				bottom = Integer.valueOf(this.bottomSignatureField.getText());
+			} else {
+				top = -1;
+				bottom = -1;
+			}
+		} catch (final NumberFormatException e) {
+			this.view.showErrorMessage("Number Parsing Exception",
+					"One of the measure or time signature fields is not a number!");
+			return false;
+		}
+		
+		if (measureStart <= 0) {
+			this.view.showErrorMessage("Measure Range Error",
+					"Start measure must be positive");
+		} else if (measureEnd <= 0) {
+			this.view.showErrorMessage("Measure Range Error",
+					"End measure must be positive");
+		} else if (measureStart > measureEnd) {
+			this.view.showErrorMessage("Measure Range Error",
+					"Start measure must be before or equal to end measure.");
+		} else if (checkTimeSignature && top <= 0) {
+			this.view.showErrorMessage("Time Signature Error",
+					"Top numeral of time signature must be positive");
+		} else if (checkTimeSignature && bottom <= 0) {
+			this.view.showErrorMessage("Time Signature Error",
+					"Bottom numeral of time signature must be positive");
+		} else
+			return true;
+		return false;
 	}
 	
 	/**
@@ -182,6 +254,9 @@ final class EditingPanel extends JPanel {
 		this.view.setInputText(editedInput);
 		
 		this.doneEditingButton.setEnabled(false);
+		this.measureStart.setEditable(true);
+		this.measureEnd.setEditable(true);
+		this.isNarrowing = false;
 	}
 	
 	/**
@@ -191,23 +266,42 @@ final class EditingPanel extends JPanel {
 	 * @since 2021-03-22
 	 */
 	private void editMeasures(ActionEvent e) {
-		final int measureStart = Integer.valueOf(this.measureStart.getText());
-		final int measureEnd = Integer.valueOf(this.measureEnd.getText());
-		
-		final String measureText = MeasureNarrowing.extractMeasureRange(
-				this.view.getInputText(), measureStart, measureEnd);
-		this.view.setNarrowedText(measureText);
-		
-		this.doneEditingButton.setEnabled(true);
+		if (this.checkInputErrors(false)) {
+			final int measureStart = Integer.valueOf(this.measureStart.getText());
+			final int measureEnd = Integer.valueOf(this.measureEnd.getText());
+			
+			final String measureText = MeasureNarrowing.extractMeasureRange(
+					this.view.getInputText(), measureStart, measureEnd);
+			this.view.setNarrowedText(measureText);
+			
+			this.doneEditingButton.setEnabled(true);
+			this.measureStart.setEditable(false);
+			this.measureEnd.setEditable(false);
+			this.isNarrowing = true;
+		}
 	}
 	
 	/**
 	 * @return title entered by user
 	 * @since 2021-03-26
 	 */
-	public String getTitle() {
+	public XMLMetadata getMetadata() {
 		final String title = this.titleField.getText();
-		return title.isBlank() ? XMLMetadata.DEFAULT_TITLE : title;
+		final String composer = this.composerField.getText();
+		
+		this.metadataBuilder
+				.title(title.isBlank() ? XMLMetadata.DEFAULT_TITLE : title);
+		this.metadataBuilder.composer(composer.isBlank() ? null : composer);
+		
+		return this.metadataBuilder.build();
+	}
+	
+	/**
+	 * @return true iff the narrowing function is active
+	 * @since 2021-03-31
+	 */
+	public boolean isNarrowing() {
+		return this.isNarrowing;
 	}
 	
 	/**
@@ -216,9 +310,39 @@ final class EditingPanel extends JPanel {
 	 * @param e editing action
 	 * @since 2021-03-29
 	 */
-	private void onMeasureEntryUpdate(CaretEvent e) {
-		final boolean measuresEntered = !(this.measureStart.getText().isEmpty()
-				|| this.measureEnd.getText().isEmpty());
+	private void onEntryUpdate(CaretEvent e) {
+		final boolean measuresEntered = !(this.measureStart.getText().isBlank()
+				|| this.measureEnd.getText().isBlank());
+//		final boolean signatureEntered = !(this.topSignatureField.getText()
+//				.isBlank() || this.bottomSignatureField.getText().isBlank());
 		this.editMeasureButton.setEnabled(measuresEntered);
+		// signatures not implemented yet
+//		this.setSignatureButton.setEnabled(measuresEntered && signatureEntered);
+	}
+	
+	/**
+	 * Sets the time signature for the selected measure range; runs when the "Set
+	 * Time Signature" button is pressed
+	 *
+	 * @param e botton-press action, unused
+	 * @since 2021-03-31
+	 */
+	private void setTimeSignature(ActionEvent e) {
+		/*
+		 * Note: this method allows you to set the time signature when not on
+		 * narrowing mode as long as the measure/signature fields are entered, and
+		 * that's a good thing.
+		 */
+		
+		if (this.checkInputErrors(true)) {
+			final int measureStart = Integer.valueOf(this.measureStart.getText());
+			final int measureEnd = Integer.valueOf(this.measureEnd.getText());
+			final int top = Integer.valueOf(this.topSignatureField.getText());
+			final int bottom = Integer
+					.valueOf(this.bottomSignatureField.getText());
+			
+			this.metadataBuilder.setTimeSignature(measureStart, measureEnd,
+					TimeSignature.valueOf(top, bottom));
+		}
 	}
 }

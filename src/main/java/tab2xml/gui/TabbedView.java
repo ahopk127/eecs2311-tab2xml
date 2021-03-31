@@ -185,7 +185,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	
 	@Override
 	public XMLMetadata getMetadata() {
-		return XMLMetadata.fromTitle(this.editingPanel.getTitle());
+		return this.editingPanel.getMetadata();
 	}
 	
 	@Override

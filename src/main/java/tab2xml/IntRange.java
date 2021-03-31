@@ -44,6 +44,31 @@ public final class IntRange extends AbstractSet<Integer> {
 	}
 	
 	/**
+	 * Gets an {@code IntRange}
+	 *
+	 * @param beginning beginning of range, inclusive
+	 * @param end       end of range, <b>inclusive</b>
+	 * @return
+	 * @since 2021-03-31
+	 */
+	public static IntRange inclusive(int beginning, int end) {
+		return valueOf(beginning, end + 1);
+	}
+	
+	/**
+	 * Gets an {@code IntRange}
+	 *
+	 * @param beginningInclusive beginning of range, inclusive
+	 * @param endExclusive       end of range, exclusive
+	 * @return int range
+	 * @throws IllegalArgumentException if beginning is less than end
+	 * @since 2021-03-31
+	 */
+	public static IntRange valueOf(int beginningInclusive, int endExclusive) {
+		return new IntRange(beginningInclusive, endExclusive);
+	}
+	
+	/**
 	 * The first element in the range.
 	 */
 	private final int beginningInclusive;
@@ -58,12 +83,28 @@ public final class IntRange extends AbstractSet<Integer> {
 	 * @throws IllegalArgumentException if beginning is less than end
 	 * @since 2021-03-22
 	 */
-	public IntRange(int beginningInclusive, int endExclusive) {
+	private IntRange(int beginningInclusive, int endExclusive) {
 		if (beginningInclusive > endExclusive)
 			throw new IllegalArgumentException(
 					"Beginning must be less than or equal to end");
 		this.beginningInclusive = beginningInclusive;
 		this.endExclusive = endExclusive;
+	}
+	
+	/**
+	 * @return beginning of range, exclusive
+	 * @since 2021-03-31
+	 */
+	public final int beginningExclusive() {
+		return this.beginningInclusive + 1;
+	}
+	
+	/**
+	 * @return beginning of range, inclusive
+	 * @since 2021-03-22
+	 */
+	public final int beginningInclusive() {
+		return this.beginningInclusive;
 	}
 	
 	@Override
@@ -75,6 +116,22 @@ public final class IntRange extends AbstractSet<Integer> {
 			return false;
 	}
 	
+	/**
+	 * @return end of range, exclusive
+	 * @since 2021-03-22
+	 */
+	public final int endExclusive() {
+		return this.endExclusive;
+	}
+	
+	/**
+	 * @return end of range, inclusive
+	 * @since 2021-03-31
+	 */
+	public final int endInclusive() {
+		return this.endExclusive - 1;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof IntRange))
@@ -82,22 +139,6 @@ public final class IntRange extends AbstractSet<Integer> {
 		final IntRange other = (IntRange) obj;
 		return this.beginningInclusive == other.beginningInclusive
 				&& this.endExclusive == other.endExclusive;
-	}
-	
-	/**
-	 * @return beginning of range, inclusive
-	 * @since 2021-03-22
-	 */
-	public final int getBeginningInclusive() {
-		return this.beginningInclusive;
-	}
-	
-	/**
-	 * @return end of range, exclusive
-	 * @since 2021-03-22
-	 */
-	public final int getEndExclusive() {
-		return this.endExclusive;
 	}
 	
 	@Override
