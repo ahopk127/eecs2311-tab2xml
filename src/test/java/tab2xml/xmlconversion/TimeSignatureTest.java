@@ -1,6 +1,7 @@
 package tab2xml.xmlconversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -82,9 +83,7 @@ final class TimeSignatureTest {
 		assertTrue(timeSigRanges.containsKey(IntRange.inclusive(8, 10)));
 		assertEquals(ts2, timeSigRanges.get(IntRange.inclusive(8, 10)));
 		
-		assertTrue(timeSigRanges.containsKey(IntRange.inclusive(1, 1)));
-		assertEquals(null, timeSigRanges.get(IntRange.inclusive(1, 1)));
-		assertTrue(timeSigRanges.containsKey(IntRange.inclusive(4, 7)));
-		assertEquals(null, timeSigRanges.get(IntRange.inclusive(4, 7)));
+		assertFalse(timeSigRanges.containsKey(IntRange.inclusive(1, 1)));
+		assertFalse(timeSigRanges.containsKey(IntRange.inclusive(4, 7)));
 	}
 }

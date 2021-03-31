@@ -79,7 +79,8 @@ public final class XMLMetadata {
 		}
 		
 		/**
-		 * Sets the time signature of a range of methods.
+		 * Sets the time signature of a range of measures. Any exsting time
+		 * signatures in this range will be overwritten.
 		 *
 		 * @param start     start of measure range
 		 * @param stop      end of measure range
@@ -170,7 +171,9 @@ public final class XMLMetadata {
 	}
 	
 	/**
-	 * @return map mapping ranges of measure numbers to time signatures
+	 * @return map mapping ranges of measure numbers to time signatures. Ranges
+	 *         not explicitly mapped to time signatures will not be present in
+	 *         the returned map.
 	 * @since 2021-03-31
 	 */
 	public final Map<IntRange, TimeSignature> getTimeSignatureRanges() {
@@ -196,19 +199,29 @@ public final class XMLMetadata {
 			}
 			
 			// put in last range
-			final IntRange range = IntRange.valueOf(prevRangeBeginning, maxValue + 1);
+			final IntRange range = IntRange.valueOf(prevRangeBeginning,
+					maxValue + 1);
 			timeSignatureRanges.put(range, prevSignature);
 			
+			// remove ranges that map to null
+			final Map<IntRange, TimeSignature> nullFreeRanges = new HashMap<>();
+			for (final IntRange key : timeSignatureRanges.keySet()) {
+				if (timeSignatureRanges.get(key) != null) {
+					nullFreeRanges.put(key, timeSignatureRanges.get(key));
+				}
+			}
+			
 			// store map for later
-			this.timeSignatureRanges = Collections
-					.unmodifiableMap(timeSignatureRanges);
+			this.timeSignatureRanges = Collections.unmodifiableMap(nullFreeRanges);
 		}
 		
 		return this.timeSignatureRanges;
 	}
 	
 	/**
-	 * @return map mapping the measure number to the time signature.
+	 * @return A map mapping the measure number to the time signature. If a time
+	 *         signature was not specified for a measure number, this map may not
+	 *         contain it, or it may map it to {@code null}.
 	 * @since 2021-03-22
 	 */
 	public final Map<Integer, TimeSignature> getTimeSignatures() {
