@@ -48,6 +48,8 @@
 
 
 ** Model Design
+/All TAB2XML model code is located in the ~tab2xml.model~ package and its subsets ~tab2xml.model.guitar~ etc../
+   
 	The design of the instrument based model classes have a one-to-one correspondence between the respective grammar. The system abstracts some of these components which are shared in all the tablature formats(Such as ~Score~, ~Staff~, ~Note~ objects). The ~tab2xml.model~ package contains general classes along with abstract data classes. In the model package, subsets ~tab2xml.model.guitar~ and ~tab2xml.model.drum~ are specific to the respective instruments. For example, a drum model will not contain a ~Tune~ representation and conversely a guitar model will not contain a ~DrumType~ representation.
 
 *** Score object
@@ -55,7 +57,7 @@
 		adding measures. One of the most important parts in designing this system for the ~Score~ object was to make sure that the notes had a natural ordering. This would allow notes to be compared, sorted, and provide notes a positioning system. To achieve this, a custom iterator was defined along with the ~Note~ object being ~Comparable~. This method of abstraction of the score has a lot of benefits during the conversion tablature conversion process.
 
 #+LATEX: \newpage
-	/All TAB2XML model code is located in the ~tab2xml.model~ package and its subsets ~tab2xml.model.guitar~ etc../
+	
 *** Model Abstraction
 	#+CAPTION: A general model diagram of the abstraction of a ~Score~ object.
 	[[./Diagrams/backend-model-abstraction.png]]
@@ -105,11 +107,8 @@
 
 ** Grammar Design
 	The grammars for the system are designed to abstract the score representation. The grammars can be located at ~src/main/antlr~. The system defines a set of rules for the grammar and antlr4 then creates a corresponding ~ParseTree~ from the input stream. The following are example rules(lower case, which would be nodes in the tree, sheet being the top level rule) and tokens which help build the grammar rules. This makes adding new support for tabs fairly easy as all you need to do is change the grammar rules and have a corresponding data model for that feature.
-
 	#+CAPTION: A list guitar grammar rules and tokens in ~GuitarTab.g4~(similarly drums have their own set of rules defined in ~DrumTab.g4~)
 	[[./Diagrams/guitar-grammar-rules.png]]
-
-
 	#+CAPTION: An example of a ~ParseTree~ structure for a bass(which is uses ~GuitarTab.g4~ grammar) tablature with four strings:
 	[[./Diagrams/bass-parse-tree.png]]
 
