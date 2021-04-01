@@ -20,7 +20,7 @@
    The rationale behind this design is to reduce the effort involved in creating a new GUI.  If it extends ~AbstractSwingView~, creating a new View is as simple as making a "mockup" Swing GUI and implementing two trivial methods.  This makes it easy to work with multiple GUIs at once (allowing the customer to choose which they prefer).  This design was especially important in the beginning of development, because I could prototype different GUI ideas with the customer using fully functional applications.
 ** Converting Text Tabs
    #+CAPTION: A sequence diagram for the "Convert and Save" operation
-   [[./Diagrams/convert-and-save.png]]
+   [[./Diagrams/convert-and-save-2.png]]
 
    Here is how the "Convert and Save" operation works:
    1. The user inputs the tab into the input text box (by typing, copy-and-pasting, the "Load from File" button or dragging and dropping a file).
@@ -53,13 +53,14 @@
 *** Score object
 		The ~Score~ object is by far the most important part of the model as it contains all the other objects. Because of this, the system is designed to allow the ~Score~ to be essentially a custom data structure. With functions such as adding staffs, iterating over staffs, iterating over notes and
 		adding measures. One of the most important parts in designing this system for the ~Score~ object was to make sure that the notes had a natural ordering. This would allow notes to be compared, sorted, and provide notes a positioning system. To achieve this, a custom iterator was defined along with the ~Note~ object being ~Comparable~. This method of abstraction of the score has a lot of benefits during the conversion tablature conversion process.
-	
+
+#+LATEX: \newpage
 	/All TAB2XML model code is located in the ~tab2xml.model~ package and its subsets ~tab2xml.model.guitar~ etc../
 *** Model Abstraction
-   #+CAPTION: A general model diagram of the abstraction of a ~Score~ object.
+	#+CAPTION: A general model diagram of the abstraction of a ~Score~ object.
 	[[./Diagrams/backend-model-abstraction.png]]
 
-       
+#+LATEX: \newpage
 
 ** Parser Design:
 	#+CAPTION: A class diagram for the ~Parser~ class.
