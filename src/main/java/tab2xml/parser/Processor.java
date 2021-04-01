@@ -71,7 +71,7 @@ public class Processor {
 			System.out.print(outlierMatcher.group(0));
 			System.out.println(String.format("end-group::%d", 0));
 
-			if (outlierMatcher.group(0).matches(Parser.COMMENTS) || outlierMatcher.group(0).matches("[\r\n]+"))
+			if (outlierMatcher.group(0).matches(Parser.COMMENTS) || outlierMatcher.group(0).matches("(^(?=[ \t]*(\r?\n)+)[ \t]*)"))
 				continue;
 
 			commented.insert(outlierMatcher.start() + offset, leftComment);
@@ -141,9 +141,9 @@ public class Processor {
 			System.out.print(outlierMatcher.group(0));
 			System.out.println(String.format("end-group::%d", 0));
 
-			if (outlierMatcher.group(0).matches(Parser.COMMENTS) || outlierMatcher.group(0).matches("^((?=\r?\n)[ \t]*)"))
+			if (outlierMatcher.group(0).matches(Parser.COMMENTS) || outlierMatcher.group(0).matches("(^(?=[ \t]*(\r?\n)+)[ \t]*)"))
 				continue;
-
+			
 			commented.insert(outlierMatcher.start() + offset, leftComment);
 			offset += 3;
 			commented.insert(outlierMatcher.end() + offset, rightComment);

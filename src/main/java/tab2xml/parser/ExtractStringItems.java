@@ -237,17 +237,17 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		bar.setPosition(token.getTokenIndex() + value.length());
 		bar.setTune(s.tune());
 		bar.setRightPos(column);
-		bar.setLeftPos(column - ((column - value.length() < 0)|| column == 1 ? 0 : value.length()) + 1);
+		bar.setLeftPos(column - ((column - value.length() < 0) || column == 1 ? 0 : value.length()) + 1);
 
-		// end repeat *||
-		if (start.equals("*")) {
+		// end repeat *|| .||
+		if (start.matches("(\\*|\\.)")) {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStop(true);
 		}
 
-		// start repeat: ||*
-		if (value.charAt(value.length() - 1) == '*') {
+		// start repeat: ||* ||.
+		if (value.charAt(value.length() - 1) == '*' || value.charAt(value.length() - 1) == '.') {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStart(true);
