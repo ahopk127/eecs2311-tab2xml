@@ -68,7 +68,7 @@ FRET_NUM
 	;
 
 DOUBLEBAR
-	: ('*' | '.')? (BAR | FRET_NUM) '|''|'?('*' | '.')?
+	: '*'? (BAR | FRET_NUM) '|''|'?'*'?
 	;
 
 BAR

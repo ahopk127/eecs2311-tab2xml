@@ -1,7 +1,6 @@
 package tab2xml.model.drum;
 
 import tab2xml.model.Note;
-import tab2xml.model.NoteType;
 
 /**
  * A drum note and its attributes.
@@ -12,6 +11,10 @@ public class DrumNote extends Note {
 	private static final long serialVersionUID = -1373454153112345088L;
 
 	/* Technical attributes */
+	private DrumType drumType;
+	private int id;
+	private String stem;
+	private String notehead;
 
 	/* Functional attributes */
 	private boolean isChord;
@@ -24,28 +27,21 @@ public class DrumNote extends Note {
 	/*************************/
 
 	/**
-	 * Construct a note object based specified step and octave.
-	 *
-	 * @param drumType the drumType of the line this note is on.
-	 */
-	public DrumNote(String step, String octave) {
-		this.step = step;
-		this.octave = octave;
-		this.note = getNoteType(octave);
-	}
-
-	/**
-	 * Construct a note object based on type of note.
+	 * Construct a note object based on {@code DrumType} of note.
 	 * 
 	 * @param type the type of this note
 	 */
-	public DrumNote(NoteType type) {
-		super(type);
+	public DrumNote(DrumType drumType) {
+		this.drumType = drumType;
+		this.step = drumType.getDrumStep();
+		this.octave = drumType.getDrumOctave();
+		this.id = drumType.getID();
+		setNoteType();
 	}
 
 	public DrumNote(DrumLine drumLine) {
+		this(drumLine.drumtype());
 		this.setLineNum(drumLine.getLineNum());
-		setNoteType();
 	}
 
 	/**
@@ -105,12 +101,24 @@ public class DrumNote extends Note {
 		this.isDoubleBar = isDoubleBar;
 	}
 
+	public DrumType getDrumType() {
+		return drumType;
+	}
+
+	public void setDrumType(DrumType drumType) {
+		this.drumType = drumType;
+	}
+
+	public int getId() {
+		return id;
+	}
+
 	/**
 	 * Set note type from a note already defined with a defined step
 	 */
 	@Override
 	protected void setNoteType() {
-
+		setNote(getNoteType(this.step));
 	}
 
 	/**
@@ -129,4 +137,26 @@ public class DrumNote extends Note {
 		return 0;
 	}
 
+	public String getStem() {
+		return stem;
+	}
+
+	public void setStem(String stem) {
+		setHasStem(true);
+		this.stem = stem;
+	}
+
+	/**
+	 * @return the notehead
+	 */
+	public String getNotehead() {
+		return notehead;
+	}
+
+	/**
+	 * @param notehead the notehead to set
+	 */
+	public void setNotehead(String notehead) {
+		this.notehead = notehead;
+	}
 }

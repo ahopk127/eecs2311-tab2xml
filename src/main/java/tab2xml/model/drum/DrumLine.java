@@ -16,6 +16,8 @@ import tab2xml.model.LineItem;
 public class DrumLine extends Line<DrumNote> {
 	private static final long serialVersionUID = 3885940852032675744L;
 	private int lineNum;
+	private boolean isCymbal;
+	private boolean isDrum;
 
 	/**
 	 * Construct an empty drum line(with line number grouped by staffs).
@@ -108,6 +110,34 @@ public class DrumLine extends Line<DrumNote> {
 	public Iterator<DrumNote> iterator() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * @return the isCymbal
+	 */
+	public boolean isCymbal() {
+		return isCymbal;
+	}
+
+	/**
+	 * @param isCymbal the isCymbal to set
+	 */
+	public void setCymbal(boolean isCymbal) {
+		this.isCymbal = isCymbal;
+	}
+
+	/**
+	 * @return the isDrum
+	 */
+	public boolean isDrum() {
+		return isDrum;
+	}
+
+	/**
+	 * @param isDrum the isDrum to set
+	 */
+	public void setDrum(boolean isDrum) {
+		this.isDrum = isDrum;
 	}
 
 }

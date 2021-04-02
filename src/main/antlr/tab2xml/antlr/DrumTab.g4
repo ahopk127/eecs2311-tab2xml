@@ -13,14 +13,14 @@ staff
 	;
 	
 line
-	: drumType lineItems SPACE* NEWLINE?          
+	: SPACE* drumType SPACE* lineItems SPACE* NEWLINE?          
 	;
 
 lineItems
-	:(HYPHEN 
-	| cymbal
+	:(cymbal
 	| drum
-	| BAR)+	BAR		
+	| BAR
+	| HYPHEN )+	BAR		
 	;	
 	
 drumType
@@ -36,10 +36,12 @@ drum: DRUMS;
 CYMBALS
 	: 'x'	
 	| 'X'
-	| 'o' // only hi-hat can be o - open hi-hat
+	| 'o'
 	| '#'
+	| 's'
 	| 'c'
-	| 'b'	
+	| 'b'
+	| 'p'	
 	; 
 	
 DRUMS
@@ -48,14 +50,17 @@ DRUMS
 	| 'g'
 	| 'f'
 	| 'd'
+	| 'b'
+	| 'B'
+	| '@'
 	;
 
 	
 /* Tokens */
 
 TYPE         
-	:('Bd' // base drum 1
-	| 'BD' // base drum 2
+	:('BD' // base drum 1
+	| 'Bd' // base drum 2
 	| 'SS' // side stick
 	| 'SD' // snare drum 
 	| 'ES' // electric  snare
@@ -67,16 +72,16 @@ TYPE
 	| 'HH' // open hi-hat 
 	| 'LM' // low-mid tom
 	| 'MT' // hi-mid tom
-	| 'Cc' // crash cymbal 1
+	| 'CC' // crash cymbal 1
 	| 'HT' // high tom
-	| 'Rd' // ride cymbal 1
+	| 'RD' // ride cymbal 1
 	| 'Ch'   // chinese cymbal
 	| 'RB' // ride bell
-	| 'T'  // tambourine
+	| 'TA'  // tambourine
 	| 'SC' // splash cymbal
 	| 'CB' // cowbell
-	| 'CC' // crash cymbal 2
-	| 'RD' // ride cymbal 2
+	| 'Cc' // crash cymbal 2
+	| 'Rd' // ride cymbal 2
 	| 'HC' // open high conga
 	| 'LC' // low conga
 	)

@@ -15,6 +15,7 @@ import tab2xml.model.Line;
 import tab2xml.model.Score;
 import tab2xml.model.Staff;
 import tab2xml.model.drum.DrumStaff;
+import tab2xml.model.drum.DrumType;
 import tab2xml.model.LineItem;
 import tab2xml.model.Measure;
 import tab2xml.model.Note;
@@ -343,12 +344,12 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		case DRUM:
 			int p = 0;
 			for (int i = 36; i <= 65; i++) {
-				if (i == 40)
+				if (i == 40 || i == 59 ||  i == 61 || i == 62 || i == 63)
 					continue;
 				XMLElement scoreInstrumentD = new XMLElement("score-instrument-name", musicSheet);
 				scoreInstrumentD.setAttribute("id", String.format("P1-I%d", i));
 				XMLElement instrumentNameD = new XMLElement("instrument-name", musicSheet);
-				instrumentNameD.setText(Instrument.drumSet[p++][1]);
+				instrumentNameD.setText(DrumType.drumSet.get(p++).get(1));
 				scoreInstrumentD.append(instrumentNameD);
 				scorePart.append(scoreInstrumentD);
 			}

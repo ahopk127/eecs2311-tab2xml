@@ -8,7 +8,8 @@ public class Bar extends LineItem {
 	private static final long serialVersionUID = 6758542578259875168L;
 
 	/** Pattern that matches bars. */
-	public static final Pattern pattern = Pattern.compile("(\\*\\.)?(\\||\\d+)?\\|\\|?(\\*|\\.)?");
+	public static final Pattern pattern = Pattern.compile("\\*?(\\||\\d+)?\\|\\|?\\*?");
+	
 	private int repeatCount;
 	private boolean isDoubleBar;
 	private boolean isRepeat;

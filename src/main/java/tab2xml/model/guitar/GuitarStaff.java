@@ -276,7 +276,7 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 				}
 
 				if (totalNotesInCurrMeasure == 0 && !remaining) {
-					notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(0));
+					notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(X));
 					totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 					Score.setAccumulateMeasure(Score.getAccumulateMeasure() + 1);
 				}
