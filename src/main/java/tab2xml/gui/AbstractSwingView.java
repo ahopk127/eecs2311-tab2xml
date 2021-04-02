@@ -23,6 +23,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
@@ -398,6 +400,34 @@ public abstract class AbstractSwingView implements View {
 	 */
 	protected final void setUpFileDragAndDrop() {
 		this.getInput().setDropTarget(new FileDragDropTarget());
+	}
+	
+	/**
+	 * Sets up the input so that any edit to it clears all of the highlighting.
+	 * 
+	 * @since 2021-04-02
+	 */
+	protected final void setUpHighlightingRemoval() {
+		this.getInput().getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				AbstractSwingView.this.getInput().getHighlighter()
+						.removeAllHighlights();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				AbstractSwingView.this.getInput().getHighlighter()
+						.removeAllHighlights();
+			}
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				AbstractSwingView.this.getInput().getHighlighter()
+						.removeAllHighlights();
+			}
+		});
 	}
 	
 	/**
