@@ -131,7 +131,7 @@ public class DrumTabParser extends Parser {
 			setState(17);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TYPE) | (1L << BAR) | (1L << NEWLINE))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TYPE) | (1L << BAR) | (1L << SPACE) | (1L << NEWLINE))) != 0)) {
 				{
 				{
 				setState(14);
@@ -294,32 +294,63 @@ public class DrumTabParser extends Parser {
 		enterRule(_localctx, 4, RULE_line);
 		int _la;
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(39);
-			drumType();
-			setState(40);
-			lineItems();
-			setState(44);
+			setState(42);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SPACE) {
 				{
 				{
-				setState(41);
+				setState(39);
 				match(SPACE);
 				}
 				}
-				setState(46);
+				setState(44);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(48);
+			setState(45);
+			drumType();
+			setState(49);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
+			_la = _input.LA(1);
+			while (_la==SPACE) {
+				{
+				{
+				setState(46);
+				match(SPACE);
+				}
+				}
+				setState(51);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			setState(52);
+			lineItems();
+			setState(56);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(53);
+					match(SPACE);
+					}
+					} 
+				}
+				setState(58);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
+			}
+			setState(60);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 			case 1:
 				{
-				setState(47);
+				setState(59);
 				match(NEWLINE);
 				}
 				break;
@@ -342,10 +373,6 @@ public class DrumTabParser extends Parser {
 		public TerminalNode BAR(int i) {
 			return getToken(DrumTabParser.BAR, i);
 		}
-		public List<TerminalNode> HYPHEN() { return getTokens(DrumTabParser.HYPHEN); }
-		public TerminalNode HYPHEN(int i) {
-			return getToken(DrumTabParser.HYPHEN, i);
-		}
 		public List<CymbalContext> cymbal() {
 			return getRuleContexts(CymbalContext.class);
 		}
@@ -357,6 +384,10 @@ public class DrumTabParser extends Parser {
 		}
 		public DrumContext drum(int i) {
 			return getRuleContext(DrumContext.class,i);
+		}
+		public List<TerminalNode> HYPHEN() { return getTokens(DrumTabParser.HYPHEN); }
+		public TerminalNode HYPHEN(int i) {
+			return getToken(DrumTabParser.HYPHEN, i);
 		}
 		public LineItemsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -384,38 +415,38 @@ public class DrumTabParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(54); 
+			setState(66); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
 				switch (_alt) {
 				case 1:
 					{
-					setState(54);
+					setState(66);
 					_errHandler.sync(this);
 					switch (_input.LA(1)) {
-					case HYPHEN:
-						{
-						setState(50);
-						match(HYPHEN);
-						}
-						break;
 					case CYMBALS:
 						{
-						setState(51);
+						setState(62);
 						cymbal();
 						}
 						break;
 					case DRUMS:
 						{
-						setState(52);
+						setState(63);
 						drum();
 						}
 						break;
 					case BAR:
 						{
-						setState(53);
+						setState(64);
 						match(BAR);
+						}
+						break;
+					case HYPHEN:
+						{
+						setState(65);
+						match(HYPHEN);
 						}
 						break;
 					default:
@@ -426,11 +457,11 @@ public class DrumTabParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(56); 
+				setState(68); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			setState(58);
+			setState(70);
 			match(BAR);
 			}
 		}
@@ -474,17 +505,17 @@ public class DrumTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(61);
+			setState(73);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==TYPE) {
 				{
-				setState(60);
+				setState(72);
 				match(TYPE);
 				}
 			}
 
-			setState(63);
+			setState(75);
 			match(BAR);
 			}
 		}
@@ -526,7 +557,7 @@ public class DrumTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(65);
+			setState(77);
 			match(CYMBALS);
 			}
 		}
@@ -568,7 +599,7 @@ public class DrumTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(67);
+			setState(79);
 			match(DRUMS);
 			}
 		}
@@ -584,25 +615,28 @@ public class DrumTabParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\13H\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\13T\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\7\2\22\n\2\f\2\16\2\25"+
 		"\13\2\3\2\3\2\3\3\7\3\32\n\3\f\3\16\3\35\13\3\3\3\6\3 \n\3\r\3\16\3!\3"+
-		"\3\7\3%\n\3\f\3\16\3(\13\3\3\4\3\4\3\4\7\4-\n\4\f\4\16\4\60\13\4\3\4\5"+
-		"\4\63\n\4\3\5\3\5\3\5\3\5\6\59\n\5\r\5\16\5:\3\5\3\5\3\6\5\6@\n\6\3\6"+
-		"\3\6\3\7\3\7\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\2\2K\2\23\3\2\2\2\4\33"+
-		"\3\2\2\2\6)\3\2\2\2\b8\3\2\2\2\n?\3\2\2\2\fC\3\2\2\2\16E\3\2\2\2\20\22"+
-		"\5\4\3\2\21\20\3\2\2\2\22\25\3\2\2\2\23\21\3\2\2\2\23\24\3\2\2\2\24\26"+
-		"\3\2\2\2\25\23\3\2\2\2\26\27\7\2\2\3\27\3\3\2\2\2\30\32\7\t\2\2\31\30"+
-		"\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\37\3\2\2\2\35\33"+
-		"\3\2\2\2\36 \5\6\4\2\37\36\3\2\2\2 !\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\""+
-		"&\3\2\2\2#%\7\t\2\2$#\3\2\2\2%(\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\'\5\3\2\2"+
-		"\2(&\3\2\2\2)*\5\n\6\2*.\5\b\5\2+-\7\b\2\2,+\3\2\2\2-\60\3\2\2\2.,\3\2"+
-		"\2\2./\3\2\2\2/\62\3\2\2\2\60.\3\2\2\2\61\63\7\t\2\2\62\61\3\2\2\2\62"+
-		"\63\3\2\2\2\63\7\3\2\2\2\649\7\7\2\2\659\5\f\7\2\669\5\16\b\2\679\7\6"+
-		"\2\28\64\3\2\2\28\65\3\2\2\28\66\3\2\2\28\67\3\2\2\29:\3\2\2\2:8\3\2\2"+
-		"\2:;\3\2\2\2;<\3\2\2\2<=\7\6\2\2=\t\3\2\2\2>@\7\5\2\2?>\3\2\2\2?@\3\2"+
-		"\2\2@A\3\2\2\2AB\7\6\2\2B\13\3\2\2\2CD\7\3\2\2D\r\3\2\2\2EF\7\4\2\2F\17"+
-		"\3\2\2\2\13\23\33!&.\628:?";
+		"\3\7\3%\n\3\f\3\16\3(\13\3\3\4\7\4+\n\4\f\4\16\4.\13\4\3\4\3\4\7\4\62"+
+		"\n\4\f\4\16\4\65\13\4\3\4\3\4\7\49\n\4\f\4\16\4<\13\4\3\4\5\4?\n\4\3\5"+
+		"\3\5\3\5\3\5\6\5E\n\5\r\5\16\5F\3\5\3\5\3\6\5\6L\n\6\3\6\3\6\3\7\3\7\3"+
+		"\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\2\2Y\2\23\3\2\2\2\4\33\3\2\2\2\6,\3"+
+		"\2\2\2\bD\3\2\2\2\nK\3\2\2\2\fO\3\2\2\2\16Q\3\2\2\2\20\22\5\4\3\2\21\20"+
+		"\3\2\2\2\22\25\3\2\2\2\23\21\3\2\2\2\23\24\3\2\2\2\24\26\3\2\2\2\25\23"+
+		"\3\2\2\2\26\27\7\2\2\3\27\3\3\2\2\2\30\32\7\t\2\2\31\30\3\2\2\2\32\35"+
+		"\3\2\2\2\33\31\3\2\2\2\33\34\3\2\2\2\34\37\3\2\2\2\35\33\3\2\2\2\36 \5"+
+		"\6\4\2\37\36\3\2\2\2 !\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"&\3\2\2\2#%\7\t"+
+		"\2\2$#\3\2\2\2%(\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\'\5\3\2\2\2(&\3\2\2\2)+"+
+		"\7\b\2\2*)\3\2\2\2+.\3\2\2\2,*\3\2\2\2,-\3\2\2\2-/\3\2\2\2.,\3\2\2\2/"+
+		"\63\5\n\6\2\60\62\7\b\2\2\61\60\3\2\2\2\62\65\3\2\2\2\63\61\3\2\2\2\63"+
+		"\64\3\2\2\2\64\66\3\2\2\2\65\63\3\2\2\2\66:\5\b\5\2\679\7\b\2\28\67\3"+
+		"\2\2\29<\3\2\2\2:8\3\2\2\2:;\3\2\2\2;>\3\2\2\2<:\3\2\2\2=?\7\t\2\2>=\3"+
+		"\2\2\2>?\3\2\2\2?\7\3\2\2\2@E\5\f\7\2AE\5\16\b\2BE\7\6\2\2CE\7\7\2\2D"+
+		"@\3\2\2\2DA\3\2\2\2DB\3\2\2\2DC\3\2\2\2EF\3\2\2\2FD\3\2\2\2FG\3\2\2\2"+
+		"GH\3\2\2\2HI\7\6\2\2I\t\3\2\2\2JL\7\5\2\2KJ\3\2\2\2KL\3\2\2\2LM\3\2\2"+
+		"\2MN\7\6\2\2N\13\3\2\2\2OP\7\3\2\2P\r\3\2\2\2QR\7\4\2\2R\17\3\2\2\2\r"+
+		"\23\33!&,\63:>DFK";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

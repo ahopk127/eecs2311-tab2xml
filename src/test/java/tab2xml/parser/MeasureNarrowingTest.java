@@ -5,6 +5,7 @@ import static tab2xml.parser.MeasureNarrowing.bottomRightCorner;
 import static tab2xml.parser.MeasureNarrowing.delinearize;
 import static tab2xml.parser.MeasureNarrowing.extractMeasureRange;
 import static tab2xml.parser.MeasureNarrowing.linearize;
+import static tab2xml.parser.MeasureNarrowing.measureCount;
 import static tab2xml.parser.MeasureNarrowing.replaceMeasureRange;
 import static tab2xml.parser.MeasureNarrowing.topLeftCorner;
 
@@ -157,6 +158,17 @@ class MeasureNarrowingTest {
 	@Test
 	final void testLinearize() {
 		assertEquals(tab2Linearized, linearize(tab2));
+	}
+	
+	/**
+	 * Tests {@link MeasureNarrowing#measureCount}.
+	 * 
+	 * @since 2021-04-03
+	 */
+	@Test
+	final void testMeasureCount() {
+		assertEquals(5, measureCount(tab1));
+		assertEquals(6, measureCount(tab2));
 	}
 	
 	/**

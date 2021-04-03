@@ -390,6 +390,33 @@ public final class MeasureNarrowing {
 	}
 	
 	/**
+	 * Counts the number of measures in a text tab.
+	 *
+	 * @param textTab text tab to count measures of
+	 * @return number of measures in {@code textTab}
+	 * @since 2021-04-03
+	 */
+	public static int measureCount(String textTab) {
+		final String linearizedTab = linearize(textTab);
+		final String firstLine = linearizedTab.substring(0,
+				linearizedTab.indexOf(ROW_END));
+		
+		// count the number of | characters, making sure not to double-count ||
+		// measure beginnings/ends
+		int measureBeginning = firstLine.indexOf(MEASURE_SEPARATOR);
+		int measureCount = -1; // start at -1 because this code will normally
+										// calculate one more than measure count
+		
+		while (measureBeginning != -1) {
+			measureBeginning = firstLine.indexOf(MEASURE_SEPARATOR,
+					measureBeginning + MIN_MEASURE_LENGTH + 1);
+			measureCount++;
+		}
+		
+		return measureCount;
+	}
+	
+	/**
 	 * Accepts a text tab, and returns the text tab with a set of measures
 	 * replaced. The new measure text should have '|' on both sides.
 	 * 
