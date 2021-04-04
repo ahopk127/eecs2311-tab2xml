@@ -25,17 +25,29 @@ public interface DrumTabVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStaff(DrumTabParser.StaffContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#line}.
+	 * Visit a parse tree produced by {@link DrumTabParser#drumLine}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLine(DrumTabParser.LineContext ctx);
+	T visitDrumLine(DrumTabParser.DrumLineContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#lineItems}.
+	 * Visit a parse tree produced by {@link DrumTabParser#cymbalLine}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLineItems(DrumTabParser.LineItemsContext ctx);
+	T visitCymbalLine(DrumTabParser.CymbalLineContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DrumTabParser#drumActions}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDrumActions(DrumTabParser.DrumActionsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DrumTabParser#cymbalActions}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCymbalActions(DrumTabParser.CymbalActionsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DrumTabParser#drumType}.
 	 * @param ctx the parse tree
@@ -43,15 +55,21 @@ public interface DrumTabVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDrumType(DrumTabParser.DrumTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DrumTabParser#cymbal}.
+	 * Visit a parse tree produced by {@link DrumTabParser#cymbalType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCymbal(DrumTabParser.CymbalContext ctx);
+	T visitCymbalType(DrumTabParser.CymbalTypeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DrumTabParser#drum}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitDrum(DrumTabParser.DrumContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DrumTabParser#cymbal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCymbal(DrumTabParser.CymbalContext ctx);
 }

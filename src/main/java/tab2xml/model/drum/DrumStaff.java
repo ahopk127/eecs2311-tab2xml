@@ -5,12 +5,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.TreeSet;
 
 import tab2xml.model.Staff;
+import tab2xml.ImmutablePair;
+import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.Measure;
+import tab2xml.model.Range;
 import tab2xml.model.Score;
-import tab2xml.model.guitar.Bar;
 
 public class DrumStaff extends Staff<DrumLine, DrumNote> {
 	private static final long serialVersionUID = 8730635738592350695L;
@@ -25,7 +28,68 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 	 */
 	@Override
 	public Iterator<DrumNote> iterator() {
-		return null;
+		return new NoteIterator(this);
+	}
+
+	/**
+	 * Iterate over the notes in this staff.
+	 */
+	private static class MeasureIterator implements Iterator<Measure<DrumNote>> {
+		private TreeSet<DrumNote> notes;
+		private List<LinkedList<LineItem>> staff;
+		private int startPosition = 0;
+		private int stopPosition = 1;
+
+		public MeasureIterator(DrumStaff staff) {
+			notes = staff.getNotes();
+			this.staff = staff.toList();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return notes != null && !notes.isEmpty() && notes.first().getMeasure() == Score.getAccumulateMeasureScore();
+		}
+
+		@Override
+		public Measure<DrumNote> next() {
+			Bar[] barsStart = getFirstBarsAt(startPosition, staff);
+			Bar[] barsEnd = getFirstBarsAt(stopPosition, staff);
+
+			Range upperRange = new Range(barsStart[0].rightPos(), barsEnd[0].leftPos());
+			Range bottomRange = new Range(barsStart[barsEnd.length - 1].rightPos(),
+					barsEnd[barsEnd.length - 1].leftPos());
+			ImmutablePair<Range, Range> range = ImmutablePair.of(upperRange, bottomRange);
+
+			Measure<DrumNote> measure = new Measure<>(Score.getAccumulateMeasureScore(), range);
+			while (!notes.isEmpty() && notes.first().getMeasure() == Score.getAccumulateMeasureScore()) {
+				measure.add(notes.pollFirst());
+			}
+			startPosition++;
+			stopPosition++;
+			Score.setAccumulateMeasureScore(Score.getAccumulateMeasureScore() + 1);
+			return measure;
+		}
+	}
+
+	/**
+	 * Iterate over the notes in this staff.
+	 */
+	private static class NoteIterator implements Iterator<DrumNote> {
+		private TreeSet<DrumNote> notes;
+
+		public NoteIterator(DrumStaff staff) {
+			notes = staff.getNotes();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !notes.isEmpty();
+		}
+
+		@Override
+		public DrumNote next() {
+			return notes.pollFirst();
+		}
 	}
 
 	/**
@@ -34,17 +98,17 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 	 * @author amir
 	 *
 	 */
-	public class StaffIterator implements Iterator<LineItem> {
+	private static class InitialStaffIterator implements Iterator<LineItem> {
 		private List<LinkedList<LineItem>> notes;
 		private PriorityQueue<LineItem> pq;
-		private int x = 0;
+		private final int X = 1;
 		private int y;
-		private int barsNotSeen;
 		private int numLines;
 		private int lengths[];
 		private int totalNotesInCurrMeasure;
 		private int totalNotesInStaff;
 		private boolean collecting;
+		private boolean remaining;
 		private boolean setFirstRepeatNote;
 		private DrumNote previousNote = null;
 
@@ -53,14 +117,14 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 		 * 
 		 * @param staff the staff to iterate
 		 */
-		public StaffIterator(DrumStaff staff) {
+		public InitialStaffIterator(DrumStaff staff) {
 			notes = staff.toList();
 			y = staff.size() - 1;
-			barsNotSeen = staff.numberOfMeasures();
 			numLines = staff.size();
 			lengths = new int[numLines];
 			Arrays.fill(lengths, -1);
 			collecting = true;
+			remaining = false;
 			setFirstRepeatNote = false;
 			totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 			totalNotesInStaff = staff.getNoteCount();
@@ -72,7 +136,7 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 		 */
 		@Override
 		public boolean hasNext() {
-			return totalNotesInStaff-- > 0;
+			return totalNotesInStaff-- > 0 || totalNotesInCurrMeasure != 0;
 		}
 
 		/**
@@ -82,10 +146,11 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 		 */
 		@Override
 		public LineItem next() {
-			// TODO: figure out how to calculate duration and type??
+			// while collecting notes from current measure
 			while ((pq.isEmpty() || collecting) && totalNotesInCurrMeasure != 0) {
 				collecting = true;
 
+				// we are going to next column
 				if (y > notes.size() - 1)
 					y = 0;
 
@@ -94,7 +159,7 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 					continue;
 				}
 
-				LineItem item = notes.get(y).get(x);
+				LineItem item = notes.get(y).get(X);
 
 				if (item.getClass() == DrumNote.class) {
 					DrumNote note = (DrumNote) item;
@@ -104,60 +169,93 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 					lengths[y]--;
 					totalNotesInCurrMeasure--;
 
+					if (note.isGrace()) {
+						while (notes.get(y).get(X).getClass() != Bar.class
+								&& ((DrumNote) notes.get(y).get(X)).isGrace()) {
+							DrumNote gNote = ((DrumNote) notes.get(y).get(X));
+							gNote.setGrace(false);
+							gNote.setMeasure(Score.getAccumulateMeasure());
+							pq.add(gNote);
+							notes.get(y).remove(gNote);
+							lengths[y]--;
+							totalNotesInCurrMeasure--;
+						}
+					}
 				}
 				y++;
 			}
+			// there are notes remaining after collection, and totalNotesInCurrMeasure == 0
+			// by variant
 			collecting = false;
 			y = 0;
 
 			DrumNote note = (DrumNote) pq.poll();
-
 			if (note == null)
 				return null;
 
-			// if the bars are repeat start, set the count and start note
-			// if the count is not specified by default it is 1.
+			// by this point note is not null, we have either remaining notes or we are at
+			// last pass
+			if (totalNotesInCurrMeasure != 0)
+				totalNotesInCurrMeasure--;
+
 			if (setFirstRepeatNote) {
 				note.setRepeatedStart(true);
-				Bar[] endRepeats = getEndRepeatBars();
-				if (endRepeats != null)
-					note.setRepeatCount(endRepeats[0].getRepeatCount());
+				Bar[] endRepeats = getEndRepeatBars(notes);
+				if (endRepeats != null) {
+					int c = endRepeats[0].getRepeatCount();
+					note.setRepeatCount((c == -1 ? 1 : c));
+				}
 				setFirstRepeatNote = false;
 			}
-			Bar[] bars = getFirstBars();
 
-			if (pq.isEmpty() && bars != null) {
-				if (totalNotesInCurrMeasure == 0) {
-					boolean isRepeatEnd = false;
+			// if there are no notes in queue
+			if (pq.isEmpty()) {
+				Bar[] bars = getFirstBarsAt(X, notes);
 
-					for (int i = 1; i < bars.length; i++)
-						if (bars[i].isRepeat() && bars[i].isStop())
-							isRepeatEnd = true;
+				if (isFretEndBars(bars)) {
+					for (int i = 0; i < bars.length; i++) {
+						if (!bars[i].isFretEndBar() && !bars[i].isFretEndDoubleBar())
+							continue;
 
-					if (bars[0].isRepeat() && bars[0].isStop() && !isRepeatEnd) {
+						// extract the fret from the bar
+						String value = bars[i].toString();
+						String fret = value.substring(0, value.indexOf("|"));
+						double position = bars[i].getColumn() + fret.length() - 1;
+						DrumNote newNote = new DrumNote(bars[i].getDrumType());
+						newNote.setColumn(position);
+						newNote.setLineNum(bars[i].getLineNum());
+						newNote.setMeasure(Score.getAccumulateMeasure());
+						newNote.setOctave(bars[i].getTune().getOctave());
 
+						// add new note to the queue and increase notes left count
+						pq.add(newNote);
 						totalNotesInStaff++;
+						totalNotesInCurrMeasure++;
+						remaining = true;
 					}
-				}
+					for (Bar bar : bars)
+						bar.resetFretEndBars();
+				} else
+					remaining = false;
 
-				if (bars[2].hasDoubleBar() && bars[2].isRepeat() && bars[2].isStart()) {
+				if (isRepeatBegin(bars) && !remaining) {
 					setFirstRepeatNote = true;
 				}
 
-				if (bars[2].hasDoubleBar() && bars[2].isRepeat() && bars[2].isStop()) {
+				// last note passes
+				if (isRepeatEnd(bars)) {
 					note.setRepeatedStop(true);
 				}
 
-				if (Arrays.stream(bars).filter(b -> b.hasDoubleBar() && !b.isRepeat()).count() == bars.length) {
+				if (isJustDoubleBars(bars)) {
 					note.setDoubleBar(true);
 				}
 
-				notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(x));
-				totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
-				barsNotSeen--;
-
-				if (barsNotSeen == 0 || totalNotesInCurrMeasure != 0)
+				if (totalNotesInCurrMeasure == 0 && !remaining) {
+					notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(X));
+					totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 					Score.setAccumulateMeasure(Score.getAccumulateMeasure() + 1);
+				}
 			}
 
 			if (previousNote != null && note.getColumn() == previousNote.getColumn()) {
@@ -167,6 +265,9 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 			}
 			previousNote = (DrumNote) LineItem.deepClone(note);
 
+			if (pq.isEmpty())
+				note.setLastInMeasure(true);
+
 			return note;
 		}
 
@@ -174,7 +275,7 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 			int len = 0;
 			for (int i = notes.size() - 1; i >= 0; i--) {
 				LinkedList<LineItem> line = notes.get(i);
-				for (int j = 0; j < line.size(); j++) {
+				for (int j = X; j < line.size(); j++) {
 					Object obj = line.get(j);
 					if (obj.getClass() == Bar.class) {
 						lengths[i] = len;
@@ -186,61 +287,17 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 			}
 			return Arrays.stream(lengths).sum();
 		}
-
-		private Bar[] getFirstBars() {
-			Bar[] bars = new Bar[numLines];
-			for (int i = 0; i < notes.size(); i++) {
-				for (int j = 0; j < notes.get(i).size(); j++) {
-					LineItem item = notes.get(i).get(j);
-					if (item != null && item.getClass() == Bar.class) {
-						bars[i] = (Bar) item;
-						break;
-					}
-				}
-			}
-			if (isEmpty(bars))
-				return null;
-
-			return bars;
-		}
-
-		private Bar[] getEndRepeatBars() {
-			int column = 0;
-			for (;;) {
-				Bar[] bars = new Bar[numLines];
-				for (int i = 0; i < notes.size(); i++) {
-					for (int j = column; j < notes.get(i).size(); j++) {
-						LineItem item = notes.get(i).get(j);
-						if (item != null && item.getClass() == Bar.class) {
-							bars[i] = (Bar) item;
-							break;
-						}
-					}
-				}
-				if (isEmpty(bars))
-					return null;
-
-				if (bars[2].hasDoubleBar() && bars[2].isRepeat() && bars[2].isStop() && bars[0].isStop())
-					return bars;
-				column++;
-			}
-		}
-
-		private boolean isEmpty(Bar[] bars) {
-			boolean isEmpty = true;
-			for (Bar bar : bars) {
-				if (bar != null) {
-					isEmpty = false;
-					break;
-				}
-			}
-			return isEmpty;
-		}
 	}
 
 	@Override
 	public Iterator<Measure<DrumNote>> measureIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MeasureIterator(this);
+	}
+
+	public void init(DrumStaff staff) {
+		Iterator<LineItem> itr = new InitialStaffIterator(staff);
+		while (itr.hasNext()) {
+			notes.add(((DrumNote) itr.next()));
+		}
 	}
 }

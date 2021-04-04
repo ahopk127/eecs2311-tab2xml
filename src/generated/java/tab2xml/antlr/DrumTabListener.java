@@ -30,25 +30,45 @@ public interface DrumTabListener extends ParseTreeListener {
 	 */
 	void exitStaff(DrumTabParser.StaffContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#line}.
+	 * Enter a parse tree produced by {@link DrumTabParser#drumLine}.
 	 * @param ctx the parse tree
 	 */
-	void enterLine(DrumTabParser.LineContext ctx);
+	void enterDrumLine(DrumTabParser.DrumLineContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#line}.
+	 * Exit a parse tree produced by {@link DrumTabParser#drumLine}.
 	 * @param ctx the parse tree
 	 */
-	void exitLine(DrumTabParser.LineContext ctx);
+	void exitDrumLine(DrumTabParser.DrumLineContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#lineItems}.
+	 * Enter a parse tree produced by {@link DrumTabParser#cymbalLine}.
 	 * @param ctx the parse tree
 	 */
-	void enterLineItems(DrumTabParser.LineItemsContext ctx);
+	void enterCymbalLine(DrumTabParser.CymbalLineContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#lineItems}.
+	 * Exit a parse tree produced by {@link DrumTabParser#cymbalLine}.
 	 * @param ctx the parse tree
 	 */
-	void exitLineItems(DrumTabParser.LineItemsContext ctx);
+	void exitCymbalLine(DrumTabParser.CymbalLineContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DrumTabParser#drumActions}.
+	 * @param ctx the parse tree
+	 */
+	void enterDrumActions(DrumTabParser.DrumActionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DrumTabParser#drumActions}.
+	 * @param ctx the parse tree
+	 */
+	void exitDrumActions(DrumTabParser.DrumActionsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DrumTabParser#cymbalActions}.
+	 * @param ctx the parse tree
+	 */
+	void enterCymbalActions(DrumTabParser.CymbalActionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DrumTabParser#cymbalActions}.
+	 * @param ctx the parse tree
+	 */
+	void exitCymbalActions(DrumTabParser.CymbalActionsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DrumTabParser#drumType}.
 	 * @param ctx the parse tree
@@ -60,15 +80,15 @@ public interface DrumTabListener extends ParseTreeListener {
 	 */
 	void exitDrumType(DrumTabParser.DrumTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DrumTabParser#cymbal}.
+	 * Enter a parse tree produced by {@link DrumTabParser#cymbalType}.
 	 * @param ctx the parse tree
 	 */
-	void enterCymbal(DrumTabParser.CymbalContext ctx);
+	void enterCymbalType(DrumTabParser.CymbalTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DrumTabParser#cymbal}.
+	 * Exit a parse tree produced by {@link DrumTabParser#cymbalType}.
 	 * @param ctx the parse tree
 	 */
-	void exitCymbal(DrumTabParser.CymbalContext ctx);
+	void exitCymbalType(DrumTabParser.CymbalTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DrumTabParser#drum}.
 	 * @param ctx the parse tree
@@ -79,4 +99,14 @@ public interface DrumTabListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDrum(DrumTabParser.DrumContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DrumTabParser#cymbal}.
+	 * @param ctx the parse tree
+	 */
+	void enterCymbal(DrumTabParser.CymbalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DrumTabParser#cymbal}.
+	 * @param ctx the parse tree
+	 */
+	void exitCymbal(DrumTabParser.CymbalContext ctx);
 }

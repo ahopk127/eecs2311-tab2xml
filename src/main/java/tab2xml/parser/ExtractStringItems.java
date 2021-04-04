@@ -19,9 +19,9 @@ import tab2xml.antlr.GuitarTabParser.SlideContext;
 import tab2xml.antlr.GuitarTabParser.StringContext;
 import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.antlr.GuitarTabParser.TuneContext;
+import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.LineItemsCollector;
-import tab2xml.model.guitar.Bar;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.HammerOn;
 import tab2xml.model.guitar.HammerPull;
@@ -67,7 +67,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 				string.add(item);
 			else if (item.getClass() == LineItemsCollector.class) {
 				LineItemsCollector coll = (LineItemsCollector) item;
-				string.addAll(coll.getStringItems());
+				string.addAll(coll.getLineItems());
 			}
 		}
 	}
@@ -81,8 +81,8 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		else
 			tune = new Tune(value.toUpperCase());
 		tune.setLineNum(s.getStringNum());
-		tune.setPosition(ctx.start.getTokenIndex() + value.length() - 2);
-		tune.setColumn(ctx.start.getCharPositionInLine() + value.length());
+		tune.setColumn(ctx.start.getCharPositionInLine() + value.length() - 1);
+		tune.setPosition(ctx.start.getTokenIndex() + value.length() - 1);
 		return tune;
 	}
 
@@ -210,11 +210,11 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 	public LineItem visitFret(FretContext ctx) {
 		Token token = ctx.FRET_NUM().getSymbol();
 		int length = token.getText().length();
-		int column = token.getCharPositionInLine() + length;
+		int column = token.getCharPositionInLine() + length - 1;
 		String value = ctx.getChild(0).getText();
 		GuitarNote note = new GuitarNote(s.getTune(), value);
 		note.setColumn(column);
-		note.setPosition(token.getTokenIndex() + length - 2);
+		note.setPosition(token.getTokenIndex() - 1);
 		note.setLineNum(s.getStringNum());
 		note.setOctave(s.getOctave());
 		return note;
@@ -229,15 +229,15 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 		String value = token.getText();
 		String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine() + value.length();
+		int column = token.getCharPositionInLine() + value.length() - 1;
 
 		Bar bar = new Bar();
+		bar.setTune(s.tune());
 		bar.setLineNum(s.getStringNum());
 		bar.setColumn(column);
-		bar.setPosition(token.getTokenIndex() + value.length());
-		bar.setTune(s.tune());
-		bar.setRightPos(column);
-		bar.setLeftPos(column - ((column - value.length() < 0)|| column == 1 ? 0 : value.length()) + 1);
+		bar.setPosition(token.getTokenIndex() - 1);
+		bar.setRightPos(token.getTokenIndex() + value.length() - 1);
+		bar.setLeftPos(token.getTokenIndex() - 1);
 
 		// end repeat *||
 		if (start.equals("*")) {

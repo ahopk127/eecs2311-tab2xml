@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import tab2xml.model.Bar;
 import tab2xml.model.Line;
 import tab2xml.model.LineItem;
 

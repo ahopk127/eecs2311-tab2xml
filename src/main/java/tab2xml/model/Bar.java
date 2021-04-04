@@ -1,21 +1,23 @@
-package tab2xml.model.guitar;
+package tab2xml.model;
 
 import java.util.regex.Pattern;
 
-import tab2xml.model.LineItem;
+import tab2xml.model.drum.DrumType;
+import tab2xml.model.guitar.Tune;
 
 public class Bar extends LineItem {
 	private static final long serialVersionUID = 6758542578259875168L;
 
 	/** Pattern that matches bars. */
 	public static final Pattern pattern = Pattern.compile("\\*?(\\||\\d+)?\\|\\|?\\*?");
-	
+
 	private int repeatCount;
 	private boolean isDoubleBar;
 	private boolean isRepeat;
 	private boolean start;
 	private boolean stop;
 	private Tune tune;
+	private DrumType drumType;
 
 	private double rightPos;
 	private double leftPos;
@@ -126,6 +128,14 @@ public class Bar extends LineItem {
 		return Bar.pattern.pattern();
 	}
 
+	public DrumType getDrumType() {
+		return drumType;
+	}
+
+	public void setDrumType(DrumType type) {
+		this.drumType = type;
+	}
+
 	@Override
 	public int length() {
 		return toString().length();
@@ -153,4 +163,5 @@ public class Bar extends LineItem {
 		else
 			return "|";
 	}
+
 }

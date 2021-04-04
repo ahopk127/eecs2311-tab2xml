@@ -9,29 +9,46 @@ sheet
 	;
 	
 staff								
-	: NEWLINE* line+ NEWLINE*
+	: NEWLINE* (cymbalLine | drumLine)+ NEWLINE*
 	;
 	
-line
-	: SPACE* drumType SPACE* lineItems SPACE* NEWLINE?          
+drumLine
+	: SPACE* drumType SPACE* drumActions SPACE* NEWLINE?
 	;
 
-lineItems
-	:(cymbal
-	| drum
+cymbalLine
+	: SPACE* cymbalType SPACE* cymbalActions SPACE* NEWLINE?
+	;
+	
+drumActions
+	:(drum
 	| BAR
-	| HYPHEN )+	BAR		
+	| HYPHEN )*	BAR		
 	;	
-	
-drumType
-	: TYPE? BAR          
-	;
 
-cymbal: CYMBALS;
+cymbalActions
+	:(cymbal
+	| BAR
+	| HYPHEN )*	BAR		
+	;	
+
+drumType: DRUMTYPE SPACE? SPACE? SPACE? BAR;
+cymbalType: CYMBALTYPE SPACE? SPACE? SPACE? BAR;
 
 drum: DRUMS;
+cymbal: CYMBALS;
 
 /* Tokens */
+DRUMS
+	: 'o'
+	| 'O'
+	| 'g'
+	| 'f'
+	| 'd'
+	| 'b'
+	| 'B'
+	| '@'
+	;
 	
 CYMBALS
 	: 'x'	
@@ -44,46 +61,34 @@ CYMBALS
 	| 'p'	
 	; 
 	
-DRUMS
-	: 'o'
-	| 'O'
-	| 'g'
-	| 'f'
-	| 'd'
-	| 'b'
-	| 'B'
-	| '@'
-	;
-
-	
 /* Tokens */
-
-TYPE         
+DRUMTYPE
 	:('BD' // base drum 1
 	| 'Bd' // base drum 2
 	| 'SS' // side stick
 	| 'SD' // snare drum 
 	| 'ES' // electric  snare
 	| 'T1' // low floor tom
-	| 'CH' // closed  hi-hat
 	| 'T2' // high floor tom
-	| 'PH' // pedal hi-hat
 	| 'LT' // low tom
-	| 'HH' // open hi-hat 
 	| 'LM' // low-mid tom
 	| 'MT' // hi-mid tom
-	| 'CC' // crash cymbal 1
 	| 'HT' // high tom
-	| 'RD' // ride cymbal 1
-	| 'Ch'   // chinese cymbal
-	| 'RB' // ride bell
 	| 'TA'  // tambourine
-	| 'SC' // splash cymbal
 	| 'CB' // cowbell
-	| 'Cc' // crash cymbal 2
-	| 'Rd' // ride cymbal 2
-	| 'HC' // open high conga
-	| 'LC' // low conga
+	)
+	;
+CYMBALTYPE         
+	:('HH' // closed hi-hat *
+	| 'PH' // pedal hi-hat *
+	| 'OH' // open hi-hat *
+	| 'CC' // crash cymbal 1 *
+	| 'RD' // ride cymbal 1 *
+	| 'Ch'   // chinese cymbal *
+	| 'RB' // ride bell *
+	| 'SC' // splash cymbal *
+	| 'Cc' // crash cymbal 2 *
+	| 'Rd' // ride cymbal 2 *
 	)
 	;
 	
@@ -92,7 +97,7 @@ BAR
 	;
 	
 HYPHEN 
-	: '-' 
+	: '-' -> channel(HIDDEN)
 	;
 	
 SPACE

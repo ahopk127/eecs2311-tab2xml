@@ -42,25 +42,49 @@ public class DrumTabBaseListener implements DrumTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLine(DrumTabParser.LineContext ctx) { }
+	@Override public void enterDrumLine(DrumTabParser.DrumLineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLine(DrumTabParser.LineContext ctx) { }
+	@Override public void exitDrumLine(DrumTabParser.DrumLineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLineItems(DrumTabParser.LineItemsContext ctx) { }
+	@Override public void enterCymbalLine(DrumTabParser.CymbalLineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLineItems(DrumTabParser.LineItemsContext ctx) { }
+	@Override public void exitCymbalLine(DrumTabParser.CymbalLineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDrumActions(DrumTabParser.DrumActionsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDrumActions(DrumTabParser.DrumActionsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCymbalActions(DrumTabParser.CymbalActionsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCymbalActions(DrumTabParser.CymbalActionsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -78,13 +102,13 @@ public class DrumTabBaseListener implements DrumTabListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCymbal(DrumTabParser.CymbalContext ctx) { }
+	@Override public void enterCymbalType(DrumTabParser.CymbalTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCymbal(DrumTabParser.CymbalContext ctx) { }
+	@Override public void exitCymbalType(DrumTabParser.CymbalTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -97,6 +121,18 @@ public class DrumTabBaseListener implements DrumTabListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDrum(DrumTabParser.DrumContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCymbal(DrumTabParser.CymbalContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCymbal(DrumTabParser.CymbalContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

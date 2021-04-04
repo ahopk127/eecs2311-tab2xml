@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import tab2xml.model.guitar.Bar;
+import tab2xml.model.drum.DrumType;
 import tab2xml.model.guitar.Tune;
 
 /**
@@ -200,16 +200,27 @@ public abstract class Staff<E extends Line<?>, T extends Note> extends ScoreItem
 		for (int i = 0; i < list.size(); i++) {
 			for (int j = 0; j < list.get(i).size(); j++) {
 				LineItem item = list.get(i).get(j);
-				if ((item != null && (item.getClass() == Bar.class || item.getClass() == Tune.class))
+				if ((item != null && (item.getClass() == Bar.class || item.getClass() == Tune.class || item.getClass() == DrumType.class))
 						&& count++ == index) {
 					if (item.getClass() == Tune.class) {
 						Bar bar = new Bar();
 						Tune tune = (Tune) item;
+						bar.setLineNum(tune.getLineNum());
 						bar.setColumn(tune.getColumn());
 						bar.setPosition(tune.getPosition());
-						bar.setLineNum(tune.getLineNum());
+						bar.setRightPos(tune.getPosition());
+						bar.setLeftPos(tune.getPosition());
 						bars[i] = bar;
-					} else
+					} else if (item.getClass() == DrumType.class) {
+						Bar bar = new Bar();
+						DrumType type = (DrumType) item;
+						bar.setLineNum(type.getLineNum());
+						bar.setColumn(type.getColumn());
+						bar.setPosition(type.getPosition());
+						bar.setRightPos(type.getPosition());
+						bar.setLeftPos(type.getPosition());
+						bars[i] = bar;
+					}else
 						bars[i] = (Bar) item;
 					break;
 				}
