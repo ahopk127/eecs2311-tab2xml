@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import tab2xml.model.Bar;
 import tab2xml.model.Line;
 import tab2xml.model.LineItem;
 
@@ -41,14 +42,14 @@ public class DrumLine extends Line<DrumNote> {
 	 * @return the octave of this drum line's drum part.
 	 */
 	public String getOctave() {
-		return null;
+		return drumtype().getDrumOctave();
 	}
 
 	/**
 	 * @return the step of this drum line's drum part.
 	 */
 	public String getDrumStep() {
-		return drumtype().getDrumType();
+		return drumtype().getDrumStep();
 	}
 
 	/**
@@ -91,9 +92,17 @@ public class DrumLine extends Line<DrumNote> {
 	@Override
 	public Collection<? extends LineItem> getNotes() {
 		List<LineItem> notes = new ArrayList<>();
-		for (@SuppressWarnings("unused")
-		LineItem item : lineItems) {
-			// TODO: get the list of notes in the drum line.
+		for (LineItem item : lineItems) {
+			if (item.getClass() == DrumNote.class) {
+				DrumNote note = (DrumNote) item;
+				notes.add((LineItem) LineItem.deepClone(note));
+			} else if (item.getClass() == Bar.class) {
+				Bar bar = (Bar) item;
+				notes.add((LineItem) LineItem.deepClone(bar));
+			} else if (item.getClass() == DrumType.class) {
+				DrumType type = (DrumType) item;
+				notes.add((LineItem) LineItem.deepClone(type));
+			}
 		}
 		return notes;
 	}

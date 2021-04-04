@@ -9,6 +9,7 @@ import java.util.TreeSet;
 
 import tab2xml.model.Staff;
 import tab2xml.ImmutablePair;
+import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.Measure;
 import tab2xml.model.Range;
@@ -78,7 +79,7 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 			Bar[] barsEnd = getFirstBarsAt(stopPosition, staff);
 
 			Range upperRange = new Range(barsStart[0].rightPos(), barsEnd[0].leftPos());
-			Range bottomRange = new Range(barsStart[barsEnd.length - 1].rightPos(),
+			Range bottomRange = new Range(barsStart[barsStart.length - 1].rightPos(),
 					barsEnd[barsEnd.length - 1].leftPos());
 			ImmutablePair<Range, Range> range = ImmutablePair.of(upperRange, bottomRange);
 
@@ -128,7 +129,6 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 		private int lengths[];
 		private int totalNotesInCurrMeasure;
 		private int totalNotesInStaff;
-		private int durationCurrNote;
 		private boolean collecting;
 		private boolean remaining;
 		private boolean setFirstRepeatNote;
@@ -267,8 +267,6 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 				// last note passes
 				if (isRepeatEnd(bars)) {
 					note.setRepeatedStop(true);
-					if (note.getNoteCount() > 1)
-						note.getNotes().forEach(n -> n.setDurationVal(durationCurrNote));
 				}
 
 				if (isJustDoubleBars(bars)) {

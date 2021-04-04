@@ -36,6 +36,8 @@ public class DrumNote extends Note {
 		this.step = drumType.getDrumStep();
 		this.octave = drumType.getDrumOctave();
 		this.id = drumType.getID();
+		this.stem = DrumType.drumSet.get(id).get(4);
+		this.notehead = DrumType.drumSet.get(id).get(5);
 		setNoteType();
 	}
 

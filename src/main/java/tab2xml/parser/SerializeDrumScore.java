@@ -17,5 +17,4 @@ public class SerializeDrumScore extends DrumTabBaseVisitor<Score<DrumStaff>> {
 				.forEach(c -> score.addStaff((DrumStaff) visitor.visit(c)));
 		return score;
 	}
-
 }

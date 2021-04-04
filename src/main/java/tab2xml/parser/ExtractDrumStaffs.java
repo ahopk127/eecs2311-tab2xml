@@ -1,7 +1,10 @@
 package tab2xml.parser;
 
+import org.antlr.v4.runtime.tree.TerminalNodeImpl;
+
 import tab2xml.antlr.DrumTabBaseVisitor;
-import tab2xml.antlr.DrumTabParser.LineContext;
+import tab2xml.antlr.DrumTabParser.CymbalLineContext;
+import tab2xml.antlr.DrumTabParser.DrumLineContext;
 import tab2xml.antlr.DrumTabParser.StaffContext;
 import tab2xml.model.ScoreItem;
 import tab2xml.model.drum.DrumLine;
@@ -18,18 +21,28 @@ public class ExtractDrumStaffs extends DrumTabBaseVisitor<ScoreItem<DrumNote>> {
 	}
 
 	@Override
-	public ScoreItem<DrumNote> visitLine(LineContext ctx) {
-		final DrumLine line = new DrumLine();
+	public ScoreItem<DrumNote> visitStaff(StaffContext ctx) {
+		DrumStaff st = new DrumStaff();
+		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
+				.forEach(c -> st.add((DrumLine) visit(c)));
+		return st;
+	}
+
+	@Override
+	public ScoreItem<DrumNote> visitDrumLine(DrumLineContext ctx) {
+		DrumLine line = new DrumLine();
+		line.setDrum(true);
 		@SuppressWarnings("unused")
-		final ExtractLineItems es = new ExtractLineItems(line, ctx);
+		ExtractLineItems es = new ExtractLineItems(line, ctx);
 		return line;
 	}
 
 	@Override
-	public ScoreItem<DrumNote> visitStaff(StaffContext ctx) {
-		final DrumStaff st = new DrumStaff();
-		// do stuff and get staff info
-		return st;
+	public ScoreItem<DrumNote> visitCymbalLine(CymbalLineContext ctx) {
+		DrumLine line = new DrumLine();
+		line.setCymbal(true);
+		@SuppressWarnings("unused")
+		ExtractLineItems es = new ExtractLineItems(line, ctx);
+		return line;
 	}
-
 }

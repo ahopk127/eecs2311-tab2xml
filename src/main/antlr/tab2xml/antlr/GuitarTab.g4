@@ -5,7 +5,7 @@ grammar GuitarTab;
 }
 
 sheet
-	: staff* EOF		
+	: staff* EOF	
 	;
 	
 staff								
@@ -26,7 +26,7 @@ stringItems
 	| hampullchain
 	| BAR
 	| DOUBLEBAR 
-	| HYPHEN)+	(BAR | DOUBLEBAR)		
+	| HYPHEN)*	(BAR | DOUBLEBAR)		
 	;	
 
 fret
@@ -76,7 +76,7 @@ BAR
 	;	
 		
 HYPHEN 
-	: '-' 
+	: '-' -> channel(HIDDEN)
 	;
 	
 SPACE

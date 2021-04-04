@@ -10,7 +10,7 @@ public class LineItemsCollector extends LineItem {
 		this.lineItems = stringItems;
 	}
 
-	public List<LineItem> getStringItems() {
+	public List<LineItem> getLineItems() {
 		return lineItems;
 	}
 

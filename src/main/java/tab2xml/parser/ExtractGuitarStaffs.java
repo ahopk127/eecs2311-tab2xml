@@ -21,9 +21,9 @@ public class ExtractGuitarStaffs extends GuitarTabBaseVisitor<ScoreItem<GuitarNo
 	}
 
 	@Override
-	public ScoreItem<GuitarNote> visitStaff(StaffContext staff) {
+	public ScoreItem<GuitarNote> visitStaff(StaffContext ctx) {
 		GuitarStaff st = new GuitarStaff();
-		staff.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
+		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
 				.forEach(c -> st.add((GuitarString) visit(c)));
 		if (st.size() == 4 || st.size() == 5)
 			st.getLines().forEach(s -> s.tune().setBass(true));

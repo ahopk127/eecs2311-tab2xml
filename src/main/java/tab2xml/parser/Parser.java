@@ -13,6 +13,7 @@ import tab2xml.exceptions.InvalidTokenException;
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.model.Instrument;
 import tab2xml.model.Score;
+import tab2xml.model.drum.DrumStaff;
 import tab2xml.model.guitar.GuitarStaff;
 import tab2xml.xmlconversion.Transform;
 import tab2xml.xmlconversion.XMLMetadata;
@@ -28,16 +29,81 @@ public class Parser {
 	/* General patterns for each instrument */
 	public static final String COMMENTS = "((/[*])(([\s]|[^ ])+)([*]/))|([/]{2,}[^\n]+)";
 	public static final String OUTLIER = "(" + COMMENTS + "|(^(?!([a-gA-G]#?)?[|-][^\r\n]*[-|]\r?\n?).+\r?\n?))";
+	public static final String OUTLIERD = "(" + COMMENTS
+			+ "|(^(?![ \t]*([ABCcDdEHhLMPRST12]{2})[|-][^\r\n]*[-|]\r?\n?).+\r?\n?))";
 	public static final String OUTLIER_MULTI = "(" + OUTLIER + "+)";
+	public static final String OUTLIER_DRUM = "(" + OUTLIERD + "+)";
 	public static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ ]*[|-])[^\r\n]*\\|).*$))).+\r?\n?)";
 	public static final String GP = STRING + "{6,}";
 	public static final String BP = "(" + OUTLIER + "|\r?\n)" + "(" + STRING + "{4,5})" + "(" + OUTLIER + "|\r?\n)";
-	public  static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEHhLMPRST12]{2})[\\|-]).*\\|).*)+)).*\r?\n?)+";
+	public static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEHhLMPRST12]{2})[-|]).*\\|).*)+)).*\r?\n?)+";
 
 	public static final Pattern outlierPlucked = Pattern.compile(OUTLIER_MULTI, Pattern.MULTILINE);
+	public static final Pattern outlierPercussion = Pattern.compile(OUTLIER_DRUM, Pattern.MULTILINE);
 	public static final Pattern guitarPattern = Pattern.compile(GP, Pattern.MULTILINE);
 	public static final Pattern bassPattern = Pattern.compile(BP, Pattern.MULTILINE);
 	public static final Pattern drumPattern = Pattern.compile(DP, Pattern.MULTILINE);
+
+	private final Processor processor;
+	private final Instrument instrument;
+	private final Score<?> sheet;
+
+	/**
+	 * Construct a parser with specified tablature and instrument.
+	 * 
+	 * @param input      the tablature to be parsed
+	 * @param instrument the corresponding instrument
+	 * @throws InvalidInputException if invalid input is parsed
+	 * 
+	 */
+	public Parser(String input, Instrument instrument) throws InvalidInputException {
+		this.processor = new Processor(input, instrument);
+		this.instrument = instrument;
+		this.sheet = this.processor.process();
+	}
+
+	/**
+	 * Parse the data by instrument. Uses default XML metadata.
+	 * 
+	 * @return an XML conversion of the input plus any warnings raised during
+	 *         parsing
+	 * @throws InvalidInputException if invalid input is parsed
+	 * @throws InvalidTokenException if invalid token is parsed
+	 * 
+	 */
+	public ImmutablePair<String, Collection<ParsingWarning>> parse()
+			throws InvalidInputException, InvalidTokenException {
+		// TODO: process stage depends on the time signatures so this should also be passed to the processor
+		return this.parse(XMLMetadata.fromDefaultTitle());
+	}
+
+	/**
+	 * Parse the data by instrument.
+	 * 
+	 * @param metadata XML metadata
+	 * @return an XML conversion of the input plus any warnings raised during
+	 *         parsing
+	 * @throws InvalidInputException if invalid input is parsed
+	 * @throws InvalidTokenException if invalid token is parsed
+	 * 
+	 */
+	public ImmutablePair<String, Collection<ParsingWarning>> parse(XMLMetadata metadata)
+			throws InvalidInputException, InvalidTokenException {
+		switch (this.instrument) {
+		case GUITAR:
+			return this.parseGuitar(metadata);
+		case BASS:
+			return this.parseBass(metadata);
+		case DRUM:
+			return this.parseDrum(metadata);
+		default:
+			throw new UnsupportedOperationException("Instrument " + this.instrument + " not supported.");
+		}
+	}
+
+	public Instrument getDetectedInstrument() {
+		return this.instrument;
+	}
 
 	// returns an empty Optional if no instrument is detected,
 	// otherwise returns the detected instrument
@@ -79,64 +145,30 @@ public class Parser {
 		return Optional.of(ins);
 	}
 
-	private final Processor processor;
-	private final Instrument instrument;
-	private final Score<?> sheet;
-
 	/**
-	 * Construct a parser with specified tablature and instrument.
+	 * Parse the input as Guitar tab.
 	 * 
-	 * @param input      the tablature to be parsed
-	 * @param instrument the corresponding instrument
-	 * @throws InvalidInputException if invalid input is parsed
-	 * 
-	 */
-	public Parser(String input, Instrument instrument) throws InvalidInputException {
-		this.processor = new Processor(input, instrument);
-		this.instrument = instrument;
-		this.sheet = this.processor.process();
-	}
-
-	public Instrument getDetectedInstrument() {
-		return this.instrument;
-	}
-
-	/**
-	 * Parse the data by instrument. Uses default XML metadata.
-	 * 
-	 * @return an XML conversion of the input plus any warnings raised during
+	 * @return an XML conversion for a Guitar plus any warnings raised during
 	 *         parsing
-	 * @throws InvalidInputException if invalid input is parsed
-	 * @throws InvalidTokenException if invalid token is parsed
-	 * 
+	 * @throws InvalidInputException if invalid input is parsed.
+	 * @throws InvalidTokenException if invalid token is parsed.
 	 */
-	public ImmutablePair<String, Collection<ParsingWarning>> parse()
-			throws InvalidInputException, InvalidTokenException {
-		return this.parse(XMLMetadata.fromDefaultTitle());
-	}
+	private ImmutablePair<String, Collection<ParsingWarning>> parseGuitar(XMLMetadata metadata) {
+		String xmlOutput;
 
-	/**
-	 * Parse the data by instrument.
-	 * 
-	 * @param metadata XML metadata
-	 * @return an XML conversion of the input plus any warnings raised during
-	 *         parsing
-	 * @throws InvalidInputException if invalid input is parsed
-	 * @throws InvalidTokenException if invalid token is parsed
-	 * 
-	 */
-	public ImmutablePair<String, Collection<ParsingWarning>> parse(XMLMetadata metadata)
-			throws InvalidInputException, InvalidTokenException {
-		switch (this.instrument) {
-		case GUITAR:
-			return this.parseGuitar(metadata);
-		case BASS:
-			return this.parseBass(metadata);
-		case DRUM:
-			return this.parseDrum(metadata);
-		default:
-			throw new UnsupportedOperationException("Instrument " + this.instrument + " not supported.");
-		}
+		// This method should only be called if sheet is Score<GuitarStaff>
+		// so if this fails, the precondition was violated
+		@SuppressWarnings("unchecked")
+		final Transform<GuitarStaff> tf = new Transform<>((Score<GuitarStaff>) this.sheet, this.instrument, metadata);
+		xmlOutput = tf.toXML();
+		
+		// GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);s
+		// staff.setBeats(metadata.getTimeSignatures());
+
+		// TODO: ADD WARNINGS from guitar score data
+		final List<ParsingWarning> warnings = new ArrayList<>();
+
+		return ImmutablePair.of(xmlOutput, warnings);
 	}
 
 	/**
@@ -170,32 +202,16 @@ public class Parser {
 	 * @throws InvalidTokenException if invalid token is parsed.
 	 * 
 	 */
-	@SuppressWarnings("unused")
 	private ImmutablePair<String, Collection<ParsingWarning>> parseDrum(XMLMetadata metadata) {
-		throw new UnsupportedOperationException("Support not yet added for drums.");
-	}
-
-	/**
-	 * Parse the input as Guitar tab.
-	 * 
-	 * @return an XML conversion for a Guitar plus any warnings raised during
-	 *         parsing
-	 * @throws InvalidInputException if invalid input is parsed.
-	 * @throws InvalidTokenException if invalid token is parsed.
-	 */
-	private ImmutablePair<String, Collection<ParsingWarning>> parseGuitar(XMLMetadata metadata) {
 		String xmlOutput;
 
-		// This method should only be called if sheet is Score<GuitarStaff>
+		// This method should only be called if sheet is Score<DrumStaff>
 		// so if this fails, the precondition was violated
 		@SuppressWarnings("unchecked")
-		final Transform<GuitarStaff> tf = new Transform<>((Score<GuitarStaff>) this.sheet, this.instrument, metadata);
+		final Transform<DrumStaff> tf = new Transform<>((Score<DrumStaff>) this.sheet, this.instrument, metadata);
 		xmlOutput = tf.toXML();
 
-		// GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);s
-		// staff.setBeats(metadata.getTimeSignatures());
-
-		// TODO: ADD WARNINGS from guitar score data
+		// TODO: ADD WARNINGS from drum score data
 		final List<ParsingWarning> warnings = new ArrayList<>();
 
 		return ImmutablePair.of(xmlOutput, warnings);
