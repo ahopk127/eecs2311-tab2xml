@@ -311,7 +311,7 @@ final class EditingPanel extends JPanel {
 		if (this.measureEnd.getText().isEmpty())
 			return MeasureNarrowing.measureCount(this.view.getInputText());
 		else {
-			final int measureEnd = Integer.valueOf(this.measureStart.getText());
+			final int measureEnd = Integer.valueOf(this.measureEnd.getText());
 			if (measureEnd <= 0)
 				return MeasureNarrowing.measureCount(this.view.getInputText());
 			else

@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import tab2xml.model.Instrument;
 import tab2xml.parser.Parser;
+import tab2xml.xmlconversion.XMLMetadata;
 
 /**
  * Tests related to the Presenter.
@@ -81,7 +82,8 @@ class PresenterTest {
 		final Instrument instrument = Instrument.GUITAR;
 		
 		try {
-			expectedOutput = new Parser(input, instrument).parse().getFirst();
+			expectedOutput = new Parser(input, instrument,
+					XMLMetadata.fromDefaultTitle()).parse().getFirst();
 		} catch (final Exception e) {
 			e.printStackTrace();
 			fail(e.getClass()
@@ -119,7 +121,8 @@ class PresenterTest {
 		final Instrument instrument = Instrument.GUITAR;
 		
 		try {
-			expectedOutput = new Parser(input, instrument).parse().getFirst();
+			expectedOutput = new Parser(input, instrument,
+					XMLMetadata.fromDefaultTitle()).parse().getFirst();
 		} catch (final Exception e) {
 			e.printStackTrace();
 			fail(e.getClass()

@@ -14,6 +14,7 @@ import tab2xml.exceptions.ParsingWarning;
 import tab2xml.exceptions.UnparseableInputException;
 import tab2xml.model.Instrument;
 import tab2xml.parser.Parser;
+import tab2xml.xmlconversion.XMLMetadata;
 
 /**
  * The Tab2XML presenter, which handles event code. It acts as an intermediate
@@ -89,8 +90,10 @@ public final class Presenter {
 	public boolean convert() {
 		final String input = this.view.getInputText();
 		final Instrument selectedInstrument = this.view.getSelectedInstrument();
+		final XMLMetadata metadata = this.view.getMetadata();
 		
-		final Optional<String> output = this.convert(input, selectedInstrument);
+		final Optional<String> output = this.convert(input, selectedInstrument,
+				metadata);
 		
 		if (output.isEmpty())
 			return false;
@@ -108,8 +111,8 @@ public final class Presenter {
 	 * @return MusicXML output, or empty optional if parsing error occurred
 	 * @since 2021-02-25
 	 */
-	private Optional<String> convert(String input,
-			Instrument selectedInstrument) {
+	private Optional<String> convert(String input, Instrument selectedInstrument,
+			XMLMetadata metadata) {
 		if (input.isBlank()) {
 			this.view.showErrorMessage("Error: Empty Input",
 					"Please input your text tab before converting.");
@@ -120,10 +123,10 @@ public final class Presenter {
 		final String musicXMLOutput;
 		final Collection<ParsingWarning> warnings;
 		try {
-			final Parser parser = new Parser(input, selectedInstrument);
+			final Parser parser = new Parser(input, selectedInstrument, metadata);
 			this.view.setSelectedInstrument(parser.getDetectedInstrument());
 			
-			final var output = parser.parse(this.view.getMetadata());
+			final var output = parser.parse();
 			musicXMLOutput = output.getFirst();
 			warnings = output.getSecond();
 			
@@ -174,7 +177,9 @@ public final class Presenter {
 		// get input and output
 		final String input = this.view.getInputText();
 		final Instrument selectedInstrument = this.view.getSelectedInstrument();
-		final Optional<String> output = this.convert(input, selectedInstrument);
+		final XMLMetadata metadata = this.view.getMetadata();
+		final Optional<String> output = this.convert(input, selectedInstrument,
+				metadata);
 		
 		// if an error occurred, abort
 		if (output.isEmpty())

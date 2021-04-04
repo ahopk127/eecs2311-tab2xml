@@ -16,6 +16,7 @@ import tab2xml.model.Score;
 import tab2xml.model.LineItem;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.xmlconversion.ValidateXML;
+import tab2xml.xmlconversion.XMLMetadata;
 import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.GuitarStaff;
 
@@ -119,7 +120,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -185,7 +186,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -260,7 +261,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -321,7 +322,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -382,7 +383,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -457,7 +458,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -527,7 +528,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -601,7 +602,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -671,7 +672,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
@@ -738,7 +739,7 @@ class ParserTest {
 				}
 			}
 
-			final Parser parser = new Parser(input, instrument);
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
