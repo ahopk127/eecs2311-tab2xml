@@ -110,7 +110,7 @@ class EditingPanelTest {
 				"Measure start above measure count did not cause error.");
 		
 		this.panel.measureStart.setText("");
-		this.panel.measureEnd.setText("100");
+		this.panel.measureEnd.setText("6");
 		assertThrows(RuntimeException.class,
 				() -> this.panel.editMeasureButton.doClick(),
 				"Measure end above measure count did not cause error.");
@@ -122,7 +122,7 @@ class EditingPanelTest {
 				"Measure start after end did not cause error.");
 		
 		this.panel.measureStart.setText("2");
-		this.panel.measureEnd.setText("4");
+		this.panel.measureEnd.setText("5");
 		assertDoesNotThrow(() -> this.panel.editMeasureButton.doClick(),
 				"Error thrown with correct measure input.");
 		

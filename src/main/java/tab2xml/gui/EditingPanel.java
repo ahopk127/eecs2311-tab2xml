@@ -205,6 +205,8 @@ final class EditingPanel extends JPanel {
 	private boolean checkInputErrors(boolean checkTimeSignature) {
 		final int measureStart = this.measureStart();
 		final int measureEnd = this.measureEnd();
+		final int measureCount = MeasureNarrowing
+				.measureCount(this.view.getInputText());
 		final int top, bottom;
 		try {
 			if (checkTimeSignature) {
@@ -226,6 +228,12 @@ final class EditingPanel extends JPanel {
 		} else if (measureEnd <= 0) {
 			this.view.showErrorMessage("Measure Range Error",
 					"End measure must be positive");
+		} else if (measureStart > measureCount) {
+			this.view.showErrorMessage("Measure Range Error",
+					"Start measure must be less than or equal to number of measures");
+		} else if (measureEnd > measureCount) {
+			this.view.showErrorMessage("Measure Range Error",
+					"End measure must be less than or equal to number of measures");
 		} else if (measureStart > measureEnd) {
 			this.view.showErrorMessage("Measure Range Error",
 					"Start measure must be before or equal to end measure.");
