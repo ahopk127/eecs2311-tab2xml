@@ -1,4 +1,4 @@
-% Created 2021-03-31 Wed 20:43
+% Created 2021-04-05 Mon 10:48
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -33,10 +33,10 @@
 \newpage
 
 \section{Front End Design}
-\label{sec:org54adca8}
+\label{sec:org92afa69}
 \emph{All TAB2XML front-end code is located in the \texttt{tab2xml.gui} package.}
 \subsection{Front End Classes}
-\label{sec:org4240890}
+\label{sec:org4cb4296}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./Diagrams/frontend-class-diagram.png}
@@ -51,10 +51,10 @@ The \texttt{Presenter} is the part of the frontend that interacts with the backe
 
 The rationale behind this design is to reduce the effort involved in creating a new GUI.  If it extends \texttt{AbstractSwingView}, creating a new View is as simple as making a "mockup" Swing GUI and implementing two trivial methods.  This makes it easy to work with multiple GUIs at once (allowing the customer to choose which they prefer).  This design was especially important in the beginning of development, because I could prototype different GUI ideas with the customer using fully functional applications.
 \subsection{Converting Text Tabs}
-\label{sec:org8fc2779}
+\label{sec:orgef2258e}
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=.9\linewidth]{./Diagrams/convert-and-save.png}
+\includegraphics[width=.9\linewidth]{./Diagrams/convert-and-save-2.png}
 \caption{A sequence diagram for the "Convert and Save" operation}
 \end{figure}
 
@@ -74,7 +74,7 @@ Here is how the "Convert and Save" operation works:
 \item The \texttt{View} displays any errors that occurred during the file-saving operation.
 \end{enumerate}
 \subsection{Front End Maintenance}
-\label{sec:org13bdb8a}
+\label{sec:orgc79e91f}
 To create a new GUI, simply make your GUI handled by a class that extends \texttt{View}.  It should also have a \texttt{Presenter} field instantiated using \texttt{new Presenter(this)}.  You must implement all of the \texttt{View}'s methods, which is much easier if you extend \texttt{AbstractSwingView}.  Then, you can call the presenter's methods within the GUI, and your GUI will be fully connected to the TAB2XML backend.
 
 To modify the look of an existing View such as \texttt{TabbedView} (or add/remove components), simply modify its constructor (you may have to edit the other methods, if they are broken by the change).  If you are adding a new feature that should exist in every Swing View, consider instead adding it to \texttt{AbstractSwingView}, as this will make it available for every View.
@@ -82,45 +82,48 @@ To modify the look of an existing View such as \texttt{TabbedView} (or add/remov
 \newpage
 
 \section{Back End Design}
-\label{sec:org01d8b22}
+\label{sec:org08e6235}
 \subsection{Overview}
-\label{sec:orgd7cb8eb}
-The backend of TAB2XML was designed with the main focus of flexibility, and future scaling of the system. The central component of the system is the \href{https://www.antlr.org/}{antlr4} parser generation tool. The system uses custom instrument defined grammar to recognize different formats of tablature. Since the system's grammar can be changed effortlessly this makes extending for different types of input much easier. With the combination of the generated antlr4 parser classes(located in \texttt{/src/generated/java}) and the systemâ€™s custom model data classes, a tablature score can be abstracted into components which make handling the data simpler. The backend is divided into a three step process, the \texttt{preprocessing} of the tablature, the antlr4 \texttt{ParseTree} visitor which is used to extract score data, and finally the XML conversion process.
+\label{sec:org8e5bd24}
+The backend of TAB2XML was designed with the main focus of flexibility, and future scaling of the system. The central component of the system is the \href{https://www.antlr.org/}{antlr4} parser generation tool. The system uses custom instrument defined grammar to recognize different formats of tablature. Since the system's grammar can be changed effortlessly this makes extending for different types of input much easier. With the combination of the generated antlr4 parser classes(located in \texttt{/src/generated/java}) and the system's custom model data classes, a tablature score can be abstracted into components which make handling the data simpler. The backend is divided into a three step process, the \texttt{preprocessing} of the tablature, the antlr4 \texttt{ParseTree} visitor which is used to extract score data, and finally the XML conversion process.
 
 
 \subsection{Model Design}
-\label{sec:orgabbaa7e}
+\label{sec:org613c297}
+\emph{All TAB2XML model code is located in the \texttt{tab2xml.model} package and its subsets \texttt{tab2xml.model.guitar} etc..}
+
 The design of the instrument based model classes have a one-to-one correspondence between the respective grammar. The system abstracts some of these components which are shared in all the tablature formats(Such as \texttt{Score}, \texttt{Staff}, \texttt{Note} objects). The \texttt{tab2xml.model} package contains general classes along with abstract data classes. In the model package, subsets \texttt{tab2xml.model.guitar} and \texttt{tab2xml.model.drum} are specific to the respective instruments. For example, a drum model will not contain a \texttt{Tune} representation and conversely a guitar model will not contain a \texttt{DrumType} representation.
 
 \subsubsection{Score object}
-\label{sec:org3e625cd}
+\label{sec:org226d26e}
 The \texttt{Score} object is by far the most important part of the model as it contains all the other objects. Because of this, the system is designed to allow the \texttt{Score} to be essentially a custom data structure. With functions such as adding staffs, iterating over staffs, iterating over notes and
 adding measures. One of the most important parts in designing this system for the \texttt{Score} object was to make sure that the notes had a natural ordering. This would allow notes to be compared, sorted, and provide notes a positioning system. To achieve this, a custom iterator was defined along with the \texttt{Note} object being \texttt{Comparable}. This method of abstraction of the score has a lot of benefits during the conversion tablature conversion process.
 
-\emph{All TAB2XML model code is located in the \texttt{tab2xml.model} package and its subsets \texttt{tab2xml.model.guitar} etc..}
+\newpage
+
 \subsubsection{Model Abstraction}
-\label{sec:orgb09ca82}
+\label{sec:orgb54c54f}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./Diagrams/backend-model-abstraction.png}
 \caption{A general model diagram of the abstraction of a \texttt{Score} object.}
 \end{figure}
 
-
+\newpage
 
 \subsection{Parser Design:}
-\label{sec:org1886243}
+\label{sec:org9d8e2b4}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./Diagrams/backend-parser-class-diagram.png}
 \caption{A class diagram for the \texttt{Parser} class.}
 \end{figure}
 
-The highlighted areas are the main components of the three main steps in the systems process as mentioned earlier. The first is the \texttt{Processor} which is aggregated with the \texttt{Parser}. The responsibility of the \texttt{Parser} is to unite the \texttt{Processor} and the \texttt{Transform} components and delegate conversions of tablature based on selected instrument or detected instrument. The \texttt{Processor} preprocesses the input to prepare it for the \texttt{ParseTree} extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score(The grammars are defined to ignore the commented metadata,although we still extract it as it might be useful to the user). 
+The highlighted areas are the main components of the three main steps in the systems process as mentioned earlier. The first is the \texttt{Processor} which is aggregated with the \texttt{Parser}. The responsibility of the \texttt{Parser} is to unite the \texttt{Processor} and the \texttt{Transform} components and delegate conversions of tablature based on selected instrument or detected instrument. The \texttt{Processor} preprocesses the input to prepare it for the \texttt{ParseTree} extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score(The grammars are defined to ignore the commented metadata, although we still extract it as it might be useful to the user). 
 
 
 \subsubsection{sample \texttt{Processor} task:}
-\label{sec:org688adac}
+\label{sec:orgd5f1ad7}
 before preprocessing:
 \begin{verbatim}
 	               III.......
@@ -151,34 +154,29 @@ D|--------------------------|-------------------------|
 */
 \end{verbatim}
 
-Once the main preprocessing tasks are complete and we are confident the input is valid, the \texttt{Processor} uses its aggregate extractor classes(ie. \texttt{SerializeGuitarScore}, \texttt{SerializeDrumScore}) to visit the parse tree generated by antlr4, while using the respective model classes to contain the information. The main steps of making the extracted data useful happens during the last steps of the \texttt{Processor}. Tasks such as creating measures for the \texttt{Score}, and calculating duration of notes. Once the processor has finished its job we have a \texttt{Score} object ready to be transformed into its XML equivalent. This is where The \texttt{Transform} class comes in. Itâ€™s job is to simply generate XML from the parsed information serialized in the respective \texttt{Score} object. Hence, once this conversion is finished the XML is passed back to the frontend where it is handled as needed.
-
+Once the main preprocessing tasks are complete and we are confident the input is valid, the \texttt{Processor} uses its aggregate extractor classes(ie. \texttt{SerializeGuitarScore}, \texttt{SerializeDrumScore}) to visit the parse tree generated by antlr4, while using the respective model classes to contain the information. The main steps of making the extracted data useful happens during the last steps of the \texttt{Processor}. Tasks such as creating measures for the \texttt{Score}, and calculating duration of notes. Once the processor has finished its job we have a \texttt{Score} object ready to be transformed into its XML equivalent. This is where The \texttt{Transform} class comes in. It's job is to simply generate XML from the parsed information serialized in the respective \texttt{Score} object. Hence, once this conversion is finished the XML is passed back to the frontend where it is handled as needed.
 
 \subsection{Grammar Design}
-\label{sec:orga58ff09}
-
+\label{sec:org8a16e19}
 The grammars for the system are designed to abstract the score representation. The grammars can be located at \texttt{src/main/antlr}. The system defines a set of rules for the grammar and antlr4 then creates a corresponding \texttt{ParseTree} from the input stream. The following are example rules(lower case, which would be nodes in the tree, sheet being the top level rule) and tokens which help build the grammar rules. This makes adding new support for tabs fairly easy as all you need to do is change the grammar rules and have a corresponding data model for that feature.
-
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./Diagrams/guitar-grammar-rules.png}
-\caption{A list guitar grammar rules and tokens in \texttt{GuitarTab.g4\textasciitilde{}(similarly drums have their own set of rules in \textasciitilde{}DrumTab.g4})}
+\caption{A list guitar grammar rules and tokens in \texttt{GuitarTab.g4\textasciitilde{}(similarly drums have their own set of rules defined in \textasciitilde{}DrumTab.g4})}
 \end{figure}
-
-
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=.9\linewidth]{./Diagrams/bass-parse-tree.png}
-\caption{An example of a \texttt{ParseTree} structure for a bass(which is similar to \texttt{GuitarTab.g4} grammar) tablature with four strings:}
+\caption{An example of a \texttt{ParseTree} structure for a bass(which is uses \texttt{GuitarTab.g4} grammar) tablature with four strings:}
 \end{figure}
 
-With the rules and \texttt{ParseTree} defined by antlr4, the system can traverse the tree with the system’s custom made \texttt{Visitor} classes( \texttt{ExtractGuitarScore}, \texttt{ExtractDrumScore}). The visitors define their logic in parsing the information based on which node the visitor is at in the input stream. If a hammer-on rule is reached the information is stored in the respective \texttt{HammerOn} model class. The visitors are broken up into three abstract components that serializes the \texttt{Score}, serializes \texttt{Staff}, and finally collects line/string(\texttt{GuitarString}, \texttt{DrumLine}) items. These classes all extend  their respective grammar defined \texttt{BaseVisitor} classes generated by antlr4.
+With the rules and \texttt{ParseTree} defined by antlr4, the system can traverse the \texttt{ParseTree} with the systemâ€™s custom made \texttt{Visitor} classes( \texttt{SerializeGuitarScore}, \texttt{SerializeDrumScore}). The visitors define their logic in parsing the information based on which node the visitor is at in the input stream. If a hammer-on rule is reached the information is stored in the respective \texttt{HammerOn} model class. The visitors are broken up into three abstract components that serializes the \texttt{Score}, serializes \texttt{Staff}, and finally collects line/string(\texttt{GuitarString}, \texttt{DrumLine}) items. These classes all extend  their respective grammar defined \texttt{BaseVisitor} classes generated by antlr4.
 
 \subsection{System capabilities}
-\label{sec:org338b07e}
-The system can support well formed guitar and bass tablature very well. The system's auto instrument detection is robust as it takes into account the metadata around the main components of the score, making it convenient for the user.  The system does fall short when the input is not well formed due to a lacking input validation system which allows malformed input to bypass to the \texttt{ParseTree} visitor process. With the right implementation and design of a validation system this could be fixed rather easily. The grammars of this system could also be improved to further reduce ambiguities which arise errors. The systemâ€™s design abstraction of the \texttt{Score} object into its subcomponents extends the possibility to allow more detailed configuration as desired by the user.
+\label{sec:org0c44a0d}
+The system can support well formed guitar and bass tablature very well. The system's auto instrument detection is robust as it takes into account the metadata around the main components of the score, making it convenient for the user.  The system does fall short when the input is not well formed due to a lacking input validation system which allows malformed input to bypass to the \texttt{ParseTree} visitor process. With the right implementation and design of a validation system this could be fixed rather easily. The grammars of this system could also be improved to further reduce ambiguities which arise errors. The system's design abstraction of the \texttt{Score} object into its subcomponents extends the possibility to allow more detailed configuration as desired by the user.
 
 \subsection{Back End Maintenance}
-\label{sec:orgdf79ccb}
-To add new support for a tablature feature you must change the grammar for the respective instrument. Adding a new rule is very simple but the main challenge is creating a grammar that avoids ambiguity. That’s why it’s important for the system to abstract the \texttt{Score} into subcomponents. For example, our system doesn’t support bend actions for guitar. We can add this support by adding a rule \texttt{bend} in our grammar file and finally add that rule to our \texttt{stringItems} rule. Then finally parsing the information once that rule is reached in the \texttt{ParseTree}. This ease of changing the grammar makes it easy to extend support. The grammars are not perfect but it is a good base to extend to more complex features. The model classes all contain modular abstractions of classes which make them easy to maintain or add additional changes to. There is a clear distinction of class separation since our model is divided based on the respective instrument. Making it simple to create new models for currently supported instruments we want to support.
+\label{sec:org5a527b2}
+To add new support for a tablature feature you must change the grammar for the respective instrument. Adding a new rule is very simple but the main challenge is creating a grammar that avoids ambiguity. Thatâ€™s why itâ€™s important for the system to abstract the \texttt{Score} into subcomponents. For example, our system doesnâ€™t support bend actions for guitar. We can add this support by adding a rule \texttt{bend} in our grammar file and finally add that rule to our \texttt{stringItems} rule. Then finally parsing the information once that rule is reached in the \texttt{ParseTree}. This ease of changing the grammar makes it easy to extend support. The grammars are not perfect but it is a good base to extend to more complex features. The model classes all contain modular abstractions of classes which make them easy to maintain or add additional changes to. There is a clear distinction of class separation since our model is divided based on the respective instrument. Making it simple to create new models for currently supported instruments or ones we want to support.
 \end{document}
