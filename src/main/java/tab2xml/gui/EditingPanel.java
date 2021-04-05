@@ -2,6 +2,7 @@ package tab2xml.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.text.NumberFormat;
@@ -107,13 +108,17 @@ final class EditingPanel extends JPanel {
 	 * @since 2021-03-22
 	 */
 	public EditingPanel(NarrowingView view) {
-		super(new GridBagLayout());
+		super(new GridLayout(1, 2));
 		
 		this.metadataBuilder = new XMLMetadata.Builder();
 		this.view = view;
 		
+		final JPanel measureEditingPanel = new JPanel(new GridLayout(2, 1));
+		measureEditingPanel.setBorder(new TitledBorder("Edit Measure(s)"));
+		this.add(measureEditingPanel);
+		
 		final JPanel measureSelectionPanel = new JPanel();
-		this.add(measureSelectionPanel, gridBag(0, 0));
+		measureEditingPanel.add(measureSelectionPanel);
 		
 		final JLabel measureLabel = new JLabel("Measure Range:");
 		measureSelectionPanel.add(measureLabel);
@@ -142,30 +147,11 @@ final class EditingPanel extends JPanel {
 		this.doneEditingButton.addActionListener(this::doneEditing);
 		measureSelectionPanel.add(this.doneEditingButton);
 		
-		final JPanel metadataPanel = new JPanel(new GridBagLayout());
-		metadataPanel.setBorder(new TitledBorder("Metadata"));
-		this.add(metadataPanel, gridBag(0, 1));
-		
-		final JLabel titleLabel = new JLabel("Title:");
-		metadataPanel.add(titleLabel, gridBag(0, 0, 1, 1, INSETS));
-		
-		this.titleField = new JTextField(40);
-		metadataPanel.add(this.titleField, gridBag(1, 0, 2, 1, INSETS));
-		
-		final JLabel composerLabel = new JLabel("Composer:");
-		metadataPanel.add(composerLabel, gridBag(0, 1, 1, 1, INSETS));
-		
-		this.composerField = new JTextField(40);
-		metadataPanel.add(this.composerField, gridBag(1, 1, 2, 1, INSETS));
-		
-//		final JButton setTitleButton = new JButton("Set Title");
-//		metadataPanel.add(setTitleButton, gridBag(4, 0, 1, 1, INSETS));
+		final JPanel timeSignaturePanel = new JPanel();
+		measureEditingPanel.add(timeSignaturePanel);
 		
 		final JLabel timeSignatureLabel = new JLabel("Time Signature:");
-		metadataPanel.add(timeSignatureLabel, gridBag(0, 2, 1, 1, INSETS));
-		
-		final JPanel timeSignaturePanel = new JPanel();
-		metadataPanel.add(timeSignaturePanel, gridBag(1, 2, 1, 1, INSETS));
+		timeSignaturePanel.add(timeSignatureLabel);
 		
 		this.topSignatureField = new JFormattedTextField(
 				NumberFormat.getIntegerInstance());
@@ -184,10 +170,29 @@ final class EditingPanel extends JPanel {
 		this.bottomSignatureField.addCaretListener(this::onEntryUpdate);
 		timeSignaturePanel.add(this.bottomSignatureField);
 		
-		this.setSignatureButton = new JButton(
-				"Set Time Signature for Measure(s)");
+		this.setSignatureButton = new JButton("Set Time Signature for Range");
 		this.setSignatureButton.addActionListener(this::setTimeSignature);
-		metadataPanel.add(this.setSignatureButton, gridBag(2, 2, 1, 1, INSETS));
+		timeSignaturePanel.add(this.setSignatureButton);
+		
+		final JPanel metadataPanel = new JPanel(new GridBagLayout());
+		metadataPanel.setBorder(new TitledBorder("Metadata for Whole Score"));
+		this.add(metadataPanel);
+		
+		final JLabel titleLabel = new JLabel("Title:");
+		metadataPanel.add(titleLabel, gridBag(0, 0, 1, 1, INSETS));
+		
+		this.titleField = new JTextField(40);
+		metadataPanel.add(this.titleField, gridBag(1, 0, 2, 1, INSETS));
+		
+		final JLabel composerLabel = new JLabel("Composer:");
+		metadataPanel.add(composerLabel, gridBag(0, 1, 1, 1, INSETS));
+		
+		this.composerField = new JTextField(40);
+		metadataPanel.add(this.composerField, gridBag(1, 1, 2, 1, INSETS));
+		
+//		final JButton setTitleButton = new JButton("Set Title");
+//		metadataPanel.add(setTitleButton, gridBag(4, 0, 1, 1, INSETS));
+		
 	}
 	
 	/**
