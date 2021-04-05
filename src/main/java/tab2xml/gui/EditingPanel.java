@@ -87,9 +87,9 @@ final class EditingPanel extends JPanel {
 	final JTextField bottomSignatureField;
 	
 	// control buttons
-	private final JButton editMeasureButton;
-	private final JButton doneEditingButton;
-	private final JButton setSignatureButton;
+	final JButton editMeasureButton;
+	final JButton doneEditingButton;
+	final JButton setSignatureButton;
 	
 	/** Whether or not narrowing is currently being used */
 	private boolean isNarrowing = false;
@@ -205,6 +205,8 @@ final class EditingPanel extends JPanel {
 	private boolean checkInputErrors(boolean checkTimeSignature) {
 		final int measureStart = this.measureStart();
 		final int measureEnd = this.measureEnd();
+		final int measureCount = MeasureNarrowing
+				.measureCount(this.view.getInputText());
 		final int top, bottom;
 		try {
 			if (checkTimeSignature) {
@@ -226,6 +228,12 @@ final class EditingPanel extends JPanel {
 		} else if (measureEnd <= 0) {
 			this.view.showErrorMessage("Measure Range Error",
 					"End measure must be positive");
+		} else if (measureStart > measureCount) {
+			this.view.showErrorMessage("Measure Range Error",
+					"Start measure must be less than or equal to number of measures");
+		} else if (measureEnd > measureCount) {
+			this.view.showErrorMessage("Measure Range Error",
+					"End measure must be less than or equal to number of measures");
 		} else if (measureStart > measureEnd) {
 			this.view.showErrorMessage("Measure Range Error",
 					"Start measure must be before or equal to end measure.");
@@ -317,13 +325,8 @@ final class EditingPanel extends JPanel {
 	int measureEnd() {
 		if (this.measureEnd.getText().isEmpty())
 			return MeasureNarrowing.measureCount(this.view.getInputText());
-		else {
-			final int measureEnd = Integer.valueOf(this.measureEnd.getText());
-			if (measureEnd <= 0)
-				return MeasureNarrowing.measureCount(this.view.getInputText());
-			else
-				return measureEnd;
-		}
+		else
+			return Integer.valueOf(this.measureEnd.getText());
 	}
 	
 	/**

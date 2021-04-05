@@ -1,8 +1,12 @@
 package tab2xml.gui;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static tab2xml.ResourceLoading.loadTextResource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import tab2xml.IntRange;
 import tab2xml.model.TimeSignature;
+import tab2xml.parser.MeasureNarrowing;
 import tab2xml.xmlconversion.XMLMetadata;
 
 /**
@@ -23,6 +28,10 @@ import tab2xml.xmlconversion.XMLMetadata;
 class EditingPanelTest {
 	private static final String TESTING_TITLE = "Testing Title";
 	private static final String TESTING_COMPOSER = "Testing Composer";
+	
+	/** The tab to be used for testing. */
+	private static final String testTab = loadTextResource(
+			"readme-sample-1.txt");
 	
 	private ViewBot view;
 	private EditingPanel panel;
@@ -69,6 +78,74 @@ class EditingPanelTest {
 	}
 	
 	/**
+	 * Tests that errors in the set measure numbers are determined correctly.
+	 * 
+	 * @since 2021-04-05
+	 */
+	@Test
+	void testErrors() {
+		// measures
+		this.panel.measureStart.setText("-1");
+		this.panel.measureEnd.setText("");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.editMeasureButton.doClick(),
+				"Negative measure start did not cause error.");
+		
+		this.panel.measureStart.setText("");
+		this.panel.measureEnd.setText("-1");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.editMeasureButton.doClick(),
+				"Negative measure end did not cause error.");
+		
+		this.panel.measureStart.setText("100");
+		this.panel.measureEnd.setText("");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.editMeasureButton.doClick(),
+				"Measure start above measure count did not cause error.");
+		
+		this.panel.measureStart.setText("100");
+		this.panel.measureEnd.setText("200");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.editMeasureButton.doClick(),
+				"Measure start above measure count did not cause error.");
+		
+		this.panel.measureStart.setText("");
+		this.panel.measureEnd.setText("6");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.editMeasureButton.doClick(),
+				"Measure end above measure count did not cause error.");
+		
+		this.panel.measureStart.setText("4");
+		this.panel.measureEnd.setText("2");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.editMeasureButton.doClick(),
+				"Measure start after end did not cause error.");
+		
+		this.panel.measureStart.setText("2");
+		this.panel.measureEnd.setText("5");
+		assertDoesNotThrow(() -> this.panel.editMeasureButton.doClick(),
+				"Error thrown with correct measure input.");
+		
+		// time signatures
+		this.panel.topSignatureField.setText("-1");
+		this.panel.bottomSignatureField.setText("4");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.setSignatureButton.doClick(),
+				"Negative time signature top did not cause error.");
+		
+		this.panel.topSignatureField.setText("4");
+		this.panel.bottomSignatureField.setText("-1");
+		assertThrows(RuntimeException.class,
+				() -> this.panel.setSignatureButton.doClick(),
+				"Negative time signature bottom did not cause error.");
+		
+		this.panel.topSignatureField.setText("4");
+		this.panel.bottomSignatureField.setText("4");
+		assertDoesNotThrow(() -> this.panel.setSignatureButton.doClick(),
+				"Error thrown with correct time signature input");
+	}
+	
+	/**
 	 * Tests that the measure range is correctly calculated for empty text boxes
 	 * 
 	 * @since 2021-04-05
@@ -94,6 +171,47 @@ class EditingPanelTest {
 		
 		assertEquals(3, this.panel.measureStart());
 		assertEquals(4, this.panel.measureEnd());
+	}
+	
+	/**
+	 * Tests that the narrowing functionality is used correctly. Does not test
+	 * whether the narrowed text is correct, since that is the job of
+	 * MeasureNarrowingTest.
+	 * 
+	 * @since 2021-04-05
+	 */
+	@Test
+	void testNarrowing() {
+		// set tab (5 measures) and measure range
+		this.view.setInputText(testTab);
+		this.panel.measureStart.setText("2");
+		this.panel.measureEnd.setText("4");
+		
+		// press edit button, if it is enabled
+		assertTrue(this.panel.editMeasureButton.isEnabled(),
+				"Edit button failed to enable");
+		this.panel.editMeasureButton.doClick();
+		
+		// assert that panel is narrowing & has the correct text
+		final String expected = MeasureNarrowing.extractMeasureRange(testTab, 2,
+				4);
+		assertEquals(expected, this.view.getNarrowedText());
+		assertTrue(this.panel.isNarrowing(), "Panel did not enable narrowing");
+		
+		// edit narrowed text
+		final String replacement = expected.replaceFirst("2", "3");
+		this.view.setNarrowedText(replacement);
+		
+		// press Done button, if it is enabled
+		assertTrue(this.panel.doneEditingButton.isEnabled(),
+				"Done button failed to enable");
+		this.panel.doneEditingButton.doClick();
+		
+		// assert that panel is not narrowing & input text is changed
+		final String expected2 = MeasureNarrowing.replaceMeasureRange(testTab, 2,
+				4, replacement);
+		assertEquals(expected2, this.view.getInputText());
+		assertFalse(this.panel.isNarrowing(), "Panel did not disable narrowing");
 	}
 	
 	/**
@@ -134,4 +252,5 @@ class EditingPanelTest {
 		final XMLMetadata metadata2 = this.panel.getMetadata();
 		assertEquals(TESTING_TITLE, metadata2.title());
 	}
+	
 }

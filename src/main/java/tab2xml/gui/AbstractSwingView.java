@@ -63,10 +63,12 @@ public abstract class AbstractSwingView implements View {
 			// area.
 			final List<Path> droppedFiles;
 			try {
-				// Using DataFlavor.javaFileListFlavor as an argument guarantees the
-				// runtime type of result will be List, and all its elements will be
-				// instances of File. Therefore, this cast will never cause an
-				// error.
+				/*
+				 * Using DataFlavor.javaFileListFlavor as an argument guarantees the
+				 * runtime type of result will be List, and all its elements will be
+				 * instances of File. Therefore, this cast will never cause an
+				 * error.
+				 */
 				@SuppressWarnings("unchecked")
 				final List<File> result = (List<File>) event.getTransferable()
 						.getTransferData(DataFlavor.javaFileListFlavor);
@@ -395,7 +397,7 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 
+	 * 				
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {

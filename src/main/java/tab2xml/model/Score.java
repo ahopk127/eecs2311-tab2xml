@@ -164,6 +164,9 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 
 				// first staff won't be null as there is at least one measure.
 				// all measures by default are set to the first measure's/score's set attributes.
+				if (firstStaff == null)
+					throw new AssertionError("First staff should not be null.");
+				
 				measure.setBeats(firstStaff.getBeats());
 				measure.setBeatType(firstStaff.getBeatType());
 				measure.setDivision(firstStaff.getDivision());

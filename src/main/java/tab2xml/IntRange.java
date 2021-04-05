@@ -3,6 +3,8 @@ package tab2xml;
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A range of integers. The beginning is inclusive and the end is exclusive.
@@ -44,6 +46,37 @@ public final class IntRange extends AbstractSet<Integer> {
 	}
 	
 	/**
+	 * The separator used in the toString() method.
+	 */
+	private static final String SEPARATOR = "..";
+	
+	/** A regex that matches an integer. */
+	private static final String INTEGER_PATTERN = "([+-]?\\d+)";
+	/** Pattern that matches the toString output */
+	private static final Pattern TO_STRING = Pattern
+			.compile(INTEGER_PATTERN + "\\.\\." + INTEGER_PATTERN);
+	
+	/**
+	 * Parses a string formatted as in {@link #toString} and returns the
+	 * associated int range
+	 *
+	 * @param str string to parse
+	 * @return parsed IntRange instance
+	 * @throws IllegalArgumentException if format is incorrect
+	 * @since 2021-04-05
+	 */
+	public static IntRange fromString(String str) {
+		final Matcher matcher = TO_STRING.matcher(str);
+		if (matcher.find()) {
+			final int beginning = Integer.parseInt(matcher.group(1));
+			final int end = Integer.parseInt(matcher.group(2));
+			return IntRange.inclusive(beginning, end);
+		} else
+			throw new IllegalArgumentException(
+					"Incorrect format for IntRange string.");
+	}
+	
+	/**
 	 * Gets an {@code IntRange}
 	 *
 	 * @param beginning beginning of range, inclusive
@@ -53,6 +86,14 @@ public final class IntRange extends AbstractSet<Integer> {
 	 */
 	public static IntRange inclusive(int beginning, int end) {
 		return valueOf(beginning, end + 1);
+	}
+	
+	/**
+	 * @return true if {@code str} is parseable by {@link #fromString}.
+	 * @since 2021-04-05
+	 */
+	public static boolean isValidString(String str) {
+		return TO_STRING.matcher(str).find();
 	}
 	
 	/**
@@ -160,8 +201,16 @@ public final class IntRange extends AbstractSet<Integer> {
 		return this.endExclusive - this.beginningInclusive;
 	}
 	
+	/**
+	 * Returns a String representation of this range. It consists of the
+	 * {@linkplain #beginningInclusive() inclusive beginning}, then two periods,
+	 * then the {@linkplain #endInclusive() inclusive end}.
+	 * <p>
+	 * For example, {@code IntRange.inclusive(3, 7).toString()} returns
+	 * {@code "3..7"}.
+	 */
 	@Override
 	public String toString() {
-		return "[" + this.beginningInclusive() + ", " + this.endInclusive() + "]";
+		return this.beginningInclusive() + SEPARATOR + this.endInclusive();
 	}
 }

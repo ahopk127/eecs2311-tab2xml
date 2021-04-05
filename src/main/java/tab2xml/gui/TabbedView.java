@@ -43,12 +43,19 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	private final JTabbedPane inputOutputPane;
 	
 	// INPUT COMPONENTS
-	private final JTextComponent input;
-	private final JTextComponent narrowedInput;
-	private final EditingPanel editingPanel;
+	final JTextComponent input;
+	final JTextComponent narrowedInput;
+	final EditingPanel editingPanel;
 	
 	// OUTPUT COMPONENTS
-	private final JTextComponent output;
+	final JTextComponent output;
+	
+	// BUTTONS (package-private for testing)
+	final JButton loadFromFile;
+	final JButton convertButton;
+	final JButton convertAndSave;
+	final JButton saveInput;
+	final JButton saveOutput;
 	
 	/**
 	 * Creates the TabbedView.
@@ -79,29 +86,29 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 				new FlowLayout(FlowLayout.CENTER, 10, 5));
 		inputPanel.add(inputButtonPanel, BorderLayout.SOUTH);
 		
-		final JButton loadFromFile = new JButton("Load from File");
-		loadFromFile.addActionListener(e -> this.presenter.loadInput());
-		inputButtonPanel.add(loadFromFile);
+		this.loadFromFile = new JButton("Load from File");
+		this.loadFromFile.addActionListener(e -> this.presenter.loadInput());
+		inputButtonPanel.add(this.loadFromFile);
 		
-		final JButton convertButton = new JButton("Convert");
-		convertButton.setEnabled(false);
-		convertButton.addActionListener(e -> {
+		this.convertButton = new JButton("Convert");
+		this.convertButton.setEnabled(false);
+		this.convertButton.addActionListener(e -> {
 			if (this.presenter.convert()) {
 				this.inputOutputPane.setSelectedIndex(2); // output
 			}
 		});
-		inputButtonPanel.add(convertButton);
+		inputButtonPanel.add(this.convertButton);
 		
-		final JButton convertAndSave = new JButton("Convert and Save");
-		convertAndSave.setEnabled(false);
-		convertAndSave
+		this.convertAndSave = new JButton("Convert and Save");
+		this.convertAndSave.setEnabled(false);
+		this.convertAndSave
 				.addActionListener(e -> this.presenter.convertAndSave(true));
-		inputButtonPanel.add(convertAndSave);
+		inputButtonPanel.add(this.convertAndSave);
 		
-		final JButton saveInput = new JButton("Save Input");
-		saveInput.setEnabled(false);
-		saveInput.addActionListener(e -> this.presenter.saveInput());
-		inputButtonPanel.add(saveInput);
+		this.saveInput = new JButton("Save Input");
+		this.saveInput.setEnabled(false);
+		this.saveInput.addActionListener(e -> this.presenter.saveInput());
+		inputButtonPanel.add(this.saveInput);
 		
 		// input text box
 		this.input = new JTextArea(24, 80);
@@ -109,12 +116,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		this.setUpFileDragAndDrop();
 		this.setUpHighlightingRemoval();
 		this.input.addCaretListener(e -> this.presenter.detectInstrument());
-		this.input.addCaretListener(e -> {
-			final boolean inputBlank = this.input.getText().isBlank();
-			convertButton.setEnabled(!inputBlank);
-			convertAndSave.setEnabled(!inputBlank);
-			saveInput.setEnabled(!inputBlank);
-		});
+		this.input.addCaretListener(e -> this.updateButtons());
 		inputPanel.add(
 				new JScrollPane(this.input,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -149,17 +151,15 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 				new FlowLayout(FlowLayout.CENTER, 10, 5));
 		outputPanel.add(outputButtonPanel, BorderLayout.SOUTH);
 		
-		final JButton saveToFile = new JButton("Save to File");
-		saveToFile.setEnabled(false);
-		saveToFile.addActionListener(e -> this.presenter.saveOutput());
-		outputButtonPanel.add(saveToFile);
+		this.saveOutput = new JButton("Save to File");
+		this.saveOutput.setEnabled(false);
+		this.saveOutput.addActionListener(e -> this.presenter.saveOutput());
+		outputButtonPanel.add(this.saveOutput);
 		
 		// output text box
 		this.output = new JTextArea(24, 80);
 		this.output.setBorder(new LineBorder(Color.BLACK));
-		this.output.addCaretListener(e -> {
-			saveToFile.setEnabled(!this.output.getText().isBlank());
-		});
+		this.output.addCaretListener(e -> this.updateButtons());
 		outputPanel.add(
 				new JScrollPane(this.output,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -200,7 +200,33 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	}
 	
 	@Override
+	public void setInputText(String text) {
+		this.input.setText(text);
+		this.updateButtons();
+	}
+	
+	@Override
 	public void setNarrowedText(String text) {
 		this.narrowedInput.setText(text);
+	}
+	
+	@Override
+	public void setOutputText(String text) {
+		this.output.setText(text);
+		this.updateButtons();
+	}
+	
+	/**
+	 * Updates the state of the view's buttons.
+	 * 
+	 * @since 2021-04-05
+	 */
+	final void updateButtons() {
+		final boolean inputBlank = this.input.getText().isBlank();
+		this.convertButton.setEnabled(!inputBlank);
+		this.convertAndSave.setEnabled(!inputBlank);
+		this.saveInput.setEnabled(!inputBlank);
+		
+		this.saveOutput.setEnabled(!this.output.getText().isBlank());
 	}
 }

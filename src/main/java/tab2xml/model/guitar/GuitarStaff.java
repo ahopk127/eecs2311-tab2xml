@@ -102,10 +102,12 @@ public class GuitarStaff extends Staff<GuitarString> {
 		return new LineIterator(this);
 	}
 
+	@Override
 	public Iterator<Measure<Note>> measureIterator() {
 		return new MeasureIterator(this);
 	}
 
+	@Override
 	public Iterator<Note> noteIterator() {
 		return new NoteIterator(this);
 	}
