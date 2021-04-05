@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * A static utility class with methods to handle narrowing to a measure.
@@ -40,8 +41,9 @@ public final class MeasureNarrowing {
 	static final class StringPosition implements Comparable<StringPosition> {
 		/** Comparator used for natural order */
 		private static final Comparator<StringPosition> naturalOrder = Comparator
-				.comparingInt((StringPosition p) -> p.row).thenComparingInt(p -> p.col);
-
+				.comparingInt((StringPosition p) -> p.row)
+				.thenComparingInt(p -> p.col);
+		
 		/**
 		 * Converts a String index into a {@code StringPosition}.
 		 *
@@ -54,29 +56,29 @@ public final class MeasureNarrowing {
 			int startOfRow = 0;
 			int endOfRow = -1;
 			int rowNum = -1;
-
+			
 			while (endOfRow < index) {
 				startOfRow = endOfRow + 1;
 				endOfRow = string.indexOf(ROW_END, startOfRow);
 				rowNum++;
 			}
-
+			
 			return new StringPosition(rowNum, index - startOfRow);
 		}
-
+		
 		final int row;
 		final int col;
-
+		
 		public StringPosition(int row, int col) {
 			this.row = row;
 			this.col = col;
 		}
-
+		
 		@Override
 		public int compareTo(StringPosition o) {
 			return naturalOrder.compare(this, o);
 		}
-
+		
 		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
@@ -88,12 +90,12 @@ public final class MeasureNarrowing {
 			final StringPosition other = (StringPosition) obj;
 			return this.col == other.col && this.row == other.row;
 		}
-
+		
 		@Override
 		public int hashCode() {
 			return Objects.hash(this.col, this.row);
 		}
-
+		
 		/**
 		 * Converts this {@code StringPosition} to an index in a string.
 		 *
@@ -108,31 +110,37 @@ public final class MeasureNarrowing {
 			for (int i = 0; i < this.row; i++) {
 				startOfRow = string.indexOf(ROW_END, startOfRow) + 1;
 			}
-
+			
 			// now that we have the start of the row, we can easily calculate the
 			// position
 			return startOfRow + this.col;
 		}
-
+		
 		@Override
 		public String toString() {
 			return "(row=" + this.row + ", col=" + this.col + ")";
 		}
 	}
-
+	
 	/** The minimum length of a measure, excluding surrounding '|' characters */
 	private static final int MIN_MEASURE_LENGTH = 1;
-
+	
 	/**
 	 * The character that separates measures.
 	 */
 	private static final char MEASURE_SEPARATOR = '|';
-
+	
 	/**
 	 * The character that marks the end of a row.
 	 */
 	private static final String ROW_END = "\n";
-
+	
+	/**
+	 * A pattern that matches lines that are part of a measure
+	 */
+	private static final Pattern MEASURE_LINE = Pattern
+			.compile("^.{0,2}\\|.*-.*\\|$");
+	
 	/**
 	 * Finds the bottom right corner of a measure in a text tab.
 	 *
@@ -143,22 +151,24 @@ public final class MeasureNarrowing {
 	 */
 	static StringPosition bottomRightCorner(String textTab, int measure) {
 		// do not include the last character (in case it is a terminating newline)
-		final int startOfLastRow = textTab.lastIndexOf(ROW_END, textTab.length() - 2) + 1;
-
+		final int startOfLastRow = textTab.lastIndexOf(ROW_END,
+				textTab.length() - 2) + 1;
+		
 		int endOfMeasure = textTab.indexOf(MEASURE_SEPARATOR, startOfLastRow);
-
+		
 		for (int i = 0; i < measure; i++) {
-			endOfMeasure = textTab.indexOf(MEASURE_SEPARATOR, endOfMeasure + MIN_MEASURE_LENGTH + 1);
+			endOfMeasure = textTab.indexOf(MEASURE_SEPARATOR,
+					endOfMeasure + MIN_MEASURE_LENGTH + 1);
 		}
-
+		
 		// in case it's a repeated measure, find the REAL ending | character
 		while (textTab.charAt(endOfMeasure + 1) == MEASURE_SEPARATOR) {
 			endOfMeasure++;
 		}
-
+		
 		return StringPosition.fromIndex(textTab, endOfMeasure);
 	}
-
+	
 	/**
 	 * Does the reverse of linearize().
 	 * 
@@ -170,39 +180,42 @@ public final class MeasureNarrowing {
 	 */
 	static String delinearize(String textTab, int maxLineLength) {
 		final String[] linearizedLines = textTab.split(ROW_END);
-
+		
 		final List<String> lines = new ArrayList<>();
 		final int prefixLength = textTab.indexOf(MEASURE_SEPARATOR) + 1;
-
+		
 		// find the beginning and end of each set of lines within the tab
 		int beginningInclusive = prefixLength;
 		int endExclusive = prefixLength;
-
+		
 		while (beginningInclusive < linearizedLines[0].length()) {
 			// find end of current line
 			int nextMeasure = beginningInclusive;
 			do {
 				endExclusive = nextMeasure;
-				nextMeasure = linearizedLines[0].indexOf(MEASURE_SEPARATOR, nextMeasure) + 1;
-			} while (nextMeasure != 0 && prefixLength + nextMeasure - beginningInclusive <= maxLineLength);
-
+				nextMeasure = linearizedLines[0].indexOf(MEASURE_SEPARATOR,
+						nextMeasure) + 1;
+			} while (nextMeasure != 0 && prefixLength + nextMeasure
+					- beginningInclusive <= maxLineLength);
+			
 			// we can get the lines now
 			for (int i = 0; i < linearizedLines.length; i++) {
 				final String prefix = linearizedLines[i].substring(0, prefixLength);
-				final String line = linearizedLines[i].substring(beginningInclusive, endExclusive);
-
+				final String line = linearizedLines[i].substring(beginningInclusive,
+						endExclusive);
+				
 				lines.add(prefix + line);
 			}
 			lines.add("");
 			beginningInclusive = endExclusive;
 		}
-
+		
 		return String.join(ROW_END, lines.toArray(new String[0]));
 	}
-
+	
 	/**
-	 * Extracts a range of measures from a text tab, and returns them as a String.
-	 * The surrounding '|' characters will be included in the output.
+	 * Extracts a range of measures from a text tab, and returns them as a
+	 * String. The surrounding '|' characters will be included in the output.
 	 *
 	 * @param textTab      text tab to extract from
 	 * @param measureStart first measure to extract, inclusive
@@ -210,18 +223,21 @@ public final class MeasureNarrowing {
 	 * @return extracted measures
 	 * @since 2021-03-22
 	 */
-	public static String extractMeasureRange(String textTab, int measureStart, int measureEnd) {
-		final int maxLineLength = textTab.lines().mapToInt(String::length).max().orElse(0);
-
+	public static String extractMeasureRange(String textTab, int measureStart,
+			int measureEnd) {
+		final int maxLineLength = textTab.lines().mapToInt(String::length).max()
+				.orElse(0);
+		
 		final String linearized = linearize(textTab);
 		final StringPosition topLeft = topLeftCorner(linearized, measureStart);
-		final StringPosition bottomRight = bottomRightCorner(linearized, measureEnd);
-
-		final String linearizedResult = extractRectangle(linearized, topLeft.row, topLeft.col, bottomRight.row,
-				bottomRight.col);
+		final StringPosition bottomRight = bottomRightCorner(linearized,
+				measureEnd);
+		
+		final String linearizedResult = extractRectangle(linearized, topLeft.row,
+				topLeft.col, bottomRight.row, bottomRight.col);
 		return delinearize(linearizedResult, maxLineLength);
 	}
-
+	
 	/**
 	 * Extracts a rectangular region from a String. For example, if s is:
 	 *
@@ -253,26 +269,28 @@ public final class MeasureNarrowing {
 	 * @return extracted rectangle
 	 * @since 2021-03-26
 	 */
-	private static final String extractRectangle(String s, int beginRow, int beginCol, int endRow, int endCol) {
+	private static final String extractRectangle(String s, int beginRow,
+			int beginCol, int endRow, int endCol) {
 		final StringBuilder rectangle = new StringBuilder();
-
+		
 		for (int row = beginRow; row <= endRow; row++) {
 			// calculate row string (e.g. |-----2--------|)
 			final StringPosition beginning = new StringPosition(row, beginCol);
 			final StringPosition end = new StringPosition(row, endCol);
-			final String rowString = s.substring(beginning.toIndex(s), end.toIndex(s) + 1);
-
+			final String rowString = s.substring(beginning.toIndex(s),
+					end.toIndex(s) + 1);
+			
 			// add it to rectangle
 			rectangle.append(rowString);
 			rectangle.append(ROW_END);
 		}
-
+		
 		return rectangle.toString();
 	}
-
+	
 	/**
-	 * Takes a text tab and splits it into lines, returning only the ones important
-	 * for text tab narrowing.
+	 * Takes a text tab and splits it into lines, returning only the ones
+	 * important for text tab narrowing.
 	 *
 	 * @param textTab tab to split
 	 * @return important lines
@@ -280,39 +298,40 @@ public final class MeasureNarrowing {
 	 */
 	private static String[] getImportantLines(String textTab) {
 		final String[] lines = textTab.split(ROW_END);
-
+		
 		final List<String> filteredLines = new ArrayList<>();
-
+		
 		// add each line to filteredLines, if it is important
 		for (int i = 0; i < lines.length; i++) {
 			if (isMeasureLine(lines[i])) {
 				filteredLines.add(lines[i]);
-
+				
 			} else if (i > 0 && isMeasureLine(lines[i - 1])) {
 				// keep a blank line separator between measure lines
 				filteredLines.add("");
 			}
 		}
-
+		
 		// remove excess blank lines from beginning and end
 		while (filteredLines.size() > 0 && "".equals(filteredLines.get(0))) {
 			filteredLines.remove(0);
 		}
-		while (filteredLines.size() > 0 && "".equals(filteredLines.get(filteredLines.size() - 1))) {
+		while (filteredLines.size() > 0
+				&& "".equals(filteredLines.get(filteredLines.size() - 1))) {
 			filteredLines.remove(filteredLines.size() - 1);
 		}
-
+		
 		return filteredLines.toArray(new String[0]);
 	}
-
+	
 	/**
 	 * @return true if {@code line} contains measure text
 	 * @since 2021-03-29
 	 */
 	private static boolean isMeasureLine(String line) {
-		return line.contains("|-") || line.contains("-|");
+		return MEASURE_LINE.matcher(line).matches();
 	}
-
+	
 	/**
 	 * "Linearizes" a text tab, moving all of its "lines" into one.
 	 *
@@ -322,7 +341,7 @@ public final class MeasureNarrowing {
 	 */
 	static String linearize(String textTab) {
 		final String[] oldLines = getImportantLines(textTab);
-
+		
 		// determine number of strings/lines in tab
 		int numLines = -1;
 		for (int i = 0; i < oldLines.length; i++) {
@@ -331,7 +350,7 @@ public final class MeasureNarrowing {
 				break;
 			}
 		}
-
+		
 		if (numLines == -1)
 			// the tab is already linear
 			return textTab;
@@ -341,10 +360,10 @@ public final class MeasureNarrowing {
 			for (int i = 0; i < newLines.length; i++) {
 				newLines[i] = new StringBuilder(oldLines[i]);
 			}
-
+			
 			// add the stuff below to these stringbuilders
 			int newLine = 0; // new line that current line will be added to
-
+			
 			// start at first line not already included in the builders
 			for (int i = numLines; i < oldLines.length; i++) {
 				if (isMeasureLine(oldLines[i])) {
@@ -354,27 +373,29 @@ public final class MeasureNarrowing {
 					// I am excluding the first | because the previous line will end
 					// in | and I do not want to create a double-|
 					final String oldLine = oldLines[i];
-					final String strippedLine = oldLine.substring(oldLine.indexOf(MEASURE_SEPARATOR) + 1,
+					final String strippedLine = oldLine.substring(
+							oldLine.indexOf(MEASURE_SEPARATOR) + 1,
 							oldLine.lastIndexOf(MEASURE_SEPARATOR) + 1);
-
+					
 					newLines[newLine].append(strippedLine);
 					newLine = (newLine + 1) % numLines;
 				}
 			}
-
+			
 			// combine lines
-			final int totalSize = Arrays.stream(newLines).mapToInt(StringBuilder::length).sum() + numLines;
+			final int totalSize = Arrays.stream(newLines)
+					.mapToInt(StringBuilder::length).sum() + numLines;
 			final StringBuilder combined = new StringBuilder(totalSize);
-
+			
 			for (final StringBuilder line : newLines) {
 				combined.append(line);
 				combined.append(ROW_END);
 			}
-
+			
 			return combined.toString();
 		}
 	}
-
+	
 	/**
 	 * Counts the number of measures in a text tab.
 	 *
@@ -383,30 +404,35 @@ public final class MeasureNarrowing {
 	 * @since 2021-04-03
 	 */
 	public static int measureCount(String textTab) {
+		if (!textTab.contains(ROW_END))
+			return 0;
+		
 		final String linearizedTab = linearize(textTab);
-		final String firstLine = linearizedTab.substring(0, linearizedTab.indexOf(ROW_END));
-
+		final String firstLine = linearizedTab.substring(0,
+				linearizedTab.indexOf(ROW_END));
+		
 		// count the number of | characters, making sure not to double-count ||
 		// measure beginnings/ends
 		int measureBeginning = firstLine.indexOf(MEASURE_SEPARATOR);
 		int measureCount = -1; // start at -1 because this code will normally
-								// calculate one more than measure count
-
+		// calculate one more than measure count
+		
 		while (measureBeginning != -1) {
-			measureBeginning = firstLine.indexOf(MEASURE_SEPARATOR, measureBeginning + MIN_MEASURE_LENGTH + 1);
+			measureBeginning = firstLine.indexOf(MEASURE_SEPARATOR,
+					measureBeginning + MIN_MEASURE_LENGTH + 1);
 			measureCount++;
 		}
-
+		
 		return measureCount;
 	}
-
+	
 	/**
-	 * Accepts a text tab, and returns the text tab with a set of measures replaced.
-	 * The new measure text should have '|' on both sides.
+	 * Accepts a text tab, and returns the text tab with a set of measures
+	 * replaced. The new measure text should have '|' on both sides.
 	 * 
 	 * <p>
-	 * <b>Warning: this method will replace any text that is not part of a measure
-	 * or tuning (i.e. text on non-measure lines).</b>
+	 * <b>Warning: this method will replace any text that is not part of a
+	 * measure or tuning (i.e. text on non-measure lines).</b>
 	 *
 	 * @param textTab        original text tab
 	 * @param measureStart   first measure to replace, inclusive
@@ -415,20 +441,24 @@ public final class MeasureNarrowing {
 	 * @return text tab with measures replaced
 	 * @since 2021-03-22
 	 */
-	public static String replaceMeasureRange(String textTab, int measureStart, int measureEnd, String newMeasureText) {
-		final int maxLineLength = textTab.lines().mapToInt(String::length).max().orElse(0);
-
+	public static String replaceMeasureRange(String textTab, int measureStart,
+			int measureEnd, String newMeasureText) {
+		final int maxLineLength = textTab.lines().mapToInt(String::length).max()
+				.orElse(0);
+		
 		final String linearizedTab = linearize(textTab);
 		final String linearizedReplacement = linearize(newMeasureText);
-
+		
 		final StringPosition topLeft = topLeftCorner(linearizedTab, measureStart);
-		final StringPosition bottomRight = bottomRightCorner(linearizedTab, measureEnd);
-
-		final String linearizedOutput = replaceRectangle(linearizedTab, topLeft.row, topLeft.col, bottomRight.row,
-				bottomRight.col, linearizedReplacement);
+		final StringPosition bottomRight = bottomRightCorner(linearizedTab,
+				measureEnd);
+		
+		final String linearizedOutput = replaceRectangle(linearizedTab,
+				topLeft.row, topLeft.col, bottomRight.row, bottomRight.col,
+				linearizedReplacement);
 		return delinearize(linearizedOutput, maxLineLength);
 	}
-
+	
 	/**
 	 * Replaces a rectangular region in a String, returning the new String. For
 	 * example, if s is:
@@ -473,31 +503,33 @@ public final class MeasureNarrowing {
 	 * @return extracted rectangle
 	 * @since 2021-03-26
 	 */
-	private static final String replaceRectangle(String s, int beginRow, int beginCol, int endRow, int endCol,
-			String newRectangle) {
+	private static final String replaceRectangle(String s, int beginRow,
+			int beginCol, int endRow, int endCol, String newRectangle) {
 		final StringBuilder newTab = new StringBuilder();
 		final String[] replaceRows = newRectangle.split("\n");
-
+		
 		for (int row = beginRow; row <= endRow; row++) {
 			// calculate position of replacement (e.g. |-----2--------|)
 			final int rowBeginning = new StringPosition(row, 0).toIndex(s);
 			final StringPosition beginning = new StringPosition(row, beginCol);
 			final StringPosition end = new StringPosition(row, endCol);
-
+			
 			// get parts of new row
-			final String beforeReplace = s.substring(rowBeginning, beginning.toIndex(s));
-			final String afterReplace = s.substring(end.toIndex(s) + 1, s.indexOf("\n", rowBeginning + 1));
-
+			final String beforeReplace = s.substring(rowBeginning,
+					beginning.toIndex(s));
+			final String afterReplace = s.substring(end.toIndex(s) + 1,
+					s.indexOf("\n", rowBeginning + 1));
+			
 			// assemble it in the StringBuilder
 			newTab.append(beforeReplace);
 			newTab.append(replaceRows[row - beginRow]);
 			newTab.append(afterReplace);
 			newTab.append("\n");
 		}
-
+		
 		return newTab.toString();
 	}
-
+	
 	/**
 	 * Finds the top-left corner of a measure
 	 *
@@ -509,14 +541,15 @@ public final class MeasureNarrowing {
 	static final StringPosition topLeftCorner(String textTab, int measure) {
 		// start of first measure
 		int startOfMeasure = textTab.indexOf(MEASURE_SEPARATOR);
-
+		
 		for (int i = 1; i < measure; i++) {
-			startOfMeasure = textTab.indexOf(MEASURE_SEPARATOR, startOfMeasure + MIN_MEASURE_LENGTH + 1);
+			startOfMeasure = textTab.indexOf(MEASURE_SEPARATOR,
+					startOfMeasure + MIN_MEASURE_LENGTH + 1);
 		}
-
+		
 		return StringPosition.fromIndex(textTab, startOfMeasure);
 	}
-
+	
 	/**
 	 * This is a static utility class, you shouldn't be able to get any measures
 	 */
