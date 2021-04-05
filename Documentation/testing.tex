@@ -1,4 +1,4 @@
-% Created 2021-03-31 Wed 20:40
+% Created 2021-04-05 Mon 10:48
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -16,7 +16,7 @@
 \usepackage{hyperref}
 \date{2021 March 29}
 \title{TAB2XML Testing Document\\\medskip
-\large For Version 0.4.0-alpha.1}
+\large For Version 0.4.0}
 \hypersetup{
  pdfauthor={},
  pdftitle={TAB2XML Testing Document},
@@ -31,10 +31,10 @@
 
 \newpage\\
 \section{Front-End Tests}
-\label{sec:org872d0fe}
+\label{sec:org76be226}
 Many of the front-end tests are implemented using a \texttt{ViewBot}, a class that simulates a GUI.\\
 \subsection{PresenterTest}
-\label{sec:org3d83d03}
+\label{sec:org7179daf}
 These test cases were derived by making one test for each important method of \texttt{Presenter}.\\
 \begin{itemize}
 \item \texttt{testConvert()}: Tests that the Presenter's convert method correctly interacts with the input (gets input text \& instrument, uses the parser to convert the tab and sets the output correctly).  It does not check that the converted MusicXML is correct - that is the backend tests' job.\\
@@ -53,7 +53,7 @@ Some text is put in the output of a ViewBot.  Then, a Presenter uses its \texttt
 
 This testing is sufficient because every method of the Presenter is covered by a test (except the constructor, which is trivial and has only one line of code).  The Presenter's methods are simple enough that only one test is necessary for each.\\
 \subsection{PromptingTextAreaTest}
-\label{sec:org24f893c}
+\label{sec:orgeb07c44}
 These test cases were derived by making one test case for each of the important functionalities of the \texttt{PromptingTextArea}: the colour and font of the prompt, the prompt text disappearing when the text box is focused, typing text in the box, and setting the area's font.\\
 \begin{itemize}
 \item \texttt{testAutoPromptFont()}: Tests that the PromptingTextArea correctly auto-creates prompting and non-prompting fonts.  It is implemented by setting the area's prompt font to null and then calling getPromptFont().  It expects that a newly created font is returned.\\
@@ -69,7 +69,7 @@ This test is implemented by disabling the prompt, and setting the font.  The reg
 
 This testing is sufficient because every method of the PromptingTextArea is tested at least once, and all important or complex methods have tests dedicated to them and their related methods: \texttt{testPromptColourFont} tests setRegularFont() and setPromptFont(); \texttt{testPromptTyping} tests setText() and setPromptText(); \texttt{testSetFont} tests setFont().  All other public methods are simple getters or setters, or methods that trivially call one of the tested methods.  In addition, the gain or loss of focus, an important feature of the \texttt{PromptingTextArea}, has its own dedicated testing method.\\
 \subsection{TimeSignatureTest}
-\label{sec:org837b563}
+\label{sec:org3c1012c}
 This is a small test that tests the time signature setting functionality.  It was derived by thinking of situations that could cause problems, and creating one test for simple, non-problematic situations.  Both tests are implemented by creating an \texttt{XMLMetadata} instance with specific time signatures, and checking the contents of the maps returned by \texttt{getTimeSignatures()} and \texttt{getTimeSignatureRanges()}.\\
 \begin{itemize}
 \item \texttt{testTimeSignatures()}: Tests a set of time signatures where the measure ranges do not overlap.\\
@@ -78,7 +78,7 @@ This is a small test that tests the time signature setting functionality.  It wa
 
 This is sufficient testing because it tests an example of every major scenario, and test data for \texttt{XMLMetadata} (which has functionality other than the time signatures being tested, though this functionality is simple enough that it does not need to be tested) is 93 \%.  All instructions in \texttt{XMLMetadata} that relate to time signatures are covered by this test.\\
 \subsection{ViewTest}
-\label{sec:orgfeff22a}
+\label{sec:org118e4e9}
 These tests were derived by making one test for each major method of the View interface.\\
 All tests in this section are run once per View supported by the program, and once for the ViewBot.  This ensures that all of the Views support every possible feature.  Any test in this section that requires use of an unimplemented optional method is skipped.\\
 All three of these tests are implemented by setting the paramater to some value, then comparing the value set to the value returned by the appropriate get method.\\
@@ -90,9 +90,9 @@ All three of these tests are implemented by setting the paramater to some value,
 
 This testing is sufficient because, like in the Presenter, every important method in the View interface is tested by one test, except \texttt{showErrorMessage(String, String)}.  The showErrorMessage method cannot be tested automatically (because I do not want to specify \textbf{how} an error message is shown, only that one is shown), and it is trivial enough that I am not worried about it breaking (As of the time this document was written, all implementations of this method have only one line of code).  The View's methods are also simple enough that only one test per View is needed for each method.\\
 \section{Back-End Tests}
-\label{sec:orgf250e3a}
+\label{sec:orge168d15}
 \subsection{ParserTest}
-\label{sec:orgba54068}
+\label{sec:org0410c3e}
 These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.\\
 \begin{itemize}
 \item \texttt{testScore()}: Tests that there is the correct amount of Staffs within a given Score.\\
@@ -111,7 +111,7 @@ This test was created by hard coding an array of different notes, with different
 
 This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Since the prototype is expected to handle simple tabs, only testing for the simplest components of a text tab were created. In the future this tester will have testing for more complex components, and testing for different components that the parser is not yet set up to interpret.\\
 \subsection{NoteTest}
-\label{sec:org28b02e1}
+\label{sec:orga61ece0}
 These tests were derived to make sure that note objects, which contain valuable information about notes that can be used in the xml conversion process, can be properly created.\\
 \begin{itemize}
 \item \texttt{noteTest()}: Tests that notes have the correct name and index.\\
@@ -124,7 +124,7 @@ There are 2 testTonote. The first was created by passing the string input(\emph{
 
 This is sufficient testing because it checks that our system properly handles creating Note objects, which is a very important step in translating the information from text tabs to xml because notes are the main focus of learning songs through text tab. By testing the correctness and validity of these note objects, we can be sure that the notes that appear in a text tab will have the necessary information used in xml.\\
 \subsection{MeasureNarrowingTest}
-\label{sec:orgb20a4d6}
+\label{sec:org8c45c7b}
 These were derived by considering the operations of \texttt{MeasureNarrowing} (including private methods) as well as the possible text tabs that could cause problems.\\
 Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.\\
 \begin{itemize}

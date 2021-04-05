@@ -1,4 +1,4 @@
-% Created 2021-03-26 Fri 12:45
+% Created 2021-04-05 Mon 10:48
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -30,12 +30,12 @@
 
 \newpage
 \section{Introduction}
-\label{sec:org1539541}
+\label{sec:orge8c6e97}
 TAB2XML is a system that can convert text tablature to MusicXML.  It is being created for the purpose of allowing people to take advantage of MusicXML's many features, such as rendering, transposing and automatic playing.  Its primary audience is musicians.
 \section{Functional Requirements}
-\label{sec:org0a4ddba}
+\label{sec:orgee97b30}
 \subsection{Functionality}
-\label{sec:orgbdd3dd3}
+\label{sec:org4d07a9f}
 \begin{itemize}
 \item Must convert text tablature to MusicXML tablature
 \item Must be able to read guitar, drum and bass text tabs
@@ -50,7 +50,7 @@ TAB2XML is a system that can convert text tablature to MusicXML.  It is being cr
 \item Must support grace notes
 \end{itemize}
 \subsection{Usability}
-\label{sec:org72d44df}
+\label{sec:org655589c}
 \begin{itemize}
 \item Must have an intuitive visual interface
 \item Must be able to accept copy-pasted text or text read from a file
@@ -59,31 +59,31 @@ TAB2XML is a system that can convert text tablature to MusicXML.  It is being cr
 \item Must deal with errors in a user-friendly way
 \end{itemize}
 \section{Non-Functional Requirements}
-\label{sec:org4990bda}
+\label{sec:org9c1d8ee}
 \begin{itemize}
 \item Should have an API that can be used by other programs
 \end{itemize}
 \subsection{Reliability}
-\label{sec:orgd0ae41e}
+\label{sec:org78ab060}
 \begin{itemize}
 \item Must be able to work with lots of variation in the format of the text tab
 \item The converted MusicXML tablature must be error free
 \end{itemize}
 \subsection{Performance}
-\label{sec:org6a09106}
+\label{sec:orgba8632e}
 \begin{itemize}
 \item Must convert the text tab in a reasonable amount of time
 \end{itemize}
 \subsection{Supportability}
-\label{sec:org4b34046}
+\label{sec:orgf82403d}
 \begin{itemize}
 \item Should allow the user to configure their preferences for how they want the drums sheet music to be displayed (selecting the value and noteheads). Can have a default notation but should be able to be customized through preferences
 \item Must be testable via automated testing
 \end{itemize}
 \section{Use Cases}
-\label{sec:org96e609f}
+\label{sec:org398e177}
 \subsection{Convert Text Tab}
-\label{sec:orgcd3c7e5}
+\label{sec:org034d8c8}
 Primary Actor: Musician \\
 Goal: The musician has a text tab, and they want a MusicXML file \\
 Success Scenario:
@@ -98,11 +98,11 @@ Success Scenario:
 \item Musician closes program
 \end{enumerate}
 \subsubsection{Extensions}
-\label{sec:orgb034cd9}
+\label{sec:orga9ed169}
 3a. If system cannot identify instrument, or it identifies the wrong instrument, musician can choose instrument manually. \\
 5a. If text tab is unrecognizable, notify musician and restart at step 2 \\
 \subsection{Edit Text Tab}
-\label{sec:orgbffcebf}
+\label{sec:orga43ef27}
 Primary Actor: Musician \\
 Goal: The musician has an incorrect text tab, and they want to make it correct. \\
 Success Scenario:
@@ -113,13 +113,13 @@ Success Scenario:
 \item Musician tells system to convert text tab
 \item System identifies errors in text tab, and also converts tab.
 \item Musician edits text tab to fix identified errors
-\item (Optional) Musician converts text tab to MusicXML (scenario of \ref{sec:orgcd3c7e5}, start at step 3)
+\item (Optional) Musician converts text tab to MusicXML (scenario of \ref{sec:org034d8c8}, start at step 3)
 \end{enumerate}
 \subsubsection{Extensions}
-\label{sec:orgedfda25}
+\label{sec:org3ae686b}
 3a. If system cannot identify instrument, or it identifies the wrong instrument, musician can choose instrument manually. \\
 \subsection{Change Settings}
-\label{sec:org143404d}
+\label{sec:org6fc91d4}
 Primary Actor: Musician \\
 Success Scenario:
 \begin{enumerate}
@@ -129,12 +129,12 @@ Success Scenario:
 \item Musician stops program or continues using program for something else
 \end{enumerate}
 \subsection{Use Case Diagram}
-\label{sec:org8d18639}
+\label{sec:org96902d6}
 \begin{center}
 \includegraphics[width=.9\linewidth]{./Diagrams/use-case-diagram.png}
 \end{center}
 \section{User Stories}
-\label{sec:org3b759f5}
+\label{sec:org31027a2}
 \begin{enumerate}
 \item "As a musician, I want to convert this text tablature to MusicXML so I can take advantage of MusicXML features like rendering, transposing and automatic playing."
 \end{enumerate}
