@@ -28,7 +28,8 @@ import tab2xml.xmlconversion.XMLMetadata;
 public class Parser {
 	/* General patterns for each instrument */
 	public static final String COMMENTS = "((/[*])(([\s]|[^ ])+)([*]/))|([/]{2,}[^\n]+)";
-	public static final String OUTLIER_G = "(" + COMMENTS + "|(^(?![ \t]*([a-gA-G]#?)?[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
+	public static final String OUTLIER_G = "(" + COMMENTS
+			+ "|(^(?![ \t]*([a-gA-G]#?)?[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
 	public static final String OUTLIER_D = "(" + COMMENTS
 			+ "|(^(?![ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
 	public static final String OUTLIER_GUITAR = "(" + OUTLIER_G + "+)";

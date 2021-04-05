@@ -353,9 +353,9 @@ public class Processor {
 		int offset = 0;
 		while (outlierMatcher.find()) {
 			// TODO: remove this
-//			System.out.println(String.format("start-group::%d", 0));
-//			System.out.print(outlierMatcher.group(0));
-//			System.out.println(String.format("end-group::%d", 0));
+			//			System.out.println(String.format("start-group::%d", 0));
+			//			System.out.print(outlierMatcher.group(0));
+			//			System.out.println(String.format("end-group::%d", 0));
 
 			if (outlierMatcher.group(0).matches(Parser.COMMENTS)
 					|| outlierMatcher.group(0).matches("(^(?=[ \t]*(\r?\n)+)[ \t]*)"))
@@ -415,9 +415,9 @@ public class Processor {
 		int offset = 0;
 		while (outlierMatcher.find()) {
 			// TODO: remove this
-//			System.out.println(String.format("start-group::%d", 0));
-//			System.out.print(outlierMatcher.group(0));
-//			System.out.println(String.format("end-group::%d", 0));
+			//			System.out.println(String.format("start-group::%d", 0));
+			//			System.out.print(outlierMatcher.group(0));
+			//			System.out.println(String.format("end-group::%d", 0));
 
 			if (outlierMatcher.group(0).matches(Parser.COMMENTS)
 					|| outlierMatcher.group(0).matches("(^(?=[ \t]*(\r?\n)+)[ \t]*)"))
@@ -430,9 +430,9 @@ public class Processor {
 		}
 
 		// TODO: remove this
-//		System.out.println("================commented===============");
-//		System.out.println(commented.toString());
-//		System.out.println("=========================================");
+		//		System.out.println("================commented===============");
+		//		System.out.println(commented.toString());
+		//		System.out.println("=========================================");
 
 		// extract meta data
 		while (staffMatcher.find() && outlierMatcher.find()) {
@@ -465,9 +465,9 @@ public class Processor {
 		Matcher outlierMatcher = Parser.outlierPercussion.matcher(tab.toString());
 
 		// TODO: remove this
-//		System.out.println("==============spaced-input===============");
-//		System.out.println(tab.toString());
-//		System.out.println("=========================================");
+		//		System.out.println("==============spaced-input===============");
+		//		System.out.println(tab.toString());
+		//		System.out.println("=========================================");
 
 		int count = 0;
 		int prevIndex = 0;
@@ -492,9 +492,9 @@ public class Processor {
 		}
 
 		// TODO: remove this
-//		System.out.println("================commented===============");
-//		System.out.println(commented.toString());
-//		System.out.println("=========================================");
+		//		System.out.println("================commented===============");
+		//		System.out.println(commented.toString());
+		//		System.out.println("=========================================");
 
 		// extract meta data
 		while (staffMatcher.find() && outlierMatcher.find()) {

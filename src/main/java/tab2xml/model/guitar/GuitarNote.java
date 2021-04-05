@@ -225,7 +225,6 @@ public class GuitarNote extends Note {
 		this.isDoubleBar = isDoubleBar;
 	}
 
-
 	/**
 	 * Construct a note from the ASCII tablature.
 	 * 

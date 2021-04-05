@@ -85,7 +85,6 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	@Override
 	public abstract Iterator<E> iterator();
 
-
 	/**
 	 * @return the total number of notes in the staff
 	 */
@@ -100,11 +99,11 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 
 	@Override
 	public abstract String toString();
-	
+
 	public String time() {
 		return String.format("%d:%d", getBeats(), getBeatType());
 	}
-	
+
 	/**
 	 * Extract notes from this staff to a 2d list.
 	 * 
@@ -135,7 +134,7 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	public void setBeatType(int beatType) {
 		this.beatType = Optional.of(beatType);
 	}
-	
+
 	public int getDivision() {
 		return division.orElse(Score.DEFAULT_DIVISION);
 	}
