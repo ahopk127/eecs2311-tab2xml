@@ -9,9 +9,9 @@ import java.util.TreeSet;
 import tab2xml.ImmutablePair;
 
 public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable<E> {
-	private Optional<Integer> beats;
-	private Optional<Integer> beatType;
-	private Optional<Integer> division;
+	private Optional<Integer> beats = Optional.empty();
+	private Optional<Integer> beatType = Optional.empty();
+	private Optional<Integer> division = Optional.empty();
 
 	private int measure;
 	private final ImmutablePair<Range, Range> range;
@@ -125,7 +125,7 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	}
 
 	public void setBeats(int beats) {
-		this.beats = Optional.ofNullable(beats);
+		this.beats = Optional.of(beats);
 	}
 
 	public int getBeatType() {
@@ -133,7 +133,7 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	}
 
 	public void setBeatType(int beatType) {
-		this.beatType = Optional.ofNullable(beatType);
+		this.beatType = Optional.of(beatType);
 	}
 
 	public int getDivision() {
@@ -141,7 +141,7 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	}
 
 	public void setDivision(int division) {
-		this.division = Optional.ofNullable(division);
+		this.division = Optional.of(division);
 	}
 
 	public Range getColumnRange() {

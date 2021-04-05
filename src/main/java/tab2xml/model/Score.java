@@ -29,9 +29,9 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 	/** The default number of divisions per quarter note. */
 	public final static int DEFAULT_DIVISION = 2;
 
-	private Optional<Integer> beats;
-	private Optional<Integer> beatType;
-	private Optional<Integer> division;
+	private Optional<Integer> beats = Optional.empty();
+	private Optional<Integer> beatType = Optional.empty();
+	private Optional<Integer> division = Optional.empty();
 
 	private List<E> staffs;
 	private List<Measure<? extends Note>> measures;
@@ -129,7 +129,7 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 			map = metadata.getTimeSignatureRanges();
 			System.out.println("the map: " + map);
 		}
-
+		E firstStaff = null;
 		for (E st : staffs) {
 			// all staffs by default are set to the scores general defaults/set defaults.
 			st.setBeats(this.getBeats());
@@ -141,18 +141,13 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 			while (itr.hasNext()) {
 				Measure<? extends Note> measure = itr.next();
 
-				// all measures by default are set to the scores general defaults/set defaults.
-				measure.setBeats(this.getBeats());
-				measure.setBeatType(this.getBeatType());
-				measure.setDivision(this.getDivision());
-
 				// if metadata is not null and this measure is in the selected range change time signature of that measure.
 				if (map != null) {
 					for (IntRange range : map.keySet()) {
 						if (range.contains(measure.getMeasure() + 1)) {
 							TimeSignature ts = map.get(range);
 							measure.setBeats(ts.upperNumeral());
-							measure.setBeats(ts.lowerNumeral());
+							measure.setBeatType(ts.lowerNumeral());
 						}
 					}
 				}
@@ -161,7 +156,15 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 				if (measure.getMeasure() == 0) {
 					st.setBeats(measure.getBeats());
 					st.setBeatType(measure.getBeatType());
+					st.setDivision(measure.getDivision());
+					firstStaff = st;
 				}
+
+				// first staff won't be null as there is at least one measure.
+				// all measures by default are set to the first measure's/score's set attributes.
+				measure.setBeats(firstStaff.getBeats());
+				measure.setBeatType(firstStaff.getBeatType());
+				measure.setDivision(firstStaff.getDivision());
 
 				// divisions is set to the score general; possibility of letting user set this as well.
 				measure.setDivision(this.getDivision());
@@ -193,7 +196,7 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 	}
 
 	public void setBeats(int beats) {
-		this.beats = Optional.ofNullable(beats);
+		this.beats = Optional.of(beats);
 	}
 
 	public int getBeatType() {
@@ -201,7 +204,7 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 	}
 
 	public void setBeatType(int beatType) {
-		this.beatType = Optional.ofNullable(beatType);
+		this.beatType = Optional.of(beatType);
 	}
 
 	public int getDivision() {
@@ -209,7 +212,7 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 	}
 
 	public void setDivision(int division) {
-		this.division = Optional.ofNullable(division);
+		this.division = Optional.of(division);
 	}
 
 	/**

@@ -23,9 +23,9 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	private static final long serialVersionUID = -1721480917571243686L;
 
 	/* General defaults of staffs */
-	private Optional<Integer> beats;
-	private Optional<Integer> beatType;
-	private Optional<Integer> division;
+	private Optional<Integer> beats = Optional.empty();
+	private Optional<Integer> beatType = Optional.empty();
+	private Optional<Integer> division = Optional.empty();
 
 	/**
 	 * Construct an empty staff.
@@ -125,7 +125,7 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	}
 
 	public void setBeats(int beats) {
-		this.beats = Optional.ofNullable(beats);
+		this.beats = Optional.of(beats);
 	}
 
 	public int getBeatType() {
@@ -133,7 +133,7 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	}
 
 	public void setBeatType(int beatType) {
-		this.beatType = Optional.ofNullable(beatType);
+		this.beatType = Optional.of(beatType);
 	}
 	
 	public int getDivision() {
@@ -141,7 +141,7 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	}
 
 	public void setDivision(int division) {
-		this.division = Optional.ofNullable(division);
+		this.division = Optional.of(division);
 	}
 
 	/* functional methods */

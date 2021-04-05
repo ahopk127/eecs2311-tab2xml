@@ -114,7 +114,7 @@ public class Transform<T extends Staff<? extends Line>> {
 			for (int i = 0; i < measureCount; i++) {
 				XMLElement attributes = null;
 				TimeSignature ts = map.get(range);
-				// if the range doesn't contain the first measure, set the other ranges with set time signatures.
+				// skip first measure, set the other ranges with set time signatures.
 				if (!range.contains(1) && range.contains(i + 1) && staff.time() != ts.toString()) {
 					attributes = new XMLElement("attributes", musicSheet);
 					XMLElement time = new XMLElement("time", musicSheet);
