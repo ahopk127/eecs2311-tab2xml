@@ -4,48 +4,48 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class PullOff extends StringItem {
+public class PullOff extends LineItem {
 	private static final long serialVersionUID = -216451585018707396L;
-	private Note start;
-	private Note stop;
-	
-	public PullOff(Note start, Note stop) {
+	private GuitarNote start;
+	private GuitarNote stop;
+
+	public PullOff(GuitarNote start, GuitarNote stop) {
 		this.start = start;
 		this.stop = stop;
 	}
-	
-	@Override
-	public int getNoteCount() {
-		return this.getNotes().size();
+
+	public GuitarNote getStart() {
+		return this.start;
 	}
-	
-	public Collection<? extends StringItem> getNotes() {
-		final List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(this.start));
-		notes.add((StringItem) StringItem.deepClone(this.stop));
+
+	public GuitarNote getStop() {
+		return this.stop;
+	}
+
+	public Collection<? extends LineItem> getNotes() {
+		final List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(this.start));
+		notes.add((LineItem) LineItem.deepClone(this.stop));
 		return notes;
 	}
 
 	@Override
-	public double getPosition() {
-		return start.getPosition();
+	public int length() {
+		return start.length() + stop.length() + 1;
 	}
-	
-	public Note getStart() {
-		return this.start;
-	}
-	
-	public Note getStop() {
-		return this.stop;
-	}
-	
+
 	@Override
-	public int getStringNum() {
-		return this.start.getStringNum();
+	public int getLineNum() {
+		return this.start.getLineNum();
 	}
-	
+
+	@Override
+	public int getNoteCount() {
+		return this.getNotes().size();
+	}
+
 	@Override
 	public String toString() {
 		if (this.start == null)

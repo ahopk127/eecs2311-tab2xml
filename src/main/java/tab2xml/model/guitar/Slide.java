@@ -4,41 +4,41 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class Slide extends StringItem {
+public class Slide extends LineItem {
 	private static final long serialVersionUID = 328697200069305169L;
-	private Note start;
-	private Note stop;
+	private GuitarNote start;
+	private GuitarNote stop;
 
-	public Slide(Note start, Note stop) {
+	public Slide(GuitarNote start, GuitarNote stop) {
 		this.start = start;
 		this.stop = stop;
 	}
 
-	public Note getStart() {
+	public GuitarNote getStart() {
 		return start;
 	}
 
-	public Note getStop() {
+	public GuitarNote getStop() {
 		return stop;
 	}
 
-	public Collection<? extends StringItem> getNotes() {
-		List<StringItem> notes = new ArrayList<>();
-		notes.add((StringItem) StringItem.deepClone(start));
-		notes.add((StringItem) StringItem.deepClone(stop));
+	public Collection<? extends LineItem> getNotes() {
+		List<LineItem> notes = new ArrayList<>();
+		notes.add((LineItem) LineItem.deepClone(start));
+		notes.add((LineItem) LineItem.deepClone(stop));
 		return notes;
 	}
 
 	@Override
-	public double getPosition() {
-		return start.getPosition();
+	public int length() {
+		return start.length() + stop.length() + 1;
 	}
 
 	@Override
-	public int getStringNum() {
-		return start.getStringNum();
+	public int getLineNum() {
+		return start.getLineNum();
 	}
 
 	@Override

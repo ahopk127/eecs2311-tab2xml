@@ -17,7 +17,7 @@ public enum NoteType {
 	/**
 	 * Return the string value of this note type.
 	 * 
-	 * @return the string representation of this note type 
+	 * @return the string representation of this note type
 	 */
 	public String getValue() {
 		return name;

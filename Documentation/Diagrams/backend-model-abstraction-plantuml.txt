@@ -1,0 +1,23 @@
+@startuml
+abstract class Staff {}
+abstract class ScoreItem {}
+abstract class LineItem {}
+abstract class Line {}
+abstract class Note {}
+
+
+Score "*" *-- Measure
+Score "*" *-- Staff
+Staff <|--- ScoreItem
+GuitarStaff <|--- Staff
+DrumStaff <|--- Staff
+GuitarNote <|--- Note
+DrumNote <|--- Note
+Note <|--- LineItem
+GuitarString <|--- Line
+DrumLine <|--- Line
+Staff "*"*--- Line
+Line <|--- ScoreItem
+Line "*"*--- LineItem
+
+@enduml

@@ -28,7 +28,8 @@ public class XMLElement {
 	 * @param e the element to append to this element
 	 */
 	public void append(XMLElement e) {
-		element.appendChild(e.getElement());
+		if (e != null)
+			element.appendChild(e.getElement());
 	}
 
 	/**

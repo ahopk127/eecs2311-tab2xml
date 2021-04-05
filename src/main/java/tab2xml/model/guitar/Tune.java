@@ -1,14 +1,13 @@
 package tab2xml.model.guitar;
 
-import tab2xml.model.StringItem;
+import tab2xml.model.LineItem;
 
-public class Tune extends StringItem {
+public class Tune extends LineItem {
 	private static final long serialVersionUID = 7283815230989809053L;
-	public static String standardTuning[][] = { { "E", "2" }, { "A", "2" }, { "D", "3" }, { "G", "3" }, { "B", "3" },
-			{ "E", "4" } };
+	public static String standardTuning[][] = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
+			{ "E", "2" } };
 
 	private String tune;
-	private int stringNum;
 	private boolean isStandard;
 	private boolean isBass;
 
@@ -20,29 +19,27 @@ public class Tune extends StringItem {
 		this.tune = tune;
 	}
 
-	public Tune(int stringNum) {
+	public Tune(int lineNum) {
 		this();
-		this.stringNum = stringNum;
+		this.lineNum = lineNum;
 	}
 
 	public String getTune() {
 		if (!isStandard)
 			return tune;
-		return standardTuning[(6 - stringNum) % 6][0];
+		if (isBass)
+			return standardTuning[((lineNum - 1) % 4) + 2][0];
+		return standardTuning[(lineNum - 1) % 6][0];
 	}
 
 	public String getOctave() {
 		if (isBass)
-			return String.valueOf(Integer.parseInt(standardTuning[(6 - stringNum) % 6][1]) - 1);
-		return standardTuning[(6 - stringNum) % 6][1];
+			return String.valueOf(Integer.parseInt(standardTuning[((lineNum - 1) % 4) + 2][1]) - 1);
+		return standardTuning[(lineNum - 1) % 6][1];
 	}
 
 	public boolean isStandard() {
 		return isStandard;
-	}
-
-	public void setStringNum(int stringNum) {
-		this.stringNum = stringNum;
 	}
 
 	public boolean isBass() {
@@ -54,13 +51,8 @@ public class Tune extends StringItem {
 	}
 
 	@Override
-	public double getPosition() {
-		return 0;
-	}
-
-	@Override
-	public int getStringNum() {
-		return stringNum;
+	public int length() {
+		return toString().length();
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package tab2xml.gui;
 
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -21,6 +23,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
@@ -111,6 +115,43 @@ public abstract class AbstractSwingView implements View {
 			System.err.println("Failed to enable system look-and-feel.");
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-01-18
+	 */
+	public static GridBagConstraints gridBag(int x, int y) {
+		final GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = x;
+		gbc.gridy = y;
+		return gbc;
+	}
+	
+	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-01-18
+	 */
+	public static GridBagConstraints gridBag(int x, int y, int width,
+			int height) {
+		final GridBagConstraints gbc = gridBag(x, y);
+		gbc.gridwidth = width;
+		gbc.gridheight = height;
+		return gbc;
+	}
+	
+	/**
+	 * Creates a {@code GridBagConstraints} object.
+	 *
+	 * @since 2021-02-25
+	 */
+	public static GridBagConstraints gridBag(int x, int y, int width, int height,
+			Insets insets) {
+		final GridBagConstraints gbc = gridBag(x, y, width, height);
+		gbc.insets = insets;
+		return gbc;
 	}
 	
 	/**
@@ -270,13 +311,24 @@ public abstract class AbstractSwingView implements View {
 				this.getInput().getHighlighter(), ERROR_PAINTER));
 	}
 	
+	/**
+	 * Prompts for a file. The default implementation uses JFileChooser.
+	 * 
+	 * @param preferredType preferred file type
+	 * @param forSave       whether the prompt is for saving or loading
+	 * @return file selected by user, or empty optional if no file was selected
+	 */
 	@Override
-	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType) {
+	public Optional<Path> promptForFile(FileNameExtensionFilter preferredType,
+			boolean forSave) {
 		final JFileChooser fc = new JFileChooser(this.defaultDirectory);
 		fc.addChoosableFileFilter(preferredType);
 		fc.setFileFilter(preferredType);
 		
-		if (fc.showOpenDialog(this.frame) == JFileChooser.APPROVE_OPTION) {
+		final var result = forSave ? fc.showSaveDialog(this.frame)
+				: fc.showOpenDialog(fc);
+		
+		if (result == JFileChooser.APPROVE_OPTION) {
 			this.defaultDirectory = fc.getCurrentDirectory();
 			return Optional.of(fc.getSelectedFile().toPath());
 		} else
@@ -343,11 +395,39 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 				
+	 * 
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {
 		this.getInput().setDropTarget(new FileDragDropTarget());
+	}
+	
+	/**
+	 * Sets up the input so that any edit to it clears all of the highlighting.
+	 * 
+	 * @since 2021-04-02
+	 */
+	protected final void setUpHighlightingRemoval() {
+		this.getInput().getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				AbstractSwingView.this.getInput().getHighlighter()
+						.removeAllHighlights();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				AbstractSwingView.this.getInput().getHighlighter()
+						.removeAllHighlights();
+			}
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				AbstractSwingView.this.getInput().getHighlighter()
+						.removeAllHighlights();
+			}
+		});
 	}
 	
 	/**

@@ -19,14 +19,14 @@ import tab2xml.antlr.GuitarTabParser.SlideContext;
 import tab2xml.antlr.GuitarTabParser.StringContext;
 import tab2xml.antlr.GuitarTabParser.StringItemsContext;
 import tab2xml.antlr.GuitarTabParser.TuneContext;
-import tab2xml.model.StringItem;
-import tab2xml.model.StringItemsCollector;
-import tab2xml.model.guitar.Bar;
+import tab2xml.model.Bar;
+import tab2xml.model.LineItem;
+import tab2xml.model.LineItemsCollector;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.HammerOn;
 import tab2xml.model.guitar.HammerPull;
 import tab2xml.model.guitar.Harmonic;
-import tab2xml.model.guitar.Note;
+import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.PullOff;
 import tab2xml.model.guitar.Slide;
 import tab2xml.model.guitar.Tune;
@@ -37,7 +37,7 @@ import tab2xml.model.guitar.Tune;
  * @author amir
  *
  */
-public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
+public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 	private GuitarString s;
 	private final static double EPSILON = 0.001;
 
@@ -50,137 +50,148 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	 */
 	public ExtractStringItems(GuitarString string, StringContext sc) {
 		this.s = string;
-		List<StringItem> visited = new ArrayList<>();
+		List<LineItem> visited = new ArrayList<>();
 
-		Tune tune = (Tune) visit(sc.getChild(0));
+		int temp = 0;
+		while (sc.getChild(temp).getClass() != TuneContext.class)
+			temp++;
+		Tune tune = (Tune) visit(sc.getChild(temp));
 		s.add(tune);
-		visited.add(visit(sc.getChild(1)));
 
-		for (StringItem item : visited) {
+		while (sc.getChild(++temp).getClass() != StringItemsContext.class)
+			temp++;
+		visited.add(visit(sc.getChild(temp)));
+
+		for (LineItem item : visited) {
 			if (item.getClass() == Tune.class)
 				string.add(item);
-			else if (item.getClass() == StringItemsCollector.class) {
-				StringItemsCollector coll = (StringItemsCollector) item;
-				string.addAll(coll.getStringItems());
+			else if (item.getClass() == LineItemsCollector.class) {
+				LineItemsCollector coll = (LineItemsCollector) item;
+				string.addAll(coll.getLineItems());
 			}
 		}
 	}
 
 	@Override
-	public StringItem visitTune(TuneContext ctx) {
+	public LineItem visitTune(TuneContext ctx) {
 		String value = ctx.getChild(0).getText();
 		Tune tune;
 		if (value.charAt(value.length() - 1) == '|')
 			tune = new Tune();
 		else
-			tune = new Tune(value);
-		tune.setStringNum(s.getStringNum());
+			tune = new Tune(value.toUpperCase());
+		tune.setLineNum(s.getStringNum());
+		tune.setColumn(ctx.start.getCharPositionInLine());
+		tune.setPosition(ctx.start.getTokenIndex() + value.length() - 1);
 		return tune;
 	}
 
 	@Override
-	public StringItem visitStringItems(StringItemsContext ctx) {
-		StringItemsCollector coll = new StringItemsCollector(new ArrayList<StringItem>());
-		int numMeasures = (int) ctx.children.stream().filter(c -> c.getClass() == TerminalNodeImpl.class
-				&& Pattern.matches("\\*?(\\||\\d+)\\||\\|\\*?", c.getText())).count();
+	public LineItem visitStringItems(StringItemsContext ctx) {
+		LineItemsCollector coll = new LineItemsCollector(new ArrayList<LineItem>());
+		int numMeasures = (int) ctx.children.stream()
+				.filter(c -> c.getClass() == TerminalNodeImpl.class && c.getText().matches(Bar.pattern())).count();
 		s.setNumMeasures(numMeasures);
 		ctx.children.stream().forEach(c -> coll.add(visit(c)));
 		return coll;
 	}
 
 	@Override
-	public StringItem visitSlide(SlideContext ctx) {
+	public LineItem visitSlide(SlideContext ctx) {
 		int index = 0;
 		boolean isGrace = ctx.getChild(0).getClass() == TerminalNodeImpl.class;
 
 		if (isGrace)
 			index++;
 
-		Note start = (Note) visit(ctx.getChild(index));
+		GuitarNote start = (GuitarNote) visit(ctx.getChild(index));
 		start.setStartSlide(true);
-		Note stop = (Note) visit(ctx.getChild(index + 2));
+		GuitarNote stop = (GuitarNote) visit(ctx.getChild(index + 2));
 		stop.setStopSlide(true);
 		Slide slide = new Slide(start, stop);
+		stop.add(start);
 
 		if (isGrace) {
 			start.setGrace(true);
 			stop.setGrace(true);
-			stop.setPosition(start.getPosition() + EPSILON);
+			stop.setColumn(start.getColumn() + EPSILON);
 		}
-
 		return slide;
 	}
 
 	@Override
-	public StringItem visitPulloff(PulloffContext ctx) {
+	public LineItem visitPulloff(PulloffContext ctx) {
 		int index = 0;
 		boolean isGrace = ctx.getChild(0).getClass() == TerminalNodeImpl.class;
 
 		if (isGrace)
 			index++;
 
-		Note start = (Note) visit(ctx.getChild(index));
+		GuitarNote start = (GuitarNote) visit(ctx.getChild(index));
 		start.setStartPull(true);
-		Note stop = (Note) visit(ctx.getChild(index + 2));
+		GuitarNote stop = (GuitarNote) visit(ctx.getChild(index + 2));
 		stop.setStopPull(true);
 		PullOff pullOff = new PullOff(start, stop);
+		stop.add(start);
 
 		if (isGrace) {
 			start.setGrace(true);
 			stop.setGrace(true);
-			stop.setPosition(start.getPosition() + EPSILON);
+			stop.setColumn(start.getColumn() + EPSILON);
 		}
 
 		return pullOff;
 	}
 
 	@Override
-	public StringItem visitHammeron(HammeronContext ctx) {
+	public LineItem visitHammeron(HammeronContext ctx) {
 		int index = 0;
 		boolean isGrace = ctx.getChild(0).getClass() == TerminalNodeImpl.class;
 
 		if (isGrace)
 			index++;
 
-		Note start = (Note) visit(ctx.getChild(index));
+		GuitarNote start = (GuitarNote) visit(ctx.getChild(index));
 		start.setStartHammer(true);
-		Note stop = (Note) visit(ctx.getChild(index + 2));
+		GuitarNote stop = (GuitarNote) visit(ctx.getChild(index + 2));
 		stop.setStopHammer(true);
 		HammerOn hammerOn = new HammerOn(start, stop);
+		stop.add(start);
 
 		if (isGrace) {
 			start.setGrace(true);
 			stop.setGrace(true);
-			stop.setPosition(start.getPosition() + EPSILON);
+			stop.setColumn(start.getColumn() + EPSILON);
 		}
 
 		return hammerOn;
 	}
 
 	@Override
-	public StringItem visitHammerPull(HammerPullContext ctx) {
-		List<Note> notes = new ArrayList<>();
+	public LineItem visitHammerPull(HammerPullContext ctx) {
+		List<GuitarNote> notes = new ArrayList<>();
 		boolean isGrace = ctx.getChild(0).getClass() == TerminalNodeImpl.class;
 
 		for (int i = (isGrace ? 1 : 0); i < ctx.getChildCount(); i++) {
 			ParseTree child = ctx.getChild(i);
 			if (child.getClass() != TerminalNodeImpl.class) {
-				Note note = (Note) visit(child);
+				GuitarNote note = (GuitarNote) visit(child);
 				notes.add(note);
 			}
 		}
 
-		Note start = notes.get(0);
+		GuitarNote start = notes.get(0);
 		start.setStartChain(true);
-		Note stop = notes.get(notes.size() - 1);
+		GuitarNote stop = notes.get(notes.size() - 1);
 		stop.setStopChain(true);
-		List<Note> subList = notes.subList(1, notes.size() - 1);
-		List<Note> middle = new ArrayList<>(subList);
-		start.setMiddle(middle);
+		List<GuitarNote> subList = notes.subList(1, notes.size() - 1);
+		List<GuitarNote> middle = new ArrayList<>(subList);
+		stop.addAll(middle);
+		stop.add(start);
 
 		if (isGrace) {
-			middle.forEach(n -> n.setPosition(start.getPosition() + EPSILON));
-			stop.setPosition(start.getPosition() + EPSILON);
+			middle.forEach(n -> n.setColumn(start.getColumn() + EPSILON));
+			stop.setColumn(start.getColumn() + EPSILON);
 			notes.forEach(n -> n.setGrace(true));
 		}
 		HammerPull hammerPull = new HammerPull(start, middle, stop);
@@ -188,59 +199,70 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<StringItem> {
 	}
 
 	@Override
-	public StringItem visitHarmonic(HarmonicContext ctx) {
-		Note note = (Note) visit(ctx.getChild(1));
+	public LineItem visitHarmonic(HarmonicContext ctx) {
+		GuitarNote note = (GuitarNote) visit(ctx.getChild(1));
 		note.setHarmonic(true);
 		Harmonic harmonic = new Harmonic(note);
 		return harmonic;
 	}
 
 	@Override
-	public StringItem visitFret(FretContext ctx) {
+	public LineItem visitFret(FretContext ctx) {
 		Token token = ctx.FRET_NUM().getSymbol();
 		int length = token.getText().length();
-		int column = token.getCharPositionInLine() + length;
+		int column = token.getCharPositionInLine() + length - 1;
 		String value = ctx.getChild(0).getText();
-		Note note = new Note(s.getTune(), value);
-		note.setPosition(column);
-		note.setString(Integer.toString(s.getStringNum()));
+		GuitarNote note = new GuitarNote(s.getTune(), value);
+		note.setColumn(column);
+		note.setPosition(token.getTokenIndex() - 1);
+		note.setLineNum(s.getStringNum());
 		note.setOctave(s.getOctave());
 		return note;
 	}
 
 	@Override
-	public StringItem visitTerminal(TerminalNode node) {
+	public LineItem visitTerminal(TerminalNode node) {
 		Token token = node.getSymbol();
 
-		if (token.getText().equals("-"))
+		if (!token.getText().matches(Bar.pattern()))
 			return null;
 
 		String value = token.getText();
 		String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine() + value.length();
+		int column = token.getCharPositionInLine() + value.length() - 1;
 
 		Bar bar = new Bar();
-		bar.setStringNum(s.getStringNum());
-		bar.setPosition(column);
-		bar.setTune(s.getTune());
+		bar.setTune(s.tune());
+		bar.setLineNum(s.getStringNum());
+		bar.setColumn(column);
+		bar.setPosition(token.getTokenIndex());
+		bar.setRightPos(token.getTokenIndex() + value.length() - 1);
+		bar.setLeftPos(token.getTokenIndex());
 
+		// end repeat *||
 		if (start.equals("*")) {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStop(true);
 		}
 
+		// start repeat: ||*
 		if (value.charAt(value.length() - 1) == '*') {
 			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStart(true);
 		}
 
+		// n|
 		if (isNumeric(start)) {
 			bar.setRepeatCount(Integer.parseInt(start));
-			bar.setDoubleBar(true);
 			bar.setRepeat(true);
 			bar.setStop(true);
+
+			// n||
+			if (value.substring(value.indexOf("|"), value.length()).equals("||")) {
+				bar.setDoubleBar(true);
+			}
 		}
 
 		if (value.equals("||"))

@@ -1,0 +1,146 @@
+@startuml
+class Score implements Iterable
+class ScoreIterator implements Iterator
+class MeasureIterator implements Iterator
+
+class Parser {
+  +{static} String COMMENTS
+  +{static} String OUTLIER
+  +{static} String OUTLIER_MULTI
+  +{static} String STRING
+  +{static} String GP
+  +{static} String BP
+  +{static} String DP
+  +{static} Pattern outlierPlucked
+  +{static} Pattern guitarPattern
+  +{static} Pattern bassPattern
+  +{static} Pattern drumPattern
+
+  -Processor processor
+  -Instrument instrument
+  -Score<?> sheet
+  
+  +Parser(String, Instrument)
+  +parse() : ImmutablePair<String, Collection<ParsingWarning>>
+  +parse(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  +getDetectedInstrument(String) : Optional<Insturment>
+  +getDetectedInsturment() : Instrument
+  -parseGuitar(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  -parseBass(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  -parseDrum(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+}
+
+class Score<E extends Staff<? extends Line<?>, ? extends Note>>{
+  +{static} int DEFAULT_BEATS = 4
+  +{static} int DEFAULT_BEATTYPE = 4
+  +{static} int DEFAULT_DIVISION = 2
+
+  -List<E> staffs
+  -List<Measure<? extends Note>> measures
+  -{static} int accumulateMeasure
+  -{static} int accumulateMeasureScore
+
+  +Score()
+
+  +addStaff(E e) : boolean
+  +size() : int
+  +getStaffs() : List<E>
+  +getMeasures() : List<Measure<? extends Note>>
+  +getNoteCount() : int
+  +numberOfMeasures() : int
+  +processMeasures() : void
+  +getMeasure(int) : ImmutablePair<Range, Range>
+  +iterator() : Iterator<E>
+  +measureIterator() : Iterator<Measure<? extends Note>>
+  +toString() : String
+  +{static}getAccumulateMeasure() : int
+  +{static}setAccumulateMeasure() : void
+  +{static}getAccumulateMeasureScore() : int
+  +{static}setAccumulateMeasureScore() : void
+}
+
+class ScoreIterator<T> {
+  -int index
+  -List<T> staffs
+  
+  +ScoreIterator(List<T>)
+  +hasNext() : boolean
+  +next() : T
+}
+
+class MeasureIterator<T> {
+  -int index
+  -List<T> measures
+  
+  +MeasureIterator(List<T>)
+  +hasNext() : boolean
+  +next() : T
+}
+
+interface Iterator<T> {}
+
+interface Iterable<E> {}
+
+abstract class Staff<E extends Line<?>, T extends Note> {}
+
+class Processor {
+  -{static} SerializeGuitarScore sgs
+  -{static} SerializeDrumScore sds
+
+  -String input
+  -Instrument instrument
+
+  +Processor(String, Instrument)
+  +process() : Score<?>
+  -{static} processGuitar(String) : Score<GuitarStaff>
+  -{static} processBass(String) : Score<GuitarStaff>
+  -{static} processDrum(String) : Score<DrumStaff>
+  -{static} preprocessGuitar(String) : String
+  -{static} preprocessBass(String) : String
+  -{static} preprocessDrum(String) : String
+  -{static} showErrors(List<ErrorToken>) : void
+}
+
+class SerializeGuitarScore {
+  +visitSheet(SheetContext ctx) : Score<GuitarStaff>
+}
+
+class SerializeDrumScore {
+  +visitSheet(SheetContext ctx) : Score<DrumStaff>
+}
+
+class Transform<T extends Staff<? extends Line<? extends Note>, ? extends Note>> {
+}
+
+enum Instrument {
+  GUITAR("Classical Guitar")
+  BASS("Bass Guitar")
+  DRUM("Drumset")
+  
+  -String name
+  -String[][] drumSet
+
+  -Instrument(String)
+  +getName() : String
+}
+
+note top of Processor : 1.
+note "2." as N2
+SerializeGuitarScore .. N2
+N2 .. SerializeDrumScore
+note top of Transform : 3.
+
+Parser "1" o-- Processor
+Processor "1" o-- SerializeGuitarScore
+Processor "1" o-- SerializeDrumScore
+Processor "1" o-- Instrument
+Parser "1" o-- Instrument
+Parser "1" o-- Score
+Parser --- Transform
+Score +-- ScoreIterator
+Score +-- MeasureIterator
+Score "*" *-- Measure
+Score "*" *-- Staff
+GuitarStaff <|--- Staff
+DrumStaff <|--- Staff
+@enduml

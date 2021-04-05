@@ -16,12 +16,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 
+import tab2xml.xmlconversion.XMLMetadata;
+
 /**
  * A view that shows input and output in separate text boxes, in tabs.
  *
  * @since 2021-03-10
  */
-final class TabbedView extends AbstractSwingView {
+final class TabbedView extends AbstractSwingView implements NarrowingView {
 	/**
 	 * The insets used for prompt labels
 	 */
@@ -42,6 +44,8 @@ final class TabbedView extends AbstractSwingView {
 	
 	// INPUT COMPONENTS
 	private final JTextComponent input;
+	private final JTextComponent narrowedInput;
+	private final EditingPanel editingPanel;
 	
 	// OUTPUT COMPONENTS
 	private final JTextComponent output;
@@ -65,15 +69,6 @@ final class TabbedView extends AbstractSwingView {
 		final JPanel inputPanel = new JPanel(new BorderLayout());
 		this.inputOutputPane.addTab("Input - Text Tab", inputPanel);
 		
-		this.input = new JTextArea(24, 80);
-		this.input.setBorder(new LineBorder(Color.BLACK));
-		this.setUpFileDragAndDrop();
-		inputPanel.add(
-				new JScrollPane(this.input,
-						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
-				BorderLayout.CENTER);
-		
 		final JLabel inputLabel = new JLabel(
 				"Enter text tab or load it from a file...");
 		inputLabel.setBorder(new EmptyBorder(LABEL_INSETS));
@@ -89,34 +84,61 @@ final class TabbedView extends AbstractSwingView {
 		inputButtonPanel.add(loadFromFile);
 		
 		final JButton convertButton = new JButton("Convert");
+		convertButton.setEnabled(false);
 		convertButton.addActionListener(e -> {
 			if (this.presenter.convert()) {
-				this.inputOutputPane.setSelectedIndex(1); // output
+				this.inputOutputPane.setSelectedIndex(2); // output
 			}
 		});
 		inputButtonPanel.add(convertButton);
 		
 		final JButton convertAndSave = new JButton("Convert and Save");
+		convertAndSave.setEnabled(false);
 		convertAndSave
 				.addActionListener(e -> this.presenter.convertAndSave(true));
 		inputButtonPanel.add(convertAndSave);
 		
 		final JButton saveInput = new JButton("Save Input");
+		saveInput.setEnabled(false);
 		saveInput.addActionListener(e -> this.presenter.saveInput());
 		inputButtonPanel.add(saveInput);
+		
+		// input text box
+		this.input = new JTextArea(24, 80);
+		this.input.setBorder(new LineBorder(Color.BLACK));
+		this.setUpFileDragAndDrop();
+		this.setUpHighlightingRemoval();
+		this.input.addCaretListener(e -> this.presenter.detectInstrument());
+		this.input.addCaretListener(e -> {
+			final boolean inputBlank = this.input.getText().isBlank();
+			convertButton.setEnabled(!inputBlank);
+			convertAndSave.setEnabled(!inputBlank);
+			saveInput.setEnabled(!inputBlank);
+		});
+		inputPanel.add(
+				new JScrollPane(this.input,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
+		
+		// ----- INPUT EDITING -----
+		final JPanel editingTab = new JPanel(new BorderLayout());
+		this.inputOutputPane.addTab("Input Editing", editingTab);
+		
+		this.narrowedInput = new JTextArea(24, 80);
+		this.narrowedInput.setBorder(new LineBorder(Color.BLACK));
+		editingTab.add(
+				new JScrollPane(this.narrowedInput,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
+		
+		this.editingPanel = new EditingPanel(this);
+		editingTab.add(this.editingPanel, BorderLayout.SOUTH);
 		
 		// ----- OUTPUT -----
 		final JPanel outputPanel = new JPanel(new BorderLayout());
 		this.inputOutputPane.addTab("Output - MusicXML", outputPanel);
-		
-		this.output = new JTextArea(24, 80);
-		this.output.setBorder(new LineBorder(Color.BLACK));
-		
-		outputPanel.add(
-				new JScrollPane(this.output,
-						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
-				BorderLayout.CENTER);
 		
 		final JLabel outputLabel = new JLabel(
 				"The output MusicXML will be displayed here.");
@@ -128,8 +150,21 @@ final class TabbedView extends AbstractSwingView {
 		outputPanel.add(outputButtonPanel, BorderLayout.SOUTH);
 		
 		final JButton saveToFile = new JButton("Save to File");
+		saveToFile.setEnabled(false);
 		saveToFile.addActionListener(e -> this.presenter.saveOutput());
 		outputButtonPanel.add(saveToFile);
+		
+		// output text box
+		this.output = new JTextArea(24, 80);
+		this.output.setBorder(new LineBorder(Color.BLACK));
+		this.output.addCaretListener(e -> {
+			saveToFile.setEnabled(!this.output.getText().isBlank());
+		});
+		outputPanel.add(
+				new JScrollPane(this.output,
+						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+						ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS),
+				BorderLayout.CENTER);
 		
 		// ----- INSTRUMENT SELECTION -----
 		final JPanel instrumentSelectionPanel = new JPanel(
@@ -150,7 +185,22 @@ final class TabbedView extends AbstractSwingView {
 	}
 	
 	@Override
+	public XMLMetadata getMetadata() {
+		return this.editingPanel.getMetadata();
+	}
+	
+	@Override
+	public String getNarrowedText() {
+		return this.narrowedInput.getText();
+	}
+	
+	@Override
 	protected JTextComponent getOutput() {
 		return this.output;
+	}
+	
+	@Override
+	public void setNarrowedText(String text) {
+		this.narrowedInput.setText(text);
 	}
 }

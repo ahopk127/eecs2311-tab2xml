@@ -1,0 +1,38 @@
+@startuml
+User -> View : Input text tab into text box
+View -> Presenter : Call detectInstrument()
+Presenter -> Parser : Call getDetectedInstrument()
+Presenter <-- Parser : return detected instrument
+View <-- Presenter : Update selected instrument
+User -> View : Click "Convert and Save"
+View -> Presenter : Call convertAndSave()
+View -> Presenter : provide input text
+Presenter -> Parser : provide input text
+Parser -> Processor : Call process()
+Processor -> SerializeGuitarScore : Call visit()
+Processor -> SerializeDrumScore : Call visit()
+SerializeGuitarScore -> "sheet: Score" : construct guitar Score
+SerializeGuitarScore <-- "sheet: Score" : return guitar sheet
+Processor <-- SerializeGuitarScore : return guitar sheet
+SerializeDrumScore -> "sheet: Score" : construct drum Score
+SerializeDrumScore <-- "sheet: Score" : return drum sheet
+Processor <-- SerializeDrumScore : return drum sheet
+Processor -> "sheet: Score" : Call init()
+Processor <-- "sheet: Score" : return aggregated staffs
+Processor -> "sheet: Score" : Call processMeasures()
+Processor <-- "sheet: Score" : return aggregated measures   
+Processor -> "sheet: Score" : Call processDuration()   
+Processor <-- "sheet: Score" : return processed durations  
+Parser <-- Processor : aggregate sheet
+Presenter -> Parser : Call parse()
+Parser -> Transform : Call toXML()
+Transform -> "sheet: Score" : get sheet data
+"sheet: Score" -> Transform : return sheet data
+Parser <-- Transform : return sheet as XML string
+Presenter <-- Parser : return converted output
+View <-- Presenter : display any errors or warnings
+User -> View : select output file
+View -> Presenter : pass output file
+Presenter -> Files : writeString()
+View <-- Presenter : display any errors or warnings
+@enduml

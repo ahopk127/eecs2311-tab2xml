@@ -1,4 +1,23 @@
 * Changelog
+** [0.4.0] - [2021-04-05 Mon] (Week 11)
+*** Added
+    - Created inital draft of design document
+    - The instrument is automatically detected (but this instrument selection can be overwritten)
+    - Added the ability to narrow down the input to measures
+    - Added the ability to set the output score's title and composer
+    - Partially implemented the ability to set the time signatures of the output measures
+*** Changed
+    - Tweaked manual to clarify how to use TAB2XML in code
+    - TabbedView's buttons become disabled when they shouldn't be pressed
+    - You can no longer convert or save with an empty input/output
+    - Changed the internal representation of measures to allow for calculating note duration
+    - Error/Warning Highlighting is now cleared when the input is edited.
+*** Fixed
+    - #13 Wrong Input & Output Instrument Name
+    - #21 Could not save output on MacOS
+    - #29 Could not build on older Java versions because "text blocks are a preview feature"
+    - Could not export to JAR, even though Gradle generates one
+    - Fixed many more bugs
 ** [0.4.0-alpha.1] - [2021-03-22 Mon] (Week 9)
 *** Changed
     - Updated README
