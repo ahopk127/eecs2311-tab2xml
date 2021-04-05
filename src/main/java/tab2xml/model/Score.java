@@ -126,7 +126,7 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 	public void processMeasures(XMLMetadata metadata) {
 		Map<IntRange, TimeSignature> map = null;
 		if (metadata != null) {
-			map = metadata.getTimeSignatureRanges();
+			map = metadata.timeSignatureRanges();
 			System.out.println("the map: " + map);
 		}
 		E firstStaff = null;
@@ -146,8 +146,10 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 					for (IntRange range : map.keySet()) {
 						if (range.contains(measure.getMeasure() + 1)) {
 							TimeSignature ts = map.get(range);
-							measure.setBeats(ts.upperNumeral());
-							measure.setBeatType(ts.lowerNumeral());
+							if (ts != null) {
+								measure.setBeats(ts.upperNumeral());
+								measure.setBeatType(ts.lowerNumeral());
+							}
 						}
 					}
 				}

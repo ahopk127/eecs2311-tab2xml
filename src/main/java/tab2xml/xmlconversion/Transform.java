@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,7 +62,7 @@ public class Transform<T extends Staff<? extends Line>> {
 		this.musicSheet = new MusicSheet(doc, dBuilder, dbFactory);
 		this.instrument = instrument;
 		this.metadata = metadata;
-		metadata.getTimeSignatures();
+		metadata.timeSignatures();
 		switch (instrument) {
 		case GUITAR:
 		case BASS:
@@ -107,7 +108,7 @@ public class Transform<T extends Staff<? extends Line>> {
 		GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);
 		setGuitarBassStaffAttributes(staff, measures.get(0));
 
-		Map<IntRange, TimeSignature> map = metadata.getTimeSignatureRanges();
+		Map<IntRange, TimeSignature> map = metadata.timeSignatureRanges();
 
 		// all time signatures are set here before appending any notes.
 		for (IntRange range : map.keySet()) {
@@ -510,18 +511,18 @@ public class Transform<T extends Staff<? extends Line>> {
 		musicSheet.append(root);
 		XMLElement work = new XMLElement("work", musicSheet);
 		XMLElement workTitle = new XMLElement("work-title", musicSheet);
-		workTitle.setText(metadata.getTitle());
+		workTitle.setText(metadata.title());
 		work.append(workTitle);
 
-		XMLElement identification = null;
-		if (metadata.getComposer().orElse(null) != null) {
-			identification = new XMLElement("identification", musicSheet);
+		XMLElement identification = metadata.composer().map(composer -> {
+			XMLElement element = new XMLElement("identification", musicSheet);
 			XMLElement creator = new XMLElement("creator", musicSheet);
 			creator.setAttribute("type", "composer");
-			creator.setText(metadata.getComposer().get());
-			identification.append(creator);
-		}
-
+			creator.setText(composer);
+			element.append(creator);
+			return element;
+		}).orElse(null);
+		
 		XMLElement partList = new XMLElement("part-list", musicSheet);
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");
