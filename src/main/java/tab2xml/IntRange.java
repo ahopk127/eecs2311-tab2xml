@@ -162,6 +162,6 @@ public final class IntRange extends AbstractSet<Integer> {
 	
 	@Override
 	public String toString() {
-		return "[" + this.beginningInclusive + ", " + this.endExclusive + ")";
+		return "[" + this.beginningInclusive() + ", " + this.endInclusive() + "]";
 	}
 }

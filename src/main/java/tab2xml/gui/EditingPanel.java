@@ -74,17 +74,17 @@ final class EditingPanel extends JPanel {
 	private final NarrowingView view;
 	
 	/** Text field describing the beginning of the measure range */
-	private final JTextField measureStart;
+	final JTextField measureStart;
 	/** Text field describing the end of the measure range */
-	private final JTextField measureEnd;
+	final JTextField measureEnd;
 	/** Text field describing the score title */
-	private final JTextField titleField;
+	final JTextField titleField;
 	/** Text field describing the score composer */
-	private final JTextField composerField;
+	final JTextField composerField;
 	/** Field for top part of time signature */
-	private final JTextField topSignatureField;
+	final JTextField topSignatureField;
 	/** Field for bottom part of time signature */
-	private final JTextField bottomSignatureField;
+	final JTextField bottomSignatureField;
 	
 	// control buttons
 	private final JButton editMeasureButton;
@@ -246,7 +246,7 @@ final class EditingPanel extends JPanel {
 	 * @param e button-press action
 	 * @since 2021-03-22
 	 */
-	private void doneEditing(ActionEvent e) {
+	void doneEditing(ActionEvent e) {
 		final int measureStart = this.measureStart();
 		final int measureEnd = this.measureEnd();
 		
@@ -268,7 +268,7 @@ final class EditingPanel extends JPanel {
 	 * @param e button-press action
 	 * @since 2021-03-22
 	 */
-	private void editMeasures(ActionEvent e) {
+	void editMeasures(ActionEvent e) {
 		if (this.checkInputErrors(false)) {
 			final int measureStart = this.measureStart();
 			final int measureEnd = this.measureEnd();
@@ -295,6 +295,8 @@ final class EditingPanel extends JPanel {
 		this.metadataBuilder
 				.title(title.isBlank() ? XMLMetadata.DEFAULT_TITLE : title);
 		this.metadataBuilder.composer(composer.isBlank() ? null : composer);
+		this.metadataBuilder.maxMeasure(
+				MeasureNarrowing.measureCount(this.view.getInputText()));
 		
 		return this.metadataBuilder.build();
 	}
@@ -312,7 +314,7 @@ final class EditingPanel extends JPanel {
 	 *         input measure range
 	 * @since 2021-04-03
 	 */
-	private int measureEnd() {
+	int measureEnd() {
 		if (this.measureEnd.getText().isEmpty())
 			return MeasureNarrowing.measureCount(this.view.getInputText());
 		else {
@@ -328,7 +330,7 @@ final class EditingPanel extends JPanel {
 	 * @return start of measure range
 	 * @since 2021-04-03
 	 */
-	private int measureStart() {
+	int measureStart() {
 		if (this.measureStart.getText().isEmpty())
 			return 1;
 		else
@@ -352,7 +354,7 @@ final class EditingPanel extends JPanel {
 	 * @param e botton-press action, unused
 	 * @since 2021-03-31
 	 */
-	private void setTimeSignature(ActionEvent e) {
+	void setTimeSignature(ActionEvent e) {
 		/*
 		 * Note: this method allows you to set the time signature when not on
 		 * narrowing mode as long as the measure/signature fields are entered, and

@@ -1,7 +1,6 @@
 package tab2xml.xmlconversion;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -33,8 +32,8 @@ final class TimeSignatureTest {
 		b.setTimeSignature(4, 6, ts2); // overwrites measures 4 & 5
 		
 		final XMLMetadata metadata = b.build();
-		final var timeSignatures = metadata.getTimeSignatures();
-		final var timeSigRanges = metadata.getTimeSignatureRanges();
+		final var timeSignatures = metadata.timeSignatures();
+		final var timeSigRanges = metadata.timeSignatureRanges();
 		
 		for (int i = 2; i <= 3; i++) {
 			assertEquals(ts1, timeSignatures.get(i));
@@ -67,11 +66,15 @@ final class TimeSignatureTest {
 		b.setTimeSignature(8, 10, ts2);
 		
 		final XMLMetadata metadata = b.build();
-		final var timeSignatures = metadata.getTimeSignatures();
-		final var timeSigRanges = metadata.getTimeSignatureRanges();
+		final var timeSignatures = metadata.timeSignatures();
+		final var timeSigRanges = metadata.timeSignatureRanges();
 		
+		assertEquals(null, timeSignatures.getOrDefault(1, null));
 		for (int i = 2; i <= 3; i++) {
 			assertEquals(ts1, timeSignatures.get(i));
+		}
+		for (int i = 4; i <= 7; i++) {
+			assertEquals(null, timeSignatures.getOrDefault(i, null));
 		}
 		for (int i = 8; i <= 10; i++) {
 			assertEquals(ts2, timeSignatures.get(i));
@@ -83,7 +86,10 @@ final class TimeSignatureTest {
 		assertTrue(timeSigRanges.containsKey(IntRange.inclusive(8, 10)));
 		assertEquals(ts2, timeSigRanges.get(IntRange.inclusive(8, 10)));
 		
-		assertFalse(timeSigRanges.containsKey(IntRange.inclusive(1, 1)));
-		assertFalse(timeSigRanges.containsKey(IntRange.inclusive(4, 7)));
+		// null ranges
+		assertTrue(timeSigRanges.containsKey(IntRange.inclusive(1, 1)));
+		assertEquals(null, timeSigRanges.get(IntRange.inclusive(1, 1)));
+		assertTrue(timeSigRanges.containsKey(IntRange.inclusive(4, 7)));
+		assertEquals(null, timeSigRanges.get(IntRange.inclusive(4, 7)));
 	}
 }
