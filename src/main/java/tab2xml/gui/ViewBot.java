@@ -16,7 +16,7 @@ import tab2xml.model.Instrument;
  *
  * @since 2021-01-20
  */
-public final class ViewBot implements View {
+public final class ViewBot implements NarrowingView {
 	/**
 	 * The text inputted by the user. (represents whatever text area the user is
 	 * using to input text)
@@ -27,6 +27,10 @@ public final class ViewBot implements View {
 	 * gives to the user)
 	 */
 	private String outputText;
+	/**
+	 * The text of the narrowing "text box".
+	 */
+	private String narrowText;
 	/**
 	 * The instrument selected by the bot.
 	 */
@@ -59,6 +63,11 @@ public final class ViewBot implements View {
 	@Override
 	public final String getInputText() {
 		return this.inputText;
+	}
+	
+	@Override
+	public String getNarrowedText() {
+		return this.narrowText;
 	}
 	
 	@Override
@@ -103,6 +112,11 @@ public final class ViewBot implements View {
 	@Override
 	public final void setInputText(String inputText) {
 		this.inputText = inputText;
+	}
+	
+	@Override
+	public void setNarrowedText(String text) {
+		this.narrowText = text;
 	}
 	
 	/**
