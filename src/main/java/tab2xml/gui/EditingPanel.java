@@ -87,9 +87,9 @@ final class EditingPanel extends JPanel {
 	final JTextField bottomSignatureField;
 	
 	// control buttons
-	private final JButton editMeasureButton;
-	private final JButton doneEditingButton;
-	private final JButton setSignatureButton;
+	final JButton editMeasureButton;
+	final JButton doneEditingButton;
+	final JButton setSignatureButton;
 	
 	/** Whether or not narrowing is currently being used */
 	private boolean isNarrowing = false;
@@ -317,13 +317,8 @@ final class EditingPanel extends JPanel {
 	int measureEnd() {
 		if (this.measureEnd.getText().isEmpty())
 			return MeasureNarrowing.measureCount(this.view.getInputText());
-		else {
-			final int measureEnd = Integer.valueOf(this.measureEnd.getText());
-			if (measureEnd <= 0)
-				return MeasureNarrowing.measureCount(this.view.getInputText());
-			else
-				return measureEnd;
-		}
+		else
+			return Integer.valueOf(this.measureEnd.getText());
 	}
 	
 	/**
