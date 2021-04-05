@@ -68,8 +68,8 @@ DRUMTYPE
 	| 'SS' // side stick
 	| 'SD' // snare drum 
 	| 'ES' // electric  snare
-	| 'T1' // low floor tom
-	| 'T2' // high floor tom
+	| 'FT' // low floor tom
+	| 'Ft' // high floor tom
 	| 'LT' // low tom
 	| 'LM' // low-mid tom
 	| 'MT' // hi-mid tom

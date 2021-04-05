@@ -5,15 +5,18 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 
+import tab2xml.IntRange;
 import tab2xml.model.Instrument;
 import tab2xml.model.Line;
 import tab2xml.model.Score;
 import tab2xml.model.Staff;
+import tab2xml.model.TimeSignature;
 import tab2xml.model.drum.DrumNote;
 import tab2xml.model.drum.DrumStaff;
 import tab2xml.model.drum.DrumType;
@@ -29,7 +32,7 @@ import tab2xml.model.guitar.GuitarString;
  * 
  * @author amir
  */
-public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends Note>> {
+public class Transform<T extends Staff<? extends Line>> {
 	private final Score<T> sheet;
 	MusicSheet musicSheet;
 	private Document doc;
@@ -39,7 +42,8 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 	private Instrument instrument;
 
 	/**
-	 * Construct a transformer that accepts a specified score and an instrument.
+	 * Construct a transformer that accepts a specified {@code Score},
+	 * {@code Instrument}, and {@code XMLMetadata}.
 	 * 
 	 * @param sheet      the score retrieved by the parser
 	 * @param instrument the type of instrument corresponding to this score
@@ -82,7 +86,6 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 
 	/**
 	 * Generate XML from data for selected instrument, Guitar or Bass.
-	 * 
 	 */
 	private void generateGuitarBass() {
 		XMLElement root = new XMLElement("score-partwise", musicSheet);
@@ -102,17 +105,31 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		}
 
 		GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);
-
-		// if not selected by user set to default
-		if (metadata.getTimeSignatures().get(0) == null) {
-			staff.setBeats("4");
-			staff.setBeatType("4");
-		} else {
-			staff.setBeats(String.valueOf(metadata.getTimeSignatures().get(0).upperNumeral()));
-			staff.setBeats(String.valueOf(metadata.getTimeSignatures().get(0).lowerNumeral()));
-		}
 		setGuitarBassStaffAttributes(staff, measures.get(0));
 
+		Map<IntRange, TimeSignature> map = metadata.getTimeSignatureRanges();
+
+		// all time signatures are set here before appending any notes.
+		for (IntRange range : map.keySet()) {
+			for (int i = 0; i < measureCount; i++) {
+				XMLElement attributes = null;
+				TimeSignature ts = map.get(range);
+				// if the range doesn't contain the first measure, set the other ranges with set time signatures.
+				if (!range.contains(1) && range.contains(i + 1) && staff.time() != ts.toString()) {
+					attributes = new XMLElement("attributes", musicSheet);
+					XMLElement time = new XMLElement("time", musicSheet);
+					XMLElement beats = new XMLElement("beats", musicSheet);
+					beats.setText(String.valueOf(ts.upperNumeral()));
+					XMLElement beatType = new XMLElement("beat-type", musicSheet);
+					beatType.setText(String.valueOf(ts.lowerNumeral()));
+					time.append(beats, beatType);
+					attributes.append(time);
+					measures.get(i).append(attributes);
+				}
+			}
+		}
+
+		// append time attribute to the measures that the user set different from the score default.
 		for (Measure<? extends Note> m : sheet.getMeasures()) {
 			for (LineItem item : m) {
 				GuitarNote note = (GuitarNote) item;
@@ -135,7 +152,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 	private void setGuitarBassStaffAttributes(GuitarStaff staff, XMLElement measure) {
 		XMLElement attributes = new XMLElement("attributes", musicSheet);
 		XMLElement divisions = new XMLElement("divisions", musicSheet);
-		divisions.setText("2");
+		divisions.setText(String.valueOf(staff.getDivision()));
 
 		XMLElement key = new XMLElement("key", musicSheet);
 		XMLElement fifths = new XMLElement("fifths", musicSheet);
@@ -144,9 +161,9 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 
 		XMLElement time = new XMLElement("time", musicSheet);
 		XMLElement beats = new XMLElement("beats", musicSheet);
-		beats.setText("4");
+		beats.setText(String.valueOf(staff.getBeats()));
 		XMLElement beatType = new XMLElement("beat-type", musicSheet);
-		beatType.setText(staff.getBeatType());
+		beatType.setText(String.valueOf(staff.getBeatType()));
 		time.append(beats, beatType);
 
 		XMLElement clef = new XMLElement("clef", musicSheet);
@@ -166,7 +183,6 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		int i = 1;
 		Collections.reverse(list);
 		for (GuitarString s : list) {
-			System.out.println("String: " + s.toString());
 			XMLElement staffTuning = new XMLElement("staff-tuning", musicSheet);
 			staffTuning.setAttribute("line", String.valueOf(i++));
 			XMLElement tuningStep = new XMLElement("tuning-step", musicSheet);
@@ -342,17 +358,6 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		}
 
 		DrumStaff staff = (DrumStaff) sheet.getStaffs().get(0);
-		// if not selected by user set to default
-		staff.setBeats("4");
-		staff.setBeatType("4");
-
-		if (metadata.getTimeSignatures().get(0) == null) {
-			staff.setBeats("4");
-			staff.setBeatType("4");
-		} else {
-			staff.setBeats(String.valueOf(metadata.getTimeSignatures().get(0).upperNumeral()));
-			staff.setBeats(String.valueOf(metadata.getTimeSignatures().get(0).lowerNumeral()));
-		}
 		setDrumStaffAttributes(staff, measures.get(0));
 
 		for (Measure<? extends Note> m : sheet.getMeasures()) {
@@ -378,7 +383,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 	private void setDrumStaffAttributes(DrumStaff staff, XMLElement measure) {
 		XMLElement attributes = new XMLElement("attributes", musicSheet);
 		XMLElement divisions = new XMLElement("divisions", musicSheet);
-		divisions.setText("4");
+		divisions.setText(String.valueOf(staff.getDivision()));
 
 		XMLElement key = new XMLElement("key", musicSheet);
 		XMLElement fifths = new XMLElement("fifths", musicSheet);
@@ -387,9 +392,9 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 
 		XMLElement time = new XMLElement("time", musicSheet);
 		XMLElement beats = new XMLElement("beats", musicSheet);
-		beats.setText(staff.getBeats());
+		beats.setText(String.valueOf(staff.getBeats()));
 		XMLElement beatType = new XMLElement("beat-type", musicSheet);
-		beatType.setText(staff.getBeatType());
+		beatType.setText(String.valueOf(staff.getBeatType()));
 		time.append(beats, beatType);
 
 		XMLElement clef = new XMLElement("clef", musicSheet);
@@ -398,7 +403,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 		XMLElement line = new XMLElement("line", musicSheet);
 		line.setText("2");
 		clef.append(sign, line);
-		attributes.append(divisions, time, clef);
+		attributes.append(divisions, key, time, clef);
 		measure.append(attributes);
 	}
 
@@ -432,7 +437,7 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 			unPitched.append(displayStep, displayOctave);
 
 			XMLElement duration = new XMLElement("duration", musicSheet);
-			duration.setText("1");
+			duration.setText(currNote.getDuration());
 			XMLElement instrument = new XMLElement("instrument", musicSheet);
 			instrument.setAttribute("id", String.format("P1-I%d", currNote.getId()));
 			XMLElement voice = new XMLElement("voice", musicSheet);
@@ -573,7 +578,8 @@ public class Transform<T extends Staff<? extends Line<? extends Note>, ? extends
 
 			XMLElement midiDeviceD = new XMLElement("midi-device", musicSheet);
 			midiDeviceD.setAttribute("port", "1");
-			midiDeviceD.setText("");
+			midiDeviceD.setText(" ");
+			scorePart.append(midiDeviceD);
 			for (int i = 36; i <= 65; i++) {
 				if (i == 40 || i == 59 || i == 61 || i == 62 || i == 63)
 					continue;

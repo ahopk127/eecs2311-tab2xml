@@ -28,17 +28,17 @@ import tab2xml.xmlconversion.XMLMetadata;
 public class Parser {
 	/* General patterns for each instrument */
 	public static final String COMMENTS = "((/[*])(([\s]|[^ ])+)([*]/))|([/]{2,}[^\n]+)";
-	public static final String OUTLIER = "(" + COMMENTS + "|(^(?!([a-gA-G]#?)?[|-][^\r\n]*[-|]\r?\n?).+\r?\n?))";
-	public static final String OUTLIERD = "(" + COMMENTS
-			+ "|(^(?![ \t]*([ABCcDdEHhLMPRST12]{2})[|-][^\r\n]*[-|]\r?\n?).+\r?\n?))";
-	public static final String OUTLIER_MULTI = "(" + OUTLIER + "+)";
-	public static final String OUTLIER_DRUM = "(" + OUTLIERD + "+)";
-	public static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ ]*[|-])[^\r\n]*\\|).*$))).+\r?\n?)";
+	public static final String OUTLIER_G = "(" + COMMENTS + "|(^(?![ \t]*([a-gA-G]#?)?[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
+	public static final String OUTLIER_D = "(" + COMMENTS
+			+ "|(^(?![ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
+	public static final String OUTLIER_GUITAR = "(" + OUTLIER_G + "+)";
+	public static final String OUTLIER_DRUM = "(" + OUTLIER_D + "+)";
+	public static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ \t]*[|-])[^\s]*[-|]).*$))).+\r?\n?)";
 	public static final String GP = STRING + "{6,}";
-	public static final String BP = "(" + OUTLIER + "|\r?\n)" + "(" + STRING + "{4,5})" + "(" + OUTLIER + "|\r?\n)";
-	public static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEHhLMPRST12]{2})[-|]).*\\|).*)+)).*\r?\n?)+";
+	public static final String BP = "(" + OUTLIER_G + "|\r?\n)" + "(" + STRING + "{4,5})" + "(" + OUTLIER_G + "|\r?\n)";
+	public static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|])[^\s]*[-|]).*)+)).*\r?\n?)+";
 
-	public static final Pattern outlierPlucked = Pattern.compile(OUTLIER_MULTI, Pattern.MULTILINE);
+	public static final Pattern outlierPlucked = Pattern.compile(OUTLIER_GUITAR, Pattern.MULTILINE);
 	public static final Pattern outlierPercussion = Pattern.compile(OUTLIER_DRUM, Pattern.MULTILINE);
 	public static final Pattern guitarPattern = Pattern.compile(GP, Pattern.MULTILINE);
 	public static final Pattern bassPattern = Pattern.compile(BP, Pattern.MULTILINE);
@@ -59,7 +59,7 @@ public class Parser {
 	 */
 	public Parser(String input, Instrument instrument, XMLMetadata metadata) throws InvalidInputException {
 		this.metadata = metadata;
-		this.processor = new Processor(input, instrument);
+		this.processor = new Processor(input, instrument, metadata);
 		this.instrument = instrument;
 		this.sheet = this.processor.process();
 	}
@@ -147,9 +147,6 @@ public class Parser {
 		@SuppressWarnings("unchecked")
 		final Transform<GuitarStaff> tf = new Transform<>((Score<GuitarStaff>) this.sheet, this.instrument, metadata);
 		xmlOutput = tf.toXML();
-		
-		// GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);s
-		// staff.setBeats(metadata.getTimeSignatures());
 
 		// TODO: ADD WARNINGS from guitar score data
 		final List<ParsingWarning> warnings = new ArrayList<>();
@@ -171,7 +168,8 @@ public class Parser {
 		// This method should only be called if sheet is Score<GuitarStaff>
 		// so if this fails, the precondition was violated
 		@SuppressWarnings("unchecked")
-		final Transform<GuitarStaff> tf = new Transform<>((Score<GuitarStaff>) this.sheet, this.instrument, this.metadata);
+		final Transform<GuitarStaff> tf = new Transform<>((Score<GuitarStaff>) this.sheet, this.instrument,
+				this.metadata);
 		xmlOutput = tf.toXML();
 
 		// TODO: ADD WARNINGS from bass score data

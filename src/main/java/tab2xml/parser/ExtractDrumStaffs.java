@@ -8,7 +8,6 @@ import tab2xml.antlr.DrumTabParser.DrumLineContext;
 import tab2xml.antlr.DrumTabParser.StaffContext;
 import tab2xml.model.ScoreItem;
 import tab2xml.model.drum.DrumLine;
-import tab2xml.model.drum.DrumNote;
 import tab2xml.model.drum.DrumStaff;
 
 /**
@@ -16,12 +15,12 @@ import tab2xml.model.drum.DrumStaff;
  * 
  * @author amir
  */
-public class ExtractDrumStaffs extends DrumTabBaseVisitor<ScoreItem<DrumNote>> {
+public class ExtractDrumStaffs extends DrumTabBaseVisitor<ScoreItem> {
 	public ExtractDrumStaffs() {
 	}
 
 	@Override
-	public ScoreItem<DrumNote> visitStaff(StaffContext ctx) {
+	public ScoreItem visitStaff(StaffContext ctx) {
 		DrumStaff st = new DrumStaff();
 		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
 				.forEach(c -> st.add((DrumLine) visit(c)));
@@ -29,7 +28,7 @@ public class ExtractDrumStaffs extends DrumTabBaseVisitor<ScoreItem<DrumNote>> {
 	}
 
 	@Override
-	public ScoreItem<DrumNote> visitDrumLine(DrumLineContext ctx) {
+	public ScoreItem visitDrumLine(DrumLineContext ctx) {
 		DrumLine line = new DrumLine();
 		line.setDrum(true);
 		@SuppressWarnings("unused")
@@ -38,7 +37,7 @@ public class ExtractDrumStaffs extends DrumTabBaseVisitor<ScoreItem<DrumNote>> {
 	}
 
 	@Override
-	public ScoreItem<DrumNote> visitCymbalLine(CymbalLineContext ctx) {
+	public ScoreItem visitCymbalLine(CymbalLineContext ctx) {
 		DrumLine line = new DrumLine();
 		line.setCymbal(true);
 		@SuppressWarnings("unused")

@@ -1,6 +1,7 @@
 package tab2xml.model.drum;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,30 +13,108 @@ import tab2xml.ImmutablePair;
 import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.Measure;
+import tab2xml.model.Note;
 import tab2xml.model.Range;
 import tab2xml.model.Score;
 
-public class DrumStaff extends Staff<DrumLine, DrumNote> {
+/**
+ * A representation of a drum staff in tablature.
+ * 
+ * @author amir
+ */
+public class DrumStaff extends Staff<DrumLine> {
 	private static final long serialVersionUID = 8730635738592350695L;
+	private List<DrumLine> lines;
+	private TreeSet<DrumNote> notes;
 
 	public DrumStaff() {
+		lines = new LinkedList<>();
+		notes = new TreeSet<>();
+	}
+
+	public void init(DrumStaff staff) {
+		Iterator<LineItem> itr = new InitialStaffIterator(staff);
+		while (itr.hasNext()) {
+			notes.add(((DrumNote) itr.next()));
+		}
+	}
+
+	@Override
+	public boolean add(DrumLine line) {
+		if (line == null)
+			return false;
+		lines.add(line);
+		return true;
+	}
+
+	@Override
+	public boolean addLines(Collection<? extends DrumLine> lines) {
+		for (DrumLine l : lines)
+			if (!add(l))
+				return false;
+		return true;
+	}
+
+	@Override
+	public List<DrumLine> getLines() {
+		return lines;
+	}
+
+	@Override
+	public int numberOfMeasures() {
+		return lines.get(0).getNumMeasures();
+	}
+
+	@Override
+	public String lineCount() {
+		return String.valueOf(lines.size());
+	}
+
+	@Override
+	public int size() {
+		return lines.size();
+	}
+
+	@Override
+	public int width() {
+		return lines.get(0).width();
+	}
+
+	@Override
+	public TreeSet<Note> getNotes() {
+		TreeSet<Note> copy = new TreeSet<>();
+		for (DrumNote n : notes) {
+			copy.add((DrumNote) LineItem.deepClone(n));
+		}
+		return copy;
+	}
+
+	@Override
+	public String toString() {
+		return "drum staff";
 	}
 
 	/**
-	 * Return a custom iterator for traversing a staff at a specified index.
-	 * 
-	 * @return an iterator for a staff at specified <b>index</b>
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Iterator<DrumNote> iterator() {
+	public Iterator<DrumLine> iterator() {
+		return new LineIterator(this);
+	}
+
+	public Iterator<Measure<Note>> measureIterator() {
+		return new MeasureIterator(this);
+	}
+
+	public Iterator<Note> noteIterator() {
 		return new NoteIterator(this);
 	}
 
 	/**
 	 * Iterate over the notes in this staff.
 	 */
-	private static class MeasureIterator implements Iterator<Measure<DrumNote>> {
-		private TreeSet<DrumNote> notes;
+	private static class MeasureIterator implements Iterator<Measure<Note>> {
+		private TreeSet<Note> notes;
 		private List<LinkedList<LineItem>> staff;
 		private int startPosition = 0;
 		private int stopPosition = 1;
@@ -51,16 +130,18 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 		}
 
 		@Override
-		public Measure<DrumNote> next() {
+		public Measure<Note> next() {
 			Bar[] barsStart = getFirstBarsAt(startPosition, staff);
 			Bar[] barsEnd = getFirstBarsAt(stopPosition, staff);
 
+			Range columnRange = new Range(barsStart[0].getColumn(), barsEnd[0].getColumn());
 			Range upperRange = new Range(barsStart[0].rightPos(), barsEnd[0].leftPos());
 			Range bottomRange = new Range(barsStart[barsEnd.length - 1].rightPos(),
 					barsEnd[barsEnd.length - 1].leftPos());
 			ImmutablePair<Range, Range> range = ImmutablePair.of(upperRange, bottomRange);
 
-			Measure<DrumNote> measure = new Measure<>(Score.getAccumulateMeasureScore(), range);
+			Measure<Note> measure = new Measure<>(Score.getAccumulateMeasureScore(), range);
+			measure.setColumnRange(columnRange);
 			while (!notes.isEmpty() && notes.first().getMeasure() == Score.getAccumulateMeasureScore()) {
 				measure.add(notes.pollFirst());
 			}
@@ -72,10 +153,34 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 	}
 
 	/**
+	 * Iterator over the lines in this staff.
+	 * 
+	 * @author amir
+	 */
+	public static class LineIterator implements Iterator<DrumLine> {
+		List<DrumLine> lines;
+		int index = 0;
+
+		public LineIterator(DrumStaff staff) {
+			lines = staff.getLines();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return index < lines.size();
+		}
+
+		@Override
+		public DrumLine next() {
+			return lines.get(index++);
+		}
+	}
+
+	/**
 	 * Iterate over the notes in this staff.
 	 */
-	private static class NoteIterator implements Iterator<DrumNote> {
-		private TreeSet<DrumNote> notes;
+	private static class NoteIterator implements Iterator<Note> {
+		private TreeSet<Note> notes;
 
 		public NoteIterator(DrumStaff staff) {
 			notes = staff.getNotes();
@@ -87,7 +192,7 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 		}
 
 		@Override
-		public DrumNote next() {
+		public Note next() {
 			return notes.pollFirst();
 		}
 	}
@@ -286,18 +391,6 @@ public class DrumStaff extends Staff<DrumLine, DrumNote> {
 				}
 			}
 			return Arrays.stream(lengths).sum();
-		}
-	}
-
-	@Override
-	public Iterator<Measure<DrumNote>> measureIterator() {
-		return new MeasureIterator(this);
-	}
-
-	public void init(DrumStaff staff) {
-		Iterator<LineItem> itr = new InitialStaffIterator(staff);
-		while (itr.hasNext()) {
-			notes.add(((DrumNote) itr.next()));
 		}
 	}
 }

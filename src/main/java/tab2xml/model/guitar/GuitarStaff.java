@@ -1,40 +1,35 @@
 package tab2xml.model.guitar;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
-import tab2xml.model.Staff;
 import tab2xml.ImmutablePair;
+import tab2xml.model.Staff;
 import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.Measure;
+import tab2xml.model.Note;
 import tab2xml.model.Range;
 import tab2xml.model.Score;
 
-public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
+/**
+ * A representation of a guitar staff in tablature.
+ * 
+ * @author amir
+ */
+public class GuitarStaff extends Staff<GuitarString> {
 	private static final long serialVersionUID = 5418273130827075188L;
-
-	/* Default values guitar */
-	public static final int DEFAULT_NUM_STRINGS = 6;
-	/**
-	 * The default beats.
-	 */
-	public final static int DEFAULT_BEATS = 4;
-	/**
-	 * The default beat type of every score.
-	 */
-	public final static int DEFAULT_BEATTYPE = 4;
-
-	/**
-	 * The default number of divisions per quarter note.
-	 */
-	public final static int DEFAULT_DIVISION = 2;
+	private List<GuitarString> lines;
+	private TreeSet<GuitarNote> notes;
 
 	public GuitarStaff() {
+		lines = new LinkedList<>();
+		notes = new TreeSet<>();
 	}
 
 	public void init(GuitarStaff staff) {
@@ -45,20 +40,81 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 	}
 
 	@Override
-	public Iterator<Measure<GuitarNote>> measureIterator() {
-		return new MeasureIterator(this);
+	public boolean add(GuitarString line) {
+		if (line == null)
+			return false;
+		lines.add(line);
+		return true;
 	}
 
 	@Override
-	public Iterator<GuitarNote> iterator() {
+	public boolean addLines(Collection<? extends GuitarString> lines) {
+		for (GuitarString l : lines)
+			if (!add(l))
+				return false;
+		return true;
+	}
+
+	@Override
+	public List<GuitarString> getLines() {
+		return lines;
+	}
+
+	@Override
+	public int numberOfMeasures() {
+		return lines.get(0).getNumMeasures();
+	}
+
+	@Override
+	public String lineCount() {
+		return String.valueOf(lines.size());
+	}
+
+	@Override
+	public int size() {
+		return lines.size();
+	}
+
+	@Override
+	public int width() {
+		return lines.get(0).width();
+	}
+
+	@Override
+	public TreeSet<Note> getNotes() {
+		TreeSet<Note> copy = new TreeSet<>();
+		for (GuitarNote n : notes) {
+			copy.add((GuitarNote) LineItem.deepClone(n));
+		}
+		return copy;
+	}
+
+	@Override
+	public String toString() {
+		return "guitar staff";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<GuitarString> iterator() {
+		return new LineIterator(this);
+	}
+
+	public Iterator<Measure<Note>> measureIterator() {
+		return new MeasureIterator(this);
+	}
+
+	public Iterator<Note> noteIterator() {
 		return new NoteIterator(this);
 	}
 
 	/**
 	 * Iterate over the notes in this staff.
 	 */
-	private static class MeasureIterator implements Iterator<Measure<GuitarNote>> {
-		private TreeSet<GuitarNote> notes;
+	private static class MeasureIterator implements Iterator<Measure<Note>> {
+		private TreeSet<Note> notes;
 		private List<LinkedList<LineItem>> staff;
 		private int startPosition = 0;
 		private int stopPosition = 1;
@@ -74,16 +130,18 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 		}
 
 		@Override
-		public Measure<GuitarNote> next() {
+		public Measure<Note> next() {
 			Bar[] barsStart = getFirstBarsAt(startPosition, staff);
 			Bar[] barsEnd = getFirstBarsAt(stopPosition, staff);
 
+			Range columnRange = new Range(barsStart[0].getColumn(), barsEnd[0].getColumn());
 			Range upperRange = new Range(barsStart[0].rightPos(), barsEnd[0].leftPos());
 			Range bottomRange = new Range(barsStart[barsStart.length - 1].rightPos(),
 					barsEnd[barsEnd.length - 1].leftPos());
 			ImmutablePair<Range, Range> range = ImmutablePair.of(upperRange, bottomRange);
 
-			Measure<GuitarNote> measure = new Measure<>(Score.getAccumulateMeasureScore(), range);
+			Measure<Note> measure = new Measure<>(Score.getAccumulateMeasureScore(), range);
+			measure.setColumnRange(columnRange);
 			while (!notes.isEmpty() && notes.first().getMeasure() == Score.getAccumulateMeasureScore()) {
 				measure.add(notes.pollFirst());
 			}
@@ -95,10 +153,34 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 	}
 
 	/**
+	 * Iterator over the lines in this staff.
+	 * 
+	 * @author amir
+	 */
+	public static class LineIterator implements Iterator<GuitarString> {
+		List<GuitarString> lines;
+		int index = 0;
+
+		public LineIterator(GuitarStaff staff) {
+			lines = staff.getLines();
+		}
+
+		@Override
+		public boolean hasNext() {
+			return index < lines.size();
+		}
+
+		@Override
+		public GuitarString next() {
+			return lines.get(index++);
+		}
+	}
+
+	/**
 	 * Iterate over the notes in this staff.
 	 */
-	private static class NoteIterator implements Iterator<GuitarNote> {
-		private TreeSet<GuitarNote> notes;
+	private static class NoteIterator implements Iterator<Note> {
+		private TreeSet<Note> notes;
 
 		public NoteIterator(GuitarStaff staff) {
 			notes = staff.getNotes();
@@ -110,7 +192,7 @@ public class GuitarStaff extends Staff<GuitarString, GuitarNote> {
 		}
 
 		@Override
-		public GuitarNote next() {
+		public Note next() {
 			return notes.pollFirst();
 		}
 	}

@@ -29,6 +29,7 @@ import tab2xml.model.Instrument;
 import tab2xml.model.Score;
 import tab2xml.model.drum.DrumStaff;
 import tab2xml.model.guitar.GuitarStaff;
+import tab2xml.xmlconversion.XMLMetadata;
 
 /**
  * A processor which works in 2 stages serializing ASCII tablature for a
@@ -41,8 +42,8 @@ public class Processor {
 	private static final SerializeDrumScore sds = new SerializeDrumScore();
 
 	private String input;
-
 	private final Instrument instrument;
+	private XMLMetadata metadata;
 
 	/**
 	 * Construct a processor object for an input string and instrument.
@@ -50,9 +51,10 @@ public class Processor {
 	 * @param input      string representing ASCII tablature
 	 * @param instrument the type of instrument for the tablature
 	 */
-	public Processor(String input, Instrument instrument) {
+	public Processor(String input, Instrument instrument, XMLMetadata metadata) {
 		this.input = input;
 		this.instrument = instrument;
+		this.metadata = metadata;
 	}
 
 	/**
@@ -182,7 +184,7 @@ public class Processor {
 				leastCommentCount = 3 * (leftComment + rightComment);
 				start = token.getStartIndex() - (leastCommentCount) - 1;
 				stop = token.getStopIndex() - (leastCommentCount) + 1;
-				line = token.getLine() - leftComment - rightComment;
+				line = token.getLine() - leftComment - rightComment - 1;
 				column = token.getCharPositionInLine() + 1;
 
 				errorToken.setStart(start);
@@ -196,11 +198,12 @@ public class Processor {
 			errors.clear();
 			showErrors(errorTokens);
 		}
+		// TODO: make sure input is well formed by this point.
 		Score<GuitarStaff> sheet = sgs.visit(root);
 		// initializing staffs in the sheet.
 		sheet.forEach(s -> s.init(s));
 		// next process the measures.
-		sheet.processMeasures();
+		sheet.processMeasures(metadata);
 		// next process the duration of each note.
 		sheet.getMeasures().forEach(m -> m.processDuration());
 		return sheet;
@@ -290,7 +293,7 @@ public class Processor {
 				leastCommentCount = 3 * (leftComment + rightComment);
 				start = token.getStartIndex() - (leastCommentCount) - 1;
 				stop = token.getStopIndex() - (leastCommentCount) + 1;
-				line = token.getLine() - leftComment - rightComment;
+				line = token.getLine() - leftComment - rightComment - 1;
 				column = token.getCharPositionInLine() + 1;
 
 				errorToken.setStart(start);
@@ -304,13 +307,16 @@ public class Processor {
 			errors.clear();
 			showErrors(errorTokens);
 		}
+		// TODO: make sure input is well formed by this point.
 		Score<DrumStaff> sheet = sds.visit(root);
+		// set to 4 by default(per example. idk the standards)
+		sheet.setDivision(4);
 		// initializing staffs in the sheet.
 		sheet.forEach(s -> s.init(s));
 		// next process the measures.
-		sheet.processMeasures();
+		sheet.processMeasures(metadata);
 		// next process the duration of each note.
-		//sheet.getMeasures().forEach(m -> m.processDuration());
+		sheet.getMeasures().forEach(m -> m.processDuration());
 		return sheet;
 	}
 
@@ -335,9 +341,9 @@ public class Processor {
 		Matcher outlierMatcher = Parser.outlierPlucked.matcher(tab.toString());
 
 		// TODO: remove this
-		System.out.println("==============spaced-input===============");
-		System.out.println(tab.toString());
-		System.out.println("=========================================");
+		//		System.out.println("==============spaced-input===============");
+		//		System.out.println(tab.toString());
+		//		System.out.println("=========================================");
 
 		int count = 0;
 		int prevIndex = 0;
@@ -347,9 +353,9 @@ public class Processor {
 		int offset = 0;
 		while (outlierMatcher.find()) {
 			// TODO: remove this
-			System.out.println(String.format("start-group::%d", 0));
-			System.out.print(outlierMatcher.group(0));
-			System.out.println(String.format("end-group::%d", 0));
+//			System.out.println(String.format("start-group::%d", 0));
+//			System.out.print(outlierMatcher.group(0));
+//			System.out.println(String.format("end-group::%d", 0));
 
 			if (outlierMatcher.group(0).matches(Parser.COMMENTS)
 					|| outlierMatcher.group(0).matches("(^(?=[ \t]*(\r?\n)+)[ \t]*)"))
@@ -397,9 +403,9 @@ public class Processor {
 		Matcher outlierMatcher = Parser.outlierPlucked.matcher(tab.toString());
 
 		// TODO: remove this
-		System.out.println("==============spaced-input===============");
-		System.out.println(tab.toString());
-		System.out.println("=========================================");
+		//		System.out.println("==============spaced-input===============");
+		//		System.out.println(tab.toString());
+		//		System.out.println("=========================================");
 
 		int count = 0;
 		int prevIndex = 0;
@@ -409,9 +415,9 @@ public class Processor {
 		int offset = 0;
 		while (outlierMatcher.find()) {
 			// TODO: remove this
-			System.out.println(String.format("start-group::%d", 0));
-			System.out.print(outlierMatcher.group(0));
-			System.out.println(String.format("end-group::%d", 0));
+//			System.out.println(String.format("start-group::%d", 0));
+//			System.out.print(outlierMatcher.group(0));
+//			System.out.println(String.format("end-group::%d", 0));
 
 			if (outlierMatcher.group(0).matches(Parser.COMMENTS)
 					|| outlierMatcher.group(0).matches("(^(?=[ \t]*(\r?\n)+)[ \t]*)"))
@@ -424,9 +430,9 @@ public class Processor {
 		}
 
 		// TODO: remove this
-		System.out.println("================commented===============");
-		System.out.println(commented.toString());
-		System.out.println("=========================================");
+//		System.out.println("================commented===============");
+//		System.out.println(commented.toString());
+//		System.out.println("=========================================");
 
 		// extract meta data
 		while (staffMatcher.find() && outlierMatcher.find()) {
@@ -459,9 +465,9 @@ public class Processor {
 		Matcher outlierMatcher = Parser.outlierPercussion.matcher(tab.toString());
 
 		// TODO: remove this
-		System.out.println("==============spaced-input===============");
-		System.out.println(tab.toString());
-		System.out.println("=========================================");
+//		System.out.println("==============spaced-input===============");
+//		System.out.println(tab.toString());
+//		System.out.println("=========================================");
 
 		int count = 0;
 		int prevIndex = 0;
@@ -486,9 +492,9 @@ public class Processor {
 		}
 
 		// TODO: remove this
-		System.out.println("================commented===============");
-		System.out.println(commented.toString());
-		System.out.println("=========================================");
+//		System.out.println("================commented===============");
+//		System.out.println(commented.toString());
+//		System.out.println("=========================================");
 
 		// extract meta data
 		while (staffMatcher.find() && outlierMatcher.find()) {

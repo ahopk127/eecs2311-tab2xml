@@ -9,10 +9,14 @@ import java.util.List;
  * 
  * @author amir
  */
-public abstract class Line<T> extends ScoreItem<T> {
+public abstract class Line extends ScoreItem {
 	private static final long serialVersionUID = 4752002711545090298L;
+
+	/** The items on this line */
 	protected ArrayList<LineItem> lineItems;
+	/** The line number */
 	protected static int line = 0;
+	/** The number of measures in this line */
 	protected int numMeasures;
 
 	/**

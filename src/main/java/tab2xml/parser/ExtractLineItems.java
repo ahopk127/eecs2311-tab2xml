@@ -83,6 +83,9 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 	public LineItem visitDrumType(DrumTypeContext ctx) {
 		String value = ctx.getChild(0).getText();
 		DrumType type = new DrumType(value);
+		type.setLineNum(line.getLineNum());
+		type.setColumn(ctx.start.getCharPositionInLine());
+		type.setPosition(ctx.start.getTokenIndex() + value.length() - 1);
 		return type;
 	}
 
@@ -90,6 +93,9 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 	public LineItem visitCymbalType(CymbalTypeContext ctx) {
 		String value = ctx.getChild(0).getText();
 		DrumType type = new DrumType(value);
+		type.setLineNum(line.getLineNum());
+		type.setColumn(ctx.start.getCharPositionInLine());
+		type.setPosition(ctx.start.getTokenIndex() + value.length() - 1);
 		return type;
 	}
 
@@ -115,27 +121,9 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 
 	@Override
 	public LineItem visitCymbal(CymbalContext ctx) {
-		// TODO logic of cymbals
-
-		// each note has:
-		//		  <note>
-		//	        <unpitched>
-		//	          <display-step>A</display-step>
-		//	          <display-octave>5</display-octave>
-		//	          </unpitched>
-		//	        <duration>2</duration>
-		//	        <instrument id="P1-I50"/>
-		//	        <voice>1</voice>
-		//	        <type>eighth</type>
-		//	        <stem>up</stem>
-		//	        <notehead>x</notehead>
-		//	        <beam number="1">begin</beam>
-		//	        </note>
-		//	      <note>
-
 		String value = ctx.getText();
-		int column = ctx.getStart().getCharPositionInLine() + value.length();
-		int position = ctx.getStart().getTokenIndex();
+		int column = ctx.getStart().getCharPositionInLine() + value.length() - 1;
+		int position = ctx.getStart().getTokenIndex() - 1;
 		DrumNote note = null;
 
 		if (value.equals("x")) { // strike cymbal or hi-hat
@@ -234,10 +222,10 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 	@Override
 	public LineItem visitDrum(DrumContext ctx) {
 		String value = ctx.getText();
-		int column = ctx.getStart().getCharPositionInLine() + value.length();
-		int position = ctx.getStart().getTokenIndex();
+		int column = ctx.getStart().getCharPositionInLine() + value.length() - 1;
+		int position = ctx.getStart().getTokenIndex() - 1;
 		DrumNote note = null;
-		
+
 		if (value.equals("o")) { // strike
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
@@ -322,13 +310,13 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 
 			}
 		}
-		
+
 		if (note != null) {
 			note.setLineNum(line.getLineNum());
 			note.setColumn(column);
 			note.setPosition(position);
 		}
-		
+
 		return note;
 	}
 
@@ -347,9 +335,9 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 		bar.setDrumType(line.drumtype());
 		bar.setLineNum(line.getLineNum());
 		bar.setColumn(column);
-		bar.setPosition(token.getTokenIndex() - 1);
+		bar.setPosition(token.getTokenIndex());
 		bar.setRightPos(token.getTokenIndex() + value.length() - 1);
-		bar.setLeftPos(token.getTokenIndex() - 1);
+		bar.setLeftPos(token.getTokenIndex());
 
 		if (value.equals("||"))
 			bar.setDoubleBar(true);

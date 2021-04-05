@@ -81,7 +81,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		else
 			tune = new Tune(value.toUpperCase());
 		tune.setLineNum(s.getStringNum());
-		tune.setColumn(ctx.start.getCharPositionInLine() + value.length() - 1);
+		tune.setColumn(ctx.start.getCharPositionInLine());
 		tune.setPosition(ctx.start.getTokenIndex() + value.length() - 1);
 		return tune;
 	}
@@ -235,9 +235,9 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		bar.setTune(s.tune());
 		bar.setLineNum(s.getStringNum());
 		bar.setColumn(column);
-		bar.setPosition(token.getTokenIndex() - 1);
+		bar.setPosition(token.getTokenIndex());
 		bar.setRightPos(token.getTokenIndex() + value.length() - 1);
-		bar.setLeftPos(token.getTokenIndex() - 1);
+		bar.setLeftPos(token.getTokenIndex());
 
 		// end repeat *||
 		if (start.equals("*")) {

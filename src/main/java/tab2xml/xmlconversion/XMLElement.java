@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 public class XMLElement {
 	private Document doc;
 	private Element element;
-	
+
 	/**
 	 * Construct an element with a specified tag and its corresponding music sheet.
 	 * 
@@ -28,7 +28,8 @@ public class XMLElement {
 	 * @param e the element to append to this element
 	 */
 	public void append(XMLElement e) {
-		element.appendChild(e.getElement());
+		if (e != null)
+			element.appendChild(e.getElement());
 	}
 
 	/**

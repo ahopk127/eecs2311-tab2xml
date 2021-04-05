@@ -8,7 +8,6 @@ import tab2xml.antlr.GuitarTabParser.StringContext;
 
 import tab2xml.model.ScoreItem;
 import tab2xml.model.guitar.GuitarString;
-import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.GuitarStaff;
 
 /**
@@ -16,12 +15,12 @@ import tab2xml.model.guitar.GuitarStaff;
  * 
  * @author amir
  */
-public class ExtractGuitarStaffs extends GuitarTabBaseVisitor<ScoreItem<GuitarNote>> {
+public class ExtractGuitarStaffs extends GuitarTabBaseVisitor<ScoreItem> {
 	public ExtractGuitarStaffs() {
 	}
 
 	@Override
-	public ScoreItem<GuitarNote> visitStaff(StaffContext ctx) {
+	public ScoreItem visitStaff(StaffContext ctx) {
 		GuitarStaff st = new GuitarStaff();
 		ctx.children.stream().filter(c -> c.getClass() != TerminalNodeImpl.class)
 				.forEach(c -> st.add((GuitarString) visit(c)));
@@ -31,7 +30,7 @@ public class ExtractGuitarStaffs extends GuitarTabBaseVisitor<ScoreItem<GuitarNo
 	}
 
 	@Override
-	public ScoreItem<GuitarNote> visitString(StringContext ctx) {
+	public ScoreItem visitString(StringContext ctx) {
 		GuitarString string = new GuitarString();
 		@SuppressWarnings("unused")
 		ExtractStringItems es = new ExtractStringItems(string, ctx);

@@ -1,6 +1,7 @@
 package tab2xml.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
 
 import java.util.ArrayList;
@@ -12,41 +13,24 @@ import tab2xml.model.drum.DrumType;
 import tab2xml.model.guitar.Tune;
 
 /**
- * An iterable abstract staff object. You can iterate over the staff measure by
- * measure or note by note. The default iterator iterates the staff note by
- * note.
+ * An iterable abstract staff object. You can iterate over the staff line by
+ * note by note, line by line, or measure by measure. The default iterator is
+ * line by line note.
  * 
  * @author amir
  */
-public abstract class Staff<E extends Line<?>, T extends Note> extends ScoreItem<T> {
+public abstract class Staff<E extends Line> extends ScoreItem implements Iterable<E> {
 	private static final long serialVersionUID = -1721480917571243686L;
 
 	/* General defaults of staffs */
-	/**
-	 * The default beats.
-	 */
-	public final static int DEFAULT_BEATS = 4;
-	/**
-	 * The default beat type of every score.
-	 */
-	public final static int DEFAULT_BEATTYPE = 4;
+	private Optional<Integer> beats;
+	private Optional<Integer> beatType;
+	private Optional<Integer> division;
 
 	/**
-	 * The default number of divisions per quarter note.
-	 */
-	public final static int DEFAULT_DIVISION = 2;
-
-	protected String beats;
-	protected String beatType;
-	protected List<E> lines;
-	protected TreeSet<T> notes;
-
-	/**
-	 * Constructor to reset line count on new {@code Staff}
+	 * Construct an empty staff.
 	 */
 	public Staff() {
-		lines = new ArrayList<>();
-		notes = new TreeSet<>();
 		Line.setLine(0);
 	}
 
@@ -55,99 +39,74 @@ public abstract class Staff<E extends Line<?>, T extends Note> extends ScoreItem
 	 * 
 	 * @param s the string/line object to add to this staff.
 	 */
-	public boolean add(E line) {
-		if (line == null)
-			return false;
-		lines.add(line);
-		return true;
-	}
+	public abstract boolean add(E line);
 
 	/**
 	 * Add multiple abstract string/line item to this staff.
 	 * 
 	 * @param s the string/line object to add to this staff.
 	 */
-	public boolean addLines(Collection<? extends E> lines) {
-		for (E l : lines)
-			if (!add(l))
-				return false;
-		return true;
-	}
+	public abstract boolean addLines(Collection<? extends E> lines);
 
 	/**
 	 * @return a list of abstract line objects.
 	 */
-	public List<E> getLines() {
-		return lines;
-	}
-
-	/**
-	 * @return return the beats attribute of a staff.
-	 */
-	public String getBeats() {
-		return beats;
-	}
-
-	/**
-	 * @param beatType the value to set the beats of this staff.
-	 */
-	public void setBeats(String beatType) {
-		this.beatType = beatType;
-	}
-
-	/**
-	 * @return the beat type attribute of this staff.
-	 */
-	public String getBeatType() {
-		return beatType;
-	}
-
-	/**
-	 * @param beatType the value to set the beat type of this staff.
-	 */
-	public void setBeatType(String beatType) {
-		this.beatType = beatType;
-	}
+	public abstract List<E> getLines();
 
 	/**
 	 * @return the number of measures in this staff.
 	 */
-	public int numberOfMeasures() {
-		return lines.get(0).getNumMeasures();
-	}
+	public abstract int numberOfMeasures();
 
 	/**
 	 * @return the number of lines in this staff as a string.
 	 */
-	public String lineCount() {
-		return String.valueOf(lines.size());
-	}
+	public abstract String lineCount();
 
 	/**
 	 * @return the number of lines in this staff.
 	 */
-	public int size() {
-		return lines.size();
-	}
+	public abstract int size();
 
 	/**
 	 * @return the width of this staff.
 	 */
-	public int width() {
-		return lines.get(0).width();
-	}
+	public abstract int width();
 
-	@SuppressWarnings("unchecked")
-	public TreeSet<T> getNotes() {
-		TreeSet<T> copy = new TreeSet<>();
-		for (T n : notes) {
-			copy.add((T) LineItem.deepClone(n));
-		}
-		return copy;
-	}
+	public abstract TreeSet<Note> getNotes();
+
+	public abstract Iterator<Note> noteIterator();
+
+	public abstract Iterator<Measure<Note>> measureIterator();
 
 	/**
-	 * Extract notes from this staff.
+	 * Iterate over this staff line by line.
+	 */
+	@Override
+	public abstract Iterator<E> iterator();
+
+
+	/**
+	 * @return the total number of notes in the staff
+	 */
+	@Override
+	public int getNoteCount() {
+		int count = 0;
+		for (E line : getLines()) {
+			count += line.getNoteCount();
+		}
+		return count;
+	}
+
+	@Override
+	public abstract String toString();
+	
+	public String time() {
+		return String.format("%d:%d", getBeats(), getBeatType());
+	}
+	
+	/**
+	 * Extract notes from this staff to a 2d list.
 	 * 
 	 * @return a list of notes in this staff.
 	 */
@@ -161,47 +120,39 @@ public abstract class Staff<E extends Line<?>, T extends Note> extends ScoreItem
 		return res;
 	}
 
-	/**
-	 * @return the total number of notes in the staff
-	 */
-	@Override
-	public int getNoteCount() {
-		int count = 0;
-		for (E line : lines) {
-			count += line.getNoteCount();
-		}
-		return count;
+	public int getBeats() {
+		return beats.orElse(Score.DEFAULT_BEATS);
 	}
 
-	@Override
-	public abstract Iterator<T> iterator();
+	public void setBeats(int beats) {
+		this.beats = Optional.ofNullable(beats);
+	}
 
-	public abstract Iterator<Measure<T>> measureIterator();
+	public int getBeatType() {
+		return beatType.orElse(Score.DEFAULT_BEATTYPE);
+	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		if (notes == null || notes.size() == 0)
-			return String.format("[]");
-		Iterator<Measure<T>> itr = measureIterator();
-		sb.append("[");
-		while (itr.hasNext()) {
-			sb.append(itr.next().toString());
-			sb.append((itr.hasNext() ? ", " : "]"));
-		}
-		return sb.toString();
+	public void setBeatType(int beatType) {
+		this.beatType = Optional.ofNullable(beatType);
+	}
+	
+	public int getDivision() {
+		return division.orElse(Score.DEFAULT_DIVISION);
+	}
+
+	public void setDivision(int division) {
+		this.division = Optional.ofNullable(division);
 	}
 
 	/* functional methods */
-
 	protected static Bar[] getFirstBarsAt(int index, List<LinkedList<LineItem>> list) {
 		Bar[] bars = new Bar[list.size()];
 		int count = 0;
 		for (int i = 0; i < list.size(); i++) {
 			for (int j = 0; j < list.get(i).size(); j++) {
 				LineItem item = list.get(i).get(j);
-				if ((item != null && (item.getClass() == Bar.class || item.getClass() == Tune.class || item.getClass() == DrumType.class))
-						&& count++ == index) {
+				if ((item != null && (item.getClass() == Bar.class || item.getClass() == Tune.class
+						|| item.getClass() == DrumType.class)) && count++ == index) {
 					if (item.getClass() == Tune.class) {
 						Bar bar = new Bar();
 						Tune tune = (Tune) item;
@@ -220,7 +171,7 @@ public abstract class Staff<E extends Line<?>, T extends Note> extends ScoreItem
 						bar.setRightPos(type.getPosition());
 						bar.setLeftPos(type.getPosition());
 						bars[i] = bar;
-					}else
+					} else
 						bars[i] = (Bar) item;
 					break;
 				}

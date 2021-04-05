@@ -6,7 +6,7 @@ public class Range {
 	private double division;
 
 	public Range(Measure<? extends Note> measure) {
-		this.division = measure.width() / Staff.DEFAULT_BEATS;
+		this.division = measure.width() / measure.getBeats();
 	}
 
 	public Range(double start, double stop) {
@@ -15,14 +15,6 @@ public class Range {
 		this.start = start;
 		this.stop = stop;
 	}
-
-	//    public Range(double start, double stop, Staff<? extends Line, ? extends Note> staff) {
-	//	if (start > stop)
-	//	    throw new IllegalArgumentException("Invalid rrange.");
-	//	this.start = start;
-	//	this.stop = stop;
-	//	this.division = staff.width() / Staff.DEFAULT_BEATS;
-	//    }
 
 	public double getStart() {
 		return start;
@@ -49,7 +41,7 @@ public class Range {
 	}
 
 	public double size() {
-		return stop - start;
+		return stop - start + 1;
 	}
 
 	public Range getDivision(int i) {

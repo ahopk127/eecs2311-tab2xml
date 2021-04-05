@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import tab2xml.model.Instrument;
 import tab2xml.model.Score;
 import tab2xml.model.LineItem;
+import tab2xml.model.Note;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.xmlconversion.ValidateXML;
 import tab2xml.xmlconversion.XMLMetadata;
@@ -90,8 +92,8 @@ class ParserTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test0.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
-			
+			final Processor processor = new Processor(input, instrument, null);
+
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
@@ -110,7 +112,9 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
@@ -156,7 +160,7 @@ class ParserTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
@@ -176,7 +180,9 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
@@ -231,8 +237,8 @@ class ParserTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test2.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
-			
+			final Processor processor = new Processor(input, instrument, null);
+
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
@@ -251,7 +257,9 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
@@ -292,7 +300,7 @@ class ParserTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test3.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
@@ -312,7 +320,9 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
@@ -353,7 +363,7 @@ class ParserTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test4.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
@@ -373,7 +383,9 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
@@ -402,7 +414,7 @@ class ParserTest {
 			sum += arr[i][column];
 		return sum;
 	}
-	
+
 	/**
 	 * @author sayed
 	 */
@@ -415,25 +427,25 @@ class ParserTest {
 		final int[][] exStaffData = { { 20, 4, 1 } };
 
 		// fret, step, ...
-		final String[][] exNoteData = { { "6", "D#" }, { "6", "D#" }, { "6", "D#" }, { "6", "D#" }, { "6", "D#" },
+		final String[][][] exNoteData = { { { "6", "D#" }, { "6", "D#" }, { "6", "D#" }, { "6", "D#" }, { "6", "D#" },
 				{ "6", "C#" }, { "6", "C#" }, { "6", "C#" }, { "6", "C#" }, { "6", "C#" }, { "6", "G#" }, { "6", "G#" },
 				{ "6", "G#" }, { "6", "G#" }, { "6", "G#" }, { "8", "A#" }, { "8", "A#" }, { "8", "A#" }, { "8", "A#" },
-				{ "8", "A#" } };
+				{ "8", "A#" } } };
 
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test0-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-//			System.out.println("score.size(): " + score.size() + "--------------------");
-//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			//			System.out.println("score.size(): " + score.size() + "--------------------");
+			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
+			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
 			assertEquals(1, score.size());
 			assertEquals(1, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -447,13 +459,14 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
-//					System.out.println("{ " + '"' + note.getFret() + '"' + ", " + '"' + note.getStep() + '"' + " }");
-					assertEquals(exNoteData[j][0], note.getFret());
-					assertEquals(exNoteData[j][1], note.getStep());
+					assertEquals(exNoteData[i][j][0], note.getFret());
+					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
 				}
 			}
@@ -470,8 +483,7 @@ class ParserTest {
 			return;
 		}
 	}
-	
-	
+
 	/**
 	 * @author sayed
 	 */
@@ -484,26 +496,26 @@ class ParserTest {
 		final int[][] exStaffData = { { 32, 4, 4 } };
 
 		// fret, step, ...
-		final String[][] exNoteData = { { "3", "C" }, { "3", "C" }, { "3", "C" }, { "3", "C" }, { "3", "C" },
+		final String[][][] exNoteData = { { { "3", "C" }, { "3", "C" }, { "3", "C" }, { "3", "C" }, { "3", "C" },
 				{ "3", "C" }, { "1", "A#" }, { "3", "G" }, { "0", "A" }, { "0", "A" }, { "0", "A" }, { "0", "A" },
 				{ "0", "A" }, { "0", "A" }, { "0", "A" }, { "2", "B" }, { "3", "C" }, { "3", "C" }, { "3", "C" },
 				{ "3", "C" }, { "3", "C" }, { "3", "C" }, { "1", "A#" }, { "3", "G" }, { "0", "A" }, { "0", "A" },
-				{ "0", "A" }, { "0", "A" }, { "0", "A" }, { "0", "A" }, { "0", "A" }, { "2", "B" } };
+				{ "0", "A" }, { "0", "A" }, { "0", "A" }, { "0", "A" }, { "0", "A" }, { "2", "B" } } };
 
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-//			System.out.println("score.size(): " + score.size() + "--------------------");
-//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			//			System.out.println("score.size(): " + score.size() + "--------------------");
+			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
+			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
 			assertEquals(1, score.size());
 			assertEquals(4, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -517,13 +529,14 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
-//					System.out.println("{ " + '"' + note.getFret() + '"' + ", " + '"' + note.getStep() + '"' + " }");
-					assertEquals(exNoteData[j][0], note.getFret());
-					assertEquals(exNoteData[j][1], note.getStep());
+					assertEquals(exNoteData[i][j][0], note.getFret());
+					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
 				}
 			}
@@ -540,7 +553,7 @@ class ParserTest {
 			return;
 		}
 	}
-	
+
 	/**
 	 * @author sayed
 	 */
@@ -569,15 +582,15 @@ class ParserTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test2-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-//			System.out.println("score.size(): " + score.size() + "--------------------");
-//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			//			System.out.println("score.size(): " + score.size() + "--------------------");
+			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
+			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
 			assertEquals(3, score.size());
 			assertEquals(3, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -591,11 +604,12 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
-//					System.out.println("{ " + '"' + note.getFret() + '"' + ", " + '"' + note.getStep() + '"' + " }");
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -614,7 +628,7 @@ class ParserTest {
 			return;
 		}
 	}
-	
+
 	/**
 	 * @author sayed
 	 */
@@ -639,15 +653,15 @@ class ParserTest {
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test3-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-//			System.out.println("score.size(): " + score.size() + "--------------------");
-//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			//			System.out.println("score.size(): " + score.size() + "--------------------");
+			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
+			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
 			assertEquals(2, score.size());
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -661,11 +675,12 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
-//					System.out.println("{ " + '"' + note.getFret() + '"' + ", " + '"' + note.getStep() + '"' + " }");
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -684,7 +699,7 @@ class ParserTest {
 			return;
 		}
 	}
-	
+
 	/**
 	 * @author sayed
 	 */
@@ -697,24 +712,24 @@ class ParserTest {
 		final int[][] exStaffData = { { 16, 4, 1 } };
 
 		// fret, step, ...
-		final String[][] exNoteData = { { "6", "D#" }, { "6", "D#" }, { "8", "F" }, { "9", "F#" }, { "9", "B" },
+		final String[][][] exNoteData = { { { "6", "D#" }, { "6", "D#" }, { "8", "F" }, { "9", "F#" }, { "9", "B" },
 				{ "8", "A#" }, { "6", "G#" }, { "1", "F" }, { "6", "G#" }, { "3", "G" }, { "9", "B" }, { "8", "A#" },
-				{ "9", "F#" }, { "6", "D#" }, { "6", "C#" }, { "8", "D#" } };
+				{ "9", "F#" }, { "6", "D#" }, { "6", "C#" }, { "8", "D#" } } };
 
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
 			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test4-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
-			final Processor processor = new Processor(input, instrument);
+			final Processor processor = new Processor(input, instrument, null);
 
 			// The processor's instrument is set to GUITAR.
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-//			System.out.println("score.size(): " + score.size() + "--------------------");
-//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			//			System.out.println("score.size(): " + score.size() + "--------------------");
+			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
+			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
 			assertEquals(1, score.size());
 			assertEquals(1, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -728,13 +743,14 @@ class ParserTest {
 				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
-				for (LineItem item : staff) {
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
-//					System.out.println("{ " + '"' + note.getFret() + '"' + ", " + '"' + note.getStep() + '"' + " }");
-					assertEquals(exNoteData[j][0], note.getFret());
-					assertEquals(exNoteData[j][1], note.getStep());
+					assertEquals(exNoteData[i][j][0], note.getFret());
+					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
 				}
 			}

@@ -3,7 +3,6 @@ package tab2xml.model.guitar;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import tab2xml.model.Bar;
 import tab2xml.model.Line;
@@ -14,7 +13,7 @@ import tab2xml.model.LineItem;
  * 
  * @author amir
  */
-public class GuitarString extends Line<GuitarNote> {
+public class GuitarString extends Line {
 	private static final long serialVersionUID = -5274699295630375450L;
 	private int stringNum;
 
@@ -125,11 +124,6 @@ public class GuitarString extends Line<GuitarNote> {
 			}
 		}
 		return notes;
-	}
-
-	@Override
-	public Iterator<GuitarNote> iterator() {
-		return null;
 	}
 
 	/**

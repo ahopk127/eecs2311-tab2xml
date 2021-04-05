@@ -22,12 +22,12 @@ public abstract class Note extends LineItem {
 	protected String voice;
 
 	/* Functional attributes */
-	private double column;
 	private int measure;
 	private int repeatCount;
 	private boolean lastInMeasure;
 	private double durationVal;
 	private List<GuitarNote> notes;
+	private Measure<? extends Note> measureObj;
 
 	public Note() {
 		this.notes = new LinkedList<>();
@@ -79,7 +79,8 @@ public abstract class Note extends LineItem {
 	}
 
 	public String getDuration() {
-		int value = (int) (Staff.DEFAULT_BEATS / getDurationVal() * Staff.DEFAULT_DIVISION);
+		// by this point note have measure objects with set defaults
+		int value = (int) (measureObj.getBeats() / getDurationVal() * measureObj.getDivision());
 		return String.valueOf((value <= 0 ? 1 : value));
 	}
 
@@ -140,11 +141,6 @@ public abstract class Note extends LineItem {
 		this.repeatCount = repeatCount;
 	}
 
-	@Override
-	public void setColumn(double column) {
-		this.column = column;
-	}
-
 	public int getIndex() {
 		return note.ordinal();
 	}
@@ -169,13 +165,16 @@ public abstract class Note extends LineItem {
 		return notes;
 	}
 
-	@Override
-	public abstract int length();
+	public Measure<? extends Note> getMeasureObj() {
+		return measureObj;
+	}
+
+	public void setMeasureObj(Measure<? extends Note> measureObj) {
+		this.measureObj = measureObj;
+	}
 
 	@Override
-	public double getColumn() {
-		return column;
-	}
+	public abstract int length();
 
 	@Override
 	public int getNoteCount() {

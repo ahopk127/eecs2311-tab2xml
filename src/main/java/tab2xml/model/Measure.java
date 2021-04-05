@@ -3,13 +3,19 @@ package tab2xml.model;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.TreeSet;
 
 import tab2xml.ImmutablePair;
 
 public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable<E> {
+	private Optional<Integer> beats;
+	private Optional<Integer> beatType;
+	private Optional<Integer> division;
+
 	private int measure;
-	final ImmutablePair<Range, Range> range;
+	private final ImmutablePair<Range, Range> range;
+	private Range columnRange;
 	private TreeSet<E> notes = new TreeSet<>();
 
 	public Measure(ImmutablePair<Range, Range> range) {
@@ -33,18 +39,18 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 
 		for (E n : durationNotes) {
 			E next = durationNotes.higher(n);
-			if (next ==  null) {
+			if (next == null) {
 				Range pairRange = new Range(this);
 				pairRange.setStart(n.getColumn());
-				pairRange.setStop(this.range.getFirst().getStop());
-				double width = width() / pairRange.size();
+				pairRange.setStop(this.columnRange.getStop());
+				double width = width() / (pairRange.size() - 1);
 				n.setDurationVal(duration(width));
 				continue;
 			}
 			Range pairRange = new Range(this);
 			pairRange.setStart(n.getColumn());
 			pairRange.setStop(next.getColumn());
-			double width = width() / pairRange.size();
+			double width = width() / (pairRange.size() - 1);
 			n.setDurationVal(duration(width));
 		}
 
@@ -55,7 +61,6 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 					if (n.getNotes().size() > 0)
 						n.getNotes().forEach(group -> group.setDurationVal(n2.getDurationVal()));
 				}
-					
 			}
 		}
 	}
@@ -91,7 +96,7 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	}
 
 	public double width() {
-		return range.getFirst().size();
+		return range.getFirst().size() - 2;
 	}
 
 	public double duration(double x) {
@@ -113,6 +118,38 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 			return 128;
 		else
 			return 1;
+	}
+
+	public int getBeats() {
+		return beats.orElse(Score.DEFAULT_BEATS);
+	}
+
+	public void setBeats(int beats) {
+		this.beats = Optional.ofNullable(beats);
+	}
+
+	public int getBeatType() {
+		return beatType.orElse(Score.DEFAULT_BEATTYPE);
+	}
+
+	public void setBeatType(int beatType) {
+		this.beatType = Optional.ofNullable(beatType);
+	}
+
+	public int getDivision() {
+		return division.orElse(Score.DEFAULT_DIVISION);
+	}
+
+	public void setDivision(int division) {
+		this.division = Optional.ofNullable(division);
+	}
+
+	public Range getColumnRange() {
+		return columnRange;
+	}
+
+	public void setColumnRange(Range columnRange) {
+		this.columnRange = columnRange;
 	}
 
 	public static class DurationComparator implements Comparator<LineItem> {

@@ -23,9 +23,9 @@ public class DrumType extends LineItem {
 			put(38, List.of("SS", "Side Stick", "C", "5", "up", "x"));
 			put(39, List.of("SD", "Snare", "C", "5", "up", "normal"));
 			put(41, List.of("ES", "Electic Snare", "C", "5", "up", "normal"));
-			put(42, List.of("T1", "Low Floor Tom", "A", "4", "up", "normal"));
+			put(42, List.of("FT", "Low Floor Tom", "A", "4", "up", "normal"));
 			put(43, List.of("HH", "Closed Hi-Hat", "G", "5", "up", "x")); // cymbal
-			put(44, List.of("T2", "High Floor Tom", "A", "4", "down", "normal"));
+			put(44, List.of("Ft", "High Floor Tom", "A", "4", "down", "normal"));
 			put(45, List.of("PH", "Pedal Hi-Hat", "D", "4", "down", "x")); // cymbal
 			put(46, List.of("LT", "Low Tom", "D", "5", "up", "normal"));
 			put(47, List.of("OH", "Open Hi-Hat", "E", "5", "up", "x")); // cymbal

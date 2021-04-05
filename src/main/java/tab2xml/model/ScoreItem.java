@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 
  * @author amir
  */
-public abstract class ScoreItem<T> implements Iterable<T>, Serializable {
+public abstract class ScoreItem implements Serializable {
 	private static final long serialVersionUID = -2287885769489399982L;
 
 	/**

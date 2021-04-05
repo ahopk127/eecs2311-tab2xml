@@ -3,7 +3,6 @@ package tab2xml.model.drum;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import tab2xml.model.Bar;
 import tab2xml.model.Line;
@@ -14,7 +13,7 @@ import tab2xml.model.LineItem;
  * 
  * @author amir
  */
-public class DrumLine extends Line<DrumNote> {
+public class DrumLine extends Line {
 	private static final long serialVersionUID = 3885940852032675744L;
 	private int lineNum;
 	private boolean isCymbal;
@@ -87,41 +86,6 @@ public class DrumLine extends Line<DrumNote> {
 	}
 
 	/**
-	 * @return a list of notes in this drum line.
-	 */
-	@Override
-	public Collection<? extends LineItem> getNotes() {
-		List<LineItem> notes = new ArrayList<>();
-		for (LineItem item : lineItems) {
-			if (item.getClass() == DrumNote.class) {
-				DrumNote note = (DrumNote) item;
-				notes.add((LineItem) LineItem.deepClone(note));
-			} else if (item.getClass() == Bar.class) {
-				Bar bar = (Bar) item;
-				notes.add((LineItem) LineItem.deepClone(bar));
-			} else if (item.getClass() == DrumType.class) {
-				DrumType type = (DrumType) item;
-				notes.add((LineItem) LineItem.deepClone(type));
-			}
-		}
-		return notes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return String.format("%s%s-%d", getDrumStep(), getOctave(), getNoteCount());
-	}
-
-	@Override
-	public Iterator<DrumNote> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
 	 * @return the isCymbal
 	 */
 	public boolean isCymbal() {
@@ -149,4 +113,32 @@ public class DrumLine extends Line<DrumNote> {
 		this.isDrum = isDrum;
 	}
 
+	/**
+	 * @return a list of notes in this drum line.
+	 */
+	@Override
+	public Collection<? extends LineItem> getNotes() {
+		List<LineItem> notes = new ArrayList<>();
+		for (LineItem item : lineItems) {
+			if (item.getClass() == DrumNote.class) {
+				DrumNote note = (DrumNote) item;
+				notes.add((LineItem) LineItem.deepClone(note));
+			} else if (item.getClass() == Bar.class) {
+				Bar bar = (Bar) item;
+				notes.add((LineItem) LineItem.deepClone(bar));
+			} else if (item.getClass() == DrumType.class) {
+				DrumType type = (DrumType) item;
+				notes.add((LineItem) LineItem.deepClone(type));
+			}
+		}
+		return notes;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return String.format("%s%s-%d", getDrumStep(), getOctave(), getNoteCount());
+	}
 }
