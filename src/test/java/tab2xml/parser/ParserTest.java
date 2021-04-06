@@ -327,6 +327,8 @@ class ParserTest {
 				{ "0", "B" }, { "0", "E" }, { "0", "B" }, { "1", "G#" }, { "0", "E" }, { "2", "B" }, { "2", "E" },
 				{ "1", "G#" }, { "0", "B" }, { "0", "E" } } };
 
+		final String[] exOctaves = { "2", "2", "3", "3", "3", "3", "4", "3", "3", "2", "2", "3", "3", "3", "4" };
+				
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
@@ -358,6 +360,7 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+					assertEquals(exOctaves[j], note.getOctave());
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -465,6 +468,8 @@ class ParserTest {
 				{ "6", "G#" }, { "6", "G#" }, { "6", "G#" }, { "8", "A#" }, { "8", "A#" }, { "8", "A#" }, { "8", "A#" },
 				{ "8", "A#" } } };
 
+		final String[] exOctaves = { "2", "2", "2", "2", "2", "3", "3", "3", "3", "3", "2", "2", "2", "2", "2", "2", "2", "2", "2", "2"};
+		
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
@@ -500,6 +505,7 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+					assertEquals(exOctaves[j], note.getOctave());
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -537,6 +543,9 @@ class ParserTest {
 				{ "3", "C" }, { "3", "C" }, { "3", "C" }, { "1", "A#" }, { "3", "G" }, { "0", "A" }, { "0", "A" },
 				{ "0", "A" }, { "0", "A" }, { "0", "A" }, { "0", "A" }, { "0", "A" }, { "2", "B" } } };
 
+		final String[] exOctaves = {"2", "2", "2", "2", "2", "2", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", 
+				"2", "2", "2", "2", "2", "2", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"};
+		
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
@@ -572,6 +581,7 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+					assertEquals(exOctaves[j], note.getOctave());
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -614,6 +624,10 @@ class ParserTest {
 						{ "0", "D" }, { "2", "B" }, { "4", "B" }, { "4", "F#" }, { "2", "B" }, { "2", "F#" },
 						{ "0", "A" }, { "2", "B" }, { "0", "D" } } };
 
+		final String[][] exOctaves = {{ "1", "2", "1", "1", "1", "1", "2", "1", "2", "2", "1", "1", "1", "1", "2"}, 
+				{ "2", "2", "2", "1", "1", "2", "2", "2", "2", "1", "1", "1", "1", "1", "2"}, 
+				{ "1", "2", "2", "1", "1", "1", "1", "2", "1", "2", "2", "1", "1", "1", "1", "2"}};
+		
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
@@ -649,6 +663,7 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+					assertEquals(exOctaves[i][j], note.getOctave());
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -687,6 +702,10 @@ class ParserTest {
 						{ "4", "C#" }, { "4", "F#" }, { "3", "F" }, { "2", "E" }, { "2", "B" }, { "0", "E" },
 						{ "3", "G" }, { "0", "A" }, { "2", "B" }, { "0", "D" } } };
 
+		final String[][] exOctaves = {{ "1", "2", "2", "1", "1", "1", "1", "2"},
+				{ "2", "2", "2", "2", "1", "1", "2", "2", "2", "2", "1", "1", "1", "1", "1", "2"}};
+			
+		
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
@@ -723,6 +742,7 @@ class ParserTest {
 						continue;
 					final GuitarNote note = (GuitarNote) item;
 //					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
+					assertEquals(exOctaves[i][j], note.getOctave());
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
