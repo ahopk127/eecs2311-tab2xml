@@ -87,6 +87,9 @@ class ParserTest {
 				{ "0", "E" }, { "0", "B" }, { "1", "G#" }, { "0", "E" }, { "2", "B" }, { "2", "E" }, { "1", "G#" },
 				{ "0", "B" }, { "0", "E" } };
 
+		// octaves
+		final String[] exOctaves = { "2", "2", "3", "3", "3", "4", "3", "3", "2", "2", "3", "3", "3", "4" };
+
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
@@ -118,6 +121,9 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+//					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
+//					System.out.println("exOctaves[j]: " + exOctaves[j] + "--------------------");
+					assertEquals(exOctaves[j], note.getOctave());
 					assertEquals(exNoteData[j][0], note.getFret());
 					assertEquals(exNoteData[j][1], note.getStep());
 					j++;
@@ -128,7 +134,7 @@ class ParserTest {
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			// assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -154,6 +160,10 @@ class ParserTest {
 						{ "2", "C#" }, { "0", "D" }, { "3", "F" }, { "2", "A" }, { "3", "D" }, { "3", "F" },
 						{ "2", "A" }, { "3", "D" }, { "2", "E" }, { "2", "A" }, { "2", "C#" }, { "0", "A" },
 						{ "2", "A" } } };
+
+		// octaves
+		final String[][] exOctaves = { {"4", "3", "3", "3", "3", "2", "3", "3", "3"}, {"2", "3", "3", "3", "3", "3", "3",
+				"3", "3", "3", "2", "3", "3", "3", "2", "3", "3", "3", "3", "3", "3", "3", "3", "3", "2", "3"} };
 
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
@@ -186,17 +196,23 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+//					System.out.print('"' + note.getOctave() + '"' + "," + " ");
+					assertEquals(exOctaves[i][j], note.getOctave());
+//					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
+//					System.out.println("exOctaves[j]: " + exOctaves[i][j] + "--------------------");
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
-					j++;
+					j++;		
+					
 				}
+				
 			}
 
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			// assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -232,6 +248,14 @@ class ParserTest {
 						{ "12", "E" }, { "0", "A" }, { "6", "A#" }, { "3", "G" }, { "5", "E" }, { "3", "D" },
 						{ "3", "A#" }, { "0", "G" }, { "2", "E" }, }, };
 
+		// octaves
+		final String[][] exOctaves = { {"2", "2", "2", "3", "2", "3", "3", "3", "2", "3", "3", "2", "3", "3", "3", "3",
+				"3", "2", "3", "3", "3", "3", "3", "3", "2", "3", "3", "3", "4", "4", "4"}, {"4", "4", "4", "3", "4", "3",
+				"4", "3", "4", "3", "4", "2", "4", "4", "4", "4", "4", "4", "4", "4", "2", "4", "4", "4", "4", "4", "4",
+				"4", "4", "4", "4", "3", "4", "3", "3", "2", "3"}, {"3", "4", "4", "4", "2", "4", "3", "3", "3", "3", "3",
+				"2", "4", "4", "3", "3", "4", "3", "3", "2", "3", "3", "3", "3", "4", "4", "4", "2", "4", "4", "3", "3",
+				"3", "3", "3"} };
+
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
@@ -263,6 +287,8 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+//					System.out.print('"' + note.getOctave() + '"' + "," + " ");
+					assertEquals(exOctaves[i][j], note.getOctave());
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -273,7 +299,7 @@ class ParserTest {
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			// assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -336,7 +362,7 @@ class ParserTest {
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			// assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -389,6 +415,7 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+//					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -399,7 +426,7 @@ class ParserTest {
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			// assertTrue(validator.validate(xml));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -443,9 +470,11 @@ class ParserTest {
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-			//			System.out.println("score.size(): " + score.size() + "--------------------");
-			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			// System.out.println("score.size(): " + score.size() + "--------------------");
+			// System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() +
+			// "--------------------");
+			// System.out.println("score.getNoteCount(): " + score.getNoteCount() +
+			// "--------------------");
 			assertEquals(1, score.size());
 			assertEquals(1, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -513,9 +542,11 @@ class ParserTest {
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-			//			System.out.println("score.size(): " + score.size() + "--------------------");
-			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			// System.out.println("score.size(): " + score.size() + "--------------------");
+			// System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() +
+			// "--------------------");
+			// System.out.println("score.getNoteCount(): " + score.getNoteCount() +
+			// "--------------------");
 			assertEquals(1, score.size());
 			assertEquals(4, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -588,9 +619,11 @@ class ParserTest {
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-			//			System.out.println("score.size(): " + score.size() + "--------------------");
-			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			// System.out.println("score.size(): " + score.size() + "--------------------");
+			// System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() +
+			// "--------------------");
+			// System.out.println("score.getNoteCount(): " + score.getNoteCount() +
+			// "--------------------");
 			assertEquals(3, score.size());
 			assertEquals(3, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -659,9 +692,11 @@ class ParserTest {
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-			//			System.out.println("score.size(): " + score.size() + "--------------------");
-			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			// System.out.println("score.size(): " + score.size() + "--------------------");
+			// System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() +
+			// "--------------------");
+			// System.out.println("score.getNoteCount(): " + score.getNoteCount() +
+			// "--------------------");
 			assertEquals(2, score.size());
 			assertEquals(2, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
@@ -681,6 +716,7 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final GuitarNote note = (GuitarNote) item;
+//					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
 					assertEquals(exNoteData[i][j][0], note.getFret());
 					assertEquals(exNoteData[i][j][1], note.getStep());
 					j++;
@@ -727,9 +763,11 @@ class ParserTest {
 			// Because of that, process() will always return Score<GuitarStaff>
 			@SuppressWarnings("unchecked")
 			final Score<GuitarStaff> score = (Score<GuitarStaff>) processor.process();
-			//			System.out.println("score.size(): " + score.size() + "--------------------");
-			//			System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() + "--------------------");
-			//			System.out.println("score.getNoteCount(): " + score.getNoteCount() + "--------------------");
+			// System.out.println("score.size(): " + score.size() + "--------------------");
+			// System.out.println("score.numberOfMeasures(): " + score.numberOfMeasures() +
+			// "--------------------");
+			// System.out.println("score.getNoteCount(): " + score.getNoteCount() +
+			// "--------------------");
 			assertEquals(1, score.size());
 			assertEquals(1, score.numberOfMeasures());
 			assertEquals(exTotalNotes, score.getNoteCount());
