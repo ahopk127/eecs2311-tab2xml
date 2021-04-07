@@ -228,7 +228,7 @@ class EditingPanelTest {
 		
 		this.panel.topSignatureField.setText("11");
 		this.panel.bottomSignatureField.setText("16");
-		this.panel.setTimeSignature(null);
+		this.panel.setSignatureButton.doClick();
 		
 		final XMLMetadata metadata = this.panel.getMetadata();
 		assertEquals(ts,
