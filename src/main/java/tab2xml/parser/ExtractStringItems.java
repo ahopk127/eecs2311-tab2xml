@@ -229,7 +229,8 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 		String value = token.getText();
 		String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine() + value.length() - 1;
+
+		int column = token.getCharPositionInLine();
 
 		Bar bar = new Bar();
 		bar.setTune(s.tune());
@@ -255,6 +256,11 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 		// n|
 		if (isNumeric(start)) {
+			bar.setColumn(column - start.length());
+			bar.setPosition(token.getTokenIndex() - start.length());
+			bar.setLeftPos(bar.getPosition());
+			bar.setRightPos(bar.getPosition() + value.substring(start.length()).length());
+
 			bar.setRepeatCount(Integer.parseInt(start));
 			bar.setRepeat(true);
 			bar.setStop(true);

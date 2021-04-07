@@ -6,8 +6,14 @@ import java.util.List;
 
 import tab2xml.model.LineItem;
 
+/**
+ * A harmonic representation.
+ * 
+ * @author amir
+ */
 public class Harmonic extends LineItem {
 	private static final long serialVersionUID = 7485103510856786127L;
+
 	private GuitarNote note;
 
 	public Harmonic(GuitarNote note) {

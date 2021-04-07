@@ -2,21 +2,51 @@ package tab2xml.model;
 
 import java.util.List;
 
+/**
+ * A collector used in the extraction process to collect {@code LineItem}
+ * objects on a given {@code Line}.
+ * 
+ * @author amir
+ */
 public class LineItemsCollector extends LineItem {
 	private static final long serialVersionUID = -5896057496942602721L;
+
+	/** The list of {@code LineItem} objects */
 	private List<LineItem> lineItems;
 
+	/**
+	 * Construct a collector with an initially empty list of {@code LineItem}
+	 * objects.
+	 * 
+	 * @param stringItems an initial list of {@code LineItem} objects
+	 */
 	public LineItemsCollector(List<LineItem> stringItems) {
 		this.lineItems = stringItems;
 	}
 
+	/** @return a list of {@code LineItem} objects collected by this collector */
 	public List<LineItem> getLineItems() {
 		return lineItems;
 	}
 
-	public void add(LineItem item) {
-		if (item != null)
-			lineItems.add(item);
+	/**
+	 * Add an item to this collector with the condition that the item.
+	 * 
+	 * <p>
+	 * Pre-conditions:
+	 * <ul>
+	 * <li>The item is <b>NOT NULL</b></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param item the item to add to this collector
+	 * @return {@code true} if the item was added successfully
+	 */
+	public boolean add(LineItem item) {
+		if (item == null)
+			return false;
+		lineItems.add(item);
+		return true;
 	}
 
 	@Override

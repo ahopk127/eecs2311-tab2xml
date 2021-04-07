@@ -5,12 +5,17 @@ import java.util.regex.Pattern;
 import tab2xml.model.drum.DrumType;
 import tab2xml.model.guitar.Tune;
 
+/**
+ * A model for a bar in tablature.
+ * 
+ * @author amir
+ */
 public class Bar extends LineItem {
 	private static final long serialVersionUID = 6758542578259875168L;
 
 	/** Pattern that matches bars. */
 	public static final Pattern pattern = Pattern.compile("\\*?(\\||\\d+)?\\|\\|?\\*?");
-
+	/* Functional attributes. */
 	private int repeatCount;
 	private boolean isDoubleBar;
 	private boolean isRepeat;
@@ -18,10 +23,12 @@ public class Bar extends LineItem {
 	private boolean stop;
 	private Tune tune;
 	private DrumType drumType;
-
 	private double rightPos;
 	private double leftPos;
 
+	/**
+	 * Construct an empty bar with a default repeat count
+	 */
 	public Bar() {
 		this.repeatCount = -1;
 	}
@@ -163,5 +170,4 @@ public class Bar extends LineItem {
 		else
 			return "|";
 	}
-
 }

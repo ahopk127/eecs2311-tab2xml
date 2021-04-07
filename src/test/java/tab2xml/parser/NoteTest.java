@@ -40,7 +40,7 @@ class NoteTest {
 	@MethodSource("noteNames")
 	void noteTest(GuitarNote note, String expectedName, int expectedIndex) {
 		assertEquals(expectedName, note.getStep());
-		assertEquals(expectedName, note.getNote().getValue());
+		assertEquals(expectedName, note.getNoteType().getValue());
 		assertEquals(expectedIndex, note.getIndex());
 	}
 

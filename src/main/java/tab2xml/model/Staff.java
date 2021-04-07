@@ -13,81 +13,105 @@ import tab2xml.model.drum.DrumType;
 import tab2xml.model.guitar.Tune;
 
 /**
- * An iterable abstract staff object. You can iterate over the staff line by
- * note by note, line by line, or measure by measure. The default iterator is
- * line by line note.
+ * A representation of a staff containing a collection of a parameterized
+ * {@code Line} types.
+ * 
+ * <p>
+ * Properties of this object:
+ * <ul>
+ * <li>A {@code Staff} can by default iterate over its {@code Line} objects in
+ * their natural ordering.
+ * <li>A {@code Staff} can also iterate over its {@code Note} objects in their
+ * natural ordering.
+ * <li>A {@code Staff} has an initial iterator which should be called <b>ONLY
+ * ONCE</b></li>
+ * </ul>
  * 
  * @author amir
+ * @param <E> a type of {@code Line} which this staff contains
  */
 public abstract class Staff<E extends Line> extends ScoreItem implements Iterable<E> {
 	private static final long serialVersionUID = -1721480917571243686L;
 
-	/* General defaults of staffs */
+	/** The beats of this staff. */
 	private Optional<Integer> beats = Optional.empty();
+	/** The beatType of this staff. */
 	private Optional<Integer> beatType = Optional.empty();
+	/** The division of this staff. */
 	private Optional<Integer> division = Optional.empty();
 
 	/**
-	 * Construct an empty staff.
+	 * Construct an empty staff with set default attributes. {@code Line} object
+	 * will keep track of groups of lines in a staff.
 	 */
 	public Staff() {
+		beats = Optional.of(Score.DEFAULT_BEATS);
+		beatType = Optional.of(Score.DEFAULT_BEATTYPE);
+		division = Optional.of(Score.DEFAULT_DIVISION);
 		Line.setLine(0);
 	}
 
 	/**
-	 * Add an abstract string/line item to this staff.
+	 * Add an abstract {@code Line} object to this staff.
 	 * 
-	 * @param s the string/line object to add to this staff.
+	 * <p>
+	 * Pre-conditions:
+	 * <ul>
+	 * <li>The line to add MUST not be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param line the line object to add to this staff
+	 * @return {@code true} if the line was added to this staff successfully
 	 */
 	public abstract boolean add(E line);
 
 	/**
-	 * Add multiple abstract string/line item to this staff.
+	 * Add multiple abstract {@code Line} objects to this staff.
 	 * 
-	 * @param s the string/line object to add to this staff.
+	 * <p>
+	 * Pre-conditions:
+	 * <ul>
+	 * <li>The lines to add MUST not be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param lines the line objects to add to this staff
+	 * @return {@code true} if all the lines were added to this staff successfully
 	 */
 	public abstract boolean addLines(Collection<? extends E> lines);
 
-	/**
-	 * @return a list of abstract line objects.
-	 */
+	/** @return a list of {@code Line} objects in this staff */
 	public abstract List<E> getLines();
 
-	/**
-	 * @return the number of measures in this staff.
-	 */
+	/** @return the number of measures in this staff */
 	public abstract int numberOfMeasures();
 
-	/**
-	 * @return the number of lines in this staff as a string.
-	 */
+	/** @return the number of lines in this staff as a string */
 	public abstract String lineCount();
 
-	/**
-	 * @return the number of lines in this staff.
-	 */
+	/** @return the number of lines in this staff */
 	public abstract int size();
 
-	/**
-	 * @return the width of this staff.
-	 */
+	/** @return the width of this staff in the input stream */
 	public abstract int width();
 
+	/** @return the list of {@code Note} objects in this staff */
 	public abstract TreeSet<Note> getNotes();
 
+	/** @return an {@code Iterator} which iterates over the notes in this staff */
 	public abstract Iterator<Note> noteIterator();
 
+	/**
+	 * @return an {@code Iterator} which iterates over the measures in this staff
+	 */
 	public abstract Iterator<Measure<Note>> measureIterator();
 
-	/**
-	 * Iterate over this staff line by line.
-	 */
+	/** @return an {@code Iterator} which iterates over the lines in this staff */
 	@Override
 	public abstract Iterator<E> iterator();
 
-	/**
-	 * @return the total number of notes in the staff
-	 */
+	/** @return the number of notes in this staff */
 	@Override
 	public int getNoteCount() {
 		int count = 0;
@@ -100,14 +124,61 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	@Override
 	public abstract String toString();
 
+	/**
+	 * @return the time signature of this staff in the format,
+	 *         <b>beats::beatType</b>
+	 */
 	public String time() {
 		return String.format("%d:%d", getBeats(), getBeatType());
 	}
 
+	/** @return the beats attribute of this staff (default value if not set) */
+	public int getBeats() {
+		return beats.orElse(Score.DEFAULT_BEATS);
+	}
+
 	/**
-	 * Extract notes from this staff to a 2d list.
+	 * Set the beats attribute of this staff to a specified value.
 	 * 
-	 * @return a list of notes in this staff.
+	 * @param beats the value to set
+	 */
+	public void setBeats(int beats) {
+		this.beats = Optional.of(beats);
+	}
+
+	/** @return the beatType attribute of this staff (default value if not set) */
+	public int getBeatType() {
+		return beatType.orElse(Score.DEFAULT_BEATTYPE);
+	}
+
+	/**
+	 * Set the beatType attribute of this staff to a specified value.
+	 * 
+	 * @param beatType the value to set
+	 */
+	public void setBeatType(int beatType) {
+		this.beatType = Optional.of(beatType);
+	}
+
+	/** @return the division attribute of this staff (default value if not set) */
+	public int getDivision() {
+		return division.orElse(Score.DEFAULT_DIVISION);
+	}
+
+	/**
+	 * Set the division attribute of this staff to a specified value.
+	 * 
+	 * @param division the value to set
+	 */
+	public void setDivision(int division) {
+		this.division = Optional.of(division);
+	}
+
+	/**
+	 * Extract notes from this staff to a 2d list (containing the {@code Bar}
+	 * objects).
+	 * 
+	 * @return a 2d list of notes in this staff
 	 */
 	public List<LinkedList<LineItem>> toList() {
 		List<LinkedList<LineItem>> res = new ArrayList<>();
@@ -119,31 +190,7 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 		return res;
 	}
 
-	public int getBeats() {
-		return beats.orElse(Score.DEFAULT_BEATS);
-	}
-
-	public void setBeats(int beats) {
-		this.beats = Optional.of(beats);
-	}
-
-	public int getBeatType() {
-		return beatType.orElse(Score.DEFAULT_BEATTYPE);
-	}
-
-	public void setBeatType(int beatType) {
-		this.beatType = Optional.of(beatType);
-	}
-
-	public int getDivision() {
-		return division.orElse(Score.DEFAULT_DIVISION);
-	}
-
-	public void setDivision(int division) {
-		this.division = Optional.of(division);
-	}
-
-	/* functional methods */
+	/* Functional methods */
 	protected static Bar[] getFirstBarsAt(int index, List<LinkedList<LineItem>> list) {
 		Bar[] bars = new Bar[list.size()];
 		int count = 0;

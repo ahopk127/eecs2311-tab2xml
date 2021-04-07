@@ -1,7 +1,7 @@
 package tab2xml.model;
 
 /**
- * The 12 basic music notes.
+ * An {@code Enum} of the 12 basic music notes.
  * 
  * @author amir
  */
@@ -15,9 +15,9 @@ public enum NoteType {
 	}
 
 	/**
-	 * Return the string value of this note type.
+	 * Return the string value of this {@code NoteType}.
 	 * 
-	 * @return the string representation of this note type
+	 * @return the string representation of this {@code NoteType}
 	 */
 	public String getValue() {
 		return name;

@@ -41,10 +41,7 @@ public final class UnparseableInputException extends InvalidInputException {
 	 * @since 2021-02-28
 	 */
 	private static final String singleErrorMessage(ErrorToken error) {
-		String msg = error.getMesage();
-		int col = error.getColumn();
-		int line = error.getLine();
-		return String.format("%s at line %d column %d", msg, line, col);
+		return error.getMesage();
 	}
 
 	/**

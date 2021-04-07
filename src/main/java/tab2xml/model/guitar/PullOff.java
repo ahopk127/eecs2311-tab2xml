@@ -6,8 +6,14 @@ import java.util.List;
 
 import tab2xml.model.LineItem;
 
+/**
+ * A pull-off representation.
+ * 
+ * @author amir
+ */
 public class PullOff extends LineItem {
 	private static final long serialVersionUID = -216451585018707396L;
+
 	private GuitarNote start;
 	private GuitarNote stop;
 

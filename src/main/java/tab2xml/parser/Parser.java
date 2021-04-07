@@ -30,18 +30,21 @@ public class Parser {
 	public static final String COMMENTS = "((/[*])(([\s]|[^ ])+)([*]/))|([/]{2,}[^\n]+)";
 	public static final String OUTLIER_G = "(" + COMMENTS
 			+ "|(^(?![ \t]*([a-gA-G]#?)?[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
+	public static final String OUTLIER_B = "((^(?!([a-gA-G]#?)?[|-][^\r\n]*[|-]\r?\n?).*\r?\n?)\r?\n)";
 	public static final String OUTLIER_D = "(" + COMMENTS
 			+ "|(^(?![ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
 	public static final String OUTLIER_GUITAR = "(" + OUTLIER_G + "+)";
 	public static final String OUTLIER_DRUM = "(" + OUTLIER_D + "+)";
 	public static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ \t]*[|-])[^\s]*[-|]).*$))).+\r?\n?)";
+	public static final String STRING_UNBOUND = "(" + STRING + "+)";
 	public static final String GP = STRING + "{6,}";
-	public static final String BP = "(" + OUTLIER_G + "|\r?\n)" + "(" + STRING + "{4,5})" + "(" + OUTLIER_G + "|\r?\n)";
+	public static final String BP = OUTLIER_B + "(" + STRING + "{4,5})" + OUTLIER_B;
 	public static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|])[^\s]*[-|]).*)+)).*\r?\n?)+";
 
 	public static final Pattern outlierPlucked = Pattern.compile(OUTLIER_GUITAR, Pattern.MULTILINE);
 	public static final Pattern outlierPercussion = Pattern.compile(OUTLIER_DRUM, Pattern.MULTILINE);
 	public static final Pattern guitarPattern = Pattern.compile(GP, Pattern.MULTILINE);
+	public static final Pattern guitarPatterGreedy = Pattern.compile(STRING_UNBOUND, Pattern.MULTILINE);
 	public static final Pattern bassPattern = Pattern.compile(BP, Pattern.MULTILINE);
 	public static final Pattern drumPattern = Pattern.compile(DP, Pattern.MULTILINE);
 
@@ -49,6 +52,7 @@ public class Parser {
 	private final Instrument instrument;
 	private final XMLMetadata metadata;
 	private final Score<?> sheet;
+	private final Collection<ParsingWarning> preprocessWarnings;
 
 	/**
 	 * Construct a parser with specified tablature and instrument.
@@ -63,6 +67,7 @@ public class Parser {
 		this.processor = new Processor(input, instrument, metadata);
 		this.instrument = instrument;
 		this.sheet = this.processor.process();
+		this.preprocessWarnings = processor.preprocessWarnings();
 	}
 
 	/**
@@ -118,6 +123,15 @@ public class Parser {
 
 		final int max = Math.max(Math.max(gCount, bCount), dCount);
 		Instrument ins;
+
+		// multiple instrument detected
+		if (gCount != 0 && bCount != 0 && gCount == bCount) {
+			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
+		} else if (gCount != 0 && dCount != 0 && gCount == dCount) {
+			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
+		} else if (dCount != 0 && dCount != 0 && bCount == dCount) {
+			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
+		}
 
 		if (max == gCount) {
 			ins = Instrument.GUITAR;

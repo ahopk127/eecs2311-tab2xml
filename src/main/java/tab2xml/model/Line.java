@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * An abstract line within a staff.
+ * An abstract line within a staff. This abstract {@code Line} will have a basic
+ * function of containing {@code LineItem} objects to the respective format of
+ * tablature.
  * 
  * @author amir
  */
@@ -30,7 +32,7 @@ public abstract class Line extends ScoreItem {
 	/**
 	 * Construct an empty line with a specified line position.
 	 * 
-	 * @param line the line number of this line.
+	 * @param line the line number of this line
 	 */
 	public Line(int line) {
 		this.lineItems = new ArrayList<>();
@@ -38,7 +40,7 @@ public abstract class Line extends ScoreItem {
 	}
 
 	/**
-	 * @return the total number of measures in this line.
+	 * @return the total number of measures in this line
 	 */
 	public int getNumMeasures() {
 		return numMeasures;
@@ -47,35 +49,35 @@ public abstract class Line extends ScoreItem {
 	/**
 	 * Set the total measures in this line.
 	 * 
-	 * @param numMeasures the value to set the total measures in this line.
+	 * @param numMeasures the value to set the total measures in this line
 	 */
 	public void setNumMeasures(int numMeasures) {
 		this.numMeasures = numMeasures;
 	}
 
 	/**
-	 * @return a list of notes within this line.
+	 * @return a list of notes within this line
 	 */
 	public abstract Collection<? extends LineItem> getNotes();
 
 	/**
-	 * @return the line position of this line.
+	 * @return the line position of this line
 	 */
 	public static int getLine() {
 		return line;
 	}
 
 	/**
-	 * A static method to keep track of the creation of groups of lines. s
+	 * A static method to keep track of the construction of groups of lines.
 	 * 
-	 * @param line the value to set the line count.
+	 * @param line the value to set the line count
 	 */
 	public static void setLine(int line) {
 		Line.line = line;
 	}
 
 	/**
-	 * @return the list of items in this line.
+	 * @return the list of items in this line
 	 */
 	public ArrayList<LineItem> getItems() {
 		return lineItems;
@@ -84,30 +86,32 @@ public abstract class Line extends ScoreItem {
 	/**
 	 * Add a single item to this line.
 	 * 
-	 * @param item the item to add to this line.
-	 * @return true if the item has been added.
+	 * @param item the item to add to this line
+	 * @return {@code true} if the item has been added
 	 */
 	public boolean add(LineItem item) {
-		if (item != null)
-			lineItems.add(item);
+		if (item == null)
+			return false;
+		lineItems.add(item);
 		return true;
 	}
 
 	/**
-	 * Add a list of items ot this line.
+	 * Add a list of items to this line.
 	 * 
-	 * @param items a list of line items to add.
-	 * @return true if all the items have been added.
+	 * @param items a list of line items to add
+	 * @return {@code true} if all the items have been added
 	 */
 	public boolean addAll(List<LineItem> items) {
+		if (items == null)
+			return false;
 		for (LineItem item : items)
-			add(item);
+			if (!add(item))
+				return false;
 		return true;
 	}
 
-	/**
-	 * @return the width of this line.
-	 */
+	/** @return the width of this line */
 	public int width() {
 		int count = 0;
 		for (int i = 0; i < lineItems.size(); i++)
@@ -115,9 +119,7 @@ public abstract class Line extends ScoreItem {
 		return count;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public int getNoteCount() {
 		int total = 0;
@@ -128,11 +130,8 @@ public abstract class Line extends ScoreItem {
 		return total;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
-		return String.format("line %d");
+		return String.format("line-%d");
 	}
 }

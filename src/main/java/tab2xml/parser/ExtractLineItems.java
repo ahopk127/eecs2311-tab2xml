@@ -2,6 +2,7 @@ package tab2xml.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -328,8 +329,9 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			return null;
 
 		String value = token.getText();
-		//String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine() + value.length() - 1;
+		String start = value.substring(0, value.indexOf("|"));
+
+		int column = token.getCharPositionInLine();
 
 		Bar bar = new Bar();
 		bar.setDrumType(line.drumtype());
@@ -339,9 +341,44 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 		bar.setRightPos(token.getTokenIndex() + value.length() - 1);
 		bar.setLeftPos(token.getTokenIndex());
 
+		// end repeat *||
+		if (start.equals("*")) {
+			bar.setDoubleBar(true);
+			bar.setRepeat(true);
+			bar.setStop(true);
+		}
+
+		// start repeat: ||*
+		if (value.charAt(value.length() - 1) == '*') {
+			bar.setDoubleBar(true);
+			bar.setRepeat(true);
+			bar.setStart(true);
+		}
+
+		// n|
+		if (isNumeric(start)) {
+			bar.setColumn(column - start.length());
+			bar.setPosition(token.getTokenIndex() - start.length());
+			bar.setLeftPos(bar.getPosition());
+			bar.setRightPos(bar.getPosition() + value.substring(start.length()).length());
+
+			bar.setRepeatCount(Integer.parseInt(start));
+			bar.setRepeat(true);
+			bar.setStop(true);
+
+			// n||
+			if (value.substring(value.indexOf("|"), value.length()).equals("||")) {
+				bar.setDoubleBar(true);
+			}
+		}
+
 		if (value.equals("||"))
 			bar.setDoubleBar(true);
 
 		return bar;
+	}
+	
+	private static boolean isNumeric(String s) {
+		return Pattern.matches("\\d+", s);
 	}
 }

@@ -455,6 +455,7 @@ public class Transform<T extends Staff<? extends Line>> {
 
 			//	XMLElement beam = null;
 			note.append(unPitched, duration, instrument, voice, type, stem, notehead);
+
 			if (currNote.isRepeatedStart()) {
 				XMLElement barline = new XMLElement("barline", musicSheet);
 				barline.setAttribute("location", "left");
@@ -521,7 +522,7 @@ public class Transform<T extends Staff<? extends Line>> {
 			element.append(creator);
 			return element;
 		}).orElse(null);
-		
+
 		XMLElement partList = new XMLElement("part-list", musicSheet);
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
 		scorePart.setAttribute("id", "P1");

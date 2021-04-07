@@ -37,204 +37,334 @@ public class GuitarNote extends Note {
 	private boolean isRepeatedStop;
 	private boolean isDoubleBar;
 
-	/*************************/
-
 	/**
-	 * Construct a note object based on tune and a given fret.
-	 *
-	 * @param tune the tune of the string this note is on
-	 * @param fret the fret of this note
-	 */
-	public GuitarNote(String tune, String fret) {
-		this.tune = tune;
-		this.fret = fret;
-		setNoteType();
-	}
-
-	/**
-	 * Construct a note object based on type of note.
+	 * Construct a {@code GuitarNote} object based on {@code NoteType}.
 	 * 
-	 * @param type the type of this note
+	 * @param type the {@code NoteType} to create.
 	 */
 	public GuitarNote(NoteType type) {
 		super(type);
 	}
 
-	public GuitarNote(GuitarString guitarString, String fret) {
-		this(guitarString.getTune(), fret);
-		this.setLineNum(guitarString.getStringNum());
-		setNoteType();
+	/**
+	 * Construct a {@code GuitarNote} object based on tune and a given fret.
+	 *
+	 * @param tune the tune of the string this note is on
+	 * @param fret the fret of this note
+	 */
+	public GuitarNote(String tune, String fret) {
+		super(setNoteType(tune, fret));
+		this.tune = tune;
+		this.fret = fret;
 	}
 
 	/**
-	 * Return the string attribute to the specified value.
-	 * 
-	 * @return the string attribute of this note
+	 * Construct a {@code GuitarNote} object based on a {@code GuitarString} and a
+	 * given fret.
+	 *
+	 * @param guitarString the string this note is on
+	 * @param fret         the fret of this note
 	 */
+	public GuitarNote(GuitarString guitarString, String fret) {
+		this(guitarString.getTune(), fret);
+		this.setLineNum(guitarString.getStringNum());
+	}
+
+	/** @return the string attribute of this note */
 	public String getString() {
 		return getLine();
 	}
 
-	/**
-	 * Return the fret attribute of this note.
-	 * 
-	 * @return the fret attribute of this note
-	 */
+	/** @return the fret attribute of this note */
 	public String getFret() {
 		return fret;
 	}
 
 	/**
-	 * Set the fret attribute to the specified value.
+	 * Set the fret attribute of this note to the specified value.
 	 * 
-	 * @param fret the value to set the fret attribute
+	 * @param fret the value to set
 	 */
 	public void setFret(String fret) {
 		this.fret = fret;
 	}
 
+	/** @return the tune attribute of this note */
 	public String getTune() {
 		return tune;
 	}
 
+	/**
+	 * Set the tune attribute of this note to the specified value.
+	 * 
+	 * @param tune the value to set
+	 */
 	public void setTune(String tune) {
 		this.tune = tune;
 	}
 
+	/** @return true if this note is apart of a chord */
 	public boolean isChord() {
 		return isChord;
 	}
 
+	/**
+	 * Set whether this note is apart of a chord.
+	 * 
+	 * @param isChord the value to set
+	 */
 	public void setChord(boolean isChord) {
 		this.isChord = isChord;
 	}
 
+	/** @return true if this note is the start of a hammer-on */
 	public boolean isStartHammer() {
 		return isStartHammer;
 	}
 
+	/**
+	 * Set whether this note is the start of a hammer-on.
+	 * 
+	 * @param isStartHammer the value to set
+	 */
 	public void setStartHammer(boolean isStartHammer) {
 		this.isStartHammer = isStartHammer;
 	}
 
+	/** @return true if this note is the end of a hammer-on */
 	public boolean isStopHammer() {
 		return isStopHammer;
 	}
 
+	/**
+	 * Set whether this note is the end of a hammer-on.
+	 * 
+	 * @param isStopHammer the value to set
+	 */
 	public void setStopHammer(boolean isStopHammer) {
 		this.isStopHammer = isStopHammer;
 	}
 
+	/** @return true if this note is the start of a pull-off */
 	public boolean isStartPull() {
 		return isStartPull;
 	}
 
+	/**
+	 * Set whether this note is the start of a pull-off.
+	 * 
+	 * @param isStartPull the value to set
+	 */
 	public void setStartPull(boolean isStartPull) {
 		this.isStartPull = isStartPull;
 	}
 
+	/** @return true if this note is the end of a pull-off */
 	public boolean isStopPull() {
 		return isStopPull;
 	}
 
+	/**
+	 * Set whether this note is the end of a pull-off.
+	 * 
+	 * @param isStopPull the value to set
+	 */
 	public void setStopPull(boolean isStopPull) {
 		this.isStopPull = isStopPull;
 	}
 
+	/** @return true if this note is the start of a hammer-on/pull-off chain */
 	public boolean isStartChain() {
 		return isStartChain;
 	}
 
+	/**
+	 * Set whether this note is the start of a hammer-on/pull-off chain.
+	 * 
+	 * @param isStartChain the value to set
+	 */
 	public void setStartChain(boolean isStartChain) {
 		this.isStartChain = isStartChain;
 	}
 
-	public boolean addAll(Collection<? extends GuitarNote> notes) {
-		for (GuitarNote note : notes)
-			add(note);
-		return true;
-	}
-
-	public boolean add(GuitarNote note) {
-		if (note != null)
-			this.getNotes().add(note);
-		return true;
-	}
-
+	/**
+	 * Set whether this note is the end of a hammer-on/pull-off chain.
+	 * 
+	 * @param isStopChain the value to set
+	 */
 	public boolean isStopChain() {
 		return isStopChain;
 	}
 
+	/**
+	 * Set whether this note is the end of a hammer-on/pull-off chain.
+	 * 
+	 * @param isStopChain the value to set
+	 */
 	public void setStopChain(boolean isStopChain) {
 		this.isStopChain = isStopChain;
 	}
 
+	/** @return true if this note is the start of a slide */
 	public boolean isStartSlide() {
 		return isStartSlide;
 	}
 
+	/**
+	 * Set whether this note is the start of a slide.
+	 * 
+	 * @param isStartSlide the value to set
+	 */
 	public void setStartSlide(boolean isStartSlide) {
 		this.isStartSlide = isStartSlide;
 	}
 
+	/** @return true if this note is the end of a slide */
 	public boolean isStopSlide() {
 		return isStopSlide;
 	}
 
+	/**
+	 * Set whether this note is the end of a slide.
+	 * 
+	 * @param isStopSlide the value to set
+	 */
 	public void setStopSlide(boolean isStopSlide) {
 		this.isStopSlide = isStopSlide;
 	}
 
+	/** @return true if this note is a natural harmonic */
 	public boolean isHarmonic() {
 		return isHarmonic;
 	}
 
+	/**
+	 * Set whether this note is a natural harmonic.
+	 * 
+	 * @param isHarmonic the value to set
+	 */
 	public void setHarmonic(boolean isHarmonic) {
 		this.isHarmonic = isHarmonic;
 	}
 
+	/** @return true if this note is a grace note */
 	public boolean isGrace() {
 		return isGrace;
 	}
 
+	/**
+	 * Set whether this note is a grace note.
+	 * 
+	 * @param isGrace the value to set
+	 */
 	public void setGrace(boolean isGrace) {
 		this.isGrace = isGrace;
 	}
 
+	/** @return true if this note is the first note in a repeat section */
 	public boolean isRepeatedStart() {
 		return isRepeatedStart;
 	}
 
+	/**
+	 * Set whether this note is the first note in a repeat section.
+	 * 
+	 * @param isRepeatedStart the value to set
+	 */
 	public void setRepeatedStart(boolean isRepeatedStart) {
 		this.isRepeatedStart = isRepeatedStart;
 	}
 
+	/** @return true if this note is the last note in a repeat section */
 	public boolean isRepeatedStop() {
 		return isRepeatedStop;
 	}
 
+	/**
+	 * Set whether this note is the last note in a repeat section.
+	 * 
+	 * @param isRepeatedStop the value to set
+	 */
 	public void setRepeatedStop(boolean isRepeatedStop) {
 		this.isRepeatedStop = isRepeatedStop;
 	}
 
+	/** @return true if this note is the last note before a double bar */
 	public boolean isDoubleBar() {
 		return isDoubleBar;
 	}
 
+	/**
+	 * Set whether this note is the last note before a double bar.
+	 * 
+	 * @param isDoubleBar the value to set
+	 */
 	public void setDoubleBar(boolean isDoubleBar) {
 		this.isDoubleBar = isDoubleBar;
 	}
 
 	/**
-	 * Construct a note from the ASCII tablature.
+	 * Add a {@code GuitarNote} to group with this note.
 	 * 
-	 * @param input  string input(<em>"tune + fret"</em>)
-	 * @param string the string this note is on
-	 * @return a note based on the properties of the input
-	 * @throws InvalidTokenException if the parsed note type doesn't match the
-	 *                               parsed step
+	 * <p>
+	 * Pre-conditions:
+	 * <ul>
+	 * <li>The <b>note</b> MUST note be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param note the note to group with this note
+	 * @return true if the note was added successfully
 	 */
-	public static GuitarNote toNote(String input, int string) throws InvalidTokenException {
+	public boolean add(GuitarNote note) {
+		if (note == null)
+			return false;
+		this.getNotes().add(note);
+		return true;
+	}
+
+	/**
+	 * Add a collection of {@code GuitarNote} objects to group with this note.
+	 * 
+	 * <p>
+	 * Pre-conditions:
+	 * <ul>
+	 * <li>The <b>notes</b> MUST note be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param notes the notes to group with this note
+	 * @return true if all the notes were added successfully
+	 */
+	public boolean addAll(Collection<? extends GuitarNote> notes) {
+		if (notes == null)
+			return false;
+		for (GuitarNote note : notes)
+			if (!add(note))
+				return false;
+		return true;
+	}
+
+	@Override
+	public int length() {
+		return fret.length();
+	}
+
+	@Override
+	public String toString() {
+		return step;
+	}
+
+	/**
+	 * A static utility method to construct a {@code GuitarNote} from the ASCII
+	 * tablature.
+	 * 
+	 * @param input  a string of the format <em>"tune + fret"</em>
+	 * @param string the string this note
+	 * @return a {@code GuitarNote} based on the properties of the input
+	 * @throws InvalidTokenException if the input doesn't match the format above
+	 */
+	public static final GuitarNote toNote(String input, int string) throws InvalidTokenException {
 		Pattern p = Pattern.compile("^[a-gA-G]\\d+$");
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException("The Note is invalid.");
@@ -253,60 +383,40 @@ public class GuitarNote extends Note {
 	}
 
 	/**
-	 * Get the note type of a note as a string.
+	 * A static guitar utility method to set the {@code NoteType} from a given tune
+	 * and fret.
 	 * 
-	 * @param note
-	 * @return the type of note of <b>note</b> argument otherwise null if
-	 *         <b>note</b> is not valid
+	 * @return the the {@code NoteType} of the given input
+	 * @throws InputMismatchException if the input combination is invalid
 	 */
-	public static NoteType getNoteType(String note) {
-		for (NoteType type : NoteType.values()) {
-			if (type.getValue().equals(note))
-				return type;
-		}
-		return null;
-	}
-
-	@Override
-	public int length() {
-		return fret.length();
-	}
-
-	/**
-	 * Set note type from a note already defined with a step and fret
-	 * 
-	 * @return the note type of this note
-	 * @throws InvalidTokenException if the parsed note type doesn't match the
-	 *                               parsed step
-	 */
-	@Override
-	protected void setNoteType() {
-		String tune = this.tune;
+	private static final NoteType setNoteType(String tune, String fret) {
 		tune = tune.toUpperCase();
 		int fretNum = Integer.parseInt(fret);
-
 		Pattern p = Pattern.compile("^[A-G]\\d+$");
 		String input = tune + fretNum;
 
 		if (!p.matcher(input).matches())
-			throw new InputMismatchException("The Note is invalid.");
+			throw new InputMismatchException("The input is invalid.");
 
 		int oldIndex = GuitarNote.getNoteType(tune).ordinal();
 		int index = (oldIndex + fretNum) % 12;
 
 		NoteType noteType = NoteType.values()[index];
-		setStep(noteType.getValue());
-
-		this.note = noteType;
+		return noteType;
 	}
 
 	/**
-	 * Return the string representation of this note.
+	 * A static utility method to get the {@code NoteType} of a note given its step.
 	 * 
-	 * @return the string of this note's value
+	 * @param step
+	 * @return the {@code NoteType} <b>note</b> argument otherwise null if
+	 *         <b>note</b> is not valid
 	 */
-	@Override
-	public String toString() {
-		return step;
+	public static final NoteType getNoteType(String step) {
+		for (NoteType type : NoteType.values()) {
+			if (type.getValue().equals(step))
+				return type;
+		}
+		return null;
 	}
 }
