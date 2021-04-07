@@ -2,24 +2,24 @@
 #+SUBTITLE: For version 1.0.0
 #+DATE: 2021 April 7
 #+LaTeX_HEADER: \usepackage[a4paper, lmargin=30mm, rmargin=30mm, tmargin=25mm, bmargin=25mm]{geometry}
+#+LaTeX_HEADER: \usepackage{indentfirst}
+#+LaTeX_HEADER: \usepackage{xurl}
 
 #+LATEX: \newpage
 
+* Introduction
+  TAB2XML is a system that can convert text tablature to MusicXML.  This document details the design of the system, in order to aid future developers of the system.
 * System Design Overview
-
-* Front End Design
-  /All TAB2XML front-end code is located in the ~tab2xml.gui~ package./
-** Front End Classes
-   #+CAPTION: A class diagram for the frontend of TAB2XML.
-   [[./Diagrams/frontend-class-diagram.png]]
-
-   The frontend of TAB2XML is designed using the [[https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter][MVP]] paradigm.  It is divided into two main parts, the ~View~ and the ~Presenter~.
-
-   The ~View~ is the part of the frontend that interacts with the user (the GUI).  It is handled by the ~View~ interface; the GUIs for TAB2XML implement the View interface.  In addition, all Views that represent a Swing GUI are subclasses of the skeletal implementation ~AbsractSwingView~, which reduces the effort needed to make a View.  Currently, there are four concrete classes implementing ~View~: ~TabbedView~ (currently the one in use), ~SingleEntryView~, ~DoubleEntryView~ and ~ViewBot~ (a mock view used for testing).  The ~NarrowingView~ interface represents Views that additionally support TAB2XML's tab-narrowing functionality.
-
-   The ~Presenter~ is the part of the frontend that interacts with the backend code.  It is a single class, not an interface that has multiple implementations.  It implements behaviours such as converting a tab, loading from a file and detecting the instrument of the input tab.  It uses the View interface's public methods to interact with the view.  This means that the View's buttons can simply be linked to call the Presenter's methods, instead of having to implement the method in the View.  All of the Presenter's methods return either a ~boolean~ or an ~Optional~ to describe whether they succeeded or not.
-
-   The rationale behind this design is to reduce the effort involved in creating a new GUI.  If it extends ~AbstractSwingView~, creating a new View is as simple as making a "mockup" Swing GUI and implementing two trivial methods.  This makes it easy to work with multiple GUIs at once (allowing the customer to choose which they prefer).  This design was especially important in the beginning of development, because I could prototype different GUI ideas with the customer using fully functional applications.
+  #+CAPTION: A diagram showing the relationship between major classes and packages.  Details about each component can be found in their respective section.
+  [[./Diagrams/full-system-diagram.png]]
+  
+  TAB2XML is split into multiple packages.  The major ones are:
+   - tab2xml.exceptions - Stores TAB2XML's custom exception types
+   - [[*Front End Design][tab2xml.gui]] - Frontend and GUI related code
+   - [[*Model Design][tab2xml.model]] - Abstraction of music
+   - [[*Parser Design][tab2xml.parser]] - Code that converts the tablature to a model representation
+   - tab2xml.xmlconversion - Code that converts the model representation to MusicXML, and handles everything else XML related
+  There are also some more packages, but none have major classes.
 ** Converting Text Tabs
    #+CAPTION: A sequence diagram for the "Convert and Save" operation
    [[./Diagrams/convert-and-save-2.png]]
@@ -37,6 +37,21 @@
    10. The ~Presenter~ calls the ~View~'s ~promptForFile~ method to prompt the user for the desired destination file.
    11. The ~Presenter~ calls ~Files.writeString~ to write the text tab to the selected file.
    12. The ~View~ displays any errors that occurred during the file-saving operation.
+#+LaTeX: \newpage
+
+* Front End Design
+  /All TAB2XML front-end code is located in the ~tab2xml.gui~ package./
+** Front End Classes
+   #+CAPTION: A class diagram for the frontend of TAB2XML.
+   [[./Diagrams/frontend-class-diagram.png]]
+
+   The frontend of TAB2XML is designed using the [[https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter][MVP]] paradigm.  It is divided into two main parts, the ~View~ and the ~Presenter~.
+
+   The ~View~ is the part of the frontend that interacts with the user (the GUI).  It is handled by the ~View~ interface; the GUIs for TAB2XML implement the View interface.  In addition, all Views that represent a Swing GUI are subclasses of the skeletal implementation ~AbsractSwingView~, which reduces the effort needed to make a View.  Currently, there are four concrete classes implementing ~View~: ~TabbedView~ (currently the one in use), ~SingleEntryView~, ~DoubleEntryView~ and ~ViewBot~ (a mock view used for testing).  The ~NarrowingView~ interface represents Views that additionally support TAB2XML's tab-narrowing functionality.
+
+   The ~Presenter~ is the part of the frontend that interacts with the backend code.  It is a single class, not an interface that has multiple implementations.  It implements behaviours such as converting a tab, loading from a file and detecting the instrument of the input tab.  It uses the View interface's public methods to interact with the view.  This means that the View's buttons can simply be linked to call the Presenter's methods, instead of having to implement the method in the View.  All of the Presenter's methods return either a ~boolean~ or an ~Optional~ to describe whether they succeeded or not.
+
+   The rationale behind this design is to reduce the effort involved in creating a new GUI.  If it extends ~AbstractSwingView~, creating a new View is as simple as making a "mockup" Swing GUI and implementing two trivial methods.  This makes it easy to work with multiple GUIs at once (allowing the customer to choose which they prefer).  This design was especially important in the beginning of development, because I could prototype different GUI ideas with the customer using fully functional applications.
 ** Front End Maintenance
    To create a new GUI, simply make your GUI handled by a class that extends ~View~.  It should also have a ~Presenter~ field instantiated using ~new Presenter(this)~.  You must implement all of the ~View~'s methods, which is much easier if you extend ~AbstractSwingView~.  Then, you can call the presenter's methods within the GUI, and your GUI will be fully connected to the TAB2XML backend.
 
@@ -47,7 +62,6 @@
 * Back End Design
 ** Overview
 	The backend of TAB2XML was designed with the main focus of flexibility, and future scaling of the system. The central component of the system is the [[https://www.antlr.org/][antlr4]] parser generation tool. The system uses custom instrument defined grammar to recognize different formats of tablature. Since the system's grammar can be changed effortlessly this makes extending for different types of input much easier. With the combination of the generated antlr4 parser classes(located in ~/src/generated/java~) and the system's custom model data classes, a tablature score can be abstracted into components which make handling the data simpler. The backend is divided into a three step process, the ~preprocessing~ of the tablature, the antlr4 ~ParseTree~ visitor which is used to extract score data, and finally the XML conversion process.
-
 
 ** Model Design
 /All TAB2XML model code is located in the ~tab2xml.model~ package and its subsets ~tab2xml.model.guitar~ etc../
@@ -66,13 +80,11 @@
 
 #+LATEX: \newpage
 
-** Parser Design:
+** Parser Design
 	#+CAPTION: A class diagram for the ~Parser~ class.
 	[[./Diagrams/backend-parser-class-diagram.png]]
 
 	The highlighted areas are the main components of the three main steps in the systems process as mentioned earlier. The first is the ~Processor~ which is aggregated with the ~Parser~. The responsibility of the ~Parser~ is to unite the ~Processor~ and the ~Transform~ components and delegate conversions of tablature based on selected instrument or detected instrument. The ~Processor~ preprocesses the input to prepare it for the ~ParseTree~ extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score(The grammars are defined to ignore the commented metadata, although we still extract it as it might be useful to the user). 
-
-
 *** sample ~Processor~ task:
 	before preprocessing:
 	#+BEGIN_EXAMPLE
