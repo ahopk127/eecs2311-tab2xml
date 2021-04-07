@@ -251,6 +251,15 @@ public final class InputValidation {
 	}
 
 	/**
+	 * 
+	 * @param error
+	 * @return
+	 */
+	public static boolean containsError(ErrorToken error, String input) {
+		return input.contains(error.getData());
+	}
+	
+	/**
 	 * @return true if the given input's score is well-formed tablature
 	 */
 	public static boolean isValidScore() {

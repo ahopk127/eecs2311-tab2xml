@@ -105,9 +105,10 @@ public final class BackgroundPanel extends JPanel {
 		g2.fillRect(0, 0, width, height / 2);
 		
 		// bottom half
-		g2.setColor(Color.WHITE);
+		g2.setColor(Color.DARK_GRAY);
 		g2.fillRect(0, height / 2, width, height / 2);
 		
+		g2.setColor(Color.WHITE);
 		// text
 		final Rectangle2D titleBounds = stringBounds(TITLE, TITLE_FONT);
 		g2.setFont(TITLE_FONT);

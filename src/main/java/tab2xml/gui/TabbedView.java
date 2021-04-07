@@ -3,7 +3,10 @@ package tab2xml.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Insets;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,6 +19,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 
+import tab2xml.exceptions.UnparseableInputException;
+import tab2xml.model.ErrorToken;
+import tab2xml.parser.InputValidation;
 import tab2xml.xmlconversion.XMLMetadata;
 
 /**
@@ -38,6 +44,10 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	public static void main(String[] args) {
 		View.createView(View.ViewType.TABBED);
 	}
+	
+	
+	/** List of error tokens */
+	private List<ErrorToken> errors;
 	
 	/** The pane containing the input and output tabs. */
 	private final JTabbedPane inputOutputPane;
@@ -63,6 +73,8 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	 * @since 2021-03-10
 	 */
 	public TabbedView() {
+		this.errors = new LinkedList<>();
+		
 		this.frame.setResizable(false);
 		
 		// master components - for both input and output
@@ -97,12 +109,16 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 				this.inputOutputPane.setSelectedIndex(2); // output
 			}
 		});
+		this.convertButton.addActionListener(e -> this.getInput().getHighlighter()
+				.removeAllHighlights());
 		inputButtonPanel.add(this.convertButton);
 		
 		this.convertAndSave = new JButton("Convert and Save");
 		this.convertAndSave.setEnabled(false);
 		this.convertAndSave
 				.addActionListener(e -> this.presenter.convertAndSave(true));
+		this.convertAndSave.addActionListener(e -> this.getInput().getHighlighter()
+				.removeAllHighlights());
 		inputButtonPanel.add(this.convertAndSave);
 		
 		this.saveInput = new JButton("Save Input");
@@ -113,8 +129,11 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		// input text box
 		this.input = new JTextArea(24, 80);
 		this.input.setBorder(new LineBorder(Color.BLACK));
+		this.input.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		this.setUpFileDragAndDrop();
-		this.setUpHighlightingRemoval();
+		//this.setUpHighlightingRemoval();
+		this.setUpUndoManager();
+		this.setUpRedoManager();
 		this.input.addCaretListener(e -> this.presenter.detectInstrument());
 		this.input.addCaretListener(e -> this.updateButtons());
 		inputPanel.add(
@@ -180,6 +199,14 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	}
 	
 	@Override
+	public void onParseError(UnparseableInputException error) {
+		this.convertButton.setEnabled(false);
+		this.convertAndSave.setEnabled(false);
+		this.errors.addAll(error.getErrors());
+		super.onParseError(error);
+	}
+
+	@Override
 	protected JTextComponent getInput() {
 		return this.input;
 	}
@@ -223,8 +250,15 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	 */
 	final void updateButtons() {
 		final boolean inputBlank = this.input.getText().isBlank();
-		this.convertButton.setEnabled(!inputBlank);
-		this.convertAndSave.setEnabled(!inputBlank);
+		// check if errors are still here 
+		errors.removeIf(e -> !InputValidation.containsError(e, this.getInputText()));
+		
+		if (errors.isEmpty()) {
+			this.getInput().getHighlighter().removeAllHighlights();
+		}
+		
+		this.convertButton.setEnabled(!inputBlank && this.errors.isEmpty());
+		this.convertAndSave.setEnabled(!inputBlank && this.errors.isEmpty());
 		this.saveInput.setEnabled(!inputBlank);
 		
 		this.saveOutput.setEnabled(!this.output.getText().isBlank());
