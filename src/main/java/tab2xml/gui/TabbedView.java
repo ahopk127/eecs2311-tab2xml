@@ -45,9 +45,8 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		View.createView(View.ViewType.TABBED);
 	}
 	
-	
 	/** List of error tokens */
-	private List<ErrorToken> errors;
+	private final List<ErrorToken> errors;
 	
 	/** The pane containing the input and output tabs. */
 	private final JTabbedPane inputOutputPane;
@@ -109,16 +108,16 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 				this.inputOutputPane.setSelectedIndex(2); // output
 			}
 		});
-		this.convertButton.addActionListener(e -> this.getInput().getHighlighter()
-				.removeAllHighlights());
+		this.convertButton.addActionListener(
+				e -> this.getInput().getHighlighter().removeAllHighlights());
 		inputButtonPanel.add(this.convertButton);
 		
 		this.convertAndSave = new JButton("Convert and Save");
 		this.convertAndSave.setEnabled(false);
 		this.convertAndSave
 				.addActionListener(e -> this.presenter.convertAndSave(true));
-		this.convertAndSave.addActionListener(e -> this.getInput().getHighlighter()
-				.removeAllHighlights());
+		this.convertAndSave.addActionListener(
+				e -> this.getInput().getHighlighter().removeAllHighlights());
 		inputButtonPanel.add(this.convertAndSave);
 		
 		this.saveInput = new JButton("Save Input");
@@ -131,7 +130,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		this.input.setBorder(new LineBorder(Color.BLACK));
 		this.input.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		this.setUpFileDragAndDrop();
-		//this.setUpHighlightingRemoval();
+		// this.setUpHighlightingRemoval();
 		this.setUpUndoManager();
 		this.setUpRedoManager();
 		this.input.addCaretListener(e -> this.presenter.detectInstrument());
@@ -148,6 +147,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		
 		this.narrowedInput = new JTextArea(24, 80);
 		this.narrowedInput.setBorder(new LineBorder(Color.BLACK));
+		this.narrowedInput.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		editingTab.add(
 				new JScrollPane(this.narrowedInput,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -178,6 +178,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		// output text box
 		this.output = new JTextArea(24, 80);
 		this.output.setBorder(new LineBorder(Color.BLACK));
+		this.output.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		this.output.addCaretListener(e -> this.updateButtons());
 		outputPanel.add(
 				new JScrollPane(this.output,
@@ -199,14 +200,6 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	}
 	
 	@Override
-	public void onParseError(UnparseableInputException error) {
-		this.convertButton.setEnabled(false);
-		this.convertAndSave.setEnabled(false);
-		this.errors.addAll(error.getErrors());
-		super.onParseError(error);
-	}
-
-	@Override
 	protected JTextComponent getInput() {
 		return this.input;
 	}
@@ -224,6 +217,14 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	@Override
 	protected JTextComponent getOutput() {
 		return this.output;
+	}
+	
+	@Override
+	public void onParseError(UnparseableInputException error) {
+		this.convertButton.setEnabled(false);
+		this.convertAndSave.setEnabled(false);
+		this.errors.addAll(error.getErrors());
+		super.onParseError(error);
 	}
 	
 	@Override
@@ -250,10 +251,11 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	 */
 	final void updateButtons() {
 		final boolean inputBlank = this.input.getText().isBlank();
-		// check if errors are still here 
-		errors.removeIf(e -> !InputValidation.containsError(e, this.getInputText()));
+		// check if errors are still here
+		this.errors.removeIf(
+				e -> !InputValidation.containsError(e, this.getInputText()));
 		
-		if (errors.isEmpty()) {
+		if (this.errors.isEmpty()) {
 			this.getInput().getHighlighter().removeAllHighlights();
 		}
 		

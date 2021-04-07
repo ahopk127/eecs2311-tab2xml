@@ -3,7 +3,6 @@ package tab2xml.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -29,19 +28,16 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
-
-import com.formdev.flatlaf.FlatDarkLaf;
-
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
+
+import com.formdev.flatlaf.FlatDarkLaf;
 
 import tab2xml.Main;
 import tab2xml.exceptions.ParsingWarning;
@@ -114,14 +110,14 @@ public abstract class AbstractSwingView implements View {
 			Color.YELLOW);
 	
 	/**
-	 * Enables the system look-and-feel in Swing, if it works.
+	 * Enables the LaF look-and-feel in Swing, if it works.
 	 * 
 	 * @since 2021-03-10
 	 */
-	public static void enableSystemLookAndFeel() {
+	public static void enableLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel(new FlatDarkLaf());
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			System.err.println("Failed to initialize LaF");
 			ex.printStackTrace();
 		}
@@ -190,7 +186,7 @@ public abstract class AbstractSwingView implements View {
 	 */
 	protected final Presenter presenter;
 	
-	/** 
+	/**
 	 * An undo manager.
 	 */
 	protected final UndoManager undoManager;
@@ -221,7 +217,7 @@ public abstract class AbstractSwingView implements View {
 	 * @since 2021-03-15
 	 */
 	protected AbstractSwingView() {
-		AbstractSwingView.enableSystemLookAndFeel();
+		AbstractSwingView.enableLookAndFeel();
 		
 		this.frame = new JFrame("TAB2XML " + Main.PROGRAM_VERSION);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -322,11 +318,12 @@ public abstract class AbstractSwingView implements View {
 		// show dialog box
 		View.super.onParseError(error);
 		
-		ErrorToken firstError = error.getErrors().get(0);
+		final ErrorToken firstError = error.getErrors().get(0);
 		try {
-			Rectangle2D rec = this.getInput().modelToView2D(firstError.getStart());
+			final Rectangle2D rec = this.getInput()
+					.modelToView2D(firstError.getStart());
 			this.getInput().scrollRectToVisible(rec.getBounds());
-		} catch(BadLocationException e) {
+		} catch (final BadLocationException e) {
 			System.err.format("BadLocation: %s%n", e);
 			e.printStackTrace();
 		}
@@ -419,7 +416,7 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 				
+	 * 
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {
@@ -458,60 +455,54 @@ public abstract class AbstractSwingView implements View {
 	 * Sets up the undo manager for the given input document.
 	 * 
 	 */
-	protected final void setUpUndoManager() {
-		this.getInput().getDocument().addUndoableEditListener(new UndoableEditListener() {
-			
-			@Override
-			public void undoableEditHappened(UndoableEditEvent e) {
-				undoManager.addEdit(e.getEdit());
-			}
-		});
+	protected final void setUpRedoManager() {
+		this.getInput().getDocument().addUndoableEditListener(
+				e -> AbstractSwingView.this.undoManager.addEdit(e.getEdit()));
 		
-		this.getInput().getActionMap().put("Undo", new AbstractAction() {
-			private static final long serialVersionUID = -1611382756254530673L;
-
+		this.getInput().getActionMap().put("Redo", new AbstractAction() {
+			private static final long serialVersionUID = -2412630467987603551L;
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (undoManager.canUndo())
-						undoManager.undo();
-				} catch (CannotUndoException ex) {
+					if (AbstractSwingView.this.undoManager.canRedo()) {
+						AbstractSwingView.this.undoManager.redo();
+					}
+				} catch (final CannotUndoException ex) {
 					System.err.format("CannotUndoException: %s%n", ex);
 				}
 			}
 		});
 		
-		this.getInput().getInputMap().put(KeyStroke.getKeyStroke("control Z"), "Undo");
+		this.getInput().getInputMap()
+				.put(KeyStroke.getKeyStroke("control shift Z"), "Redo");
 	}
 	
 	/**
 	 * Sets up the undo manager for the given input document.
 	 * 
 	 */
-	protected final void setUpRedoManager() {
-		this.getInput().getDocument().addUndoableEditListener(new UndoableEditListener() {
-			
-			@Override
-			public void undoableEditHappened(UndoableEditEvent e) {
-				undoManager.addEdit(e.getEdit());
-			}
-		});
+	protected final void setUpUndoManager() {
+		this.getInput().getDocument().addUndoableEditListener(
+				e -> AbstractSwingView.this.undoManager.addEdit(e.getEdit()));
 		
-		this.getInput().getActionMap().put("Redo", new AbstractAction() {
-			private static final long serialVersionUID = -2412630467987603551L;
-
+		this.getInput().getActionMap().put("Undo", new AbstractAction() {
+			private static final long serialVersionUID = -1611382756254530673L;
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					if (undoManager.canRedo())
-						undoManager.redo();
-				} catch (CannotUndoException ex) {
+					if (AbstractSwingView.this.undoManager.canUndo()) {
+						AbstractSwingView.this.undoManager.undo();
+					}
+				} catch (final CannotUndoException ex) {
 					System.err.format("CannotUndoException: %s%n", ex);
 				}
 			}
 		});
 		
-		this.getInput().getInputMap().put(KeyStroke.getKeyStroke("control shift Z"), "Redo");
+		this.getInput().getInputMap().put(KeyStroke.getKeyStroke("control Z"),
+				"Undo");
 	}
 	
 	/**
