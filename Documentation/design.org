@@ -1,10 +1,12 @@
 #+TITLE: TAB2XML Design Document
-#+SUBTITLE: For version 0.4.0
-#+DATE: 2021 March 26
-#+LaTeX_HEADER: \usepackage[margin=30mm]{geometry}
+#+SUBTITLE: For version 1.0.0
+#+DATE: 2021 April 7
+#+LaTeX_HEADER: \usepackage[a4paper, lmargin=30mm, rmargin=30mm, tmargin=25mm, bmargin=25mm]{geometry}
 
 #+LATEX: \newpage
 
+* System Design Overview
+
 * Front End Design
   /All TAB2XML front-end code is located in the ~tab2xml.gui~ package./
 ** Front End Classes
