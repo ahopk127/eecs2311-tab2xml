@@ -22,6 +22,7 @@ import tab2xml.antlr.GuitarTabParser.TuneContext;
 import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.LineItemsCollector;
+import tab2xml.model.NoteType;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.HammerOn;
 import tab2xml.model.guitar.HammerPull;
@@ -216,7 +217,7 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		note.setColumn(column);
 		note.setPosition(token.getTokenIndex() - 1);
 		note.setLineNum(s.getStringNum());
-		note.setOctave(s.getOctave());
+		note.setOctave(NoteType.getOctave(s.tune(), Integer.parseInt(value)));
 		return note;
 	}
 

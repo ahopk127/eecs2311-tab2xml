@@ -103,6 +103,7 @@ public class GuitarNote extends Note {
 		this.tune = tune;
 	}
 
+
 	/** @return true if this note is apart of a chord */
 	public boolean isChord() {
 		return isChord;

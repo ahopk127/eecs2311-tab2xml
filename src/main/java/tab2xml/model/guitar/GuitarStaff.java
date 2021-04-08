@@ -14,6 +14,7 @@ import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.Measure;
 import tab2xml.model.Note;
+import tab2xml.model.NoteType;
 import tab2xml.model.Range;
 import tab2xml.model.Score;
 
@@ -349,7 +350,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 						newNote.setPosition(position);
 						newNote.setLineNum(bars[i].getLineNum());
 						newNote.setMeasure(Score.getAccumulateMeasure());
-						newNote.setOctave(bars[i].getTune().getOctave());
+						newNote.setOctave(NoteType.getOctave(bars[i].getTune(), Integer.parseInt(fret)));
 
 						// add new note to the queue and increase notes left count
 						pq.add(newNote);
