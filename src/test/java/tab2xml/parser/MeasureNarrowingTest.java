@@ -31,6 +31,8 @@ class MeasureNarrowingTest {
 	
 	// Sample tabs
 	private static final String tab1 = loadTestFile("readme-sample-1.txt");
+	private static final String tab1NoNewline = loadTestFile(
+			"readme-sample-1-no-newline.txt");
 	private static final String tab1Modified = loadTestFile(
 			"readme-sample-1-modified.txt");
 	private static final String tab2 = loadTestFile("test2.txt");
@@ -41,6 +43,7 @@ class MeasureNarrowingTest {
 	private static final String tab4 = loadTestFile("test4.txt");
 	private static final String caprichoArabeTab = loadTestFile(
 			"Capricho Arabe.txt");
+	private static final String drumTab = loadTestFile("drum-test-1.txt");
 	
 	/**
 	 * Loads from a test file.
@@ -79,6 +82,20 @@ class MeasureNarrowingTest {
 	@Test
 	final void testDelinearize() {
 		assertEquals(tab2, delinearize(tab2Linearized, 90));
+	}
+	
+	/**
+	 * Tests that measure narrowing works with drum tabs
+	 * 
+	 * @since 2021-04-09
+	 */
+	@Test
+	final void testDrumTab() {
+		final String measure1 = String.join("\n", "|x---------------|",
+				"|--x-x-x-x-x-x-x-|", "|----o-------o---|", "|----------------|",
+				"|----------------|", "|o-------o-------|", "");
+		
+		assertEquals(measure1, extractMeasureRange(drumTab, 1, 1));
 	}
 	
 	/**
@@ -169,6 +186,25 @@ class MeasureNarrowingTest {
 	final void testMeasureCount() {
 		assertEquals(5, measureCount(tab1));
 		assertEquals(6, measureCount(tab2));
+	}
+	
+	/**
+	 * Tests that the system works on tabs that do not end in a newline.
+	 * 
+	 * @since 2021-04-09
+	 */
+	@Test
+	final void testNoNewline() {
+		final String measure1 = String.join("\n", "|-----2--------|",
+				"|--------------|", "|--------------|", "|-----------2--|",
+				"|--3--------2--|", "|--0--0--------|", "");
+		
+		final String measure3 = String.join("\n", "|--0-----3--0--|",
+				"|--0-----0--3--|", "|-----------2--|", "|--2--2--------|",
+				"|--------------|", "|--------------|", "");
+		
+		assertEquals(measure1, extractMeasureRange(tab1NoNewline, 1, 1));
+		assertEquals(measure3, extractMeasureRange(tab1NoNewline, 3, 3));
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 #+TITLE: TAB2XML System Requirements
 #+DATE: 2021 March 26
+#+LaTeX_HEADER: \usepackage[a4paper, lmargin=30mm, rmargin=30mm, tmargin=25mm, bmargin=25mm]{geometry}
 #+LaTeX: \newpage
 * Introduction
   TAB2XML is a system that can convert text tablature to MusicXML.  It is being created for the purpose of allowing people to take advantage of MusicXML's many features, such as rendering, transposing and automatic playing.  Its primary audience is musicians.

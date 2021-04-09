@@ -1,6 +1,7 @@
 #+TITLE: TAB2XML User Manual
 #+SUBTITLE: For Version 0.4.0
 #+DATE: 2021 March 29
+#+LaTeX_HEADER: \usepackage[a4paper, lmargin=30mm, rmargin=30mm, tmargin=25mm, bmargin=25mm]{geometry}
 
 #+LaTeX: \newpage
 

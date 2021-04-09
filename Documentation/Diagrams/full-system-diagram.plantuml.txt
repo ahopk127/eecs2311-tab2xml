@@ -1,0 +1,29 @@
+@startuml
+
+package tab2xml.gui {
+  interface View {}
+  class Presenter {}
+
+  Presenter "1" o-- View
+  View "0-1" o-- Presenter
+}
+
+package tab2xml.model {
+  class Score {}
+}
+
+package tab2xml.parser {
+  class Parser {}
+  class Processor {}
+}
+
+package tab2xml.xmlConversion {
+  class Transform {}
+}
+
+Parser "1" o-- Score
+Parser "1" o-- Processor
+Presenter -> Parser
+Parser -> Transform
+
+@enduml

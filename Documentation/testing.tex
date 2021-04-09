@@ -1,4 +1,4 @@
-% Created 2021-04-05 Mon 10:48
+% Created 2021-04-07 Wed 12:28
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,9 +14,10 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\date{2021 March 29}
+\usepackage[a4paper, lmargin=30mm, rmargin=30mm, tmargin=25mm, bmargin=25mm]{geometry}
+\date{2021 April 7}
 \title{TAB2XML Testing Document\\\medskip
-\large For Version 0.4.0}
+\large For Version 1.0.0}
 \hypersetup{
  pdfauthor={},
  pdftitle={TAB2XML Testing Document},
@@ -29,116 +30,155 @@
 \maketitle
 \tableofcontents
 
-\newpage\\
+\newpage
+
 \section{Front-End Tests}
-\label{sec:org76be226}
-Many of the front-end tests are implemented using a \texttt{ViewBot}, a class that simulates a GUI.\\
+\label{sec:orgd9b1a43}
+Many of the front-end tests are implemented using a \texttt{ViewBot}, a class that simulates a GUI.
+\subsection{EditingPanelTest}
+\label{sec:orgf539d82}
+This test tests the functionality of the \texttt{EditingPanel}, a custom \texttt{JPanel} that is used to edit XML metadata (by creating instances of the \texttt{XMLMetadata} class).  These test cases were derived by making one test for each important functionality of the \texttt{EditingPanel}.
+\begin{itemize}
+\item \texttt{testComposer()}: Tests that the \texttt{EditingPanel} can correctly set the XMLMetadata's composer field.  It is implemented by setting the text of the panel's composer entry, then getting the panel's resulting metadata, then checking the metadata's composer field.  This is done twice: once for an empty field (the resulting metadata should have no composer) and once for a full field (the resulting metadata's composer should be the field's text).
+\item \texttt{testErrors()}: Tests various situations which could cause an error, such as having a negative measure start value.  All error conditions are tested by creating the error conditions, simulating clicking a button, and using \texttt{assertThrows} or \texttt{assertDoesNotThrow} to test for an error (or no error).  Many error situations are tested.
+\item \texttt{testMeasureRange1()}: Tests that empty text fields create the correct specified measure range for measure narrowing (first to last).  It is implemented by clearing the \texttt{measureStart} and \texttt{measureEnd} fields and checking the resuling measure range.
+\item \texttt{testMeasureRange2()}: Tests that typing in a measure range is registered by the system.  It is implemented by setting the text of the measure range fields and then checking the resulting measure range.
+\item \texttt{testNarrowing()}: Tests that the editing panel correctly calls the backend's measure narrowing functionality.  Does not test that the narrowed text is correct, as that is the job of \texttt{MeasureNarrowingTest}.  It is implemented by following a series of steps, using a \texttt{ViewBot} which is artificially connected to an \texttt{EditingPanel}:
+\begin{enumerate}
+\item Load a text tab into the input text area, and edit the measure fields to select a measure range
+\item Ensure that the Edit button is enabled then simulate pressing it
+\item Ensure that the narrowed text tab is correctly loaded into the view's narrowing text box, and that the panel registers that editing is underway
+\item Use \texttt{view.setNarrowedText} to edit the narrowed text
+\item Ensure that the Done button is enabled then simulate pressing it
+\item Ensure that the view's input text is correctly changed, and that the panel registers that editing is complete
+\end{enumerate}
+\item \texttt{testTimeSignature()}: Tests that the EditingPanel correctly uses the time signature functionality.  It is implemented by setting a measure range and time signature in the EditingPanel's text fields, then simulating pressing the Set Time Signature button.  The panel's generated metadata is checked for the resulting time signature.
+\item \texttt{testTitle()}: Tests that the \texttt{EditingPanel} can correctly set the title field.  It is implemented in the same way as \texttt{testComposer()}, except that the case with the empty field has a different output: the metadata should contain the default title "Untitled Score", instead of containing no title.
+\end{itemize}
+
+This testing is sufficient because every important functionality of the \texttt{EditingPanel} is tested.  The code coverage of \texttt{EditingPanel} is 91 \%.  The only code that is not covered by tests is code that should never run, and error code that doesn't finish running due to the way the tests are implemented (because the \texttt{ViewBot}'s \texttt{showErrorMessage} method is implemented by throwing an exception, the methods are marked as missed).
 \subsection{PresenterTest}
-\label{sec:org7179daf}
-These test cases were derived by making one test for each important method of \texttt{Presenter}.\\
+\label{sec:org98d7a9a}
+These test cases were derived by making one test for each important method of \texttt{Presenter}.
 \begin{itemize}
-\item \texttt{testConvert()}: Tests that the Presenter's convert method correctly interacts with the input (gets input text \& instrument, uses the parser to convert the tab and sets the output correctly).  It does not check that the converted MusicXML is correct - that is the backend tests' job.\\
-It is implemented by first loading a sample input from a file and converting it using the parser to get the expected output.  Then, the ViewBot simulates inputting this text and selecting the correct instrument (guitar).  Then, the presenter's convert() method is called.  Finally, the ViewBot's output text is compared with the expected output.\\
-\item \texttt{testConvertAndSave()}: Tests that the Presenter's \texttt{convertAndSave()} method works properly.  It is basically a combination of \texttt{testConvert} and \texttt{testSaveToFile}.  In addition, it tests that the boolean argument of \texttt{convertAndSave} works properly by running twice, once per argument.\\
-It is implemented by loading sample input and issuing a convertAndSave command, similarly to \texttt{testConvert}.  Then, both the View's output and the test file used as output have their contents checked with the correct text.  Like in \texttt{testConvert}, this output is generated by the backend code.\\
-\item \texttt{testErrorNoSelectedFile()}: Tests that the system's commands properly fail (without halting) when the user does not select a file.  Also ensures that the system does not attempt to read from or write to any files in this situation.\\
-It is implemented by calling the Presenter's methods before setting any file.  A simple guitar tab is put into the View's input to prevent any errors caused by the empty input.  Variables counting the number of attempts to read from and write to files is implemented in the Presenter to ensure none of these operations occur.\\
-\item \texttt{testErrors()}: Tests that calling certain operations with an illegal state of the View correctly throws errors.\\
-It is implemented by using the ViewBot's methods to put it in the illegal state, then executing the Presenter's methods inside a assertThrows lambda.\\
-\item \texttt{testLoadFromFile()}: Tests that the "Load from File" command works properly.\\
-It is implemented by using sample text in a file.  A presenter uses its \texttt{loadFromFile()} command to load the text into a ViewBot, and the ViewBot's input text is compared with the text that was in the file.\\
-\item \texttt{testSaveToFile()}: Tests that the "Save to File" command works properly.\\
-Some text is put in the output of a ViewBot.  Then, a Presenter uses its \texttt{saveToFile()} command to save the text to a file.  The file's text is compared with the text that was inputted in the ViewBot.\\
+\item \texttt{testConvert()}: Tests that the Presenter's convert method correctly interacts with the input (gets input text \& instrument, uses the parser to convert the tab and sets the output correctly).  It does not check that the converted MusicXML is correct - that is the backend tests' job.  
+It is implemented by first loading a sample input from a file and converting it using the parser to get the expected output.  Then, the ViewBot simulates inputting this text and selecting the correct instrument (guitar).  Then, the presenter's convert() method is called.  Finally, the ViewBot's output text is compared with the expected output.
+\item \texttt{testConvertAndSave()}: Tests that the Presenter's \texttt{convertAndSave()} method works properly.  It is basically a combination of \texttt{testConvert} and \texttt{testSaveToFile}.  In addition, it tests that the boolean argument of \texttt{convertAndSave} works properly by running twice, once per argument.
+It is implemented by loading sample input and issuing a convertAndSave command, similarly to \texttt{testConvert}.  Then, both the View's output and the test file used as output have their contents checked with the correct text.  Like in \texttt{testConvert}, this output is generated by the backend code.
+\item \texttt{testErrorNoSelectedFile()}: Tests that the system's commands properly fail (without halting) when the user does not select a file.  Also ensures that the system does not attempt to read from or write to any files in this situation.
+It is implemented by calling the Presenter's methods before setting any file.  A simple guitar tab is put into the View's input to prevent any errors caused by the empty input.  Variables counting the number of attempts to read from and write to files is implemented in the Presenter to ensure none of these operations occur.
+\item \texttt{testErrors()}: Tests that calling certain operations with an illegal state of the View correctly throws errors.
+It is implemented by using the ViewBot's methods to put it in the illegal state, then executing the Presenter's methods inside a assertThrows lambda.
+\item \texttt{testLoadFromFile()}: Tests that the "Load from File" command works properly.  
+It is implemented by using sample text in a file.  A presenter uses its \texttt{loadFromFile()} command to load the text into a ViewBot, and the ViewBot's input text is compared with the text that was in the file.
+\item \texttt{testSaveToFile()}: Tests that the "Save to File" command works properly.
+Some text is put in the output of a ViewBot.  Then, a Presenter uses its \texttt{saveToFile()} command to save the text to a file.  The file's text is compared with the text that was inputted in the ViewBot.
 \end{itemize}
 
-This testing is sufficient because every method of the Presenter is covered by a test (except the constructor, which is trivial and has only one line of code).  The Presenter's methods are simple enough that only one test is necessary for each.\\
+This testing is sufficient because every method of the Presenter is covered by a test (except the constructor, which is trivial and has only one line of code).  The Presenter's methods are simple enough that only one test is necessary for each.
 \subsection{PromptingTextAreaTest}
-\label{sec:orgeb07c44}
-These test cases were derived by making one test case for each of the important functionalities of the \texttt{PromptingTextArea}: the colour and font of the prompt, the prompt text disappearing when the text box is focused, typing text in the box, and setting the area's font.\\
+\label{sec:orgdf40e06}
+These test cases were derived by making one test case for each of the important functionalities of the \texttt{PromptingTextArea}: the colour and font of the prompt, the prompt text disappearing when the text box is focused, typing text in the box, and setting the area's font.
 \begin{itemize}
-\item \texttt{testAutoPromptFont()}: Tests that the PromptingTextArea correctly auto-creates prompting and non-prompting fonts.  It is implemented by setting the area's prompt font to null and then calling getPromptFont().  It expects that a newly created font is returned.\\
-\item \texttt{testPromptColourFont()}: Tests that the text box's colour and font is set properly.\\
-This test works by creating a PromptingTextArea, and setting custom fonts with \texttt{setRegularFont()} and \texttt{setPromptFont()}.  The prompt is disabled, and the active colour and font is checked for correctness.  The prompt is enabled, and the same checks are performed.\\
-\item \texttt{testPromptFocusChanges()}: Tests that the text box reacts properly to focus changes.\\
-This test is implemented by simulating gaining and losing focus on the text box, and testing that the text box's text updates correctly.\\
-\item \texttt{testPromptTyping()}: Tests that the text box reacts properly to typing and when methods are run on it (setText and setPromptText).\\
-This test works by undergoing several operations (adding and deleting text, gaining and losing focus, changing the prompt text, manually enabling or disabling the prompt) while checking the text in the box is correct after each step.  Typing and deleting text is simulated using the setText method.\\
-\item \texttt{testSetFont()}: Tests that fonts are set correctly.\\
-This test is implemented by disabling the prompt, and setting the font.  The regular, prompt and active fonts are checked for correctness.  Then, the prompt is enabled and the regular, prompt and active fonts are checked again.  The test is repeated, but the prompt starts enabled and is switched to disabled in the second step.  This is done because the setFont method behaves differently based on whether the prompt is enabled or disabled.\\
+\item \texttt{testAutoPromptFont()}: Tests that the PromptingTextArea correctly auto-creates prompting and non-prompting fonts.  It is implemented by setting the area's prompt font to null and then calling getPromptFont().  It expects that a newly created font is returned.
+\item \texttt{testPromptColourFont()}: Tests that the text box's colour and font is set properly.  
+This test works by creating a PromptingTextArea, and setting custom fonts with \texttt{setRegularFont()} and \texttt{setPromptFont()}.  The prompt is disabled, and the active colour and font is checked for correctness.  The prompt is enabled, and the same checks are performed.
+\item \texttt{testPromptFocusChanges()}: Tests that the text box reacts properly to focus changes.  
+This test is implemented by simulating gaining and losing focus on the text box, and testing that the text box's text updates correctly.
+\item \texttt{testPromptTyping()}: Tests that the text box reacts properly to typing and when methods are run on it (setText and setPromptText).  
+This test works by undergoing several operations (adding and deleting text, gaining and losing focus, changing the prompt text, manually enabling or disabling the prompt) while checking the text in the box is correct after each step.  Typing and deleting text is simulated using the setText method.
+\item \texttt{testSetFont()}: Tests that fonts are set correctly.  
+This test is implemented by disabling the prompt, and setting the font.  The regular, prompt and active fonts are checked for correctness.  Then, the prompt is enabled and the regular, prompt and active fonts are checked again.  The test is repeated, but the prompt starts enabled and is switched to disabled in the second step.  This is done because the setFont method behaves differently based on whether the prompt is enabled or disabled.
 \end{itemize}
 
-This testing is sufficient because every method of the PromptingTextArea is tested at least once, and all important or complex methods have tests dedicated to them and their related methods: \texttt{testPromptColourFont} tests setRegularFont() and setPromptFont(); \texttt{testPromptTyping} tests setText() and setPromptText(); \texttt{testSetFont} tests setFont().  All other public methods are simple getters or setters, or methods that trivially call one of the tested methods.  In addition, the gain or loss of focus, an important feature of the \texttt{PromptingTextArea}, has its own dedicated testing method.\\
+This testing is sufficient because every method of the PromptingTextArea is tested at least once, and all important or complex methods have tests dedicated to them and their related methods: \texttt{testPromptColourFont} tests setRegularFont() and setPromptFont(); \texttt{testPromptTyping} tests setText() and setPromptText(); \texttt{testSetFont} tests setFont().  All other public methods are simple getters or setters, or methods that trivially call one of the tested methods.  In addition, the gain or loss of focus, an important feature of the \texttt{PromptingTextArea}, has its own dedicated testing method.
+\subsection{TabbedViewUserExperinceTest}
+\label{sec:orga351aa3}
+This test tests the user experience of the default \texttt{TabbedView}.  These test cases were derived by considering the important functionality of the view.  Use cases related to metadata editing are covered by \texttt{EditingPanelTest}, so they are not tested here.
+All of the tests are implemented by using the view's package-private fields to simulate the user performing a specific use case, and then checking the correctness of the values or states of the view's fields.
+\begin{itemize}
+\item \texttt{testConvert()}: Tests the "Convert Text Tab" use case.  The output musicXML is compared against output obtained from the backend, as testing the correctness of the output is the responsibility of the backend tests.
+\item \texttt{testInputButtonState()}: Tests the state of the "Convert", "Convert and Save" and "Save Input" buttons in multiple scenarios to ensure they are correctly enabled and disabled depending on the scenario.
+\item \texttt{testOutputButtonState()}: Tests the state of the "Save Output" button in multiple scenarios to ensure it is correctly enabled and disabled depending on the scenario.
+\end{itemize}
+
+This testing is sufficient because all important use cases are covered by either this test or \texttt{EditingPanelTest}.  Code coverage of the "TabbedView" class is 90 \%, and all of the missed instructions are trivial lambda instructions that do not need to be tested.
 \subsection{TimeSignatureTest}
-\label{sec:org3c1012c}
-This is a small test that tests the time signature setting functionality.  It was derived by thinking of situations that could cause problems, and creating one test for simple, non-problematic situations.  Both tests are implemented by creating an \texttt{XMLMetadata} instance with specific time signatures, and checking the contents of the maps returned by \texttt{getTimeSignatures()} and \texttt{getTimeSignatureRanges()}.\\
+\label{sec:org6b85e8c}
+This is a small test that tests the time signature setting functionality.  It was derived by thinking of situations that could cause problems, and creating one test for simple, non-problematic situations.  Both tests are implemented by creating an \texttt{XMLMetadata} instance with specific time signatures, and checking the contents of the maps returned by \texttt{getTimeSignatures()} and \texttt{getTimeSignatureRanges()}.
 \begin{itemize}
-\item \texttt{testTimeSignatures()}: Tests a set of time signatures where the measure ranges do not overlap.\\
-\item \texttt{testNonDisjointIntervals()}: Tests a set of time signatures where the measure ranges do overlap.\\
+\item \texttt{testTimeSignatures()}: Tests a set of time signatures where the measure ranges do not overlap.
+\item \texttt{testNonDisjointIntervals()}: Tests a set of time signatures where the measure ranges do overlap.
 \end{itemize}
 
-This is sufficient testing because it tests an example of every major scenario, and test data for \texttt{XMLMetadata} (which has functionality other than the time signatures being tested, though this functionality is simple enough that it does not need to be tested) is 93 \%.  All instructions in \texttt{XMLMetadata} that relate to time signatures are covered by this test.\\
+This is sufficient testing because it tests an example of every major scenario, and test data for \texttt{XMLMetadata} (which has functionality other than the time signatures being tested, though this functionality is simple enough that it does not need to be tested) is 93 \%.  All instructions in \texttt{XMLMetadata} that relate to time signatures are covered by this test.
 \subsection{ViewTest}
-\label{sec:org118e4e9}
-These tests were derived by making one test for each major method of the View interface.\\
-All tests in this section are run once per View supported by the program, and once for the ViewBot.  This ensures that all of the Views support every possible feature.  Any test in this section that requires use of an unimplemented optional method is skipped.\\
-All three of these tests are implemented by setting the paramater to some value, then comparing the value set to the value returned by the appropriate get method.\\
+\label{sec:org0f356cd}
+These tests were derived by making one test for each major method of the View interface.
+
+All tests in this section are run once per View supported by the program, and once for the ViewBot.  This ensures that all of the Views support every possible feature.  Any test in this section that requires use of an unimplemented optional method is skipped.  
+
 \begin{itemize}
-\item \texttt{testInputText()}: Tests that all of the standard views can correctly get and set their input text.\\
-\item \texttt{testOutputText()}: Tests that all of the standard views can correctly get and set their output text\\
-\item \texttt{testInstrumentSelection()}: Tests that all of the standard views can correctly get and set their instrument selection\\
+\item \texttt{testInputText()}: Tests that all of the standard views can correctly get and set their input text.
+\item \texttt{testOutputText()}: Tests that all of the standard views can correctly get and set their output text
+\item \texttt{testInstrumentSelection()}: Tests that all of the standard views can correctly get and set their instrument selection
 \end{itemize}
 
-This testing is sufficient because, like in the Presenter, every important method in the View interface is tested by one test, except \texttt{showErrorMessage(String, String)}.  The showErrorMessage method cannot be tested automatically (because I do not want to specify \textbf{how} an error message is shown, only that one is shown), and it is trivial enough that I am not worried about it breaking (As of the time this document was written, all implementations of this method have only one line of code).  The View's methods are also simple enough that only one test per View is needed for each method.\\
+All three of these tests are implemented by setting the paramater to some value, then comparing the value set to the value returned by the appropriate get method.
+
+This testing is sufficient because, like in the Presenter, every important method in the View interface is tested by one test, except \texttt{showErrorMessage(String, String)}.  The showErrorMessage method cannot be tested automatically (because I do not want to specify \textbf{how} an error message is shown, only that one is shown), and it is trivial enough that I am not worried about it breaking (As of the time this document was written, all implementations of this method have only one line of code).  The View's methods are also simple enough that only one test per View is needed for each method.
+\newpage
+
 \section{Back-End Tests}
-\label{sec:orge168d15}
+\label{sec:orgd52a181}
 \subsection{ParserTest}
-\label{sec:org0410c3e}
-These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.\\
+\label{sec:org1ec1eb1}
+These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.
 \begin{itemize}
-\item \texttt{testScore()}: Tests that there is the correct amount of Staffs within a given Score.\\
-This test was created by creating a string of a sample text tab, and using the Parse Tree to locate and count all of the staffs contained within the score, then comparing it with the expected amount of staffs.\\
-\item \texttt{testStaff()}: Tests that there is the correct amount of Measures and number of strings in a given Staff.\\
+\item \texttt{testScore()}: Tests that there is the correct amount of Staffs within a given Score.
+This test was created by creating a string of a sample text tab, and using the Parse Tree to locate and count all of the staffs contained within the score, then comparing it with the expected amount of staffs.
+\item \texttt{testStaff()}: Tests that there is the correct amount of Measures and number of strings in a given Staff.
 \end{itemize}
-This test was created by creating a string of a sample text tab of a single staff, and using the Parse Tree to locate and count every measure and every string, then comparing those with the number of expected measures and strings.\\
+This test was created by creating a string of a sample text tab of a single staff, and using the Parse Tree to locate and count every measure and every string, then comparing those with the number of expected measures and strings.
 \begin{itemize}
-\item \texttt{testTuning()}: Tests that each string in a staff is the expected tuning.\\
+\item \texttt{testTuning()}: Tests that each string in a staff is the expected tuning.
 \end{itemize}
-This test was created by creating a string of a sample text tab of a single staff, and using the Parse Tree to locate the tuning of each string and compare that with the expected tunings of each string. For inputs that do not contain string tunings, the expected tuning is the default guitar tuning.\\
+This test was created by creating a string of a sample text tab of a single staff, and using the Parse Tree to locate the tuning of each string and compare that with the expected tunings of each string. For inputs that do not contain string tunings, the expected tuning is the default guitar tuning.
 \begin{itemize}
-\item \texttt{stringItemCompareTo()}: Tests that the parser reads the notes in the correct order that they appear in the text tab.\\
+\item \texttt{stringItemCompareTo()}: Tests that the parser reads the notes in the correct order that they appear in the text tab.
 \end{itemize}
-This test was created by hard coding an array of different notes, with different positions in the tab, and adding them to an array, then comparing each note in the array to an array of each note in the order they are expected.\\
+This test was created by hard coding an array of different notes, with different positions in the tab, and adding them to an array, then comparing each note in the array to an array of each note in the order they are expected.
 
-This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Since the prototype is expected to handle simple tabs, only testing for the simplest components of a text tab were created. In the future this tester will have testing for more complex components, and testing for different components that the parser is not yet set up to interpret.\\
+This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Since the prototype is expected to handle simple tabs, only testing for the simplest components of a text tab were created. In the future this tester will have testing for more complex components, and testing for different components that the parser is not yet set up to interpret.
 \subsection{NoteTest}
-\label{sec:orga61ece0}
-These tests were derived to make sure that note objects, which contain valuable information about notes that can be used in the xml conversion process, can be properly created.\\
+\label{sec:org1de8385}
+These tests were derived to make sure that note objects, which contain valuable information about notes that can be used in the xml conversion process, can be properly created. 
 \begin{itemize}
-\item \texttt{noteTest()}: Tests that notes have the correct name and index.\\
+\item \texttt{noteTest()}: Tests that notes have the correct name and index.
 \end{itemize}
-This test was created by passing note to test, expected name of note and expected index of note as the parameter.\\
+This test was created by passing note to test, expected name of note and expected index of note as the parameter.
 \begin{itemize}
-\item \texttt{testToNote()}: There are 2 versions of testTonote, and both of them have different arguments. The first tests the toNote method in the Note class and checks if a valid note is correctly converted, and the other one tests the invalid notes.\\
+\item \texttt{testToNote()}: There are 2 versions of testTonote, and both of them have different arguments. The first tests the toNote method in the Note class and checks if a valid note is correctly converted, and the other one tests the invalid notes.
 \end{itemize}
-There are 2 testTonote. The first was created by passing the string input(\emph{"tune + fret"}) and the string this note is on, and checks if this was a valid note and if it was converted correctly by comparing it to an expected note. The 2nd one was created just by passing string input(\emph{"tune + fret"}) and checks if an invalid note was entered by using exceptions.\\
+There are 2 testTonote. The first was created by passing the string input(\emph{"tune + fret"}) and the string this note is on, and checks if this was a valid note and if it was converted correctly by comparing it to an expected note. The 2nd one was created just by passing string input(\emph{"tune + fret"}) and checks if an invalid note was entered by using exceptions.
 
-This is sufficient testing because it checks that our system properly handles creating Note objects, which is a very important step in translating the information from text tabs to xml because notes are the main focus of learning songs through text tab. By testing the correctness and validity of these note objects, we can be sure that the notes that appear in a text tab will have the necessary information used in xml.\\
+This is sufficient testing because it checks that our system properly handles creating Note objects, which is a very important step in translating the information from text tabs to xml because notes are the main focus of learning songs through text tab. By testing the correctness and validity of these note objects, we can be sure that the notes that appear in a text tab will have the necessary information used in xml.
 \subsection{MeasureNarrowingTest}
-\label{sec:org8c45c7b}
-These were derived by considering the operations of \texttt{MeasureNarrowing} (including private methods) as well as the possible text tabs that could cause problems.\\
-Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.\\
+\label{sec:orge16add5}
+These were derived by considering the operations of \texttt{MeasureNarrowing} (including private methods) as well as the possible text tabs that could cause problems.
+Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.
 \begin{itemize}
-\item \texttt{testBottomRightCorner()}: Tests the \texttt{bottomRightCorner()} private method.\\
-\item \texttt{testDelinearize()}: Tests the \texttt{delinearize()} private method.\\
-\item \texttt{testExtractDecoratedMeasure()}: Tests the \texttt{extractMeasureRange} method with the Capricho Arabe tab (which has a lot of extra "decoration" around its measure text)\\
-\item \texttt{testExtractMeasure()}: Tests the \texttt{extractMeasureRange} method for a simple input (one measure at a time, one "row" of text tab)\\
-\item \texttt{testExtractMultilineMeasure()}: Tests the \texttt{extractMeasureRange} method for a complex input (tests a multi-row text tab, extracted range goes across a row boundary)\\
-\item \texttt{testExtractRepeatedMeasure()}: Tests the \texttt{extractMeasureRange} method on a tab with a repeated measure (since the method relies on the '|' character to delimit measures, repeated measures can cause errors by having two '|' characters).\\
-\item \texttt{testLinearize()}: Tests the \texttt{linearize()} private method.\\
-\item \texttt{testReplaceMeasure()}: Tests the \texttt{replaceMeasureRange} method for a simple input.\\
-\item \texttt{testReplaceMultilineMeasure()}: Tests the \texttt{replaceMeasureRange} method for a complex input.\\
-\item \texttt{testTopLeftCorner()}: Tests the \texttt{topLeftCorner()} private method.\\
+\item \texttt{testBottomRightCorner()}: Tests the \texttt{bottomRightCorner()} private method.
+\item \texttt{testDelinearize()}: Tests the \texttt{delinearize()} private method.
+\item \texttt{testExtractDecoratedMeasure()}: Tests the \texttt{extractMeasureRange} method with the Capricho Arabe tab (which has a lot of extra "decoration" around its measure text)
+\item \texttt{testExtractMeasure()}: Tests the \texttt{extractMeasureRange} method for a simple input (one measure at a time, one "row" of text tab)
+\item \texttt{testExtractMultilineMeasure()}: Tests the \texttt{extractMeasureRange} method for a complex input (tests a multi-row text tab, extracted range goes across a row boundary)
+\item \texttt{testExtractRepeatedMeasure()}: Tests the \texttt{extractMeasureRange} method on a tab with a repeated measure (since the method relies on the '|' character to delimit measures, repeated measures can cause errors by having two '|' characters).
+\item \texttt{testLinearize()}: Tests the \texttt{linearize()} private method.
+\item \texttt{testReplaceMeasure()}: Tests the \texttt{replaceMeasureRange} method for a simple input.
+\item \texttt{testReplaceMultilineMeasure()}: Tests the \texttt{replaceMeasureRange} method for a complex input.
+\item \texttt{testTopLeftCorner()}: Tests the \texttt{topLeftCorner()} private method.
 \end{itemize}
 
-This is sufficent testing because multiple distinct tabs are tested, and the code coverage for \texttt{MeasureNarrowing} is 98 \%.  Its package-private static member class \texttt{StringPosition} has 69 \% code coverage, but the uncovered methods are all also unused (and all of them are trivial or autogenerated by Eclipse).\\
+This is sufficent testing because multiple distinct tabs are tested, and the code coverage for \texttt{MeasureNarrowing} is 98 \%.  Its package-private static member class \texttt{StringPosition} has 69 \% code coverage, but the uncovered methods are all also unused (and all of them are trivial or autogenerated by Eclipse).
 \end{document}

@@ -181,13 +181,13 @@ final class EditingPanel extends JPanel {
 		final JLabel titleLabel = new JLabel("Title:");
 		metadataPanel.add(titleLabel, gridBag(0, 0, 1, 1, INSETS));
 		
-		this.titleField = new JTextField(40);
+		this.titleField = new JTextField(30);
 		metadataPanel.add(this.titleField, gridBag(1, 0, 2, 1, INSETS));
 		
 		final JLabel composerLabel = new JLabel("Composer:");
 		metadataPanel.add(composerLabel, gridBag(0, 1, 1, 1, INSETS));
 		
-		this.composerField = new JTextField(40);
+		this.composerField = new JTextField(30);
 		metadataPanel.add(this.composerField, gridBag(1, 1, 2, 1, INSETS));
 		
 //		final JButton setTitleButton = new JButton("Set Title");

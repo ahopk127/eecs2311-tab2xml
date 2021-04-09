@@ -4,9 +4,10 @@ View -> Presenter : Call detectInstrument()
 Presenter -> Parser : Call getDetectedInstrument()
 Presenter <-- Parser : return detected instrument
 View <-- Presenter : Update selected instrument
+User -> View : Input metadata
 User -> View : Click "Convert and Save"
 View -> Presenter : Call convertAndSave()
-View -> Presenter : provide input text
+View -> Presenter : provide input text, \ninstrument and metadata
 Presenter -> Parser : provide input text
 Parser -> Processor : Call process()
 Processor -> SerializeGuitarScore : Call visit()

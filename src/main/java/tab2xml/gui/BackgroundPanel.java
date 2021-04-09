@@ -25,7 +25,7 @@ import javax.swing.border.EmptyBorder;
  */
 public final class BackgroundPanel extends JPanel {
 	/** Space allowed aronud the main app for the background. */
-	private static final Insets DEFAULT_INSETS = new Insets(100, 200, 100, 200);
+	private static final Insets DEFAULT_INSETS = new Insets(80, 200, 80, 200);
 	
 	private static final long serialVersionUID = 7022962804082734271L;
 	
