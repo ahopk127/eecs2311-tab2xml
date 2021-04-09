@@ -2,12 +2,10 @@
 
 package tab2xml.gui {
   interface View {}
-  abstract class AbstractSwingView {}
   class Presenter {}
 
   Presenter "1" o-- View
-  View <|-- AbstractSwingView
-  AbstractSwingView "1" o-- Presenter
+  View "0-1" o-- Presenter
 }
 
 package tab2xml.model {

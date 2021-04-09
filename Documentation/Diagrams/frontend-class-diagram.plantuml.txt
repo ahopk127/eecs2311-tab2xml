@@ -4,6 +4,7 @@ interface View {
   +{static} createView(ViewType) : View
   +{abstract} getInputText() : String
   +{abstract} getSelectedInstrument() : Instrument
+  +getMetadata() : XMLMetadata
   +{abstract} setOutputText(String)
   +{abstract} promptForFile(FileNameExtensionFilter) : Optional<Path>
   +{abstract} showErrorMessage(String, String)
@@ -43,14 +44,17 @@ abstract class AbstractSwingView {
 }
 ~class SingleEntryView {
 }
+~class EditingPanel {
+}
 
-Presenter "1" o-- View
-AbstractSwingView "1" o-- Presenter
+View -o "1" Presenter
+Presenter --o "1" AbstractSwingView
+EditingPanel --o "1" TabbedView
 View <|-- AbstractSwingView
 View <|-- NarrowingView
 AbstractSwingView <|-- TabbedView
 NarrowingView <|-- TabbedView
 AbstractSwingView <|-- SingleEntryView
-View <|-- ViewBot
+NarrowingView <|-- ViewBot
 
 @enduml
