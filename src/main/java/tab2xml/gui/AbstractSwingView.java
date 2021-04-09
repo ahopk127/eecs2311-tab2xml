@@ -92,10 +92,22 @@ public abstract class AbstractSwingView implements View {
 			
 			// read files
 			if (droppedFiles.size() == 1) {
-				AbstractSwingView.this.presenter.loadFromFile(droppedFiles.get(0))
+				final Path droppedFile = droppedFiles.get(0);
+				
+				// sanity check if extension is not txt
+				if (!droppedFile.toString().endsWith(".txt")) {
+					final Optional<Boolean> response = AbstractSwingView.this
+							.promptOK("Drag and Drop",
+									"The file you are dragging and dropping is not a .txt file.  "
+											+ "Are you sure you want to drag and drop this file?");
+					if (response.isEmpty() || response.get() == false)
+						return;
+				}
+				
+				// load the file
+				AbstractSwingView.this.presenter.loadFromFile(droppedFile)
 						.ifPresent(AbstractSwingView.this::setInputText);
-				AbstractSwingView.this.defaultDirectory = droppedFiles.get(0)
-						.toFile();
+				AbstractSwingView.this.defaultDirectory = droppedFile.toFile();
 			} else {
 				AbstractSwingView.this.showErrorMessage("Wrong number of files.",
 						"You can only use one file at a time.");
@@ -416,7 +428,7 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 
+	 * 				
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {
