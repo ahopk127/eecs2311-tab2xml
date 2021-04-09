@@ -254,7 +254,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		errors.removeIf(e -> !InputValidation.containsError(e, this.getInputText()));
 		
 		if (errors.isEmpty()) {
-			this.getInput().getHighlighter().removeAllHighlights();
+			this.removeAllHighlights();
 		}
 		
 		this.convertButton.setEnabled(!inputBlank && this.errors.isEmpty());

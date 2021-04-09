@@ -3,7 +3,6 @@ package tab2xml.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -108,10 +107,11 @@ public abstract class AbstractSwingView implements View {
 		}
 	}
 	
-	private static final HighlightPainter ERROR_PAINTER = new DefaultHighlightPainter(
+	private static final HighlightPainter ERROR_PAINTER = new TabHighlightPainter(
 			new Color(247, 19, 37, 50));
-	private static final HighlightPainter WARNING_PAINTER = new DefaultHighlightPainter(
+	private static final HighlightPainter WARNING_PAINTER = new TabHighlightPainter(
 			Color.YELLOW);
+	private static final int UNDO_LIMIT = 200;
 	
 	/**
 	 * Enables the system look-and-feel in Swing, if it works.
@@ -454,13 +454,23 @@ public abstract class AbstractSwingView implements View {
 		});
 	}
 	
+	protected final void removeAllHighlights() {
+		Highlighter highlighter = this.getInput().getHighlighter();
+		Highlighter.Highlight[] currHighlights = highlighter.getHighlights();
+		
+		for (int i = 0; i < currHighlights.length; i++) {
+			if (currHighlights[i].getPainter() instanceof TabHighlightPainter)
+				highlighter.removeHighlight(currHighlights[i]);
+		}
+	}
+	
 	/**
 	 * Sets up the undo manager for the given input document.
-	 * 
 	 */
 	protected final void setUpUndoManager() {
+		this.undoManager.setLimit(UNDO_LIMIT);
 		this.getInput().getDocument().addUndoableEditListener(new UndoableEditListener() {
-			
+
 			@Override
 			public void undoableEditHappened(UndoableEditEvent e) {
 				undoManager.addEdit(e.getEdit());
@@ -485,18 +495,9 @@ public abstract class AbstractSwingView implements View {
 	}
 	
 	/**
-	 * Sets up the undo manager for the given input document.
-	 * 
+	 * Sets up the redo manager for the given input document.
 	 */
 	protected final void setUpRedoManager() {
-		this.getInput().getDocument().addUndoableEditListener(new UndoableEditListener() {
-			
-			@Override
-			public void undoableEditHappened(UndoableEditEvent e) {
-				undoManager.addEdit(e.getEdit());
-			}
-		});
-		
 		this.getInput().getActionMap().put("Redo", new AbstractAction() {
 			private static final long serialVersionUID = -2412630467987603551L;
 
