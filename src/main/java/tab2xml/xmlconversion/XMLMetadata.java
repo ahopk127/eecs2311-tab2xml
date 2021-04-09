@@ -218,7 +218,7 @@ public final class XMLMetadata {
 			timeSignatureRanges.put(range, prevSignature);
 
 			// store map for later
-			this.timeSignatureRanges = Collections.unmodifiableMap(timeSignatureRanges);
+			this.timeSignatureRanges = timeSignatureRanges;
 		}
 
 		return this.timeSignatureRanges;
@@ -231,7 +231,7 @@ public final class XMLMetadata {
 	 * @since 2021-03-22
 	 */
 	public final Map<Integer, TimeSignature> timeSignatures() {
-		return Collections.unmodifiableMap(this.timeSignatures);
+		return this.timeSignatures;
 	}
 
 	/**

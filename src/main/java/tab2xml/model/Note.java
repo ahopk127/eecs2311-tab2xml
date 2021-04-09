@@ -22,6 +22,7 @@ public abstract class Note extends LineItem {
 
 	/* Additional attributes */
 	protected boolean hasStem;
+	protected boolean isDotted;
 	protected String duration;
 	protected String type;
 	protected String voice;
@@ -97,7 +98,7 @@ public abstract class Note extends LineItem {
 	}
 
 	/** @return {@code true} is this note has a stem */
-	public boolean isHasStem() {
+	public boolean hasStem() {
 		return hasStem;
 	}
 
@@ -108,6 +109,20 @@ public abstract class Note extends LineItem {
 	 */
 	public void setHasStem(boolean hasStem) {
 		this.hasStem = hasStem;
+	}
+
+	/** @return {@code true} if this note is dotted. */
+	public boolean isDotted() {
+		return isDotted;
+	}
+
+	/**
+	 * Set whether this note's duration is increased by half its original.
+	 * 
+	 * @param isDotted the value to set
+	 */
+	public void setDotted(boolean isDotted) {
+		this.isDotted = isDotted;
 	}
 
 	/** @return the duration of this note */
@@ -133,22 +148,45 @@ public abstract class Note extends LineItem {
 
 	/** @return the type of this note */
 	public String getType() {
-		switch ((int) (durationVal)) {
-		case 128:
+		if (durationVal == 128.0) {
 			return "128th";
-		case 64:
+		} else if (durationVal == 64) {
 			return "64th";
-		case 32:
+		} else if (durationVal == 32) {
 			return "32nd";
-		case 16:
+		} else if (durationVal == 16) {
 			return "16th";
-		case 8:
+		} else if (durationVal == 8) {
 			return "eighth";
-		case 4:
+		} else if (durationVal == 4) {
 			return "quarter";
-		case 2:
+		} else if (durationVal == 2) {
 			return "half";
-		default:
+		} else if (durationVal == 192) {
+			setDotted(true);
+			return "128th";
+		} else if (durationVal == 96) {
+			setDotted(true);
+			return "64th";
+		} else if (durationVal == 48) {
+			setDotted(true);
+			return "32nd";
+		} else if (durationVal == 24) {
+			setDotted(true);
+			return "16th";
+		} else if (durationVal == 12) {
+			setDotted(true);
+			return "eighth";
+		} else if (durationVal == 6) {
+			setDotted(true);
+			return "quarter";
+		} else if (durationVal == 3) {
+			setDotted(true);
+			return "half";
+		} else if (durationVal == 1.5) {
+			setDotted(true);
+			return "whole";
+		} else {
 			return "whole";
 		}
 	}

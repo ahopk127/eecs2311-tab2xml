@@ -108,16 +108,37 @@ public class Transform<T extends Staff<? extends Line>> {
 		setGuitarBassStaffAttributes(staff, measures.get(0));
 
 		Map<IntRange, TimeSignature> map = metadata.timeSignatureRanges();
-
+		map.keySet().stream().filter(r -> map.get(r) == null)
+				.forEach(r -> map.put(r, TimeSignature.valueOf(staff.getBeats(), staff.getBeatType())));
+		
 		// all time signatures are set here before appending any notes.
 		for (IntRange range : map.keySet()) {
+			int count = 0;
 			for (int i = 0; i < measureCount; i++) {
 				XMLElement attributes = null;
 				TimeSignature ts = map.get(range);
+				if (ts == null)
+					continue;
 				// skip first measure, set the other ranges with set time signatures.
 				if (!range.contains(1) && range.contains(i + 1) && staff.time() != ts.toString()) {
 					attributes = new XMLElement("attributes", musicSheet);
 					XMLElement time = new XMLElement("time", musicSheet);
+					if (count == 0)
+						time.setAttribute("print-object", "yes");
+					else
+						time.setAttribute("print-object", "no");
+					XMLElement beats = new XMLElement("beats", musicSheet);
+					beats.setText(String.valueOf(ts.upperNumeral()));
+					XMLElement beatType = new XMLElement("beat-type", musicSheet);
+					beatType.setText(String.valueOf(ts.lowerNumeral()));
+					time.append(beats, beatType);
+					attributes.append(time);
+					measures.get(i).append(attributes);
+					count++;
+				} else if (count != 0 && !range.contains(1) && range.contains(i + 1) && staff.time() == ts.toString()) {
+					attributes = new XMLElement("attributes", musicSheet);
+					XMLElement time = new XMLElement("time", musicSheet);
+					time.setAttribute("print-object", "yes");
 					XMLElement beats = new XMLElement("beats", musicSheet);
 					beats.setText(String.valueOf(ts.upperNumeral()));
 					XMLElement beatType = new XMLElement("beat-type", musicSheet);
