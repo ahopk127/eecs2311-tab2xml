@@ -66,7 +66,25 @@ public abstract class AbstractSwingView implements View {
 		public synchronized void drop(DropTargetDropEvent event) {
 			event.acceptDrop(DnDConstants.ACTION_COPY);
 			
-			// get a list of the files that were dragged and dropped into the text
+			final List<DataFlavor> dataFlavours = event
+					.getCurrentDataFlavorsAsList();
+			
+			if (dataFlavours.contains(DataFlavor.javaFileListFlavor)) {
+				this.loadFromFile(event);
+			} else if (dataFlavours.contains(DataFlavor.stringFlavor)) {
+				this.loadFromText(event);
+			}
+		}
+		
+		/**
+		 * Run when a file is dragged and dropped into the input.
+		 *
+		 * @param event drag and drop event
+		 * @since 2021-04-09
+		 */
+		private synchronized void loadFromFile(DropTargetDropEvent event) {
+			// get a list of the files that were dragged and dropped into the
+			// text
 			// area.
 			final List<Path> droppedFiles;
 			try {
@@ -113,6 +131,29 @@ public abstract class AbstractSwingView implements View {
 						"You can only use one file at a time.");
 				return;
 			}
+		}
+		
+		/**
+		 * Run whenever text is dragged and dropped into the input.
+		 *
+		 * @param event drag and drop event
+		 * @since 2021-04-09
+		 */
+		private synchronized void loadFromText(DropTargetDropEvent event) {
+			// this cast should always succeed, because the stringFlavor argument
+			// guarantees the result is of type String.
+			final String result;
+			try {
+				result = (String) event.getTransferable()
+						.getTransferData(DataFlavor.stringFlavor);
+			} catch (IOException | UnsupportedFlavorException e) {
+				e.printStackTrace();
+				AbstractSwingView.this.showErrorMessage(e.getClass() + " occurred.",
+						e.getLocalizedMessage());
+				return;
+			}
+			
+			AbstractSwingView.this.setInputText(result);
 		}
 	}
 	
