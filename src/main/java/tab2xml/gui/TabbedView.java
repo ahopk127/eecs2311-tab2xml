@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashSet;
@@ -165,82 +166,27 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (errors == null)
-					return;
-				if (errors.size() == 0)
-					return;
-				for (ErrorToken error: errors) {
-					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
-					if (offset >= error.getStart() && offset <= error.getStop()) {
-						TabbedView.this.getInput().setToolTipText(error.getMesage());
-						return;
-					}
-					TabbedView.this.getInput().setToolTipText(null);
-				}
-			}
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (errors == null)
-					return;
-				if (errors.size() == 0)
-					return;
-				for (ErrorToken error: errors) {
-					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
-					if (offset >= error.getStart() && offset <= error.getStop()) {
-						TabbedView.this.getInput().setToolTipText(error.getMesage());
-						return;
-					}
-					TabbedView.this.getInput().setToolTipText(null);
-				}
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				if (errors == null)
-					return;
-				if (errors.size() == 0)
-					return;
-				for (ErrorToken error: errors) {
-					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
-					if (offset >= error.getStart() && offset <= error.getStop()) {
-						TabbedView.this.getInput().setToolTipText(error.getMesage());
-						return;
-					}
-					TabbedView.this.getInput().setToolTipText(null);
-				}
+				checkErrorToModel(e.getPoint());
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				if (errors == null)
-					return;
-				if (errors.size() == 0)
-					return;
-				for (ErrorToken error: errors) {
-					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
-					if (offset >= error.getStart() && offset <= error.getStop()) {
-						TabbedView.this.getInput().setToolTipText(error.getMesage());
-						return;
-					}
-					TabbedView.this.getInput().setToolTipText(null);
-				}
+				checkErrorToModel(e.getPoint());
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (errors == null)
-					return;
-				if (errors.size() == 0)
-					return;
-				for (ErrorToken error: errors) {
-					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
-					if (offset >= error.getStart() && offset <= error.getStop()) {
-						TabbedView.this.getInput().setToolTipText(error.getMesage());
-						return;
-					}
-					TabbedView.this.getInput().setToolTipText(null);
-				}
+				checkErrorToModel(e.getPoint());
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// do nothing 
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// do nothing
 			}
 		});
 		
@@ -379,5 +325,20 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		this.convertAndSave.setEnabled(!inputBlank && this.errors.isEmpty());
 		this.saveInput.setEnabled(!inputBlank);
 		this.saveOutput.setEnabled(!this.output.getText().isBlank());
+	}
+	
+	final void checkErrorToModel(Point mousePos) {
+		if (errors == null)
+			return;
+		if (errors.size() == 0)
+			return;
+		for (ErrorToken error: errors) {
+			int offset = TabbedView.this.getInput().viewToModel2D(mousePos);
+			if (offset >= error.getStart() && offset <= error.getStop()) {
+				TabbedView.this.getInput().setToolTipText(error.getMesage());
+				return;
+			}
+			TabbedView.this.getInput().setToolTipText(null);
+		}
 	}
 }
