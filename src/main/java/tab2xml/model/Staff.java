@@ -229,6 +229,18 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 		return bars;
 	}
 
+	protected static Bar[] getStartRepeatBars(List<LinkedList<LineItem>> list) {
+		int column = 1;
+		for (;;) {
+			Bar[] bars = getFirstBarsAt(column, list);
+			if (isEmpty(bars))
+				return null;
+			if (isRepeatBegin(bars))
+				return bars;
+			column++;
+		}
+	}
+
 	protected static Bar[] getEndRepeatBars(List<LinkedList<LineItem>> list) {
 		int column = 1;
 		for (;;) {
@@ -240,17 +252,20 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 			column++;
 		}
 	}
+	
 
 	protected static boolean isRepeatBegin(Bar[] bars) {
 		if (bars == null || bars.length == 0)
 			return false;
-		return bars[2].isStartBar() && bars[3].isStartBar();
+		return (bars.length / 2 == 0 ? bars[bars.length / 2 - 1].isStartBar() && bars[bars.length / 2].isStartBar()
+				: bars[bars.length / 2].isStartBar());
 	}
 
 	protected static boolean isRepeatEnd(Bar[] bars) {
 		if (bars == null || bars.length == 0)
 			return false;
-		return bars[2].isStopBar() && bars[3].isStopBar();
+		return (bars.length / 2 == 0 ? bars[bars.length / 2 - 1].isStopBar() && bars[bars.length / 2].isStopBar()
+				: bars[bars.length / 2].isStopBar());
 	}
 
 	protected static boolean isJustDoubleBars(Bar[] bars) {
@@ -274,6 +289,8 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 
 	protected static boolean isEmpty(Bar[] bars) {
 		boolean isEmpty = true;
+		if (bars == null)
+			return isEmpty;
 		for (Bar bar : bars) {
 			if (bar != null) {
 				isEmpty = false;

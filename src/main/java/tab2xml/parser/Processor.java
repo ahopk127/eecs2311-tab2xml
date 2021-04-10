@@ -18,7 +18,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import tab2xml.ImmutablePair;
 import tab2xml.antlr.DrumTabLexer;
 import tab2xml.antlr.DrumTabParser;
 import tab2xml.antlr.GuitarTabLexer;
@@ -46,7 +45,9 @@ public class Processor {
 
 	private String input;
 	private final Instrument instrument;
-	private XMLMetadata metadata;
+	private final XMLMetadata metadata;
+	private final InputValidation validator;
+	@SuppressWarnings("unused")
 	private LinkedList<ParsingWarning> preprocessWarnings;
 
 	/**
@@ -60,6 +61,7 @@ public class Processor {
 		this.instrument = instrument;
 		this.metadata = metadata;
 		this.preprocessWarnings = new LinkedList<>();
+		this.validator = InputValidation.newInstance(input, instrument);
 	}
 
 	/**
@@ -74,11 +76,11 @@ public class Processor {
 		System.out.println(this.input);
 		System.out.println("=========================================");
 
-		InputValidation.validate(input, instrument);
-		if (!InputValidation.isValidScore())
-			showErrors(InputValidation.getScoreErrors());
-		else if (!InputValidation.isValidStaffs())
-			showErrors(InputValidation.getStaffErrors());
+		this.validator.validate();
+		if (!this.validator.isValidScore())
+			showErrors(this.validator.getScoreErrors());
+		else if (!this.validator.isValidStaffs())
+			showErrors(this.validator.getStaffErrors());
 
 		switch (this.instrument) {
 		case GUITAR:

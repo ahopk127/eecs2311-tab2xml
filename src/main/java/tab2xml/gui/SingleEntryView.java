@@ -13,6 +13,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.text.JTextComponent;
 
+
 /**
  * A view with a single text box, handling both input and output.
  *

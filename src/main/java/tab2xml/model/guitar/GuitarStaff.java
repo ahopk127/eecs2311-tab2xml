@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Stack;
 import java.util.TreeSet;
 
 import tab2xml.ImmutablePair;
@@ -223,6 +224,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 	private static class InitialStaffIterator implements Iterator<LineItem> {
 		private List<LinkedList<LineItem>> notes;
 		private PriorityQueue<LineItem> pq;
+		private Stack<Integer> repeatStack; 
 		private final int X = 1;
 		private int y;
 		private int numStrings;
@@ -251,6 +253,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 			totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 			totalNotesInStaff = staff.getNoteCount();
 			pq = new PriorityQueue<>();
+			repeatStack = new Stack<>();
 		}
 
 		/**
@@ -327,6 +330,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 				if (endRepeats != null) {
 					int c = endRepeats[0].getRepeatCount();
 					note.setRepeatCount((c == -1 ? 1 : c));
+					repeatStack.push(c);
 				}
 				setFirstRepeatNote = false;
 			}
@@ -369,6 +373,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 
 				// last note passes
 				if (isRepeatEnd(bars)) {
+					note.setRepeatCount(repeatStack.pop());
 					note.setRepeatedStop(true);
 				}
 

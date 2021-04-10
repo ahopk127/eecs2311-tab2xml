@@ -5,8 +5,14 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,6 +23,8 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
 import tab2xml.exceptions.UnparseableInputException;
@@ -47,7 +55,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	
 	
 	/** List of error tokens */
-	private List<ErrorToken> errors;
+	private SortedSet<ErrorToken> errors;
 	
 	/** The pane containing the input and output tabs. */
 	private final JTabbedPane inputOutputPane;
@@ -73,7 +81,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	 * @since 2021-03-10
 	 */
 	public TabbedView() {
-		this.errors = new LinkedList<>();
+		this.errors = new TreeSet<>();
 		
 		this.frame.setResizable(false);
 		
@@ -136,6 +144,106 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		this.setUpRedoManager();
 		this.input.addCaretListener(e -> this.presenter.detectInstrument());
 		this.input.addCaretListener(e -> this.updateButtons());
+		this.input.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				TabbedView.this.updateButtons();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				TabbedView.this.updateButtons();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+		
+		this.getInput().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (errors == null)
+					return;
+				if (errors.size() == 0)
+					return;
+				for (ErrorToken error: errors) {
+					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
+					if (offset >= error.getStart() && offset <= error.getStop()) {
+						TabbedView.this.getInput().setToolTipText(error.getMesage());
+						return;
+					}
+					TabbedView.this.getInput().setToolTipText(null);
+				}
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (errors == null)
+					return;
+				if (errors.size() == 0)
+					return;
+				for (ErrorToken error: errors) {
+					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
+					if (offset >= error.getStart() && offset <= error.getStop()) {
+						TabbedView.this.getInput().setToolTipText(error.getMesage());
+						return;
+					}
+					TabbedView.this.getInput().setToolTipText(null);
+				}
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if (errors == null)
+					return;
+				if (errors.size() == 0)
+					return;
+				for (ErrorToken error: errors) {
+					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
+					if (offset >= error.getStart() && offset <= error.getStop()) {
+						TabbedView.this.getInput().setToolTipText(error.getMesage());
+						return;
+					}
+					TabbedView.this.getInput().setToolTipText(null);
+				}
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				if (errors == null)
+					return;
+				if (errors.size() == 0)
+					return;
+				for (ErrorToken error: errors) {
+					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
+					if (offset >= error.getStart() && offset <= error.getStop()) {
+						TabbedView.this.getInput().setToolTipText(error.getMesage());
+						return;
+					}
+					TabbedView.this.getInput().setToolTipText(null);
+				}
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (errors == null)
+					return;
+				if (errors.size() == 0)
+					return;
+				for (ErrorToken error: errors) {
+					int offset = TabbedView.this.getInput().viewToModel2D(e.getPoint());
+					if (offset >= error.getStart() && offset <= error.getStop()) {
+						TabbedView.this.getInput().setToolTipText(error.getMesage());
+						return;
+					}
+					TabbedView.this.getInput().setToolTipText(null);
+				}
+			}
+		});
+		
 		inputPanel.add(
 				new JScrollPane(this.input,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -202,7 +310,6 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	public void onParseError(UnparseableInputException error) {
 		this.convertButton.setEnabled(false);
 		this.convertAndSave.setEnabled(false);
-		this.errors.addAll(error.getErrors());
 		super.onParseError(error);
 	}
 
@@ -251,16 +358,26 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	final void updateButtons() {
 		final boolean inputBlank = this.input.getText().isBlank();
 		// check if errors are still here 
-		errors.removeIf(e -> !InputValidation.containsError(e, this.getInputText()));
+		final InputValidation validateUpdate = InputValidation.newInstance(this.getInputText(), this.getSelectedInstrument());
+		validateUpdate.validate();
+		this.errors.removeIf(e -> !validateUpdate.getScoreErrors().contains(e));
 		
-		if (errors.isEmpty()) {
+		// use back-end validation to update errors
+		if (!validateUpdate.isValidScore()) 
+			this.errors.addAll(validateUpdate.getScoreErrors());
+		else if (!validateUpdate.isValidStaffs()) 
+			this.errors.addAll(validateUpdate.getStaffErrors());
+			
+		this.highlightErrors(this.errors);
+		
+		if (validateUpdate.isValid()) {
 			this.removeAllHighlights();
+			this.getInput().setToolTipText(null);
 		}
 		
 		this.convertButton.setEnabled(!inputBlank && this.errors.isEmpty());
 		this.convertAndSave.setEnabled(!inputBlank && this.errors.isEmpty());
 		this.saveInput.setEnabled(!inputBlank);
-		
 		this.saveOutput.setEnabled(!this.output.getText().isBlank());
 	}
 }

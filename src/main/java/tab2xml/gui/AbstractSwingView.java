@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
@@ -32,7 +33,6 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
 
@@ -454,6 +454,9 @@ public abstract class AbstractSwingView implements View {
 		});
 	}
 	
+	/**
+	 * This method removes only highlights that use an instances of {@code TabHighlightPainter}
+	 */
 	protected final void removeAllHighlights() {
 		Highlighter highlighter = this.getInput().getHighlighter();
 		Highlighter.Highlight[] currHighlights = highlighter.getHighlights();
@@ -462,6 +465,32 @@ public abstract class AbstractSwingView implements View {
 			if (currHighlights[i].getPainter() instanceof TabHighlightPainter)
 				highlighter.removeHighlight(currHighlights[i]);
 		}
+	}
+	
+	/** 
+	 * This method highlights all the invalid input and scrolls to the first occurrence.
+	 * 
+	 * @param errors a collection of errors form the Validation process.
+	 */
+	protected final void highlightErrors(SortedSet< ? extends ErrorToken> errors) {
+		if (errors == null)
+			return;
+		if (errors.isEmpty())
+			return;
+		
+		ErrorToken firstError = errors.first();
+		try {
+			Rectangle2D rec = this.getInput().modelToView2D(firstError.getStart());
+			this.getInput().scrollRectToVisible(rec.getBounds());
+		} catch(BadLocationException e) {
+			System.err.format("BadLocation: %s%n", e);
+			e.printStackTrace();
+		}
+		// remove all highlights before update
+		removeAllHighlights();
+		// highlight position of each error token
+		errors.forEach(token -> highlightToken(token,
+				this.getInput().getHighlighter(), ERROR_PAINTER));
 	}
 	
 	/**

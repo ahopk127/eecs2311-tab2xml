@@ -1,11 +1,13 @@
 package tab2xml.model;
 
+import java.util.Objects;
+
 /**
  * An error token for invalid inputs when parsing.
  * 
  * @author amir
  */
-public class ErrorToken {
+public class ErrorToken implements Comparable<ErrorToken> {
 	private String data;
 	private String message;
 	private int start;
@@ -116,7 +118,32 @@ public class ErrorToken {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(start, data);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ErrorToken other = (ErrorToken) obj;
+		if (this.getStart() == other.getStart() && this.getData().equals(other.getData()))
+			return true;
+		return false;
+	}
+
+	@Override
+	public int compareTo(ErrorToken o) {
+		return this.getStart() - o.getStart();
+	}
+
+	@Override
 	public String toString() {
 		return data;
 	}
+
 }
