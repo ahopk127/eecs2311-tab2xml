@@ -391,15 +391,15 @@ public class GuitarNote extends Note {
 	 * @throws InputMismatchException if the input combination is invalid
 	 */
 	private static final NoteType setNoteType(String tune, String fret) {
-		tune = tune.toUpperCase();
+		String upperTune = tune.toUpperCase();
 		int fretNum = Integer.parseInt(fret);
 		Pattern p = Pattern.compile("^[A-G]\\d+$");
-		String input = tune + fretNum;
+		String input = upperTune + fretNum;
 
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException("The input is invalid.");
 
-		int oldIndex = GuitarNote.getNoteType(tune).ordinal();
+		int oldIndex = GuitarNote.getNoteType(upperTune).ordinal();
 		int index = (oldIndex + fretNum) % 12;
 
 		NoteType noteType = NoteType.values()[index];

@@ -18,7 +18,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import tab2xml.ImmutablePair;
 import tab2xml.antlr.DrumTabLexer;
 import tab2xml.antlr.DrumTabParser;
 import tab2xml.antlr.GuitarTabLexer;
