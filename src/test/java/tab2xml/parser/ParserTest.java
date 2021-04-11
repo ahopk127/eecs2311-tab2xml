@@ -81,7 +81,7 @@ class ParserTest {
 	}
 
 	@Test
-	void testConversion_0() {
+	void testGuitarConversion_0() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -150,7 +150,7 @@ class ParserTest {
 	}
 
 	@Test
-	void testConversion_1() {
+	void testGuitarConversion_1() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -229,7 +229,7 @@ class ParserTest {
 	}
 
 	@Test
-	void testConversion_2() {
+	void testGuitarConversion_2() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -322,7 +322,7 @@ class ParserTest {
 	}
 
 	@Test
-	void testConversion_3() {
+	void testGuitarConversion_3() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -388,7 +388,7 @@ class ParserTest {
 	}
 
 	@Test
-	void testConversion_4() {
+	void testGuitarConversion_4() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -462,7 +462,7 @@ class ParserTest {
 	 * @author sayed
 	 */
 	@Test
-	void testConversion_0_Bass() {
+	void testBassConversion_0() {
 		final String input;
 		final Instrument instrument = Instrument.BASS;
 
@@ -536,7 +536,7 @@ class ParserTest {
 	 * @author sayed
 	 */
 	@Test
-	void testConversion_1_Bass() {
+	void testBassConversion_1() {
 		final String input;
 		final Instrument instrument = Instrument.BASS;
 
@@ -612,7 +612,7 @@ class ParserTest {
 	 * @author sayed
 	 */
 	@Test
-	void testConversion_2_Bass() {
+	void testBassConversion_2() {
 		final String input;
 		final Instrument instrument = Instrument.BASS;
 
@@ -694,7 +694,7 @@ class ParserTest {
 	 * @author sayed
 	 */
 	@Test
-	void testConversion_3_Bass() {
+	void testBassConversion_3() {
 		final String input;
 		final Instrument instrument = Instrument.BASS;
 
@@ -773,7 +773,7 @@ class ParserTest {
 	 * @author sayed
 	 */
 	@Test
-	void testConversion_4_Bass() {
+	void testBassConversion_4() {
 		final String input;
 		final Instrument instrument = Instrument.BASS;
 
@@ -918,7 +918,7 @@ class ParserTest {
 //	}
 	
 	@Test
-	void testConversion_0_Drums() {
+	void testDrumsConversion_0() {
 		final String input;
 		final Instrument instrument = Instrument.DRUM;
 
