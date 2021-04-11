@@ -942,22 +942,21 @@ class ParserTest {
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
-			// The processor's instrument is set to GUITAR.
-			// Because of that, process() will always return Score<GuitarStaff>
+			
 			@SuppressWarnings("unchecked")
 			final Score<DrumStaff> score = (Score<DrumStaff>) processor.process();
 
-		//	assertEquals(1, score.size());
-		//	assertEquals(2, score.numberOfMeasures());
-		//	assertEquals(exTotalNotes, score.getNoteCount());
+			assertEquals(1, score.size());
+			assertEquals(2, score.numberOfMeasures());
+			assertEquals(exTotalNotes, score.getNoteCount());
 
 			final List<DrumStaff> staffs = score.getStaffs();
 
 			for (int i = 0; i < staffs.size(); i++) {
 				DrumStaff staff = staffs.get(i);
 
-		//		assertEquals(exStaffData[i][0], staff.getNoteCount());
-		//		assertEquals(exStaffData[i][1], staff.size());
+				assertEquals(exStaffData[i][0], staff.getNoteCount());
+				assertEquals(exStaffData[i][1], staff.size());
 
 				int j = 0;
 				Iterator<Note> noteItr = staff.noteIterator();
