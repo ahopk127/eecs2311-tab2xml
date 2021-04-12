@@ -87,9 +87,9 @@ public class Processor {
 	 */
 	public Score<?> process() throws InvalidInputException {
 		// TODO: remove this
-		System.out.println("=================input===================");
-		System.out.println(this.input);
-		System.out.println("=========================================");
+//		System.out.println("=================input===================");
+//		System.out.println(this.input);
+//		System.out.println("=========================================");
 
 		this.validator.validate();
 		if (!this.validator.isValidScore())
@@ -347,9 +347,9 @@ public class Processor {
 		int offset = 0;
 		while (outlierMatcher.find()) {
 			// TODO: remove this
-			System.out.println(String.format("start-group::%d", 0));
-			System.out.print(outlierMatcher.group(0));
-			System.out.println(String.format("end-group::%d", 0));
+//			System.out.println(String.format("start-group::%d", 0));
+//			System.out.print(outlierMatcher.group(0));
+//			System.out.println(String.format("end-group::%d", 0));
 
 			if (outlierMatcher.group(0).matches(Parser.comments.pattern())
 					|| outlierMatcher.group(0).matches("((^((?=[\r\n]*)[ \t]*)[\r\n]*[\r\n])+)"))

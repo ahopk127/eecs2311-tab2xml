@@ -123,6 +123,7 @@ public class Parser {
 	 * @param input the tablature to parse
 	 * @return an empty Optional if no instrument is detected, otherwise returns the
 	 *         detected instrument
+	 * @throws UnsupportedOperationException if multiple instruments are detected
 	 */
 	public static Optional<Instrument> getDetectedInstrument(String input) {
 		final StringBuilder tab = new StringBuilder();
@@ -151,11 +152,13 @@ public class Parser {
 
 		// multiple instrument detected
 		// TODO: disable convert buttons: to do in frontend
-		if (gCount != 0 && bCount != 0 && gCount == bCount) {
+		if (gCount != 0 && bCount != 0 && dCount != 0) {
 			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
-		} else if (gCount != 0 && dCount != 0 && gCount == dCount) {
+		} else if (gCount != 0 && bCount != 0 && dCount == 0) {
 			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
-		} else if (dCount != 0 && dCount != 0 && bCount == dCount) {
+		} else if (gCount != 0 && bCount == 0 && dCount != 0) {
+			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
+		} else if (gCount == 0 && bCount != 0 && dCount != 0) {
 			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
 		}
 

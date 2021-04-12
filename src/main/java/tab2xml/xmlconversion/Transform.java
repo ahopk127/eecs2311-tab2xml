@@ -299,6 +299,8 @@ public class Transform<T extends Staff<? extends Line>> {
 				harmonic.setAttribute("default-y", "24");
 				harmonic.setAttribute("placement", "above");
 				harmonic.setAttribute("print-object", "yes");
+				XMLElement natural = new XMLElement("natural", musicSheet);
+				harmonic.append(natural);
 				technical.append(harmonic);
 			}
 

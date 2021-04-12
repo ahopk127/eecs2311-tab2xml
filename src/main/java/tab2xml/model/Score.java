@@ -141,10 +141,11 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 	 */
 	public void processMeasures(XMLMetadata metadata) {
 		Map<IntRange, TimeSignature> map = null;
+
 		if (metadata != null) {
 			map = metadata.timeSignatureRanges();
-			System.out.println("the map: " + map);
 		}
+
 		E firstStaff = null;
 		for (E st : staffs) {
 			// all staffs by default are set to the scores general defaults/set defaults.
