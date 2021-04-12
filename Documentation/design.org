@@ -114,6 +114,10 @@
 	[[./Diagrams/backend-parser-class-diagram-p1.png]]
 
 	The highlighted areas are the main components of the three main steps in the systems process as mentioned earlier. The first is the ~Processor~ which is aggregated with the ~Parser~. The responsibility of the ~Parser~ is to unite the ~Processor~ and the ~Transform~ components and delegate conversions of tablature based on selected instrument or detected instrument. The ~Processor~ preprocesses the input to prepare it for the ~ParseTree~ extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score(The grammars are defined to ignore the commented metadata, although we still extract it as it might be useful to the user). 
+	
+	#+CAPTION: A class diagram for the ~Processor~ class and the 3 main stages.
+	[[./Diagrams/backend-processor-diagram.png]]
+	
 *** Sample Processor task
 	before preprocessing:
 	#+BEGIN_EXAMPLE
