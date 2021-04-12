@@ -217,7 +217,6 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		note.setColumn(column);
 		note.setPosition(token.getTokenIndex() - 1);
 		note.setLineNum(s.getStringNum());
-		note.setOctave(NoteType.getOctave(s.tune(), Integer.parseInt(value)));
 		return note;
 	}
 

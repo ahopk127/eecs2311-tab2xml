@@ -2,6 +2,7 @@ package tab2xml.model;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.TreeSet;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import tab2xml.model.drum.DrumType;
+import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.Tune;
 
 /**
@@ -39,6 +41,8 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	private Optional<Integer> beatType = Optional.empty();
 	/** The division of this staff. */
 	private Optional<Integer> division = Optional.empty();
+	
+	protected static final Stack<Note> repeatNoteStack = new Stack<>();
 
 	/**
 	 * Construct an empty staff with set default attributes. {@code Line} object
@@ -229,6 +233,18 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 		return bars;
 	}
 
+	protected static Bar[] getStartRepeatBars(List<LinkedList<LineItem>> list) {
+		int column = 1;
+		for (;;) {
+			Bar[] bars = getFirstBarsAt(column, list);
+			if (isEmpty(bars))
+				return null;
+			if (isRepeatBegin(bars))
+				return bars;
+			column++;
+		}
+	}
+
 	protected static Bar[] getEndRepeatBars(List<LinkedList<LineItem>> list) {
 		int column = 1;
 		for (;;) {
@@ -240,17 +256,20 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 			column++;
 		}
 	}
+	
 
 	protected static boolean isRepeatBegin(Bar[] bars) {
 		if (bars == null || bars.length == 0)
 			return false;
-		return bars[2].isStartBar() && bars[3].isStartBar();
+		return (bars.length / 2 == 0 ? bars[bars.length / 2 - 1].isStartBar() && bars[bars.length / 2].isStartBar()
+				: bars[bars.length / 2].isStartBar());
 	}
 
 	protected static boolean isRepeatEnd(Bar[] bars) {
 		if (bars == null || bars.length == 0)
 			return false;
-		return bars[2].isStopBar() && bars[3].isStopBar();
+		return (bars.length / 2 == 0 ? bars[bars.length / 2 - 1].isStopBar() && bars[bars.length / 2].isStopBar()
+				: bars[bars.length / 2].isStopBar());
 	}
 
 	protected static boolean isJustDoubleBars(Bar[] bars) {
@@ -274,6 +293,8 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 
 	protected static boolean isEmpty(Bar[] bars) {
 		boolean isEmpty = true;
+		if (bars == null)
+			return isEmpty;
 		for (Bar bar : bars) {
 			if (bar != null) {
 				isEmpty = false;

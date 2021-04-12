@@ -11,7 +11,7 @@ import tab2xml.exceptions.InvalidTokenException;
  */
 public enum GuitarTokens {
 	// expandable along with grammar
-	BAR("\\*?(\\||\\d{1,2})?\\|\\|?\\*?"), NOTE("[a-gA-G]#?"), TUNE("[ \t]*([a-gA-G]#?)?[ \t]*[|]"), FRET("\\d{1,2}"),
+	BAR("\\*?(\\||\\d{1,2})?\\|\\|?\\*?"), TUNE("[ \t]*([a-gA-G]#?)?[ \t]*[|]"), FRET("\\d{1,2}"),
 	HARMONIC("\\[\\d{1,2}\\]"), PULLOFF("g?\\d{1,2}p\\d{1,2}"), HAMMERON("g?\\d{1,2}h\\d{1,2}"),
 	HAMMERCPULL("g?\\d{1,2}[hp]\\d{1,2}([hp]\\d{1,2})+"), SLIDE("g?\\d{1,2}s\\d{1,2}"),
 	FRETBARFRET("(\\d{1,2})?\\|\\|?(\\d{1,2})?");

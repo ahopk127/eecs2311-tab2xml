@@ -134,9 +134,6 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 					break;
 				}
 			}
-			if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(43).get(0))) { // closed hi-hats
-				note = new DrumNote(line.drumtype());
-			}
 
 			if (note == null) { // add to errors
 
@@ -175,8 +172,12 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			}
 
 		} else if (value.equals("#")) { // choke cymbal
-			if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(43).get(0)))
-				note = new DrumNote(line.drumtype());
+			for (int ID : DrumType.cymbalIDs) { // cymbals 
+				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
+					note = new DrumNote(line.drumtype());
+					break;
+				}
+			}
 
 			if (note == null) { // add to errors
 
@@ -228,14 +229,18 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 		DrumNote note = null;
 
 		if (value.equals("o")) { // strike
-			for (int ID : DrumType.drumIDs) {
-				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
-					note = new DrumNote(line.drumtype());
-					break;
+			if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(47).get(0)))
+				note = new DrumNote(line.drumtype());
+			else {
+				for (int ID : DrumType.drumIDs) {
+					if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
+						note = new DrumNote(line.drumtype());
+						break;
+					}
 				}
-			}
-			if (note == null) { // add to errors
+				if (note == null) { // add to errors
 
+				}
 			}
 
 		} else if (value.equals("O")) { // accent
@@ -264,13 +269,14 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
+					note.setGrace(true);
 					break;
 				}
 			}
 			if (note == null) { // add to errors
 
 			}
-		} else if (value.equals("d")) {
+		} else if (value.equals("d")) { // drag
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
@@ -280,7 +286,7 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			if (note == null) { // add to errors
 
 			}
-		} else if (value.equals("b")) {
+		} else if (value.equals("b")) { // soft-one-hand
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
@@ -290,7 +296,7 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			if (note == null) { // add to errors
 
 			}
-		} else if (value.equals("B")) {
+		} else if (value.equals("B")) { // accented one-hand roll
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
@@ -317,7 +323,6 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			note.setColumn(column);
 			note.setPosition(position);
 		}
-
 		return note;
 	}
 

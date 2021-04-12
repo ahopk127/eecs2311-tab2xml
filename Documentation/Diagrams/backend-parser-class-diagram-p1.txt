@@ -1,0 +1,58 @@
+@startuml
+class Score<E extends Staff<? extends Line>> implements Iterable{}
+abstract class Staff<E extends Line> extends ScoreItem implements Iterable{}
+enum Instrument{}
+
+class Parser {
+  +{static} String COMMENTS
+  +{static} String OUTLIER_G
+  +{static} String OUTLIER_B
+  +{static} String OUTLIER_D
+  +{static} String OUTLIER_GUITAR
+  +{static} String OUTLIER_DRUM
+  +{static} String STRING
+  +{static} String STRING_UNBOUND
+  +{static} String GP
+  +{static} String BP
+  +{static} String DP
+  +{static} Pattern outlierPlucked
+  +{static} Pattern outlierPercussion
+  +{static} Pattern guitarPattern
+  +{static} Pattern guitarPatternGreedy
+  +{static} Pattern bassPattern
+  +{static} Pattern drumPattern
+
+  -Processor processor
+  -Instrument instrument
+  -Score<?> sheet
+  
+  +Parser(String, Instrument)
+  +parse() : ImmutablePair<String, Collection<ParsingWarning>>
+  +parse(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  +getDetectedInstrument(String) : Optional<Insturment>
+  +getDetectedInsturment() : Instrument
+  -parseGuitar(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  -parseBass(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  -parseDrum(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+}
+
+class MeasureIterator implements Iterator{}
+class ScoreIterator implements Iterator{}
+class Measure<E extends Note>{}
+class Transform<T extends Staff<? extends Line>>{}
+abstract class ScoreItem{}
+
+Parser "1" o-- Processor
+GuitarStaff <|--- Staff
+DrumStaff <|--- Staff
+Processor "1" o-- SerializeGuitarScore
+Processor "1" o-- SerializeDrumScore
+Processor "1" o-- Instrument
+Parser "1" o-- Instrument
+Parser "1" o-- Score
+Parser --- Transform
+Score +-- ScoreIterator
+Score +-- MeasureIterator
+Score "*" *-- Measure
+Score "*" *-- Staff
+@enduml

@@ -37,7 +37,7 @@ public class DrumStaff extends Staff<DrumLine> {
 	}
 
 	/**
-	 * Initialize the drum staffs utilizing the {@code InitialStaffIterator}.
+	 * Initialize this {@code DrumStaff} utilizing the {@code InitialStaffIterator}.
 	 * 
 	 * <p>
 	 * Pre-conditions:
@@ -45,11 +45,9 @@ public class DrumStaff extends Staff<DrumLine> {
 	 * <li>This method only runs <b>ONLY ONCE</b> for each staff</li>
 	 * </ul>
 	 * </p>
-	 * 
-	 * @param staff the {@code DrumStaff} to initialize
 	 */
-	public void init(DrumStaff staff) {
-		Iterator<LineItem> itr = new InitialStaffIterator(staff);
+	public void init() {
+		Iterator<LineItem> itr = new InitialStaffIterator(this);
 		while (itr.hasNext()) {
 			notes.add(((DrumNote) itr.next()));
 		}
@@ -128,7 +126,7 @@ public class DrumStaff extends Staff<DrumLine> {
 	}
 
 	/**
-	 * Iterate over the notes in this staff.
+	 * Iterate over the measures in this staff.
 	 */
 	private static class MeasureIterator implements Iterator<Measure<Note>> {
 		private TreeSet<Note> notes;
@@ -245,7 +243,6 @@ public class DrumStaff extends Staff<DrumLine> {
 			Arrays.fill(lengths, -1);
 			collecting = true;
 			remaining = false;
-			setFirstRepeatNote = false;
 			totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 			totalNotesInStaff = staff.getNoteCount();
 			pq = new PriorityQueue<>();
@@ -322,10 +319,14 @@ public class DrumStaff extends Staff<DrumLine> {
 			if (setFirstRepeatNote) {
 				note.setRepeatedStart(true);
 				Bar[] endRepeats = getEndRepeatBars(notes);
+
 				if (endRepeats != null) {
 					int c = endRepeats[0].getRepeatCount();
-					note.setRepeatCount((c == -1 ? 1 : c));
-				}
+					c = (c == -1 ? 1 : c);
+					note.setRepeatCount(c);
+				} else
+					repeatNoteStack.push(note);
+
 				setFirstRepeatNote = false;
 			}
 
@@ -365,6 +366,12 @@ public class DrumStaff extends Staff<DrumLine> {
 
 				// last note passes
 				if (isRepeatEnd(bars)) {
+					if (!repeatNoteStack.isEmpty()) {
+						int c = bars[0].getRepeatCount();
+						c = (c == -1 ? 1 : c);
+						note.setRepeatCount(c);
+						repeatNoteStack.pop().setRepeatCount(c);
+					}
 					note.setRepeatedStop(true);
 				}
 

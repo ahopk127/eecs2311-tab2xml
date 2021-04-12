@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
@@ -28,9 +29,10 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.JTextComponent;
@@ -157,10 +159,11 @@ public abstract class AbstractSwingView implements View {
 		}
 	}
 	
-	private static final HighlightPainter ERROR_PAINTER = new DefaultHighlightPainter(
+	private static final HighlightPainter ERROR_PAINTER = new TabHighlightPainter(
 			new Color(247, 19, 37, 50));
-	private static final HighlightPainter WARNING_PAINTER = new DefaultHighlightPainter(
+	private static final HighlightPainter WARNING_PAINTER = new TabHighlightPainter(
 			Color.YELLOW);
+	private static final int UNDO_LIMIT = 200;
 	
 	/**
 	 * Enables the LaF look-and-feel in Swing, if it works.
@@ -505,12 +508,56 @@ public abstract class AbstractSwingView implements View {
 	}
 	
 	/**
-	 * Sets up the undo manager for the given input document.
-	 * 
+	 * This method removes only highlights that use an instances of {@code TabHighlightPainter}
 	 */
-	protected final void setUpRedoManager() {
-		this.getInput().getDocument().addUndoableEditListener(
-				e -> AbstractSwingView.this.undoManager.addEdit(e.getEdit()));
+	protected final void removeAllHighlights() {
+		Highlighter highlighter = this.getInput().getHighlighter();
+		Highlighter.Highlight[] currHighlights = highlighter.getHighlights();
+		
+		for (int i = 0; i < currHighlights.length; i++) {
+			if (currHighlights[i].getPainter() instanceof TabHighlightPainter)
+				highlighter.removeHighlight(currHighlights[i]);
+		}
+	}
+	
+	/** 
+	 * This method highlights all the invalid input and scrolls to the first occurrence.
+	 * 
+	 * @param errors a collection of errors form the Validation process.
+	 */
+	protected final void highlightErrors(SortedSet< ? extends ErrorToken> errors) {
+		if (errors == null)
+			return;
+		if (errors.isEmpty())
+			return;
+		
+		ErrorToken firstError = errors.first();
+		try {
+			Rectangle2D rec = this.getInput().modelToView2D(firstError.getStart());
+			this.getInput().scrollRectToVisible(rec.getBounds());
+		} catch(BadLocationException e) {
+			System.err.format("BadLocation: %s%n", e);
+			e.printStackTrace();
+		}
+		// remove all highlights before update
+		removeAllHighlights();
+		// highlight position of each error token
+		errors.forEach(token -> highlightToken(token,
+				this.getInput().getHighlighter(), ERROR_PAINTER));
+	}
+	
+	/**
+	 * Sets up the undo manager for the given input document.
+	 */
+	protected final void setUpUndoManager() {
+		this.undoManager.setLimit(UNDO_LIMIT);
+		this.getInput().getDocument().addUndoableEditListener(new UndoableEditListener() {
+
+			@Override
+			public void undoableEditHappened(UndoableEditEvent e) {
+				undoManager.addEdit(e.getEdit());
+			}
+		});
 		
 		this.getInput().getActionMap().put("Redo", new AbstractAction() {
 			private static final long serialVersionUID = -2412630467987603551L;
@@ -532,16 +579,12 @@ public abstract class AbstractSwingView implements View {
 	}
 	
 	/**
-	 * Sets up the undo manager for the given input document.
-	 * 
+	 * Sets up the redo manager for the given input document.
 	 */
-	protected final void setUpUndoManager() {
-		this.getInput().getDocument().addUndoableEditListener(
-				e -> AbstractSwingView.this.undoManager.addEdit(e.getEdit()));
-		
-		this.getInput().getActionMap().put("Undo", new AbstractAction() {
-			private static final long serialVersionUID = -1611382756254530673L;
-			
+	protected final void setUpRedoManager() {
+		this.getInput().getActionMap().put("Redo", new AbstractAction() {
+			private static final long serialVersionUID = -2412630467987603551L;
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {

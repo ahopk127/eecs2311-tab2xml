@@ -99,4 +99,5 @@ final class DoubleEntryView extends AbstractSwingView {
 	protected JTextComponent getOutput() {
 		return this.output;
 	}
+
 }

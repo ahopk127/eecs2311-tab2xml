@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Stack;
 import java.util.TreeSet;
 
 import tab2xml.ImmutablePair;
@@ -38,7 +39,8 @@ public class GuitarStaff extends Staff<GuitarString> {
 	}
 
 	/**
-	 * Initialize the guitar staffs utilizing the {@code InitialStaffIterator}.
+	 * Initialize this {@code GuitarStaff} utilizing the
+	 * {@code InitialStaffIterator}.
 	 * 
 	 * <p>
 	 * Pre-conditions:
@@ -46,11 +48,10 @@ public class GuitarStaff extends Staff<GuitarString> {
 	 * <li>This method only runs <b>ONLY ONCE</b> for each staff</li>
 	 * </ul>
 	 * </p>
-	 * 
-	 * @param staff the {@code GuitarStaff} to initialize
 	 */
-	public void init(GuitarStaff staff) {
-		Iterator<LineItem> itr = new InitialStaffIterator(staff);
+	public void init() {
+		// then initialize the staff
+		Iterator<LineItem> itr = new InitialStaffIterator(this);
 		while (itr.hasNext()) {
 			notes.add(((GuitarNote) itr.next()));
 		}
@@ -129,7 +130,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 	}
 
 	/**
-	 * Iterate over the notes in this staff.
+	 * Iterate over the measures in this staff.
 	 */
 	private static class MeasureIterator implements Iterator<Measure<Note>> {
 		private TreeSet<Note> notes;
@@ -241,13 +242,17 @@ public class GuitarStaff extends Staff<GuitarString> {
 		 */
 		public InitialStaffIterator(GuitarStaff staff) {
 			notes = staff.toList();
+			// set the octaves
+			notes.forEach(l -> l.stream().filter(i -> i.getClass() == GuitarNote.class).forEach(
+					n -> ((GuitarNote) n).setOctave(NoteType.getOctave(staff.getLines().get(n.getLineNum() - 1).tune(),
+							Integer.parseInt(((GuitarNote) n).getFret())))));
+
 			y = staff.size() - 1;
 			numStrings = staff.size();
 			lengths = new int[numStrings];
 			Arrays.fill(lengths, -1);
 			collecting = true;
 			remaining = false;
-			setFirstRepeatNote = false;
 			totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
 			totalNotesInStaff = staff.getNoteCount();
 			pq = new PriorityQueue<>();
@@ -324,10 +329,14 @@ public class GuitarStaff extends Staff<GuitarString> {
 			if (setFirstRepeatNote) {
 				note.setRepeatedStart(true);
 				Bar[] endRepeats = getEndRepeatBars(notes);
+
 				if (endRepeats != null) {
 					int c = endRepeats[0].getRepeatCount();
-					note.setRepeatCount((c == -1 ? 1 : c));
-				}
+					c = (c == -1 ? 1 : c);
+					note.setRepeatCount(c);
+				} else
+					repeatNoteStack.push(note);
+
 				setFirstRepeatNote = false;
 			}
 
@@ -369,6 +378,12 @@ public class GuitarStaff extends Staff<GuitarString> {
 
 				// last note passes
 				if (isRepeatEnd(bars)) {
+					if (!repeatNoteStack.isEmpty()) {
+						int c = bars[0].getRepeatCount();
+						c = (c == -1 ? 1 : c);
+						note.setRepeatCount(c);
+						repeatNoteStack.pop().setRepeatCount(c);
+					}
 					note.setRepeatedStop(true);
 				}
 

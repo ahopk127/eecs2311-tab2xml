@@ -4,20 +4,35 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.model.LineItem;
 import tab2xml.model.NoteType;
 import tab2xml.model.guitar.GuitarNote;
+import tab2xml.model.guitar.GuitarString;
 
+/**
+ * Tests related to the Presenter.
+ *
+ * @author Sayed, Edward
+ */
 class NoteTest {
 
+	/**
+	 * A list of arguments to test that NoteType functions as expected.
+	 * 
+	 * @return an argument in the format (GuitarNote, step, ordinal)
+	 */
 	static Stream<Arguments> noteNames() {
 		return Stream.of(Arguments.of(new GuitarNote(NoteType.A), "A", 0),
 				Arguments.of(new GuitarNote(NoteType.AS), "A#", 1), Arguments.of(new GuitarNote(NoteType.B), "B", 2),
@@ -77,5 +92,85 @@ class NoteTest {
 		InputMismatchException thrown = assertThrows(InputMismatchException.class, () -> GuitarNote.toNote(input, 0),
 				"The Note is invalid.");
 		assertTrue(thrown.getMessage().contains("The Note is invalid."));
+	}
+
+	/**
+	 * This method tests the natural ordering of notes within a staff. This is an
+	 * important component because all features will build upon a note's natural
+	 * ordering.
+	 * 
+	 * <p>
+	 * Given a tab such as:
+	 * 
+	 * <pre>
+	 * |-----------0-----|-0---------------|
+	 * |---------0---0---|-0---------------|
+	 * |-------1-------1-|-1---------------|
+	 * |-----2-----------|-2---------------|
+	 * |---2-------------|-2---------------|
+	 * |-0---------------|-0---------------|
+	 * </pre>
+	 * 
+	 * The expected natural ordering is as follows:
+	 * <p>
+	 * (0, 2, 2, 1, 0, 0, 0, 1, 0, 2, 2, 1, 0, 0)
+	 * </p>
+	 *
+	 * Highest priority property to least:
+	 * <ul>
+	 * </ul>
+	 * <li>The note's column</li>
+	 * <li>The note's string (bottom up)</li>
+	 * </p>
+	 * 
+	 * This test will ensure correctness as random variable testing is used. To make sure the
+	 * natural ordering holds in every case, random insertions are made on a given
+	 * {@code GuitarString}.
+	 */
+	@Test
+	void stringItemCompareTo() {
+		final int NUM_NOTES = 12;
+		final Random RAND = new Random();
+
+		LineItem[] stringItems = new LineItem[NUM_NOTES];
+		GuitarString[] strings = new GuitarString[6];
+
+		for (int i = 1; i <= strings.length; i++) {
+			strings[i - 1] = new GuitarString(i);
+		}
+
+		int index;
+
+		// same string: insertion at random orders
+		for (int i = 1; i <= NUM_NOTES; i++) {
+			GuitarNote note = new GuitarNote(strings[0], String.valueOf(i));
+			note.setColumn(i);
+
+			do {
+				index = RAND.nextInt(NUM_NOTES);
+			} while (stringItems[index] != null);
+			stringItems[index] = note;
+		}
+
+		Arrays.sort(stringItems);
+		String[] expected1 = { "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E" };
+		assertEquals(Arrays.toString(expected1), Arrays.toString(stringItems));
+		Arrays.fill(stringItems, null);
+
+		// different strings: insertion at random orders
+		for (int i = 1; i <= NUM_NOTES; i++) {
+			GuitarNote note = new GuitarNote(strings[(i - 1) % strings.length], String.valueOf(i));
+			note.setColumn(i);
+
+			do {
+				index = RAND.nextInt(NUM_NOTES);
+			} while (stringItems[index] != null);
+			stringItems[index] = note;
+		}
+
+		Arrays.sort(stringItems);
+		String[] expected2 = { "F", "C#", "A#", "F#", "D", "A#", "B", "G", "E", "C", "G#", "E" };
+		assertEquals(Arrays.toString(expected2), Arrays.toString(stringItems));
+		Arrays.fill(stringItems, null);
 	}
 }

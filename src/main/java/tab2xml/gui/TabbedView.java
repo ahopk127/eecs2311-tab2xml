@@ -5,8 +5,11 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Insets;
-import java.util.LinkedList;
-import java.util.List;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,6 +20,8 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
 import tab2xml.exceptions.UnparseableInputException;
@@ -46,7 +51,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	}
 	
 	/** List of error tokens */
-	private final List<ErrorToken> errors;
+	private SortedSet<ErrorToken> errors;
 	
 	/** The pane containing the input and output tabs. */
 	private final JTabbedPane inputOutputPane;
@@ -72,7 +77,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	 * @since 2021-03-10
 	 */
 	public TabbedView() {
-		this.errors = new LinkedList<>();
+		this.errors = new TreeSet<>();
 		
 		this.frame.setResizable(false);
 		
@@ -135,6 +140,51 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		this.setUpRedoManager();
 		this.input.addCaretListener(e -> this.presenter.detectInstrument());
 		this.input.addCaretListener(e -> this.updateButtons());
+		this.input.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				TabbedView.this.updateButtons();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				TabbedView.this.updateButtons();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+			}
+		});
+		
+		this.getInput().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				checkErrorToModel(e.getPoint());
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				checkErrorToModel(e.getPoint());
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				checkErrorToModel(e.getPoint());
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// do nothing 
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// do nothing
+			}
+		});
+		
 		inputPanel.add(
 				new JScrollPane(this.input,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -251,18 +301,42 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 	 */
 	final void updateButtons() {
 		final boolean inputBlank = this.input.getText().isBlank();
-		// check if errors are still here
-		this.errors.removeIf(
-				e -> !InputValidation.containsError(e, this.getInputText()));
+		// check if errors are still here 
+		final InputValidation validateUpdate = InputValidation.newInstance(this.getInputText(), this.getSelectedInstrument());
+		validateUpdate.validate();
+		this.errors.removeIf(e -> !validateUpdate.getScoreErrors().contains(e));
+
+		// use back-end validation to update errors
+		if (!validateUpdate.isValidScore()) 
+			this.errors.addAll(validateUpdate.getScoreErrors());
+		else if (!validateUpdate.isValidStaffs()) 
+			this.errors.addAll(validateUpdate.getStaffErrors());
+			
+		this.highlightErrors(this.errors);
 		
-		if (this.errors.isEmpty()) {
-			this.getInput().getHighlighter().removeAllHighlights();
+		if (validateUpdate.isValid()) {
+			this.removeAllHighlights();
+			this.getInput().setToolTipText(null);
 		}
 		
 		this.convertButton.setEnabled(!inputBlank && this.errors.isEmpty());
 		this.convertAndSave.setEnabled(!inputBlank && this.errors.isEmpty());
 		this.saveInput.setEnabled(!inputBlank);
-		
 		this.saveOutput.setEnabled(!this.output.getText().isBlank());
+	}
+	
+	final void checkErrorToModel(Point mousePos) {
+		if (errors == null)
+			return;
+		if (errors.size() == 0)
+			return;
+		for (ErrorToken error: errors) {
+			int offset = TabbedView.this.getInput().viewToModel2D(mousePos);
+			if (offset >= error.getStart() && offset <= error.getStop()) {
+				TabbedView.this.getInput().setToolTipText(error.getMesage());
+				return;
+			}
+			TabbedView.this.getInput().setToolTipText(null);
+		}
 	}
 }

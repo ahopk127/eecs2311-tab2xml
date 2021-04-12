@@ -1,0 +1,61 @@
+@startuml
+class Processor {
+  -{static} SerializeGuitarScore sgs
+  -{static} SerializeDrumScore sds
+
+  -String input
+  -Instrument instrument
+  -XMLMetadata metadata
+  -InputValidation validator
+  -LinkedList<ParseWarning> preprocessWarnings
+
+  +Processor(String, Instrument, XMLMetadata)
+  +process() : Score<?>
+  +getPreprocessWarnings() : Collection<ParseWarning>
+  -{static} processGuitar(String) : Score<GuitarStaff>
+  -{static} processBass(String) : Score<GuitarStaff>
+  -{static} processDrum(String) : Score<DrumStaff>
+  -{static} preprocessGuitar(String) : String
+  -{static} preprocessBass(String) : String
+  -{static} preprocessDrum(String) : String
+  -{static} commentMetadata(Matcher, StringBuffer) : void
+  -{static} extractMetadata(String, Matcher, Matcher, int, StringBuilder, List<String>) : void
+  -{static} showErrors(List<ErrorToken>) : void
+  
+}
+
+class SerializeGuitarScore {
+  +visitSheet(SheetContext ctx) : Score<GuitarStaff>
+}
+
+class SerializeDrumScore {
+  +visitSheet(SheetContext ctx) : Score<DrumStaff>
+}
+
+class Transform<T extends Staff<? extends Line>>{}
+
+enum Instrument {
+  GUITAR("Classical Guitar")
+  BASS("Bass Guitar")
+  DRUM("Drumset")
+  
+  -String name
+  -String[][] drumSet
+
+  -Instrument(String)
+  +getName() : String
+}
+
+note top of Processor : 1.
+note "2." as N2
+SerializeGuitarScore .. N2
+N2 .. SerializeDrumScore
+note top of Transform : 3.
+
+Parser "1" o-- Processor
+Processor "1" o-- SerializeGuitarScore
+Processor "1" o-- SerializeDrumScore
+Processor "1" o-- Instrument
+Parser "1" o-- Instrument
+Parser --- Transform
+@enduml

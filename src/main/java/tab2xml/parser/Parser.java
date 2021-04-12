@@ -67,7 +67,7 @@ public class Parser {
 		this.processor = new Processor(input, instrument, metadata);
 		this.instrument = instrument;
 		this.sheet = this.processor.process();
-		this.preprocessWarnings = processor.preprocessWarnings();
+		this.preprocessWarnings = processor.getPreprocessWarnings();
 	}
 
 	/**

@@ -393,8 +393,8 @@ public class GuitarNote extends Note {
 	private static final NoteType setNoteType(String tune, String fret) {
 		String upperTune = tune.toUpperCase();
 		int fretNum = Integer.parseInt(fret);
-		Pattern p = Pattern.compile("^[A-G]\\d+$");
-		String input = upperTune + fretNum;
+		Pattern p = Pattern.compile("^[A-G]#?\\d+$");
+		String input = tune + fretNum;
 
 		if (!p.matcher(input).matches())
 			throw new InputMismatchException("The input is invalid.");
