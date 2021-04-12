@@ -393,7 +393,7 @@ public class GuitarNote extends Note {
 	private static final NoteType setNoteType(String tune, String fret) {
 		tune = tune.toUpperCase();
 		int fretNum = Integer.parseInt(fret);
-		Pattern p = Pattern.compile("^[A-G]\\d+$");
+		Pattern p = Pattern.compile("^[A-G]#?\\d+$");
 		String input = tune + fretNum;
 
 		if (!p.matcher(input).matches())

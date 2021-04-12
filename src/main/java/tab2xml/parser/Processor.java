@@ -171,7 +171,7 @@ public class Processor {
 		// TODO: make sure input is well formed by this point.
 		Score<GuitarStaff> sheet = sgs.visit(root);
 		// initializing staffs in the sheet.
-		sheet.forEach(s -> s.init(s));
+		sheet.forEach(s -> s.init());
 		// next process the measures.
 		sheet.processMeasures(metadata);
 		// next process the duration of each note.
@@ -259,17 +259,12 @@ public class Processor {
 		// set to 4 by default(per example)
 		sheet.setDivision(4);
 		// initializing staffs in the sheet.
-		sheet.forEach(s -> s.init(s));
+		sheet.forEach(s -> s.init());
 		// next process the measures.
 		sheet.processMeasures(metadata);
 		// next process the duration of each note.
 		sheet.getMeasures().forEach(m -> m.processDuration());
 		return sheet;
-	}
-
-	private static void showErrors(List<ErrorToken> errors) throws UnparseableInputException {
-		final UnparseableInputException e = UnparseableInputException.get(errors);
-		throw e;
 	}
 
 	private static String preprocessGuitar(String input) {
@@ -366,7 +361,12 @@ public class Processor {
 			scoreMetadata.add(metaMatcher.group(0));
 	}
 
-	public Collection<ParsingWarning> preprocessWarnings() {
+	private static void showErrors(List<ErrorToken> errors) throws UnparseableInputException {
+		final UnparseableInputException e = UnparseableInputException.get(errors);
+		throw e;
+	}
+
+	public Collection<ParsingWarning> getPreprocessWarnings() {
 		// TODO: return warnings that DONT prevent parsing.
 		// examples
 		/*

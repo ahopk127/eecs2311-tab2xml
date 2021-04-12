@@ -2,6 +2,7 @@ package tab2xml.model;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.TreeSet;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import tab2xml.model.drum.DrumType;
+import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.Tune;
 
 /**
@@ -39,6 +41,8 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	private Optional<Integer> beatType = Optional.empty();
 	/** The division of this staff. */
 	private Optional<Integer> division = Optional.empty();
+	
+	protected static final Stack<Note> repeatNoteStack = new Stack<>();
 
 	/**
 	 * Construct an empty staff with set default attributes. {@code Line} object

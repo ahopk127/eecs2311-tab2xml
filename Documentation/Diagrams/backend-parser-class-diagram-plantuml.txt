@@ -3,33 +3,6 @@ class Score implements Iterable
 class ScoreIterator implements Iterator
 class MeasureIterator implements Iterator
 
-class Parser {
-  +{static} String COMMENTS
-  +{static} String OUTLIER
-  +{static} String OUTLIER_MULTI
-  +{static} String STRING
-  +{static} String GP
-  +{static} String BP
-  +{static} String DP
-  +{static} Pattern outlierPlucked
-  +{static} Pattern guitarPattern
-  +{static} Pattern bassPattern
-  +{static} Pattern drumPattern
-
-  -Processor processor
-  -Instrument instrument
-  -Score<?> sheet
-  
-  +Parser(String, Instrument)
-  +parse() : ImmutablePair<String, Collection<ParsingWarning>>
-  +parse(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
-  +getDetectedInstrument(String) : Optional<Insturment>
-  +getDetectedInsturment() : Instrument
-  -parseGuitar(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
-  -parseBass(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
-  -parseDrum(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
-}
-
 class Score<E extends Staff<? extends Line<?>, ? extends Note>>{
   +{static} int DEFAULT_BEATS = 4
   +{static} int DEFAULT_BEATTYPE = 4

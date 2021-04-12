@@ -3,6 +3,7 @@ package tab2xml.parser;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -12,6 +13,8 @@ import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
+import tab2xml.gui.Presenter;
+import tab2xml.gui.View;
 import tab2xml.model.Instrument;
 import tab2xml.model.Score;
 import tab2xml.model.LineItem;
@@ -22,60 +25,36 @@ import tab2xml.xmlconversion.XMLMetadata;
 import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.GuitarStaff;
 
+/**
+ * Tests related to parsing the three different formats of tablature.
+ *
+ * @author Sayed, Edward
+ *
+ * @since 2021-02-06
+ */
 class ParserTest {
 	static final Path TEST_FILES = Path.of("src", "test", "resources");
 	static final File MUSICXML_XSD = TEST_FILES.resolve("musicxml.xsd").toFile();
 	static final ValidateXML validator = new ValidateXML(MUSICXML_XSD);
 
+	/**
+	 * This test is a simple correctness test which tests the first tablature
+	 * example provided during the project. This test makes sure that the correct
+	 * notes are parsed with the correct attributes.
+	 * <p>
+	 * The tablature to parse:
+	 * 
+	 * <pre>
+	 * |-----------0-----|-0---------------|
+	 * |---------0---0---|-0---------------|
+	 * |-------1-------1-|-1---------------|
+	 * |-----2-----------|-2---------------|
+	 * |---2-------------|-2---------------|
+	 * |-0---------------|-0---------------|
+	 * </pre>
+	 */
 	@Test
-	void stringItemCompareTo() {
-		final int NUM_NOTES = 12;
-		final Random RAND = new Random();
-
-		LineItem[] stringItems = new LineItem[NUM_NOTES];
-		GuitarString[] strings = new GuitarString[6];
-
-		for (int i = 1; i <= strings.length; i++) {
-			strings[i - 1] = new GuitarString(i);
-		}
-
-		int index;
-
-		// same string: insertion at random orders
-		for (int i = 1; i <= NUM_NOTES; i++) {
-			GuitarNote note = new GuitarNote(strings[0], String.valueOf(i));
-			note.setColumn(i);
-
-			do {
-				index = RAND.nextInt(NUM_NOTES);
-			} while (stringItems[index] != null);
-			stringItems[index] = note;
-		}
-
-		Arrays.sort(stringItems);
-		String[] expected1 = { "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E" };
-		assertEquals(Arrays.toString(expected1), Arrays.toString(stringItems));
-		Arrays.fill(stringItems, null);
-
-		// different strings: insertion at random orders
-		for (int i = 1; i <= NUM_NOTES; i++) {
-			GuitarNote note = new GuitarNote(strings[(i - 1) % strings.length], String.valueOf(i));
-			note.setColumn(i);
-
-			do {
-				index = RAND.nextInt(NUM_NOTES);
-			} while (stringItems[index] != null);
-			stringItems[index] = note;
-		}
-
-		Arrays.sort(stringItems);
-		String[] expected2 = { "F", "C#", "A#", "F#", "D", "A#", "B", "G", "E", "C", "G#", "E" };
-		assertEquals(Arrays.toString(expected2), Arrays.toString(stringItems));
-		Arrays.fill(stringItems, null);
-	}
-
-	@Test
-	void testConversion_0() {
+	void testConversionGuitar_0() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -123,12 +102,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -137,8 +117,33 @@ class ParserTest {
 		}
 	}
 
+	/**
+	 * This test makes sure that guitar tablature with multiple staffs are parsed
+	 * correctly with the correct number of measures. This will ensure that more
+	 * complex tablature will be correctly parsed and in the natural order of the
+	 * notes.
+	 * 
+	 * <p>
+	 * The tablature to parse:
+	 * 
+	 * <pre>
+	 * E|--0-----------------------|-------------------------|
+	 * B|------------------3-----5-|-2-----------------------|
+	 * G|------------------3-------|-2-----------------------|
+	 * D|------------------5-------|-2-----------------------|
+	 * A|--------------------------|-0-----------------------|
+	 * D|--------------------------|-------------------------|
+	 *
+	 * E|----------------------------------|---------------------------------||
+	 * B|------3-------3-------2-------2---|-----3-------3-------2-----------||
+	 * G|------2-------2-------2-------2---|-----2-------2-------2-------2---||
+	 * D|------3---3-------2-----------5---|-----3---3-------2---------------||
+	 * A|--------------------------0-------|-------------------------0-------||
+	 * D|--0-------------------------------|-0-------------------------------||
+	 * </pre>
+	 */
 	@Test
-	void testConversion_1() {
+	void testConversionGuitar_1() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -191,12 +196,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -205,8 +211,40 @@ class ParserTest {
 		}
 	}
 
+	/**
+	 * This test ensures that the notes within the different guitar actions such as
+	 * hammer-on are parsed correctly. This test consists of the currently supported
+	 * operations for guitar excluding grace notes and repeat sections (which will
+	 * be tested in the next two guitar tests).
+	 * 
+	 * <p>
+	 * The tablature to parse:
+	 * 
+	 * <pre>
+	 * E|--------------------------------------|---------------------------5-8-11--10|
+	 * B|-------------10-----------8p6-5h6-8p5-|-3h6-------7-------------7-----------|
+	 * G|------------------7-------------------|-------7-------5-------5-------------|
+	 * D|---------7--------7-------------------|-------7-------7-----7---------------|
+	 * A|--------------8-------7-------0-------|-------------------5-----------------|
+	 * D|--0p8--0------------------------------|---0---------------------------------|
+	 * 
+	 * E|--8h10p8---6---5---3---6p5-10p9-12p10-13p12-|-15h12-10h9-12h10-6h5-8h6---0---------|
+	 * B|-----------8-------5------------------------|--------------------------8---3---2---|
+	 * G|-------0-------3----------------------------|--------------------------------3---2-|
+	 * D|--------------------------------------------|--------------------------------------|
+	 * A|-----------------------0--------------------|--0-------------------------------0---|
+	 * D|--------------------------------------------|--------------------------------------|
+	 * 
+	 * E|--6h8p6p5-----------------9p6---0-------|---------0----9-12---6p3-----------|
+	 * B|------------5-------5---------8s3-------|------2s10---------------5s3-------|
+	 * G|------------6-------6---------------3p0-|-----2-----------------------3p0---|
+	 * D|---------------[7]----------------------|---2-----------------------------2-|
+	 * A|--------0---------------0---------------|-0-----------------0---------------|
+	 * D|----------------------------------------|-----------------------------------|
+	 * </pre>
+	 */
 	@Test
-	void testConversion_2() {
+	void testConversionGuitar_2() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -268,12 +306,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -282,8 +321,26 @@ class ParserTest {
 		}
 	}
 
+	/**
+	 * This test ensures that grace notes function as expected. The grace note
+	 * modifier acts greedy and collects any of the notes that follow the action.
+	 * This test makes sure that this attribute works together with the notes
+	 * natural ordering.
+	 * 
+	 * <p>
+	 * The tablature to parse:
+	 * 
+	 * <pre>
+	 * |-----------0-----|-0---------------|
+	 * |---------0---0---|-0---------------|
+	 * |-------g0h1----1-|-1---------------|
+	 * |-----2-----------|-2---------------|
+	 * |---2-------------|-2---------------|
+	 * |-0---------------|-0---------------|
+	 * </pre>
+	 */
 	@Test
-	void testConversion_3() {
+	void testConversionGuitar_3() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -331,12 +388,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -345,8 +403,22 @@ class ParserTest {
 		}
 	}
 
+	/**
+	 * This test ensures that a basic repeat section functions as expected.
+	 * 
+	 * <p>
+	 * The tablature to parse:
+	 * <pre>
+	 * |-----------0-----||----------0--------4|
+	 * |---------0---0---||----------0--------||
+	 * |-------1-------1-||*---------1-------*||
+	 * |-----2-----------||*---------2-------*||
+	 * |---2-------------||------2---2--------||
+	 * |-0---------------||--0-------0--------||
+	 * </pre>
+	 */
 	@Test
-	void testConversion_4() {
+	void testConversionGuitar_4() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -394,25 +466,19 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			//assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
 			fail("Error: failed to parse tab correctly");
 			return;
 		}
-	}
-
-	private static int sumColumn(int column, int[][] arr) {
-		int sum = 0;
-		for (int i = 0; i < arr.length; i++)
-			sum += arr[i][column];
-		return sum;
 	}
 
 	/**
@@ -470,12 +536,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			// assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -540,12 +607,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			// assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -615,12 +683,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			// assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -686,12 +755,13 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			// assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -754,17 +824,56 @@ class ParserTest {
 					j++;
 				}
 			}
-
 			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
 			final var output = parser.parse();
 			@SuppressWarnings("unused")
 			final String xml = output.getFirst();
-			// assertTrue(validator.validate(xml));
+			//			saveToFile(TEST_FILES.resolve("output.musicxml"), xml);
+			//			//assertTrue(validator.validate(TEST_FILES.resolve("output.musicxml")));
+			//			deleteFile(TEST_FILES.resolve("output.musicxml"));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
 			fail("Error: failed to parse tab correctly");
 			return;
+		}
+	}
+
+	private static int sumColumn(int column, int[][] arr) {
+		int sum = 0;
+		for (int i = 0; i < arr.length; i++)
+			sum += arr[i][column];
+		return sum;
+	}
+
+	/**
+	 * Write XML to a file for testing.
+	 * 
+	 * @param file the path to output the file to
+	 * @param xml  the XML to write
+	 * @return {@code true} if the file was written successfully
+	 */
+	private boolean saveToFile(Path file, String xml) {
+		try {
+			Files.writeString(file, xml);
+			return true;
+		} catch (final IOException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Delete a file after done testing.
+	 * 
+	 * @param file the path to delete
+	 * @return {@code true} if the file was deleted successfully
+	 */
+	private boolean deleteFile(Path file) {
+		try {
+			Files.delete(file);
+			return true;
+		} catch (final IOException e) {
+			return false;
 		}
 	}
 }

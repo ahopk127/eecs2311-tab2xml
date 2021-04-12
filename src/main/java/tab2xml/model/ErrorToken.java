@@ -32,10 +32,10 @@ public class ErrorToken implements Comparable<ErrorToken> {
 	 * Construct an error token with specified attributes.
 	 * 
 	 * @param message the message describing this error token
-	 * @param data    the value of this token
-	 * @param start   the index of the first character of this token in the input
+	 * @param data    the value of this error token
+	 * @param start   the index of the first character of this error token in the input
 	 *                stream
-	 * @param stop    the index of the last character of this token in the input
+	 * @param stop    the index of the last character of this error token in the input
 	 *                stream
 	 */
 	public ErrorToken(String message, String data, int start, int stop) {
