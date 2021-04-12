@@ -104,7 +104,7 @@
 
 *** Score object
 		The ~Score~ object is by far the most important part of the model as it contains all the other objects. Because of this, the system is designed to allow the ~Score~ to be essentially a custom data structure. With functions such as adding staffs, iterating over staffs, iterating over notes and
-		adding measures. One of the most important parts in designing this system for the ~Score~ object was to make sure that the notes had a natural ordering. This would allow notes to be compared, sorted, and provide notes a positioning system. To achieve this, a custom iterator was defined along with the ~Note~ object being ~Comparable~. This method of abstraction of the score has a lot of benefits during the conversion tablature conversion process.
+		adding measures. One of the most important parts in designing this system for the ~Score~ object was to make sure that the notes had a natural ordering. This would allow notes to be compared, sorted, and provide notes a positioning system. To achieve this, a custom iterator was defined along with the ~Note~ object being ~Comparable~. This method of abstraction of the score has a lot of benefits during the tablature conversion process.
 	#+CAPTION: A class diagram of a ~Score~ object.
 	[[./Diagrams/backend-score-diagram.png]]
 
