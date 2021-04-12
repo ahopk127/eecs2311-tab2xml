@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import tab2xml.exceptions.InvalidTokenException;
 
 /**
- * List of guitar tablature token types and their regular expressions.
+ * List of drum tablature token types and their regular expressions.
  * 
  * @author amir
  */

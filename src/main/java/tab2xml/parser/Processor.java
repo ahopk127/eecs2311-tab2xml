@@ -34,18 +34,33 @@ import tab2xml.model.guitar.GuitarStaff;
 import tab2xml.xmlconversion.XMLMetadata;
 
 /**
- * A processor which works in 2 stages(preprocessing and score parsing)
- * serializing ASCII tablature for a specified instrument.
+ * A processor used to preprocess tablature and prepare the input for the
+ * {@code ParseTree} visitor/serialization process.
+ * 
+ * <p>
+ * Pre-conditions:
+ * <ul>
+ * <li><b>The input is delegated from the {@code Parser} as a
+ * {@code String}.</b></li>
+ * <li><b>The input must first pass a validation check before the main
+ * preprocessing task</li>
+ * </ul>
  * 
  * @author amir
  */
 public class Processor {
+	/** The guitar/bass visitor used to serialize a guitar/bass score. */
 	private static final SerializeGuitarScore sgs = new SerializeGuitarScore();
+	/** The drum visitor used to serialize a drum score. */
 	private static final SerializeDrumScore sds = new SerializeDrumScore();
 
+	/** The input to preprocess. */
 	private String input;
+	/** The corresponding instrument to the input. */
 	private final Instrument instrument;
+	/** The XML metadata to be in the final XML output. */
 	private final XMLMetadata metadata;
+	/** A validator to check if a tablature is well-formed. */
 	private final InputValidation validator;
 	@SuppressWarnings("unused")
 	private LinkedList<ParsingWarning> preprocessWarnings;
@@ -53,7 +68,7 @@ public class Processor {
 	/**
 	 * Construct a processor object for an input string and instrument.
 	 * 
-	 * @param input      string representing ASCII tablature
+	 * @param input      the raw string representing ASCII tablature
 	 * @param instrument the corresponding instrument for the tablature
 	 */
 	public Processor(String input, Instrument instrument, XMLMetadata metadata) {
@@ -67,7 +82,7 @@ public class Processor {
 	/**
 	 * Delegate processing based on instrument.
 	 *
-	 * @return a score with serialized
+	 * @return a score with serialized information
 	 * @throws InvalidInputException if invalid input occurs
 	 */
 	public Score<?> process() throws InvalidInputException {
@@ -336,7 +351,7 @@ public class Processor {
 			System.out.print(outlierMatcher.group(0));
 			System.out.println(String.format("end-group::%d", 0));
 
-			if (outlierMatcher.group(0).matches(Parser.COMMENTS)
+			if (outlierMatcher.group(0).matches(Parser.comments.pattern())
 					|| outlierMatcher.group(0).matches("((^((?=[\r\n]*)[ \t]*)[\r\n]*[\r\n])+)"))
 				continue;
 
@@ -374,6 +389,6 @@ public class Processor {
 		 * If a staff has too many lines
 		 * If a tab has staffs which are not consistent (in terms of lines etc).
 		 */
-		return null;
+		return preprocessWarnings;
 	}
 }

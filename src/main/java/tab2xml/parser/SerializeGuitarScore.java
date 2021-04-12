@@ -8,10 +8,9 @@ import tab2xml.model.Score;
 import tab2xml.model.guitar.GuitarStaff;
 
 /**
- * Serialize a score into a list of staffs.
+ * Serialize a guitar {@code ParseTree} into a guitar score.
  * 
  * @author amir
- *
  */
 public class SerializeGuitarScore extends GuitarTabBaseVisitor<Score<GuitarStaff>> {
 	@Override

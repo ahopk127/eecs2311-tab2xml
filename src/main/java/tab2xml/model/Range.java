@@ -17,7 +17,7 @@ import java.util.Optional;
  * <p>
  * pre-conditions:
  * <ul>
- * <li><b>The <i>start</i> of a range must be strictly less than the
+ * <li><b>The <i>start</i> of a range must be less than the
  * <i>stop</i></b>
  * </ul>
  * 

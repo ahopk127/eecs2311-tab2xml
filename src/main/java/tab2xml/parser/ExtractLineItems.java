@@ -25,11 +25,25 @@ import tab2xml.model.drum.DrumLine;
 import tab2xml.model.drum.DrumNote;
 import tab2xml.model.drum.DrumType;
 
+/**
+ * Extract drum line items from a drum {@code ParseTree}. This visitor class is
+ * generalized to the drum line scope in the list of rules.
+ * 
+ * @author amir
+ */
 public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 	private DrumLine line;
 	@SuppressWarnings("unused")
 	private final ArrayList<ErrorToken> semanticErrors;
 
+	/**
+	 * Construct a {@code ExtractLineItems} {@code ParseTree} visitor from a
+	 * specified {@code DrumLine} and {@code DrumLineContext}. When this constructor
+	 * is called, the line in the staff is a drum line.
+	 * 
+	 * @param line the drum line model
+	 * @param lc   the corresponding drum line context
+	 */
 	public ExtractLineItems(DrumLine line, DrumLineContext lc) {
 		this.line = line;
 		List<LineItem> visited = new ArrayList<>();
@@ -55,6 +69,14 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 		}
 	}
 
+	/**
+	 * Construct a {@code ExtractLineItems} {@code ParseTree} visitor from a
+	 * specified {@code DrumLine} and {@code CymbalLineContext}. When this
+	 * constructor is called, the line in the staff is a cymbal line.
+	 * 
+	 * @param line the drum line model
+	 * @param lc   the corresponding cymbal line context
+	 */
 	public ExtractLineItems(DrumLine line, CymbalLineContext lc) {
 		this.line = line;
 		List<LineItem> visited = new ArrayList<>();
@@ -382,7 +404,7 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 
 		return bar;
 	}
-	
+
 	private static boolean isNumeric(String s) {
 		return Pattern.matches("\\d+", s);
 	}

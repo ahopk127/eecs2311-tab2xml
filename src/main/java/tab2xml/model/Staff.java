@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import tab2xml.model.drum.DrumType;
-import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.Tune;
 
 /**
@@ -41,7 +40,7 @@ public abstract class Staff<E extends Line> extends ScoreItem implements Iterabl
 	private Optional<Integer> beatType = Optional.empty();
 	/** The division of this staff. */
 	private Optional<Integer> division = Optional.empty();
-	
+	/** A stack to keep track of repeat sections in a score. */
 	protected static final Stack<Note> repeatNoteStack = new Stack<>();
 
 	/**

@@ -13,7 +13,7 @@ import tab2xml.model.ErrorToken;
 import tab2xml.model.Instrument;
 
 /**
- * A static utility class to validate well-formed tablature.
+ * A class used to validate well-formed tablature.
  * 
  * <p>
  * Validation tasks which prevent parsing:

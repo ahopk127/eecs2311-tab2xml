@@ -19,48 +19,71 @@ import tab2xml.xmlconversion.Transform;
 import tab2xml.xmlconversion.XMLMetadata;
 
 /**
- * The parser is responsible for delegating extraction from data based on
- * instrument.
+ * A parser used to delegate tablature conversion.
+ * 
+ * <p>
+ * Pre-conditions:
+ * <ul>
+ * <li><b>A parser needs a tablature as a {@code String}, a corresponding
+ * {@code Instrument}, and an optional {@code MetaData} which can be
+ * {@code null}</b>
+ * </ul>
  * 
  * @author amir
- * 
  */
 public class Parser {
-	/* General patterns for each instrument */
-	public static final String COMMENTS = "((/[*])(([\s]|[^ ])+)([*]/))|([/]{2,}[^\n]+)";
-	public static final String OUTLIER_G = "(" + COMMENTS
+	/* General patterns for each instrument built using more basic patterns. */
+	private static final String COMMENTS = "((/[*])(([\s]|[^ ])+)([*]/))|([/]{2,}[^\n]+)";
+	private static final String OUTLIER_G = "(" + COMMENTS
 			+ "|(^(?![ \t]*([a-gA-G]#?)?[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
-	public static final String OUTLIER_B = "((^(?!([a-gA-G]#?)?[|-][^\r\n]*[|-]\r?\n?).*\r?\n?)\r?\n)";
-	public static final String OUTLIER_D = "(" + COMMENTS
+	private static final String OUTLIER_B = "((^(?!([a-gA-G]#?)?[|-][^\r\n]*[|-]\r?\n?).*\r?\n?)\r?\n)";
+	private static final String OUTLIER_D = "(" + COMMENTS
 			+ "|(^(?![ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
-	public static final String OUTLIER_GUITAR = "(" + OUTLIER_G + "+)";
-	public static final String OUTLIER_DRUM = "(" + OUTLIER_D + "+)";
-	public static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ \t]*[|-])[^\s]*[-|]).*$))).+\r?\n?)";
-	public static final String STRING_UNBOUND = "(" + STRING + "+)";
-	public static final String GP = STRING + "{6,}";
-	public static final String BP = OUTLIER_B + "(" + STRING + "{4,5})" + OUTLIER_B;
-	public static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|])[^\s]*[-|]).*)+)).*\r?\n?)+";
+	private static final String OUTLIER_GUITAR = "(" + OUTLIER_G + "+)";
+	private static final String OUTLIER_DRUM = "(" + OUTLIER_D + "+)";
+	private static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ \t]*[|-])[^\s]*[-|]).*$))).+\r?\n?)";
+	private static final String STRING_UNBOUND = "(" + STRING + "+)";
+	private static final String GP = STRING + "{6,}";
+	private static final String BP = OUTLIER_B + "(" + STRING + "{4,5})" + OUTLIER_B;
+	private static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|])[^\s]*[-|]).*)+)).*\r?\n?)+";
 
+	/** A pattern to match comments. */
+	public static final Pattern comments = Pattern.compile(COMMENTS, Pattern.MULTILINE);
+	/** A pattern to match metadata around guitar/bass staffs. */
 	public static final Pattern outlierPlucked = Pattern.compile(OUTLIER_GUITAR, Pattern.MULTILINE);
+	/** A pattern to match metadata around drum staffs. */
 	public static final Pattern outlierPercussion = Pattern.compile(OUTLIER_DRUM, Pattern.MULTILINE);
+	/** A pattern to match guitar staffs. */
 	public static final Pattern guitarPattern = Pattern.compile(GP, Pattern.MULTILINE);
+	/** A pattern to match guitar staffs without a lower bound. */
 	public static final Pattern guitarPatterGreedy = Pattern.compile(STRING_UNBOUND, Pattern.MULTILINE);
+	/** A pattern to match bass staffs( the standard of 4 or 5 strings). */
 	public static final Pattern bassPattern = Pattern.compile(BP, Pattern.MULTILINE);
+	/** A pattern to match drum staffs. */
 	public static final Pattern drumPattern = Pattern.compile(DP, Pattern.MULTILINE);
 
+	/**
+	 * An aggregate processor used to preprocess and generate a {@code Score}
+	 * object.
+	 */
 	private final Processor processor;
+	/**
+	 * The instrument that is either detected by the system or selected by the user.
+	 */
 	private final Instrument instrument;
+	/** The XML metadata to be in the final XML output. */
 	private final XMLMetadata metadata;
+	/** the {@code Score} object to hold the parsed information. */
 	private final Score<?> sheet;
+	/** A list of parse warnings that will not halt parsing. */
+	@SuppressWarnings("unused")
 	private final Collection<ParsingWarning> preprocessWarnings;
 
 	/**
-	 * Construct a parser with specified tablature and instrument.
-	 * 
-	 * @param input      the tablature to be parsed
+	 * @param input      the tablature to parse
 	 * @param instrument the corresponding instrument
-	 * @throws InvalidInputException if invalid input is parsed
-	 * 
+	 * @param metadata   the optional metadata
+	 * @throws InvalidInputException if invalid input occurs while parsing
 	 */
 	public Parser(String input, Instrument instrument, XMLMetadata metadata) throws InvalidInputException {
 		this.metadata = metadata;
@@ -77,7 +100,6 @@ public class Parser {
 	 *         parsing
 	 * @throws InvalidInputException if invalid input is parsed
 	 * @throws InvalidTokenException if invalid token is parsed
-	 * 
 	 */
 	public ImmutablePair<String, Collection<ParsingWarning>> parse()
 			throws InvalidInputException, InvalidTokenException {
@@ -97,8 +119,11 @@ public class Parser {
 		return this.instrument;
 	}
 
-	// returns an empty Optional if no instrument is detected,
-	// otherwise returns the detected instrument
+	/**
+	 * @param input the tablature to parse
+	 * @return an empty Optional if no instrument is detected, otherwise returns the
+	 *         detected instrument
+	 */
 	public static Optional<Instrument> getDetectedInstrument(String input) {
 		final StringBuilder tab = new StringBuilder();
 
@@ -125,6 +150,7 @@ public class Parser {
 		Instrument ins;
 
 		// multiple instrument detected
+		// TODO: disable convert buttons: to do in frontend
 		if (gCount != 0 && bCount != 0 && gCount == bCount) {
 			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
 		} else if (gCount != 0 && dCount != 0 && gCount == dCount) {

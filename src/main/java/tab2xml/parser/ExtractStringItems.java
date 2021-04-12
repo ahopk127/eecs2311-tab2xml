@@ -22,7 +22,6 @@ import tab2xml.antlr.GuitarTabParser.TuneContext;
 import tab2xml.model.Bar;
 import tab2xml.model.LineItem;
 import tab2xml.model.LineItemsCollector;
-import tab2xml.model.NoteType;
 import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.HammerOn;
 import tab2xml.model.guitar.HammerPull;
@@ -33,18 +32,18 @@ import tab2xml.model.guitar.Slide;
 import tab2xml.model.guitar.Tune;
 
 /**
- * Extract string contents from parse tree.
+ * Extract string items from a guitar {@code ParseTree}. This visitor class is
+ * generalized to the string scope in the list of rules.
  * 
  * @author amir
- *
  */
 public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 	private GuitarString s;
 	private final static double EPSILON = 0.001;
 
 	/**
-	 * Construct a sample parse tree visitor from a specified {@code GuitarString}
-	 * and {@code StringContext}.
+	 * Construct a {@code ExtractStringItems} {@code ParseTree} visitor from a
+	 * specified {@code GuitarString} and {@code StringContext}.
 	 * 
 	 * @param string the guitar string model
 	 * @param sc     the corresponding string context

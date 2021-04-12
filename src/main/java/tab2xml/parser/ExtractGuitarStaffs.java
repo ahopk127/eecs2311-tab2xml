@@ -11,7 +11,8 @@ import tab2xml.model.guitar.GuitarString;
 import tab2xml.model.guitar.GuitarStaff;
 
 /**
- * Extract staffs from guitar parse tree.
+ * Extract staffs from a guitar {@code ParseTree}. This visitor class is
+ * generalized to the staff scope in the list of rules.
  * 
  * @author amir
  */

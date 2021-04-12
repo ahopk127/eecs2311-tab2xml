@@ -11,7 +11,8 @@ import tab2xml.model.drum.DrumLine;
 import tab2xml.model.drum.DrumStaff;
 
 /**
- * Extract staffs from drum parse tree.
+ * Extract staffs from a drum {@code ParseTree}. This visitor class is generalized to the
+ * staff scope in the list of rules.
  * 
  * @author amir
  */
