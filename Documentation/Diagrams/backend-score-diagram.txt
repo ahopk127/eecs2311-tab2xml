@@ -14,7 +14,6 @@ class Score<E extends Staff<? extends Line>> implements Iterable{
   -{static} int accumulateMeasureScore
 
   +Score()
-
   +addStaff(E e) : boolean
   +size() : int
   +getStaffs() : List<E>
@@ -52,9 +51,10 @@ class MeasureIterator<T> {
 
 interface Iterator<T> {}
 interface Iterable<E> {}
-abstract class ScoreItem{}
+class ScoreIterator {}
+class MeasureIterator {}
 
-abstract class Staff<E extends Line> extends ScoreItem implements Iterable{
+abstract class Staff<E extends Line> implements Iterable{
   -Optional<Integer> beats;
   -Optional<Integer> beatTYpe;
   -Optional<Integer> division;
@@ -82,8 +82,10 @@ class Measure<E extends Note> implements Comparable{}
 
 Score +-- ScoreIterator
 Score +-- MeasureIterator
-Score "*" *-- Measure
+Score "*" *-left- Measure
 Score "*" *-- Staff
-GuitarStaff <|--- Staff
-DrumStaff <|--- Staff
+Iterator <|-[dashed]- ScoreIterator
+Iterator <|-[dashed]- MeasureIterator
+GuitarStaff <|-left- Staff
+DrumStaff <|-left- Staff
 @enduml

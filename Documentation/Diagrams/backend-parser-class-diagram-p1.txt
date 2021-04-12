@@ -1,8 +1,4 @@
 @startuml
-class Score<E extends Staff<? extends Line>> implements Iterable{}
-abstract class Staff<E extends Line> extends ScoreItem implements Iterable{}
-enum Instrument{}
-
 class Parser {
   +{static} String COMMENTS
   +{static} String OUTLIER_G
@@ -36,23 +32,17 @@ class Parser {
   -parseDrum(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
 }
 
-class MeasureIterator implements Iterator{}
-class ScoreIterator implements Iterator{}
-class Measure<E extends Note>{}
+class SerializeGuitarScore {}
+class SerializeDrumScore {}
+enum Instrument{}
 class Transform<T extends Staff<? extends Line>>{}
-abstract class ScoreItem{}
+class Score<E extends Staff<? extends Line>> {}
 
 Parser "1" o-- Processor
-GuitarStaff <|--- Staff
-DrumStaff <|--- Staff
 Processor "1" o-- SerializeGuitarScore
 Processor "1" o-- SerializeDrumScore
-Processor "1" o-- Instrument
-Parser "1" o-- Instrument
-Parser "1" o-- Score
+Processor "1" o-right- Instrument
+Parser "1" o-right- Instrument
+Parser "1" o-left- Score
 Parser --- Transform
-Score +-- ScoreIterator
-Score +-- MeasureIterator
-Score "*" *-- Measure
-Score "*" *-- Staff
 @enduml

@@ -32,7 +32,18 @@ class SerializeDrumScore {
   +visitSheet(SheetContext ctx) : Score<DrumStaff>
 }
 
-class Transform<T extends Staff<? extends Line>>{}
+class Transform<T extends Staff<? extends Line>>{
+  -Score<?> sheet
+  -MusicSheet musicSheet
+  -Document doc
+  -DocumentBuilder dBuilder
+  -DocumentBuilderFactory dbFactory
+  -XMLMetadata metadata
+  -Instrument instrument
+   
+  +Transform(Score<T>, Instrument, XMLMetadata)
+  +toXML() : String
+}
 
 enum Instrument {
   GUITAR("Classical Guitar")
