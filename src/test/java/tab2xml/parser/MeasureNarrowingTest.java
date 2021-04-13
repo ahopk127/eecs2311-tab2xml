@@ -149,6 +149,17 @@ class MeasureNarrowingTest {
 	}
 	
 	/**
+	 * Tests {@link MeasureNarrowing#linearize}, ensuring it handles blank lines
+	 * correctly.
+	 * 
+	 * @since 2021-04-13
+	 */
+	@Test
+	final void testLinearize2() {
+		assertEquals(tab2Linearized, linearize("\n\n" + tab2 + "\n\n\n"));
+	}
+	
+	/**
 	 * Tests {@link MeasureNarrowing#measureCount}.
 	 * 
 	 * @since 2021-04-03

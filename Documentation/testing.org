@@ -1,13 +1,24 @@
 #+TITLE: TAB2XML Testing Document
 #+SUBTITLE: For Version 1.0.0
-#+DATE: 2021 April 7
+#+DATE: 2021 April 13
 #+LaTeX_HEADER: \usepackage[a4paper, lmargin=30mm, rmargin=30mm, tmargin=25mm, bmargin=25mm]{geometry}
 #+LaTeX: \newpage
 
+* Introduction
+  This document details the testing used in TAB2XML, how they were derived, how they are implemented, and why the testing is sufficient.
+
+  #+CAPTION: Test coverage report for the whole project, as of 2021-04-13.
+  [[../Screenshots/test-coverage-20210413.png]]
 * Front-End Tests
   Many of the front-end tests are implemented using a ~ViewBot~, a class that simulates a GUI.
+** Code Coverage and Test Sufficiency
+   #+CAPTION: Code coverage for the ~tab2xml.gui~ package, where the GUI code is located.  This report, and all statistics in the Front-End Tests section, are as of 2021-04-13.
+   [[../Screenshots/test-coverage-20210413-gui.png]]
+
+   Testing GUI code is a unique challenge, so it is unrealistic to get high code coverage of in GUI tests.  However, TAB2XML's GUI have a coverage of 74 %, which is high for GUI tests.  All of the code not tested in ~tab2xml.gui~ is very hard or impossible to test automatically.  However, since almost all of these features are related to user interaction, errors can be found easily by manually running the application.  In addition, most of the uncovered code is simple enough that it may not need testing.  Much of the un-covered code involves prompting the user with a dialog box, which cannot be tested automatically.  Since each GUI functionality of TAB2XML that can be tested has a test, this testing is sufficient.
 ** EditingPanelTest
    This test tests the functionality of the ~EditingPanel~, a custom ~JPanel~ that is used to edit XML metadata (by creating instances of the ~XMLMetadata~ class).  These test cases were derived by making one test for each important functionality of the ~EditingPanel~.
+   - ~testCancel()~: Tests that the "Cancel" button works properly.  It is implemented by inputting a text tab, setting a measure range, clicking Edit, editing the tab, then clicking Cancel.  The test then ensures that the input text tab was not changed.
    - ~testComposer()~: Tests that the ~EditingPanel~ can correctly set the XMLMetadata's composer field.  It is implemented by setting the text of the panel's composer entry, then getting the panel's resulting metadata, then checking the metadata's composer field.  This is done twice: once for an empty field (the resulting metadata should have no composer) and once for a full field (the resulting metadata's composer should be the field's text).
    - ~testErrors()~: Tests various situations which could cause an error, such as having a negative measure start value.  All error conditions are tested by creating the error conditions, simulating clicking a button, and using ~assertThrows~ or ~assertDoesNotThrow~ to test for an error (or no error).  Many error situations are tested.
    - ~testMeasureRange1()~: Tests that empty text fields create the correct specified measure range for measure narrowing (first to last).  It is implemented by clearing the ~measureStart~ and ~measureEnd~ fields and checking the resuling measure range.
@@ -22,7 +33,7 @@
    - ~testTimeSignature()~: Tests that the EditingPanel correctly uses the time signature functionality.  It is implemented by setting a measure range and time signature in the EditingPanel's text fields, then simulating pressing the Set Time Signature button.  The panel's generated metadata is checked for the resulting time signature.
    - ~testTitle()~: Tests that the ~EditingPanel~ can correctly set the title field.  It is implemented in the same way as ~testComposer()~, except that the case with the empty field has a different output: the metadata should contain the default title "Untitled Score", instead of containing no title.
 
-   This testing is sufficient because every important functionality of the ~EditingPanel~ is tested.  The code coverage of ~EditingPanel~ is 91 %.  The only code that is not covered by tests is code that should never run, and error code that doesn't finish running due to the way the tests are implemented (because the ~ViewBot~'s ~showErrorMessage~ method is implemented by throwing an exception, the methods are marked as missed).
+   This testing is sufficient because every important functionality of the ~EditingPanel~ is tested.  The code coverage of ~EditingPanel~ is 90 %.  The ~XMLMetadata~ class, which is related to ~EditingPanel~, has 100 % code coverage.  The only code that is not covered by tests is code that should never run, and error code that doesn't finish running due to the way the tests are implemented (because the ~ViewBot~'s ~showErrorMessage~ method is implemented by throwing an exception, the methods are marked as missed).
 ** PresenterTest
    These test cases were derived by making one test for each important method of ~Presenter~.
    - ~testConvert()~: Tests that the Presenter's convert method correctly interacts with the input (gets input text & instrument, uses the parser to convert the tab and sets the output correctly).  It does not check that the converted MusicXML is correct - that is the backend tests' job.  
@@ -38,7 +49,7 @@
    - ~testSaveToFile()~: Tests that the "Save to File" command works properly.
      Some text is put in the output of a ViewBot.  Then, a Presenter uses its ~saveToFile()~ command to save the text to a file.  The file's text is compared with the text that was inputted in the ViewBot.
 
-   This testing is sufficient because every method of the Presenter is covered by a test (except the constructor, which is trivial and has only one line of code).  The Presenter's methods are simple enough that only one test is necessary for each.
+   This testing is sufficient because every method of the Presenter is covered by a test (except the constructor, which is trivial and has only one line of code).  The Presenter's methods are simple enough that only one test is necessary for each.  The Presenter has 72 % code coverage, and most of the missed lines are trivial error handling code.
 ** PromptingTextAreaTest
    These test cases were derived by making one test case for each of the important functionalities of the ~PromptingTextArea~: the colour and font of the prompt, the prompt text disappearing when the text box is focused, typing text in the box, and setting the area's font.
    - ~testAutoPromptFont()~: Tests that the PromptingTextArea correctly auto-creates prompting and non-prompting fonts.  It is implemented by setting the area's prompt font to null and then calling getPromptFont().  It expects that a newly created font is returned.
@@ -51,7 +62,7 @@
    - ~testSetFont()~: Tests that fonts are set correctly.  
      This test is implemented by disabling the prompt, and setting the font.  The regular, prompt and active fonts are checked for correctness.  Then, the prompt is enabled and the regular, prompt and active fonts are checked again.  The test is repeated, but the prompt starts enabled and is switched to disabled in the second step.  This is done because the setFont method behaves differently based on whether the prompt is enabled or disabled.
 
-   This testing is sufficient because every method of the PromptingTextArea is tested at least once, and all important or complex methods have tests dedicated to them and their related methods: ~testPromptColourFont~ tests setRegularFont() and setPromptFont(); ~testPromptTyping~ tests setText() and setPromptText(); ~testSetFont~ tests setFont().  All other public methods are simple getters or setters, or methods that trivially call one of the tested methods.  In addition, the gain or loss of focus, an important feature of the ~PromptingTextArea~, has its own dedicated testing method.
+   This testing is sufficient because every method of the PromptingTextArea is tested at least once, and all important or complex methods have tests dedicated to them and their related methods: ~testPromptColourFont~ tests setRegularFont() and setPromptFont(); ~testPromptTyping~ tests setText() and setPromptText(); ~testSetFont~ tests setFont().  All other public methods are simple getters or setters, or methods that trivially call one of the tested methods.  In addition, the gain or loss of focus, an important feature of the ~PromptingTextArea~, has its own dedicated testing method.  The code coverage for ~PromptingTextArea~ is 100 %.
 ** TabbedViewUserExperinceTest
    This test tests the user experience of the default ~TabbedView~.  These test cases were derived by considering the important functionality of the view.  Use cases related to metadata editing are covered by ~EditingPanelTest~, so they are not tested here.
    All of the tests are implemented by using the view's package-private fields to simulate the user performing a specific use case, and then checking the correctness of the values or states of the view's fields.
@@ -59,13 +70,13 @@
    - ~testInputButtonState()~: Tests the state of the "Convert", "Convert and Save" and "Save Input" buttons in multiple scenarios to ensure they are correctly enabled and disabled depending on the scenario.
    - ~testOutputButtonState()~: Tests the state of the "Save Output" button in multiple scenarios to ensure it is correctly enabled and disabled depending on the scenario.
 
-   This testing is sufficient because all important use cases are covered by either this test or ~EditingPanelTest~.  Code coverage of the "TabbedView" class is 90 %, and all of the missed instructions are trivial lambda instructions that do not need to be tested.
+   This testing is sufficient because all important use cases are covered by either this test or ~EditingPanelTest~.  Code coverage of the ~TabbedView~ class is 79 %, and all of the missed instructions are trivial lambda instructions that do not need to be tested or things that are hard to test automatically but easy to test manually.
 ** TimeSignatureTest
    This is a small test that tests the time signature setting functionality.  It was derived by thinking of situations that could cause problems, and creating one test for simple, non-problematic situations.  Both tests are implemented by creating an ~XMLMetadata~ instance with specific time signatures, and checking the contents of the maps returned by ~getTimeSignatures()~ and ~getTimeSignatureRanges()~.
    - ~testTimeSignatures()~: Tests a set of time signatures where the measure ranges do not overlap.
    - ~testNonDisjointIntervals()~: Tests a set of time signatures where the measure ranges do overlap.
      
-   This is sufficient testing because it tests an example of every major scenario, and test data for ~XMLMetadata~ (which has functionality other than the time signatures being tested, though this functionality is simple enough that it does not need to be tested) is 93 %.  All instructions in ~XMLMetadata~ that relate to time signatures are covered by this test.
+   This is sufficient testing because it tests an example of every major scenario, and test coverage for ~XMLMetadata~ (which has functionality other than the time signatures being tested) is 100 %.  All instructions in ~XMLMetadata~ that relate to time signatures are covered by this test.
 ** ViewTest
    These tests were derived by making one test for each major method of the View interface.
 
@@ -78,6 +89,8 @@
    All three of these tests are implemented by setting the parameter to some value, then comparing the value set to the value returned by the appropriate get method.
 
    This testing is sufficient because, like in the Presenter, every important method in the View interface is tested by one test, except ~showErrorMessage(String, String)~.  The showErrorMessage method cannot be tested automatically (because I do not want to specify *how* an error message is shown, only that one is shown), and it is trivial enough that I am not worried about it breaking (As of the time this document was written, all implementations of this method have only one line of code).  The View's methods are also simple enough that only one test per View is needed for each method.
+
+   ~View~ has 18 % code coverage, ~AbstractSwingView~ has 47 % code coverage, and the three concrete view classes each have 80-90 % code coverage.  ~View~'s code coverage is low because many of its methods are default methods that are overriden by ~AbstractSwingView~, plus one static factory method that does not need to be tested.  ~AbstractSwingView~'s code coverage is low because many of its methods cannot be tested automatically (though all can easily be tested manually).
 #+LaTeX: \newpage
 
 * Back-End Tests
@@ -109,6 +122,7 @@
 ** MeasureNarrowingTest
    These were derived by considering the operations of ~MeasureNarrowing~ (including private methods) as well as the possible text tabs that could cause problems.
    Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.
+   
    - ~testBottomRightCorner()~: Tests the ~bottomRightCorner()~ private method.
    - ~testDelinearize()~: Tests the ~delinearize()~ private method.
    - ~testExtractDecoratedMeasure()~: Tests the ~extractMeasureRange~ method with the Capricho Arabe tab (which has a lot of extra "decoration" around its measure text)
@@ -116,8 +130,9 @@
    - ~testExtractMultilineMeasure()~: Tests the ~extractMeasureRange~ method for a complex input (tests a multi-row text tab, extracted range goes across a row boundary)
    - ~testExtractRepeatedMeasure()~: Tests the ~extractMeasureRange~ method on a tab with a repeated measure (since the method relies on the '|' character to delimit measures, repeated measures can cause errors by having two '|' characters).
    - ~testLinearize()~: Tests the ~linearize()~ private method.
+   - ~testLinearize2()~: Tests that linearization handles blank lines at the start and end correctly.
    - ~testReplaceMeasure()~: Tests the ~replaceMeasureRange~ method for a simple input.
    - ~testReplaceMultilineMeasure()~: Tests the ~replaceMeasureRange~ method for a complex input.
    - ~testTopLeftCorner()~: Tests the ~topLeftCorner()~ private method.
 
-   This is sufficent testing because multiple distinct tabs are tested, and the code coverage for ~MeasureNarrowing~ is 98 %.  Its package-private static member class ~StringPosition~ has 69 % code coverage, but the uncovered methods are all also unused (and all of them are trivial or autogenerated by Eclipse).
+   This is sufficent testing because multiple distinct tabs are tested, and the code coverage for ~MeasureNarrowing~ is 96 %.  Its package-private static member class ~StringPosition~ has 69 % code coverage, but the uncovered methods are all also unused (and all of them are trivial or autogenerated by Eclipse).
