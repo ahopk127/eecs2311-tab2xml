@@ -30,7 +30,7 @@
       [[../Screenshots/eclipse-build.png]]
 ** Commandline
    1. Use the command ~git clone https://github.com/ahopk127/eecs2311-tab2xml.git~ to clone the project to the directory of your choice
-   2. Change directory to the directory where you installed the project, then use Gradle (~./gradlew build~, if that doesn't work try running ~chmod +x ./gradlew~ then ~./gradlew build~) to build the project.
+   2. Change directory to the directory where you installed the project, then use Gradle (~./gradlew build~; if that doesn't work try running ~chmod +x ./gradlew~ then ~./gradlew build~) to build the project.
 #+LaTeX: \newpage
 
 * How to Use TAB2XML
@@ -44,8 +44,10 @@
       - Drag and drop a text tab file into the input box
       - Drag and drop text into the input box
       [[../Screenshots/sample-inputs-tabbedview-1.0.0.png]]
-   3. Press the "Convert" button.  The text tab will be replaced with the corresponding MusicXML.
+   3. Press the "Convert" button (If there are any errors in your tab, you will not be able to do this; fix any errors first).  The text tab will be replaced with the corresponding MusicXML.
       [[../Screenshots/converted-20210413-tabbedview.png]]
+      Here is what it will look like if your input tab has errors:
+      [[../Screenshots/sample-invalid-input-tabbedview.png]]
    4. You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button. \\
       Here is a screenshot of the produced MusicXML, rendered using [[https://musescore.org/en/download][MuseScore 3.6.2]]:
       [[../Screenshots/converted-20210413-musescore.png]]
