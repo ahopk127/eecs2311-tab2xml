@@ -188,11 +188,23 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 				measure.setBeatType(firstStaff.getBeatType());
 				measure.setDivision(firstStaff.getDivision());
 
+				// if metadata is not null and this measure is in the selected range change time signature of that measure.
+				if (map != null) {
+					for (IntRange range : map.keySet()) {
+						if (range.contains(measure.getMeasure() + 1)) {
+							TimeSignature ts = map.get(range);
+							if (ts != null) {
+								measure.setBeats(ts.upperNumeral());
+								measure.setBeatType(ts.lowerNumeral());
+							}
+						}
+					}
+				}
+
 				// divisions is set to the score general; possibility of letting user set this as well.
 				measure.setDivision(this.getDivision());
-				st.getNotes().forEach(n -> n.setMeasureObj(measure));
 				measure.getNotes().forEach(n -> n.setMeasureObj(measure));
-				measures.add(measure);
+				this.measures.add(measure);
 			}
 		}
 	}
@@ -340,7 +352,7 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 		List<T> staffs;
 
 		public ScoreIterator(List<T> staffs) {
-			this.staffs = staffs;
+			this.staffs = new ArrayList<>(staffs);
 		}
 
 		@Override
@@ -363,7 +375,7 @@ public class Score<E extends Staff<? extends Line>> implements Iterable<E> {
 		List<T> measures;
 
 		public MeasureIterator(List<T> measures) {
-			this.measures = measures;
+			this.measures = new ArrayList<>(measures);
 		}
 
 		@Override

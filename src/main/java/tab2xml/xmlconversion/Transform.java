@@ -61,7 +61,7 @@ public class Transform<T extends Staff<? extends Line>> {
 		this.musicSheet = new MusicSheet(doc, dBuilder, dbFactory);
 		this.instrument = instrument;
 		this.metadata = metadata;
-		metadata.timeSignatures();
+	
 		switch (instrument) {
 		case GUITAR:
 		case BASS:

@@ -2,6 +2,7 @@ package tab2xml.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -10,10 +11,15 @@ import java.util.regex.Pattern;
 import tab2xml.ImmutablePair;
 import tab2xml.exceptions.InvalidInputException;
 import tab2xml.exceptions.InvalidTokenException;
+import tab2xml.exceptions.MeasureWarning;
 import tab2xml.exceptions.ParsingWarning;
 import tab2xml.model.Instrument;
+import tab2xml.model.Measure;
+import tab2xml.model.Note;
 import tab2xml.model.Score;
+import tab2xml.model.drum.DrumNote;
 import tab2xml.model.drum.DrumStaff;
+import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.GuitarStaff;
 import tab2xml.xmlconversion.Transform;
 import tab2xml.xmlconversion.XMLMetadata;
@@ -150,18 +156,6 @@ public class Parser {
 		final int max = Math.max(Math.max(gCount, bCount), dCount);
 		Instrument ins;
 
-		// multiple instrument detected
-		// TODO: disable convert buttons: to do in frontend
-		if (gCount != 0 && bCount != 0 && dCount != 0) {
-			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
-		} else if (gCount != 0 && bCount != 0 && dCount == 0) {
-			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
-		} else if (gCount != 0 && bCount == 0 && dCount != 0) {
-			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
-		} else if (gCount == 0 && bCount != 0 && dCount != 0) {
-			throw new UnsupportedOperationException("Sorry, multiple instruments not supported");
-		}
-
 		if (max == gCount) {
 			ins = Instrument.GUITAR;
 		} else if (max == bCount) {
@@ -194,7 +188,19 @@ public class Parser {
 
 		// TODO: ADD WARNINGS from guitar score data
 		final List<ParsingWarning> warnings = new ArrayList<>();
+		Iterator<Measure<? extends Note>> measureItr = this.sheet.measureIterator();
 
+		while (measureItr.hasNext()) {
+			// next will always return a Measure<GuitarNote>
+			@SuppressWarnings("unchecked")
+			Measure<GuitarNote> measure = (Measure<GuitarNote>) measureItr.next();
+
+			if (measure.size() == 0) {
+				warnings.add(new MeasureWarning("", String.format("Empty measure %d", measure.getMeasure() + 1),
+						(int) measure.getRange().getFirst().getStart(),
+						(int) measure.getRange().getSecond().getStop()));
+			}
+		}
 		return ImmutablePair.of(xmlOutput, warnings);
 	}
 
@@ -218,7 +224,19 @@ public class Parser {
 
 		// TODO: ADD WARNINGS from bass score data
 		final List<ParsingWarning> warnings = new ArrayList<>();
+		Iterator<Measure<? extends Note>> measureItr = this.sheet.measureIterator();
 
+		while (measureItr.hasNext()) {
+			// next will always return a Measure<GuitarNote>
+			@SuppressWarnings("unchecked")
+			Measure<GuitarNote> measure = (Measure<GuitarNote>) measureItr.next();
+
+			if (measure.size() == 0) {
+				warnings.add(new MeasureWarning("", String.format("Empty measure %d", measure.getMeasure() + 1),
+						(int) measure.getRange().getFirst().getStart(),
+						(int) measure.getRange().getSecond().getStop()));
+			}
+		}
 		return ImmutablePair.of(xmlOutput, warnings);
 	}
 
@@ -241,7 +259,20 @@ public class Parser {
 
 		// TODO: ADD WARNINGS from drum score data
 		final List<ParsingWarning> warnings = new ArrayList<>();
+		Iterator<Measure<? extends Note>> measureItr = this.sheet.measureIterator();
 
+		// measure warnings
+		while (measureItr.hasNext()) {
+			// next will always return a Measure<DrumNote>
+			@SuppressWarnings("unchecked")
+			Measure<DrumNote> measure = (Measure<DrumNote>) measureItr.next();
+
+			if (measure.size() == 0) {
+				warnings.add(new MeasureWarning("", String.format("Empty measure %d", measure.getMeasure()+ 1),
+						(int) measure.getRange().getFirst().getStart(),
+						(int) measure.getRange().getSecond().getStop()));
+			}
+		}
 		return ImmutablePair.of(xmlOutput, warnings);
 	}
 }
