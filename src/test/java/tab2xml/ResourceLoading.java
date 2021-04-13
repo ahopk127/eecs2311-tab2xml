@@ -11,7 +11,28 @@ import java.nio.file.Path;
  * @since 2021-04-05
  */
 public final class ResourceLoading {
-	private static final Path TEST_FILES = Path.of("src", "test", "resources");
+	/** Directory for test files */
+	public static final Path TEST_FILES = Path.of("src", "test", "resources");
+	/** Directory for test tabs */
+	public static final Path TEST_TABS = TEST_FILES.resolve("test-tabs");
+	
+	/**
+	 * Loads a text tab from the sample tabs directory, for testing.
+	 *
+	 * @param name name of tab
+	 * @return fire contents as String
+	 * @since 2021-04-13
+	 */
+	public static final String loadTestTab(String name) {
+		final String filepath = name.contains(".") ? name : name + ".txt";
+		
+		try {
+			return Files.readString(TEST_TABS.resolve(filepath))
+					.replaceAll("\\r\\n", "\n");
+		} catch (final IOException e) {
+			throw new AssertionError("I/O Exception occured during setup");
+		}
+	}
 	
 	/**
 	 * Loads a text resource

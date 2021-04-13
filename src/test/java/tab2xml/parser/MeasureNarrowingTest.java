@@ -1,6 +1,7 @@
 package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static tab2xml.ResourceLoading.loadTestTab;
 import static tab2xml.parser.MeasureNarrowing.bottomRightCorner;
 import static tab2xml.parser.MeasureNarrowing.delinearize;
 import static tab2xml.parser.MeasureNarrowing.extractMeasureRange;
@@ -8,10 +9,6 @@ import static tab2xml.parser.MeasureNarrowing.linearize;
 import static tab2xml.parser.MeasureNarrowing.measureCount;
 import static tab2xml.parser.MeasureNarrowing.replaceMeasureRange;
 import static tab2xml.parser.MeasureNarrowing.topLeftCorner;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,44 +21,18 @@ import tab2xml.parser.MeasureNarrowing.StringPosition;
  * @since 2021-03-26
  */
 class MeasureNarrowingTest {
-	/**
-	 * Test files.
-	 */
-	private static final Path TEST_FILES = Path.of("src", "test", "resources");
-	
 	// Sample tabs
-	private static final String tab1 = loadTestFile("readme-sample-1.txt");
-	private static final String tab1NoNewline = loadTestFile(
-			"readme-sample-1-no-newline.txt");
-	private static final String tab1Modified = loadTestFile(
-			"readme-sample-1-modified.txt");
-	private static final String tab2 = loadTestFile("test2.txt");
-	private static final String tab2Linearized = loadTestFile(
-			"test2-linearized.txt");
-	private static final String tab2Modified = loadTestFile(
-			"test2-modified.txt");
-	private static final String tab4 = loadTestFile("test4.txt");
-	private static final String caprichoArabeTab = loadTestFile(
-			"Capricho Arabe.txt");
-	private static final String drumTab = loadTestFile("drum-test-1.txt");
-	
-	/**
-	 * Loads from a test file.
-	 *
-	 * @param relativeName relative filename
-	 * @return file
-	 * @throws IOException from Files.readString
-	 * @since 2021-03-29
-	 */
-	private static final String loadTestFile(String relativeName) {
-		try {
-			return Files.readString(TEST_FILES.resolve(relativeName))
-					.replaceAll("\\r\\n", "\n");
-		} catch (final IOException e) {
-			throw new RuntimeException(
-					"IOException during setup: " + e.getMessage());
-		}
-	}
+	private static final String tab1 = loadTestTab("readme-sample-1");
+	private static final String tab1NoNewline = loadTestTab(
+			"readme-sample-1-no-newline");
+	private static final String tab1Modified = loadTestTab(
+			"readme-sample-1-modified");
+	private static final String tab2 = loadTestTab("test2");
+	private static final String tab2Linearized = loadTestTab("test2-linearized");
+	private static final String tab2Modified = loadTestTab("test2-modified");
+	private static final String tab4 = loadTestTab("test4");
+	private static final String caprichoArabeTab = loadTestTab("Capricho Arabe");
+	private static final String drumTab = loadTestTab("drum-test-1");
 	
 	/**
 	 * Tests that {@link MeasureNarrowing#bottomRightCorner} works properly.

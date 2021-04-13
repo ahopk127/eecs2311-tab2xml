@@ -170,7 +170,7 @@ final class EditingPanel extends JPanel {
 		this.bottomSignatureField.addCaretListener(this::onEntryUpdate);
 		timeSignaturePanel.add(this.bottomSignatureField);
 		
-		this.setSignatureButton = new JButton("Set Time Signature for Range");
+		this.setSignatureButton = new JButton("Set Time Signature");
 		this.setSignatureButton.addActionListener(this::setTimeSignature);
 		timeSignaturePanel.add(this.setSignatureButton);
 		
@@ -365,12 +365,19 @@ final class EditingPanel extends JPanel {
 		 */
 		
 		if (this.checkInputErrors(true)) {
-			final int top = Integer.valueOf(this.topSignatureField.getText());
-			final int bottom = Integer
-					.valueOf(this.bottomSignatureField.getText());
-			
-			this.metadataBuilder.setTimeSignature(this.measureStart(),
-					this.measureEnd(), TimeSignature.valueOf(top, bottom));
+			// if not narrowing, prompt to set signature for whole score
+			if (this.isNarrowing || this.view
+					.promptOK("Measure Range Error",
+							"You have not selected a measure range.\n"
+									+ "Set time signature for the whole score instead?")
+					.orElse(false)) {
+				final int top = Integer.valueOf(this.topSignatureField.getText());
+				final int bottom = Integer
+						.valueOf(this.bottomSignatureField.getText());
+				
+				this.metadataBuilder.setTimeSignature(this.measureStart(),
+						this.measureEnd(), TimeSignature.valueOf(top, bottom));
+			}
 		}
 	}
 }

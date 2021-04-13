@@ -1,6 +1,9 @@
 package tab2xml.parser;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static tab2xml.ResourceLoading.TEST_FILES;
+import static tab2xml.ResourceLoading.TEST_TABS;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +35,6 @@ import tab2xml.model.guitar.GuitarStaff;
  * @since 2021-02-06
  */
 class ParserTest {
-	static final Path TEST_FILES = Path.of("src", "test", "resources");
 	static final File MUSICXML_XSD = TEST_FILES.resolve("musicxml.xsd").toFile();
 	static final ValidateXML validator = new ValidateXML(MUSICXML_XSD);
 
@@ -71,7 +73,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test0.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test0.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -173,7 +175,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test1.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -303,7 +305,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test2.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test2.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -390,7 +392,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test3.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test3.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -470,7 +472,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test4.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test4.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -542,7 +544,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test0-Bass.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test0-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -619,7 +621,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1-Bass.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test1-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -702,7 +704,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test2-Bass.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test2-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -780,7 +782,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test3-Bass.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test3-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -853,7 +855,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test4-Bass.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test4-Bass.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -1002,7 +1004,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test0-Drum.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test0-Drum.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
