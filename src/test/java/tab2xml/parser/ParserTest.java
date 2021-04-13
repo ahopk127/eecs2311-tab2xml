@@ -1051,6 +1051,74 @@ class ParserTest {
 			return;
 		}
 	}
+	
+	@Test
+	void testDrumsConversion_1() {
+		final String input;
+		final Instrument instrument = Instrument.DRUM;
+
+		// noteCount, numStrings, numMeasures, ...
+		final int[][] exStaffData = { { 24, 5, 2 } };
+
+		// fret, step, ...
+		final String[][] exNoteData = { { "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" },
+				{ "F", "4" }, { "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" }, 
+				
+				{ "F", "4" },{ "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" }, { "F", "4" }, { "G", "5" },
+				{ "G", "5" }, { "C", "5" }, { "G", "5" }, { "F", "4" }, { "G", "5"}};
+
+		final int exTotalNotes = sumColumn(0, exStaffData);
+
+		try {
+			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1-Drum.txt");
+			input = Files.readString(TEST_INPUT_FILE);
+			final Processor processor = new Processor(input, instrument, null);
+
+			@SuppressWarnings("unchecked")
+			final Score<DrumStaff> score = (Score<DrumStaff>) processor.process();
+
+			assertEquals(1, score.size());
+			assertEquals(2, score.numberOfMeasures());
+			assertEquals(exTotalNotes, score.getNoteCount());
+
+			final List<DrumStaff> staffs = score.getStaffs();
+
+			for (int i = 0; i < staffs.size(); i++) {
+				DrumStaff staff = staffs.get(i);
+
+				assertEquals(exStaffData[i][0], staff.getNoteCount());
+				assertEquals(exStaffData[i][1], staff.size());
+
+				int j = 0;
+				Iterator<Note> noteItr = staff.noteIterator();
+				while (noteItr.hasNext()) {
+					LineItem item = noteItr.next();
+					if (item == null)
+						continue;
+					final DrumNote note = (DrumNote) item;
+					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
+					System.out.println("exOctaves[j]: " + exNoteData[j][1] + "--------------------");
+					System.out.println("note.getStep(): " + note.getStep() + "--------------------");
+					System.out.println("exNote: " + exNoteData[j][0] + "--------------------");
+					assertEquals(exNoteData[j][1], note.getOctave());
+
+					assertEquals(exNoteData[j][0], note.getStep());
+					j++;
+				}
+			}
+
+			final Parser parser = new Parser(input, instrument, XMLMetadata.fromDefaultTitle());
+			final var output = parser.parse();
+			@SuppressWarnings("unused")
+			final String xml = output.getFirst();
+			// assertTrue(validator.validate(xml));
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+			fail("Error: failed to parse tab correctly");
+			return;
+		}
+	}
 
 	private static int sumColumn(int column, int[][] arr) {
 		int sum = 0;
