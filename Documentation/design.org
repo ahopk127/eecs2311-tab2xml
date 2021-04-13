@@ -164,6 +164,6 @@
    3. Define the rule after the location the ~hampullchain~ rule is defined.
    4. ie. ~bend~ : ~fret~'b'~fret?~ is a sample rule.
    5. Add any data model classes as needed.
-   6. Add a corresponding ~visit()~ method in ~ExtractStringItems~ to collect the bend notes.
+   6. Add a corresponding ~visit()~ method in ~ExtractStringItems.java~ to collect the bend notes.
    7. Update ~GuitarTokens.java~ located in ~tab2xml.parser~.
    8. Update ~GuitarString.java~ method, ~getNotes()~ to include the notes extracted from the new feature.
