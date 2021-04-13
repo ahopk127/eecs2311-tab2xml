@@ -1072,7 +1072,7 @@ class ParserTest {
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1-Drum.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test1-Drum.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
