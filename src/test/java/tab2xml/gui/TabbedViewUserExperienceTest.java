@@ -2,7 +2,7 @@ package tab2xml.gui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static tab2xml.ResourceLoading.loadTextResource;
+import static tab2xml.ResourceLoading.loadTestTab;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,8 +16,7 @@ import tab2xml.xmlconversion.XMLMetadata;
 
 class TabbedViewUserExperienceTest {
 	/** The tab to be used for testing. */
-	private static final String testTab = loadTextResource(
-			"readme-sample-1.txt");
+	private static final String testTab = loadTestTab("readme-sample-1");
 	
 	private static final String xmlOutput;
 	static {
