@@ -4,10 +4,12 @@ actor Musician
 
 package Tab2xmlSystem {
   usecase "Convert Tablature" as UC1
-  usecase "Change Settings" as UC2
+  usecase "Edit Tablature" as UC2
+  usecase "Change Settings" as UC3
 }
 
 Musician --> UC1
 Musician --> UC2
+Musician --> UC3
 
 @enduml
