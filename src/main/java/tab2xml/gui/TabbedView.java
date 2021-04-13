@@ -20,8 +20,6 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
 import tab2xml.exceptions.UnparseableInputException;
@@ -173,21 +171,6 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 			}
 		});
 		
-		this.input.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void changedUpdate(DocumentEvent e) {}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				TabbedView.this.updateButtons();
-			}
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				TabbedView.this.updateButtons();
-			}
-		});
-		
 		inputPanel.add(
 				new JScrollPane(this.input,
 						ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -336,7 +319,7 @@ final class TabbedView extends AbstractSwingView implements NarrowingView {
 		
 		if (validateUpdate.isValid()) {
 			this.removeAllHighlights();
-			this.getInput().setToolTipText(null);
+			this.input.setToolTipText(null);
 		}
 		
 		this.convertButton.setEnabled(!inputBlank && this.errors.isEmpty());
