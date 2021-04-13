@@ -87,7 +87,7 @@
   8. multiline comments 
   
 ** Drum
-*** supported drum types and the notation
+*** supported drum types notation
   1. ~BD~ - Bass Drum 1
   2. ~Bd~ - Bass Drum 2
   3. ~SS~ - Side Stick
