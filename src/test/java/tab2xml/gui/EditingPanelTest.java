@@ -46,6 +46,31 @@ class EditingPanelTest {
 	}
 	
 	/**
+	 * Tests that the "Cancel" button works properly
+	 * 
+	 * @since 2021-04-13
+	 */
+	@Test
+	void testCancel() {
+		// set tab (5 measures) and measure range
+		this.view.setInputText(testTab);
+		this.panel.measureStart.setText("2");
+		this.panel.measureEnd.setText("4");
+		
+		// press edit button, if it is enabled
+		assertTrue(this.panel.editMeasureButton.isEnabled(),
+				"Edit button failed to enable");
+		this.panel.editMeasureButton.doClick();
+		
+		// set narrowed text to something very wrong
+		this.view.setNarrowedText("Very wrong text");
+		
+		// press cancel button and ensure the edit was cancelled
+		this.panel.editMeasureButton.doClick();
+		assertEquals(testTab, this.view.getInputText());
+	}
+	
+	/**
 	 * Tests that the composer field is set properly.
 	 * 
 	 * @since 2021-04-05
@@ -183,6 +208,7 @@ class EditingPanelTest {
 				4);
 		assertEquals(expected, this.view.getNarrowedText());
 		assertTrue(this.panel.isNarrowing(), "Panel did not enable narrowing");
+		assertEquals("Cancel", this.panel.editMeasureButton.getText());
 		
 		// edit narrowed text
 		final String replacement = expected.replaceFirst("2", "3");
@@ -198,6 +224,7 @@ class EditingPanelTest {
 				4, replacement);
 		assertEquals(expected2, this.view.getInputText());
 		assertFalse(this.panel.isNarrowing(), "Panel did not disable narrowing");
+		assertEquals("Edit", this.panel.editMeasureButton.getText());
 	}
 	
 	/**
