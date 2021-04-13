@@ -109,7 +109,7 @@
 	#+CAPTION: A class diagram for the ~Parser~ class.
 	[[./Diagrams/backend-parser-class-diagram-p1.png]]
 
-	The highlighted areas in the figure below are the main components of the three main steps in the systems process as mentioned earlier. The first is the ~Processor~ which is aggregated with the ~Parser~. The responsibility of the ~Parser~ is to unite the ~Processor~ and the ~Transform~ components and delegate conversions of tablature based on selected instrument or detected instrument. The ~Processor~ preprocesses the input to prepare it for the ~ParseTree~ extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score (The grammars are defined to ignore the commented metadata, although we still extract it as it might be useful to the user). 
+	The highlighted areas in the figure below are the main components of the three main steps in the systems ~Parser~ process as mentioned earlier. The first is the ~Processor~ which is aggregated with the ~Parser~. The responsibility of the ~Parser~ is to unite the ~Processor~ and the ~Transform~ components and delegate conversions of tablature based on selected instrument or detected instrument. The ~Processor~ preprocesses the input to prepare it for the ~ParseTree~ extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score (The grammars are defined to ignore the commented metadata, although we still extract it as it might be useful to the user). 
 	#+CAPTION: A class diagram for the ~Processor~ class and the 3 main stages.
 	[[./Diagrams/backend-processor-diagram.png]]
 	
@@ -162,7 +162,7 @@
    1. Open ~guitarTab.g4~.
    2. Edit line 25 and add a rule ~bend~.
    3. Define the rule after the location the ~hampullchain~ rule is defined.
-   4. ie. ~bend~ : ~fret~'b'~fret?~ is a sample rule.
+   4. ie. ~bend~ : ~fret'b'fret?~ is a sample rule.
    5. Add any data model classes as needed.
    6. Add a corresponding ~visit()~ method in ~ExtractStringItems.java~ to collect the bend notes.
    7. Update ~GuitarTokens.java~ located in ~tab2xml.parser~.
