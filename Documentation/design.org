@@ -90,21 +90,17 @@
 
 * Back End Design
 ** Overview
-	The backend of TAB2XML was designed with the main focus of flexibility, and future scaling of the system. The central component of the system is the [[https://www.antlr.org/][antlr4]] parser generation tool. The system uses custom instrument defined grammar to recognize different formats of tablature. Since the system's grammar can be changed effortlessly this makes extending for different types of input much easier. With the combination of the generated antlr4 parser classes(located in ~/src/generated/java~) and the system's custom model data classes, a tablature score can be abstracted into components which make handling the data simpler. The backend is divided into a three step process, the ~preprocessing~ of the tablature, the antlr4 ~ParseTree~ visitor which is used to extract score data, and finally the XML conversion process.
+	The backend of TAB2XML was designed with the main focus of flexibility, and future scaling of the system. The central component of the system is the [[https://www.antlr.org/][antlr4]] parser generation tool. The system uses custom instrument defined grammar to recognize different formats of tablature. Since the system's grammar can be changed effortlessly this makes extending for different types of input much easier. With the combination of the generated antlr4 parser classes (located in ~/src/generated/java~) and the system's custom model data classes, a tablature score can be abstracted into components which make handling the data simpler. The backend is divided into a three step process, the ~preprocessing~ of the tablature, the antlr4 ~ParseTree~ visitor which is used to extract score data, and finally the XML ~conversion~ process.
 
 ** Model Design
    /All TAB2XML model code is located in the ~tab2xml.model~ package and its subsets ~tab2xml.model.guitar~ etc../
    #+CAPTION: A general model diagram of the abstraction of a ~Score~ object.
    [[./Diagrams/backend-model-abstraction.png]]
 	
-   The design of the instrument based model classes have a one-to-one correspondence between the respective grammar. The system abstracts some of these components which are shared in all the tablature formats(Such as ~Score~, ~Staff~, and ~Note~ objects). The ~tab2xml.model~ package contains general classes along with abstract data classes. In the model package, subsets ~tab2xml.model.guitar~ and ~tab2xml.model.drum~ are specific to the respective instruments. For example, a drum model will not contain a ~Tune~ representation and conversely a guitar model will not contain a ~DrumType~ representation.
-
-
-	
+   The design of the instrument based model classes have a one-to-one correspondence between the respective grammar. The system abstracts some of these components which are shared in all the tablature formats (Such as ~Score~, ~Staff~, and ~Note~ objects). The ~tab2xml.model~ package contains general classes along with abstract data classes. In the model package, subsets ~tab2xml.model.guitar~ and ~tab2xml.model.drum~ are specific to the respective instruments. For example, a drum model will not contain a ~Tune~ representation and conversely a guitar model will not contain a ~DrumType~ representation.
 
 *** Score object
-		The ~Score~ object is by far the most important part of the model as it contains all the other objects. Because of this, the system is designed to allow the ~Score~ to be essentially a custom data structure. With functions such as adding staffs, iterating over staffs, iterating over notes and
-		adding measures. One of the most important parts in designing this system for the ~Score~ object was to make sure that the notes had a natural ordering. This would allow notes to be compared, sorted, and provide notes a positioning system. To achieve this, a custom iterator was defined along with the ~Note~ object being ~Comparable~. This method of abstraction of the score has a lot of benefits during the tablature conversion process.
+    The ~Score~ object is by far the most important part of the model as it contains all the other objects. Because of this, the system is designed to allow the ~Score~ to be essentially a custom data structure. With functions such as adding staffs, iterating over staffs, iterating over notes and adding measures. One of the most important parts in designing this system for the ~Score~ object was to make sure that the notes had a natural ordering along with all other implementations of a ~LineItem~. This would allow notes to be compared, sorted, and provide notes a positioning system. To achieve this, a custom iterator was defined along with the ~Note~ object being ~Comparable~. This method of abstraction of the score has a lot of benefits during the tablature conversion process.
 	#+CAPTION: A class diagram of a ~Score~ object.
 	[[./Diagrams/backend-score-diagram.png]]
 
@@ -113,8 +109,7 @@
 	#+CAPTION: A class diagram for the ~Parser~ class.
 	[[./Diagrams/backend-parser-class-diagram-p1.png]]
 
-	The highlighted areas are the main components of the three main steps in the systems process as mentioned earlier. The first is the ~Processor~ which is aggregated with the ~Parser~. The responsibility of the ~Parser~ is to unite the ~Processor~ and the ~Transform~ components and delegate conversions of tablature based on selected instrument or detected instrument. The ~Processor~ preprocesses the input to prepare it for the ~ParseTree~ extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score(The grammars are defined to ignore the commented metadata, although we still extract it as it might be useful to the user). 
-	
+	The highlighted areas in the figure below are the main components of the three main steps in the systems process as mentioned earlier. The first is the ~Processor~ which is aggregated with the ~Parser~. The responsibility of the ~Parser~ is to unite the ~Processor~ and the ~Transform~ components and delegate conversions of tablature based on selected instrument or detected instrument. The ~Processor~ preprocesses the input to prepare it for the ~ParseTree~ extraction process. One of its preprocess tasks is to comment the metadata around the detected staffs in the score (The grammars are defined to ignore the commented metadata, although we still extract it as it might be useful to the user). 
 	#+CAPTION: A class diagram for the ~Processor~ class and the 3 main stages.
 	[[./Diagrams/backend-processor-diagram.png]]
 	
@@ -149,20 +144,26 @@
 	*/
 	#+END_EXAMPLE
 
-	Once the main preprocessing tasks are complete and we are confident the input is valid, the ~Processor~ uses its aggregate extractor classes(ie. ~SerializeGuitarScore~, ~SerializeDrumScore~) to visit the parse tree generated by antlr4, while using the respective model classes to contain the information. The main steps of making the extracted data useful happens during the last steps of the ~Processor~. Tasks such as creating measures for the ~Score~, and calculating duration of notes. Once the processor has finished its job we have a ~Score~ object ready to be transformed into its XML equivalent. This is where The ~Transform~ class comes in. It's job is to simply generate XML from the parsed information serialized in the respective ~Score~ object. Hence, once this conversion is finished the XML is passed back to the frontend where it is handled as needed.
+	Once the main preprocessing tasks are complete and we are confident the input is valid, the ~Processor~ uses its aggregate extractor classes (ie. ~SerializeGuitarScore~, ~SerializeDrumScore~) to visit the parse tree generated by antlr4, while using the respective model classes to contain the information. The main steps of making the extracted data useful happens during the last steps of the ~Processor~. Tasks such as creating measures for the ~Score~, and calculating duration of notes. Once the processor has finished its job we have a ~Score~ object ready to be transformed into its XML equivalent. This is where The ~Transform~ class comes in. It's job is to simply generate XML from the parsed information serialized in the respective ~Score~ object. Hence, once this conversion is finished the XML is passed back to the frontend where it is handled as needed.
 
 ** Grammar Design
-   The grammars for the system are designed to abstract the score representation. The grammars can be located at ~src/main/antlr~. The system defines a set of rules for the grammar and antlr4 then creates a corresponding ~ParseTree~ from the input stream. The following are example rules(lower case, which would be nodes in the tree, sheet being the top level rule) and tokens which help build the grammar rules. This makes adding new support for tabs fairly easy as all you need to do is change the grammar rules and have a corresponding data model for that feature.
+   The grammars for the system are designed to abstract the score representation. The grammars can be located at ~src/main/antlr~. The system defines a set of rules for the grammar and antlr4 then creates a corresponding ~ParseTree~ from the input stream. The following are example rules (lower case, which would be nodes in the tree, sheet being the top level rule) and tokens which help build the grammar rules. This makes adding new support for tabs fairly easy as all you need to do is change the grammar rules and have a corresponding data model for that feature.
+	#+CAPTION: An example of a basic ~ParseTree~ structure for a guitar(defined by ~GuitarTab.g4~ grammar):
+	[[./Diagrams/backend-guitar-grammar-diagram.png]]
 	
-	#+CAPTION: A list guitar grammar rules and tokens in ~GuitarTab.g4~(similarly drums have their own set of rules defined in ~DrumTab.g4~)
-
-	#+CAPTION: An example of a ~ParseTree~ structure for a bass(which is uses ~GuitarTab.g4~ grammar) tablature with four strings:
-
-   With the rules and ~ParseTree~ defined by antlr4, the system can traverse the ~ParseTree~ with the system’s custom made ~Visitor~ classes( ~SerializeGuitarScore~, ~SerializeDrumScore~). The visitors define their logic in parsing the information based on which node the visitor is at in the input stream. If a hammer-on rule is reached the information is stored in the respective ~HammerOn~ model class. The visitors are broken up into three abstract components that serializes the ~Score~, serializes ~Staff~, and finally collects line/string(~GuitarString~, ~DrumLine~) items. These classes all extend  their respective grammar defined ~BaseVisitor~ classes generated by antlr4.
+   With the rules and ~ParseTree~ defined by antlr4, the system can traverse the ~ParseTree~ with the system’s custom made ~Visitor~ classes (~SerializeGuitarScore~, ~SerializeDrumScore~). The visitors define their logic in parsing the information based on which node the visitor is at in the input stream. If a hammer-on rule is reached the information is stored in the respective ~HammerOn~ model class. The visitors are broken up into three abstract components that serializes the ~Score~, serializes ~Staff~, and finally collects line/string (~GuitarString~, ~DrumLine~) items. These classes all extend  their respective grammar defined ~BaseVisitor~ classes generated by antlr4.
 
 ** System capabilities
    The system can support well formed guitar and bass tablature very well. The system's auto instrument detection is robust as it takes into account the metadata around the main components of the score, making it convenient for the user.  The system does fall short when the input is not well formed due to a lacking input validation system which allows malformed input to bypass to the ~ParseTree~ visitor process. With the right implementation and design of a validation system this could be fixed rather easily. The grammars of this system could also be improved to further reduce ambiguities which arise errors. The system's design abstraction of the ~Score~ object into its subcomponents extends the possibility to allow more detailed configuration as desired by the user.
 
 ** Back End Maintenance
    To add new support for a tablature feature you must change the grammar for the respective instrument. Adding a new rule is very simple but the main challenge is creating a grammar that avoids ambiguity. That’s why it’s important for the system to abstract the ~Score~ into subcomponents. For example, our system doesn’t support bend actions for guitar. We can add this support by adding a rule ~bend~ in our grammar file and finally add that rule to our ~stringItems~ rule. Then finally parsing the information once that rule is reached in the ~ParseTree~. This ease of changing the grammar makes it easy to extend support. The grammars are not perfect but it is a good base to extend to more complex features. The model classes all contain modular abstractions of classes which make them easy to maintain or add additional changes to. There is a clear distinction of class separation since our model is divided based on the respective instrument. Making it simple to create new models for currently supported instruments or future instruments.
-
+  Sample Maintenance for Adding Bend notation:
+   1. Open ~guitarTab.g4~.
+   2. Edit line 25 and add a rule ~bend~.
+   3. Define the rule at after the location the ~hampullchain~ rule is defined.
+   4. ie. ~bend~ : ~fret~'b'~fret?~ is a sample rule.
+   5. Add any data model classes as needed.
+   6. Add a corresponding ~visit()~ method in ~ExtractStringItems~ to collect the bend notes.
+   7. Update ~GuitarTokens.java~ located in ~tab2xml.parser~.
+   8. Update ~GuitarString.java~ method, ~getNotes()~ to include the notes extracted from the new feature.
