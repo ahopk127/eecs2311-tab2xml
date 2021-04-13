@@ -94,6 +94,15 @@
 #+LaTeX: \newpage
 
 * Back-End Tests
+
+** Code Coverage and Test Sufficiency
+#+CAPTION: Code coverage for the ~tab2xml.parser~ package, ~tab2xml.model~ package, ~tab2xml.model.guitar~ package, and ~tab2xml.xmlconversion~ package, where the Back-End code is located.  This report, and all statistics in the Back-End Tests section, are as of 2021-04-13.
+[[../Screenshots/test-coverage-20210413-model.png]]
+[[../Screenshots/test-coverage-20210413-model-guitar.png]]
+[[../Screenshots/test-coverage-20210413-parser.png]]
+[[../Screenshots/test-coverage-20210413-xmlconversion.png]]
+
+Testing the Back-End is a very important part of ensuring that the system is working as intended. The coverage for the Back-End is solid overall except for areas which are either no longer used, have unimportant information, or have the testing covered by a different part of the system in their place. For example, many parts related to drums are either not used or were tested by a different part of the system since drums were implemented last, and are also simpler in comparison to guitar. The testing done for the Back-End was sufficient because many example combinations of different text tabs were tested and each example was different enough to cover all possibilities required to be converted by the system.
 ** ParserTest
    These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.
    - ~testGuitarConversion()~: Tests that Guitar conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct number of strings, and correct number of measures. There is 5 versions of this test, as shown below, and each one includes different input files that handle different text tab cases.
