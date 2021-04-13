@@ -1,4 +1,4 @@
-% Created 2021-04-07 Wed 12:28
+% Created 2021-04-13 Tue 11:09
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -33,10 +33,10 @@
 \newpage
 
 \section{Front-End Tests}
-\label{sec:orgd9b1a43}
+\label{sec:org71c6a0c}
 Many of the front-end tests are implemented using a \texttt{ViewBot}, a class that simulates a GUI.
 \subsection{EditingPanelTest}
-\label{sec:orgf539d82}
+\label{sec:org7970c6b}
 This test tests the functionality of the \texttt{EditingPanel}, a custom \texttt{JPanel} that is used to edit XML metadata (by creating instances of the \texttt{XMLMetadata} class).  These test cases were derived by making one test for each important functionality of the \texttt{EditingPanel}.
 \begin{itemize}
 \item \texttt{testComposer()}: Tests that the \texttt{EditingPanel} can correctly set the XMLMetadata's composer field.  It is implemented by setting the text of the panel's composer entry, then getting the panel's resulting metadata, then checking the metadata's composer field.  This is done twice: once for an empty field (the resulting metadata should have no composer) and once for a full field (the resulting metadata's composer should be the field's text).
@@ -58,7 +58,7 @@ This test tests the functionality of the \texttt{EditingPanel}, a custom \texttt
 
 This testing is sufficient because every important functionality of the \texttt{EditingPanel} is tested.  The code coverage of \texttt{EditingPanel} is 91 \%.  The only code that is not covered by tests is code that should never run, and error code that doesn't finish running due to the way the tests are implemented (because the \texttt{ViewBot}'s \texttt{showErrorMessage} method is implemented by throwing an exception, the methods are marked as missed).
 \subsection{PresenterTest}
-\label{sec:org98d7a9a}
+\label{sec:orgec7f78d}
 These test cases were derived by making one test for each important method of \texttt{Presenter}.
 \begin{itemize}
 \item \texttt{testConvert()}: Tests that the Presenter's convert method correctly interacts with the input (gets input text \& instrument, uses the parser to convert the tab and sets the output correctly).  It does not check that the converted MusicXML is correct - that is the backend tests' job.  
@@ -77,7 +77,7 @@ Some text is put in the output of a ViewBot.  Then, a Presenter uses its \texttt
 
 This testing is sufficient because every method of the Presenter is covered by a test (except the constructor, which is trivial and has only one line of code).  The Presenter's methods are simple enough that only one test is necessary for each.
 \subsection{PromptingTextAreaTest}
-\label{sec:orgdf40e06}
+\label{sec:org79874be}
 These test cases were derived by making one test case for each of the important functionalities of the \texttt{PromptingTextArea}: the colour and font of the prompt, the prompt text disappearing when the text box is focused, typing text in the box, and setting the area's font.
 \begin{itemize}
 \item \texttt{testAutoPromptFont()}: Tests that the PromptingTextArea correctly auto-creates prompting and non-prompting fonts.  It is implemented by setting the area's prompt font to null and then calling getPromptFont().  It expects that a newly created font is returned.
@@ -93,7 +93,7 @@ This test is implemented by disabling the prompt, and setting the font.  The reg
 
 This testing is sufficient because every method of the PromptingTextArea is tested at least once, and all important or complex methods have tests dedicated to them and their related methods: \texttt{testPromptColourFont} tests setRegularFont() and setPromptFont(); \texttt{testPromptTyping} tests setText() and setPromptText(); \texttt{testSetFont} tests setFont().  All other public methods are simple getters or setters, or methods that trivially call one of the tested methods.  In addition, the gain or loss of focus, an important feature of the \texttt{PromptingTextArea}, has its own dedicated testing method.
 \subsection{TabbedViewUserExperinceTest}
-\label{sec:orga351aa3}
+\label{sec:org2cda29a}
 This test tests the user experience of the default \texttt{TabbedView}.  These test cases were derived by considering the important functionality of the view.  Use cases related to metadata editing are covered by \texttt{EditingPanelTest}, so they are not tested here.
 All of the tests are implemented by using the view's package-private fields to simulate the user performing a specific use case, and then checking the correctness of the values or states of the view's fields.
 \begin{itemize}
@@ -104,7 +104,7 @@ All of the tests are implemented by using the view's package-private fields to s
 
 This testing is sufficient because all important use cases are covered by either this test or \texttt{EditingPanelTest}.  Code coverage of the "TabbedView" class is 90 \%, and all of the missed instructions are trivial lambda instructions that do not need to be tested.
 \subsection{TimeSignatureTest}
-\label{sec:org6b85e8c}
+\label{sec:org78db87d}
 This is a small test that tests the time signature setting functionality.  It was derived by thinking of situations that could cause problems, and creating one test for simple, non-problematic situations.  Both tests are implemented by creating an \texttt{XMLMetadata} instance with specific time signatures, and checking the contents of the maps returned by \texttt{getTimeSignatures()} and \texttt{getTimeSignatureRanges()}.
 \begin{itemize}
 \item \texttt{testTimeSignatures()}: Tests a set of time signatures where the measure ranges do not overlap.
@@ -113,7 +113,7 @@ This is a small test that tests the time signature setting functionality.  It wa
 
 This is sufficient testing because it tests an example of every major scenario, and test data for \texttt{XMLMetadata} (which has functionality other than the time signatures being tested, though this functionality is simple enough that it does not need to be tested) is 93 \%.  All instructions in \texttt{XMLMetadata} that relate to time signatures are covered by this test.
 \subsection{ViewTest}
-\label{sec:org0f356cd}
+\label{sec:org09ce8d0}
 These tests were derived by making one test for each major method of the View interface.
 
 All tests in this section are run once per View supported by the program, and once for the ViewBot.  This ensures that all of the Views support every possible feature.  Any test in this section that requires use of an unimplemented optional method is skipped.  
@@ -124,34 +124,36 @@ All tests in this section are run once per View supported by the program, and on
 \item \texttt{testInstrumentSelection()}: Tests that all of the standard views can correctly get and set their instrument selection
 \end{itemize}
 
-All three of these tests are implemented by setting the paramater to some value, then comparing the value set to the value returned by the appropriate get method.
+All three of these tests are implemented by setting the parameter to some value, then comparing the value set to the value returned by the appropriate get method.
 
 This testing is sufficient because, like in the Presenter, every important method in the View interface is tested by one test, except \texttt{showErrorMessage(String, String)}.  The showErrorMessage method cannot be tested automatically (because I do not want to specify \textbf{how} an error message is shown, only that one is shown), and it is trivial enough that I am not worried about it breaking (As of the time this document was written, all implementations of this method have only one line of code).  The View's methods are also simple enough that only one test per View is needed for each method.
 \newpage
 
 \section{Back-End Tests}
-\label{sec:orgd52a181}
+\label{sec:orge615a32}
 \subsection{ParserTest}
-\label{sec:org1ec1eb1}
+\label{sec:orgc7616d2}
 These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.
 \begin{itemize}
-\item \texttt{testScore()}: Tests that there is the correct amount of Staffs within a given Score.
-This test was created by creating a string of a sample text tab, and using the Parse Tree to locate and count all of the staffs contained within the score, then comparing it with the expected amount of staffs.
-\item \texttt{testStaff()}: Tests that there is the correct amount of Measures and number of strings in a given Staff.
+\item \texttt{testGuitarConversion()}: Tests that Guitar conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct number of strings, and correct number of measures. There is 5 versions of this test, as shown below, and each one includes different input files that handle different text tab cases.
+This test was created by taking an input of a guitar tab via text file, manually recording all of the expected information in an array and comparing that expected information with the information produced by the respective functions that are used in the xml conversion process.
+\item \texttt{testGuitarConversion\_0()}: This test is a simple correctness test which tests the first tablature example provided during the project. This test makes sure that the correct notes are parsed with the correct attributes.
+\item \texttt{testGuitarConversion\_1()}: This test makes sure that guitar tablature with multiple staffs are parsed correctly with the correct number of measures. This will ensure that more complex tablature will be correctly parsed and in the natural order of the notes.
+\item \texttt{testGuitarConversion\_2()}: This test ensures that the notes within the different guitar actions such as hammer-on are parsed correctly. This test consists of the currently supported operations for guitar excluding grace notes and repeat sections (which will be tested in the next two guitar tests).
+\item \texttt{testGuitarConversion\_3()}: This test ensures that grace notes function as expected. The grace note modifier acts greedy and collects any of the notes that follow the action. This test makes sure that this attribute works together with the notes natural ordering.
+\item \texttt{testGuitarConversion\_4()}: This test ensures that a basic repeat section functions as expected.
+\item \texttt{testBassConversion()}: Tests that Bass conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct number of strings, and correct number of measures. There is multiple versions of this test and each one includes different input files that handle different text tab cases, similar to the guitar cases above.
+This test was created by taking an input of a bass tab via text file, manually recording all of the expected information in an array and comparing that expected information with the information produced by the respective functions that are used in the xml conversion process.
+\item \texttt{testDrumsConversion()}: Tests that Drum conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct octaves for each note, correct number of lines, and correct number of measures.
 \end{itemize}
-This test was created by creating a string of a sample text tab of a single staff, and using the Parse Tree to locate and count every measure and every string, then comparing those with the number of expected measures and strings.
+This test was created by taking an input of a drum tab via text file, manually recording all of the expected information in an array and comparing that expected information with the information produced by the respective functions that are used in the xml conversion process.
 \begin{itemize}
-\item \texttt{testTuning()}: Tests that each string in a staff is the expected tuning.
+\item \texttt{testGuitarScore()}: Tests that a guitar score object can be made successfully and have string and note objects assigned to it.
 \end{itemize}
-This test was created by creating a string of a sample text tab of a single staff, and using the Parse Tree to locate the tuning of each string and compare that with the expected tunings of each string. For inputs that do not contain string tunings, the expected tuning is the default guitar tuning.
-\begin{itemize}
-\item \texttt{stringItemCompareTo()}: Tests that the parser reads the notes in the correct order that they appear in the text tab.
-\end{itemize}
-This test was created by hard coding an array of different notes, with different positions in the tab, and adding them to an array, then comparing each note in the array to an array of each note in the order they are expected.
-
-This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Since the prototype is expected to handle simple tabs, only testing for the simplest components of a text tab were created. In the future this tester will have testing for more complex components, and testing for different components that the parser is not yet set up to interpret.
+This test was created by initializing a Score object, as well as GuitarString and GuitarNote objects, and adding the former two into the Score object. The purpose of this is to make sure that these objects are correctly created as they are the core of the xml conversion process.
+This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Different cases are handled by these tests to make sure that all the different types of notes are handled by the system.
 \subsection{NoteTest}
-\label{sec:org1de8385}
+\label{sec:orgf7581ae}
 These tests were derived to make sure that note objects, which contain valuable information about notes that can be used in the xml conversion process, can be properly created. 
 \begin{itemize}
 \item \texttt{noteTest()}: Tests that notes have the correct name and index.
@@ -161,10 +163,13 @@ This test was created by passing note to test, expected name of note and expecte
 \item \texttt{testToNote()}: There are 2 versions of testTonote, and both of them have different arguments. The first tests the toNote method in the Note class and checks if a valid note is correctly converted, and the other one tests the invalid notes.
 \end{itemize}
 There are 2 testTonote. The first was created by passing the string input(\emph{"tune + fret"}) and the string this note is on, and checks if this was a valid note and if it was converted correctly by comparing it to an expected note. The 2nd one was created just by passing string input(\emph{"tune + fret"}) and checks if an invalid note was entered by using exceptions.
-
+\begin{itemize}
+\item \texttt{stringItemCompareTo()}: Tests that the parser reads the notes in the correct order that they appear in the text tab.
+\end{itemize}
+This test was created by hard coding an array of different notes, with different positions in the tab, and adding them to an array, then comparing each note in the array to an array of each note in the order they are expected.
 This is sufficient testing because it checks that our system properly handles creating Note objects, which is a very important step in translating the information from text tabs to xml because notes are the main focus of learning songs through text tab. By testing the correctness and validity of these note objects, we can be sure that the notes that appear in a text tab will have the necessary information used in xml.
 \subsection{MeasureNarrowingTest}
-\label{sec:orge16add5}
+\label{sec:org859a760}
 These were derived by considering the operations of \texttt{MeasureNarrowing} (including private methods) as well as the possible text tabs that could cause problems.
 Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.
 \begin{itemize}
