@@ -1,9 +1,10 @@
 * Changelog
-** Unreleased
+** [1.0.0-beta.1] - [2021-04-13 Tue]
 *** Added
     - Now prevents the user from converting text tabs with errors
     - Added an indicator that counts the number of errors in the input
     - You can now drag and drop text as well as files
+    - You can now cancel a measure narrowing operation
     - Added a warning if you drag and drop a non-txt file
     - Added many more tests
 *** Changed

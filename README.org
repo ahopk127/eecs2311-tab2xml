@@ -1,4 +1,4 @@
-* About TAB2XML Release 0.4.0
+* About TAB2XML Release 1.0.0-beta.1
   This is an application that converts text tablature to MusicXML, created as a project for EECS 2311 at York University in 2021 Winter.
 
   It is fairly easy to use, but a full user manual can be found at [[./Documentation/manual.pdf]].
@@ -14,16 +14,16 @@
   2. Press "Convert and Save" to convert the tab to MusicXML and save the output to a file.
 * Screenshots
   *The main interface* \\
-  [[./Screenshots/main-interface-tabbedview-0.3.0.png]]
+  [[./Screenshots/main-interface-tabbedview-1.0.0.png]]
 
   *Entering a text tab* \\
-  [[./Screenshots/sample-inputs-tabbedview-0.3.0.png]]
+  [[./Screenshots/sample-inputs-tabbedview-1.0.0.png]]
 
   *Text tab converted (as of 2021-03-17)* \\
-  [[./Screenshots/converted-20210317-tabbedview.png]]
+  [[./Screenshots/converted-20210413-tabbedview.png]]
 
-  *The above MusicXML rendered in [[https://opensheetmusicdisplay.github.io/demo/][OpenSheetMusicDisplay]]* \\
-  [[./Screenshots/converted-20210317-opensheetmusicdisplay.png]]
+  *The above MusicXML rendered in [[https://musescore.org/en/download][MuseScore 3.6.2]]* \\
+  [[./Screenshots/converted-20210413-musescore.png]]
 * Supported features
   - hammer-on notations
   - pull-off notations
@@ -71,8 +71,6 @@
 ** Discrepancies
    - There are some ambiguities with token recognition and the GUI will reflect this.
    - The program currently only supports using one text tab at a time.
-   - Staff metadata is supported but is not yet a functional component.
-   - drum tabs are not supported.
 * Copyright
   Copyright (C) 2021 Adrien Hopkins, Amir Mohamad, Edward Hickman, and Sayed Mohammed.
   
