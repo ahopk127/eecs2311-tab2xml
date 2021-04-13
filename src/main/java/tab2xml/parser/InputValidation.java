@@ -99,8 +99,14 @@ public final class InputValidation {
 
 			for (MatchResult res : staffItems) {
 				String item = res.group(4);
-				if (item == null)
+				if (item == null) {
 					item = res.group(0);
+					if (res.group(1) != null) {
+						// tune validation
+						if (!GuitarTokens.isValid(res.group(1)))
+							scoreErrors.add(new ErrorToken("Invalid tuning", res.group(1), res.start(1), res.end(1)));
+					}
+				}
 				if (GuitarTokens.isValid(item))
 					continue;
 				scoreErrors.add(new ErrorToken(String.format("Invalid sequence: '%s' in staff %d", item, staffNum),
@@ -136,6 +142,12 @@ public final class InputValidation {
 				String item = res.group(3);
 				if (item == null) {
 					item = res.group(0);
+					if (res.group(1) != null) {
+						// drum type validation
+						if (!DrumTokens.isValid(res.group(1)))
+							scoreErrors
+									.add(new ErrorToken("Invalid drum part: see manual", res.group(1), res.start(1), res.end(1)));
+					}
 					if (DrumTokens.isValid(item))
 						continue;
 					scoreErrors.add(new ErrorToken(String.format("Invalid sequence: '%s' in staff %d", item, staffNum),

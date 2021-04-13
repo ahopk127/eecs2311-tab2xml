@@ -163,7 +163,7 @@ public class Parser {
 		} else {
 			ins = Instrument.DRUM;
 		}
-
+		System.out.println(ins);
 		if (max == 0)
 			return Optional.empty();
 		return Optional.of(ins);

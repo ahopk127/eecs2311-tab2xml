@@ -230,6 +230,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 		private boolean remaining;
 		private boolean setFirstRepeatNote;
 		private GuitarNote previousNote = null;
+		private Bar[] bars = null;
 
 		/**
 		 * Construct a guitar staff iterator.
@@ -259,6 +260,14 @@ public class GuitarStaff extends Staff<GuitarString> {
 		 */
 		@Override
 		public boolean hasNext() {
+			if (pq.isEmpty() && totalNotesInCurrMeasure == 0 && !remaining) {
+				do {
+					bars = getFirstBarsAt(X, notes);
+					notes.stream().filter(l -> l.size() > 1).forEach(l -> l.remove(X));
+					totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
+					Score.setAccumulateMeasure(Score.getAccumulateMeasure() + 1);
+				} while (totalNotesInCurrMeasure == 0 && totalNotesInStaff != 0);
+			}
 			return totalNotesInStaff-- > 0 || totalNotesInCurrMeasure != 0;
 		}
 
@@ -270,17 +279,6 @@ public class GuitarStaff extends Staff<GuitarString> {
 		 */
 		@Override
 		public LineItem next() {
-			// if total notes is zero, move to next measure
-			Bar[] bars = null;
-			if (pq.isEmpty() && totalNotesInCurrMeasure == 0 && !remaining) {
-				while (totalNotesInCurrMeasure == 0) {
-					bars = getFirstBarsAt(X, notes);
-					notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(X));
-					totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
-					Score.setAccumulateMeasure(Score.getAccumulateMeasure() + 1);
-				}
-			}
-
 			// while collecting notes from current measure
 			while ((pq.isEmpty() || collecting) && totalNotesInCurrMeasure != 0) {
 				collecting = true;
@@ -326,7 +324,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 
 			GuitarNote note = (GuitarNote) pq.poll();
 			if (note == null)
-				return null;
+				throw new AssertionError("Note should note be null.");
 
 			// by this point note is not null, we have either remaining notes or we are at
 			// last pass
