@@ -15,7 +15,7 @@
    #+CAPTION: Code coverage for the ~tab2xml.gui~ package, where the GUI code is located.  This report, and all statistics in the Front-End Tests section, are as of 2021-04-13.
    [[../Screenshots/test-coverage-20210413-gui.png]]
 
-   Testing GUI code is a unique challenge, so it is unrealistic to get high code coverage of in GUI tests.  However, TAB2XML's GUI have a coverage of 74 %, which is high for GUI tests.  All of the code not tested in ~tab2xml.gui~ is very hard or impossible to test automatically.  However, since almost all of these features are related to user interaction, errors can be found easily by manually running the application.  In addition, most of the uncovered code is simple enough that it may not need testing.  Much of the un-covered code involves prompting the user with a dialog box, which cannot be tested automatically.  Since each GUI functionality of TAB2XML that can be tested has a test, this testing is sufficient.
+   Testing GUI code is a unique challenge, so it is unrealistic to get high code coverage of in GUI tests.  However, TAB2XML's GUI has a coverage of 74 %, which is high for GUI tests.  All of the code not tested in ~tab2xml.gui~ is very hard or impossible to test automatically.  However, since almost all of these features are related to user interaction, errors can be found easily by manually running the application.  In addition, most of the uncovered code is simple enough that it may not need testing.  Much of the un-covered code involves prompting the user with a dialog box, which cannot be tested automatically.  Since each GUI functionality of TAB2XML that can be tested has a test, this testing is sufficient.
 ** EditingPanelTest
    This test tests the functionality of the ~EditingPanel~, a custom ~JPanel~ that is used to edit XML metadata (by creating instances of the ~XMLMetadata~ class).  These test cases were derived by making one test for each important functionality of the ~EditingPanel~.
    - ~testCancel()~: Tests that the "Cancel" button works properly.  It is implemented by inputting a text tab, setting a measure range, clicking Edit, editing the tab, then clicking Cancel.  The test then ensures that the input text tab was not changed.
@@ -96,13 +96,17 @@
 * Back-End Tests
 
 ** Code Coverage and Test Sufficiency
-#+CAPTION: Code coverage for the ~tab2xml.parser~ package, ~tab2xml.model~ package, ~tab2xml.model.guitar~ package, and ~tab2xml.xmlconversion~ package, where the Back-End code is located.  This report, and all statistics in the Back-End Tests section, are as of 2021-04-13.
-[[../Screenshots/test-coverage-20210413-model.png]]
-[[../Screenshots/test-coverage-20210413-model-guitar.png]]
-[[../Screenshots/test-coverage-20210413-parser.png]]
-[[../Screenshots/test-coverage-20210413-xmlconversion.png]]
-
-Testing the Back-End is a very important part of ensuring that the system is working as intended. The coverage for the Back-End is solid overall except for areas which are either no longer used, have unimportant information, or have the testing covered by a different part of the system in their place. For example, many parts related to drums are either not used or were tested by a different part of the system since drums were implemented last, and are also simpler in comparison to guitar. The testing done for the Back-End was sufficient because many example combinations of different text tabs were tested and each example was different enough to cover all possibilities required to be converted by the system.
+   Testing the Back-End is a very important part of ensuring that the system is working as intended. The coverage for the Back-End is solid overall except for areas which are either no longer used, have unimportant information, or have the testing covered by a different part of the system in their place. For example, many parts related to drums are either not used or were tested by a different part of the system since drums were implemented last, and are also simpler in comparison to guitar. The testing done for the Back-End was sufficient because many example combinations of different text tabs were tested and each example was different enough to cover all possibilities required to be converted by the system.
+   
+   Code coverage reports for backend code (all as of 2021-04-13, as with all statistics in the Back-End Tests section): \\
+   #+CAPTION: Code coverage for ~tab2xml.model~
+   [[../Screenshots/test-coverage-20210413-model.png]]
+   #+CAPTION: Code coverage for ~tab2xml.model.guitar~
+   [[../Screenshots/test-coverage-20210413-model-guitar.png]]
+   #+CAPTION: Code coverage for ~tab2xml.parser~
+   [[../Screenshots/test-coverage-20210413-parser.png]]
+   #+CAPTION: Code coverage for ~tab2xml.xmlConversion~
+   [[../Screenshots/test-coverage-20210413-xmlconversion.png]]
 ** ParserTest
    These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.
    - ~testGuitarConversion()~: Tests that Guitar conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct number of strings, and correct number of measures. There is 5 versions of this test, as shown below, and each one includes different input files that handle different text tab cases.
