@@ -6,7 +6,7 @@
 #+LaTeX: \newpage
 
 * Introduction and Purpose
-  The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system in many use cases.
+  The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system for many common use cases.
 * System Requirements
   - Works on all major operating systems
   - Java version 11-15 required
@@ -74,6 +74,7 @@
     1. Select the measure range as if you were editing it (follow [[*Editing Measures][these steps]] up to step 4).
     2. Input the time signature in the text boxes on the bottom-left.
     3. Press the "Set Time Signature" button.
+       [[../Screenshots/sample-input-editing-timesignature-tabbedview.png]]
 
     Note: If no time signature range was selected, the "Set Time Signature" button will still work - it will ask you if you want to set the time signature for the whole score.
 ** Other Use Cases
