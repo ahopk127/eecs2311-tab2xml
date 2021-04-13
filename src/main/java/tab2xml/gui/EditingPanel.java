@@ -139,7 +139,7 @@ final class EditingPanel extends JPanel {
 		measureSelectionPanel.add(this.measureEnd);
 		
 		this.editMeasureButton = new JButton("Edit");
-		this.editMeasureButton.addActionListener(this::editMeasures);
+		this.editMeasureButton.addActionListener(this::editMeasuresOrCancel);
 		measureSelectionPanel.add(this.editMeasureButton);
 		
 		this.doneEditingButton = new JButton("Done");
@@ -264,6 +264,7 @@ final class EditingPanel extends JPanel {
 		this.view.setNarrowedText("");
 		this.view.setInputText(editedInput);
 		
+		this.editMeasureButton.setText("Edit");
 		this.doneEditingButton.setEnabled(false);
 		this.measureStart.setEditable(true);
 		this.measureEnd.setEditable(true);
@@ -271,13 +272,24 @@ final class EditingPanel extends JPanel {
 	}
 	
 	/**
-	 * Runs whenever the "Edit" button is pressed.
+	 * Runs whenever the "Edit"/"Cancel" button is pressed.
 	 * 
 	 * @param e button-press action
 	 * @since 2021-03-22
 	 */
-	void editMeasures(ActionEvent e) {
-		if (this.checkInputErrors(false)) {
+	void editMeasuresOrCancel(ActionEvent e) {
+		if (this.isNarrowing) {
+			// cancel
+			this.view.setNarrowedText("");
+			
+			this.editMeasureButton.setText("Edit");
+			this.doneEditingButton.setEnabled(false);
+			this.measureStart.setEditable(true);
+			this.measureEnd.setEditable(true);
+			this.isNarrowing = false;
+			
+		} else if (this.checkInputErrors(false)) {
+			// edit
 			final int measureStart = this.measureStart();
 			final int measureEnd = this.measureEnd();
 			
@@ -285,10 +297,12 @@ final class EditingPanel extends JPanel {
 					this.view.getInputText(), measureStart, measureEnd);
 			this.view.setNarrowedText(measureText);
 			
+			this.editMeasureButton.setText("Cancel");
 			this.doneEditingButton.setEnabled(true);
 			this.measureStart.setEditable(false);
 			this.measureEnd.setEditable(false);
 			this.isNarrowing = true;
+			
 		}
 	}
 	
