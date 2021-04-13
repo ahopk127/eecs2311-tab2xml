@@ -1,11 +1,12 @@
 #+TITLE: TAB2XML User Manual
-#+SUBTITLE: For Version 0.4.0
-#+DATE: 2021 March 29
+#+SUBTITLE: For Version 1.0.0
+#+DATE: 2021 April 13
+#+LaTeX_HEADER: \usepackage[a4paper, lmargin=25mm, rmargin=25mm, tmargin=25mm, bmargin=25mm]{geometry}
 
 #+LaTeX: \newpage
 
 * Introduction and Purpose
-  The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system in many use cases.
+  The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system for many common use cases.
 * System Requirements
   - Works on all major operating systems
   - Java version 11-15 required
@@ -29,36 +30,56 @@
       [[../Screenshots/eclipse-build.png]]
 ** Commandline
    1. Use the command ~git clone https://github.com/ahopk127/eecs2311-tab2xml.git~ to clone the project to the directory of your choice
-   2. Change directory to the directory where you installed the project, then use ~./gradlew build~ to build the project.
-   #+LaTeX: \newpage
-   
+   2. Change directory to the directory where you installed the project, then use Gradle (~./gradlew build~; if that doesn't work try running ~chmod +x ./gradlew~ then ~./gradlew build~) to build the project.
+#+LaTeX: \newpage
+
 * How to Use TAB2XML
 ** Convert Text Tab
-   1. Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command ~./gradlew run~.\\
+   1. Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command ~./gradlew run~ in the program directory.\\
       You should see a window like this:
-      [[../Screenshots/main-interface-tabbedview-0.3.0.png]]
+      [[../Screenshots/main-interface-tabbedview-1.0.0.png]]
    2. Input your text tab into the application.  There are multiple ways of doing this:
       - Type or copy-and-paste your text tab into the text box.  
       - Press the "Load from File" button then choose a file to load your text tab from a file.  
       - Drag and drop a text tab file into the input box
-      [[../Screenshots/sample-inputs-tabbedview-0.3.0.png]]
-   3. Press the "Convert" button.  The text tab will be replaced with the corresponding MusicXML.
-      [[../Screenshots/converted-20210317-tabbedview.png]]
+      - Drag and drop text into the input box
+      [[../Screenshots/sample-inputs-tabbedview-1.0.0.png]]
+   3. Press the "Convert" button (If there are any errors in your tab, you will not be able to do this; fix any errors first).  The text tab will be replaced with the corresponding MusicXML.
+      [[../Screenshots/converted-20210413-tabbedview.png]]
+      Here is what it will look like if your input tab has errors:
+      [[../Screenshots/sample-invalid-input-tabbedview.png]]
    4. You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button. \\
-      Here is a screenshot of the produced MusicXML, rendered using [[https://opensheetmusicdisplay.github.io/demo/][OpenSheetMusicDisplay]]:
-      [[../Screenshots/converted-20210317-opensheetmusicdisplay.png]]
+      Here is a screenshot of the produced MusicXML, rendered using [[https://musescore.org/en/download][MuseScore 3.6.2]]:
+      [[../Screenshots/converted-20210413-musescore.png]]
 ** Editing Text Tabs
    After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
    
    You can use the "Input Editing" tab for more precise editing of the input.  This view also allows you to set metadata such as the title of the output score.  The view should look like this:
-   [[../Screenshots/input-editing-tabbedview-0.4.0.png]]
-   The primary feature of this view is editing a single measure or a range of measures from the input tab.  To do this, select the range of measures to edit in the text boxes provided, then click "Edit".  The measure(s) will appear in the large text box.  Edit the measure(s), then press the "Done" button to apply the changes to the input text.
+   [[../Screenshots/input-editing-tabbedview-1.0.0.png]]
+*** Editing Measures
+    One thing you can do with this editing view is editing a single measure or a range of measures from the input tablature.  To do this, follow the following steps:
+    1. Input your text tablature in the "Input" tab if it isn't already there.
+    2. Navigate to the "Input Editing" tab.
+    3. Input the desired range of measures in the "Measure Range" boxes on the bottom left.
+    4. Press the "Edit" button.  The selected measure(s) will be copied into the text box.  You should see something like this:
+       [[../Screenshots/sample-input-editing-tabbedview.png]]
+    5. Edit the tablature in the text box, then click "Done".  The text box will be cleared, and your changes will be applied to the input tab.
 
-   Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again.
-   *Warning*: Editing a measure region then saving it will remove any decorations from the tab.
+    Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again. \\
+    *Warning*: Editing a measure region then saving it will remove any decorations from the tab.
+*** Editing Metadata
+    You can also use the Input Editing tab to edit metadata.  To edit the title and/or composer, simply enter them into the text boxes on the bottom right.  There is no need to press any "Edit" or "Save" buttons, they will simply be entered in the score when it is converted.
+
+    Editing the time signature of a measure range is a bit more complicated:
+    1. Select the measure range as if you were editing it (follow [[*Editing Measures][these steps]] up to step 4).
+    2. Input the time signature in the text boxes on the bottom-left.
+    3. Press the "Set Time Signature" button.
+       [[../Screenshots/sample-input-editing-timesignature-tabbedview.png]]
+
+    Note: If no time signature range was selected, the "Set Time Signature" button will still work - it will ask you if you want to set the time signature for the whole score.
 ** Other Use Cases
    - You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
-   - To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" to load another text tab.
+   - To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" or drag and drop to load another text tab.
 ** How to Use in Code
    If you would like to use this project in your own program, the following code can be used to convert tab to MusicXML:
    
@@ -71,3 +92,45 @@
    - INPUT is the text tab.  It should be a ~String~ containing the contents of the tablature, not a file or a filepath.
    - INSTRUMENT is the instrument the tab is for.  It should be an instance of ~tab2xml.parser.Instrument~.
    - You will need to add a try-catch statement to handle the checked exceptions thrown by ~Parser.parse()~.
+   
+* Supported Tabs
+You can find a sample of supported tabs [[https://github.com/ahopk127/eecs2311-tab2xml/tree/develop/src/test/resources/test-tabs][here]].
+** Guitar/Bass
+*** supported features
+  1. hammer-on notations
+  2. pull-off notations
+  3. grace notes
+  4. repeated measures
+  5. hammer-on/pull-off combination sequences
+  6. chords
+  7. in-line comments
+  8. multiline comments 
+  
+** Drum
+*** supported drum types notation
+  1. ~BD~ - Bass Drum 1
+  2. ~Bd~ - Bass Drum 2
+  3. ~SS~ - Side Stick
+  4. ~SD~ - Snare
+  5. ~ES~ - Electric Snare
+  6. ~FT~ - Low Floor Tom 
+  7. ~HH~ - Closed Hi-Hat
+  8. ~Ft~ - High Floor Tom
+  9. ~PH~ - Pedal Hi-Hat
+  10. ~LT~ - Low Tom
+  11. ~OH~ - Open Hi-Hat
+  12. ~LM~ - Low-Mid Tom
+  13. ~MT~ - Hi-Mid Tom
+  14. ~CC~ - Crash Cymbal 1
+  15. ~HT~ - High Tom
+  16. ~RD~ - Ride Cymbal 1
+  17. ~Ch~ - Chinese Cymbal
+  18. ~RB~ - Ride Bell
+  19. ~TA~ - Tambourine
+  20. ~SC~ - Splash Cymbal
+  21. ~CB~ - Cowbell
+  22. ~Cc~ - Crash Cymbal 2
+  23. ~Rd~ - Ride Cymbal 2
+  24. ~HC~ - Open Hi Conga
+  25. ~LC~ - Low Conga
+  

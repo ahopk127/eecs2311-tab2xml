@@ -15,11 +15,10 @@ import tab2xml.model.LineItem;
  */
 public class GuitarString extends Line {
 	private static final long serialVersionUID = -5274699295630375450L;
+
 	private int stringNum;
 
-	/**
-	 * Construct an empty string(with string number grouped by staffs).
-	 */
+	/** Construct an empty string(with string number grouped by staffs). */
 	public GuitarString() {
 		super();
 		this.stringNum = getLine();
@@ -29,7 +28,7 @@ public class GuitarString extends Line {
 	 * Construct an empty string with a specified string number. Since no tuning is
 	 * provide, standard tune will be used.
 	 * 
-	 * @param stringNum the string number of this string.
+	 * @param stringNum the string number of this string
 	 */
 	public GuitarString(int stringNum) {
 		super(stringNum);
@@ -37,54 +36,48 @@ public class GuitarString extends Line {
 		this.stringNum = stringNum;
 	}
 
-	/**
-	 * @return the octave of this line.
-	 */
+	/** @return the octave of this string */
 	public String getOctave() {
 		return tune().getOctave();
 	}
 
-	/**
-	 * @return the tune step of this string.
-	 */
+	/** @return the tune step of this string */
 	public String getTune() {
 		return tune().getTune();
 	}
 
-	/**
-	 * @return the {@code Tune} of this string.
-	 */
+	/** @return the {@code Tune} object of this string */
 	public Tune tune() {
 		return (Tune) lineItems.get(0);
 	}
 
 	/**
-	 * Set the tune of this string with a specified tune object.
+	 * Set the {@code Tune} object of this string with a specified tune object.
 	 * 
-	 * @param tune the {@code Tune} object to set the {@code Tune} of this string.
+	 * @param tune the {@code Tune} object to set
 	 */
 	public void setTune(Tune tune) {
 		lineItems.set(0, (Tune) LineItem.deepClone(tune));
 	}
 
-	/**
-	 * @return the string number of this string.
-	 */
+	/** @return the string number of this string */
 	public int getStringNum() {
 		return stringNum;
 	}
 
 	/**
-	 * Set the string number of this string.
+	 * Set the string number of this string to a specified value.
 	 * 
-	 * @param stringNum the value to set the string number.
+	 * @param stringNum the value to set
 	 */
 	public void setStringNum(int stringNum) {
 		this.stringNum = stringNum;
 	}
 
 	/**
-	 * @return a list of notes in this string.
+	 * Construct a deep copy list of the {@code LineItem} objects in this string.
+	 * 
+	 * @return a list of {@code LineItem} objects in this string
 	 */
 	@Override
 	public Collection<? extends LineItem> getNotes() {
@@ -94,27 +87,21 @@ public class GuitarString extends Line {
 			if (item.getClass() == Slide.class) {
 				Slide sl = (Slide) item;
 				notes.addAll(sl.getNotes());
-
 			} else if (item.getClass() == PullOff.class) {
 				PullOff po = (PullOff) item;
 				notes.addAll(po.getNotes());
-
 			} else if (item.getClass() == HammerOn.class) {
 				HammerOn ho = (HammerOn) item;
 				notes.addAll(ho.getNotes());
-
 			} else if (item.getClass() == HammerPull.class) {
 				HammerPull hp = (HammerPull) item;
 				notes.addAll(hp.getNotes());
-
 			} else if (item.getClass() == Harmonic.class) {
 				Harmonic h = (Harmonic) item;
 				notes.addAll(h.getNotes());
-
 			} else if (item.getClass() == GuitarNote.class) {
 				GuitarNote note = (GuitarNote) item;
 				notes.add((LineItem) LineItem.deepClone(note));
-
 			} else if (item.getClass() == Bar.class) {
 				Bar bar = (Bar) item;
 				notes.add((LineItem) LineItem.deepClone(bar));
@@ -126,9 +113,6 @@ public class GuitarString extends Line {
 		return notes;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return String.format("%d%s%s-%d", getStringNum(), getTune(), getOctave(), getNoteCount());

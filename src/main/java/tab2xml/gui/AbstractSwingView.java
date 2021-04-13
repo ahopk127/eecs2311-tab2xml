@@ -8,29 +8,38 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionEvent;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.JTextComponent;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
+
+import com.formdev.flatlaf.FlatDarkLaf;
 
 import tab2xml.Main;
 import tab2xml.exceptions.ParsingWarning;
@@ -59,14 +68,34 @@ public abstract class AbstractSwingView implements View {
 		public synchronized void drop(DropTargetDropEvent event) {
 			event.acceptDrop(DnDConstants.ACTION_COPY);
 			
-			// get a list of the files that were dragged and dropped into the text
+			final List<DataFlavor> dataFlavours = event
+					.getCurrentDataFlavorsAsList();
+			
+			if (dataFlavours.contains(DataFlavor.javaFileListFlavor)) {
+				this.loadFromFile(event);
+			} else if (dataFlavours.contains(DataFlavor.stringFlavor)) {
+				this.loadFromText(event);
+			}
+		}
+		
+		/**
+		 * Run when a file is dragged and dropped into the input.
+		 *
+		 * @param event drag and drop event
+		 * @since 2021-04-09
+		 */
+		private synchronized void loadFromFile(DropTargetDropEvent event) {
+			// get a list of the files that were dragged and dropped into the
+			// text
 			// area.
 			final List<Path> droppedFiles;
 			try {
-				// Using DataFlavor.javaFileListFlavor as an argument guarantees the
-				// runtime type of result will be List, and all its elements will be
-				// instances of File. Therefore, this cast will never cause an
-				// error.
+				/*
+				 * Using DataFlavor.javaFileListFlavor as an argument guarantees the
+				 * runtime type of result will be List, and all its elements will be
+				 * instances of File. Therefore, this cast will never cause an
+				 * error.
+				 */
 				@SuppressWarnings("unchecked")
 				final List<File> result = (List<File>) event.getTransferable()
 						.getTransferData(DataFlavor.javaFileListFlavor);
@@ -83,37 +112,70 @@ public abstract class AbstractSwingView implements View {
 			
 			// read files
 			if (droppedFiles.size() == 1) {
-				AbstractSwingView.this.presenter.loadFromFile(droppedFiles.get(0))
+				final Path droppedFile = droppedFiles.get(0);
+				
+				// sanity check if extension is not txt
+				if (!droppedFile.toString().endsWith(".txt")) {
+					final Optional<Boolean> response = AbstractSwingView.this
+							.promptOK("Drag and Drop",
+									"The file you are dragging and dropping is not a .txt file.  "
+											+ "Are you sure you want to drag and drop this file?");
+					if (response.isEmpty() || response.get() == false)
+						return;
+				}
+				
+				// load the file
+				AbstractSwingView.this.presenter.loadFromFile(droppedFile)
 						.ifPresent(AbstractSwingView.this::setInputText);
-				AbstractSwingView.this.defaultDirectory = droppedFiles.get(0)
-						.toFile();
+				AbstractSwingView.this.defaultDirectory = droppedFile.toFile();
 			} else {
 				AbstractSwingView.this.showErrorMessage("Wrong number of files.",
 						"You can only use one file at a time.");
 				return;
 			}
 		}
+		
+		/**
+		 * Run whenever text is dragged and dropped into the input.
+		 *
+		 * @param event drag and drop event
+		 * @since 2021-04-09
+		 */
+		private synchronized void loadFromText(DropTargetDropEvent event) {
+			// this cast should always succeed, because the stringFlavor argument
+			// guarantees the result is of type String.
+			final String result;
+			try {
+				result = (String) event.getTransferable()
+						.getTransferData(DataFlavor.stringFlavor);
+			} catch (IOException | UnsupportedFlavorException e) {
+				e.printStackTrace();
+				AbstractSwingView.this.showErrorMessage(e.getClass() + " occurred.",
+						e.getLocalizedMessage());
+				return;
+			}
+			
+			AbstractSwingView.this.setInputText(result);
+		}
 	}
 	
-	private static final HighlightPainter ERROR_PAINTER = new DefaultHighlightPainter(
-			Color.RED);
-	private static final HighlightPainter WARNING_PAINTER = new DefaultHighlightPainter(
+	private static final HighlightPainter ERROR_PAINTER = new TabHighlightPainter(
+			new Color(247, 19, 37, 50));
+	private static final HighlightPainter WARNING_PAINTER = new TabHighlightPainter(
 			Color.YELLOW);
+	private static final int UNDO_LIMIT = 200;
 	
 	/**
-	 * Enables the system look-and-feel in Swing, if it works.
+	 * Enables the LaF look-and-feel in Swing, if it works.
 	 * 
 	 * @since 2021-03-10
 	 */
-	public static void enableSystemLookAndFeel() {
+	public static void enableLookAndFeel() {
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			// system view couldn't be installed - not the end of the world
-			// stuff will just look a bit worse
-			System.err.println("Failed to enable system look-and-feel.");
-			e.printStackTrace();
+			UIManager.setLookAndFeel(new FlatDarkLaf());
+		} catch (final Exception ex) {
+			System.err.println("Failed to initialize LaF");
+			ex.printStackTrace();
 		}
 	}
 	
@@ -179,6 +241,12 @@ public abstract class AbstractSwingView implements View {
 	 * The presenter associated with this View.
 	 */
 	protected final Presenter presenter;
+	
+	/**
+	 * An undo manager.
+	 */
+	protected final UndoManager undoManager;
+	
 	/**
 	 * A combo box used to select the instrument.
 	 */
@@ -205,12 +273,12 @@ public abstract class AbstractSwingView implements View {
 	 * @since 2021-03-15
 	 */
 	protected AbstractSwingView() {
-		AbstractSwingView.enableSystemLookAndFeel();
+		AbstractSwingView.enableLookAndFeel();
 		
 		this.frame = new JFrame("TAB2XML " + Main.PROGRAM_VERSION);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.presenter = new Presenter(this);
-		
+		this.undoManager = new UndoManager();
 		this.instrumentSelector = new JComboBox<>(Instrument.values());
 	}
 	
@@ -306,6 +374,15 @@ public abstract class AbstractSwingView implements View {
 		// show dialog box
 		View.super.onParseError(error);
 		
+		final ErrorToken firstError = error.getErrors().get(0);
+		try {
+			final Rectangle2D rec = this.getInput()
+					.modelToView2D(firstError.getStart());
+			this.getInput().scrollRectToVisible(rec.getBounds());
+		} catch (final BadLocationException e) {
+			System.err.format("BadLocation: %s%n", e);
+			e.printStackTrace();
+		}
 		// highlight position of each error
 		error.getErrors().forEach(token -> highlightToken(token,
 				this.getInput().getHighlighter(), ERROR_PAINTER));
@@ -395,7 +472,7 @@ public abstract class AbstractSwingView implements View {
 	 *           drag-and-drop. The drag-and-drop functionality enabled by this
 	 *           method relies on the {@link #setInputText} method to set the
 	 *           input text to the dropped file's contents.
-	 * 
+	 * 				
 	 * @since 2021-03-15
 	 */
 	protected final void setUpFileDragAndDrop() {
@@ -428,6 +505,100 @@ public abstract class AbstractSwingView implements View {
 						.removeAllHighlights();
 			}
 		});
+	}
+	
+	/**
+	 * This method removes only highlights that use an instances of {@code TabHighlightPainter}
+	 */
+	protected final void removeAllHighlights() {
+		Highlighter highlighter = this.getInput().getHighlighter();
+		Highlighter.Highlight[] currHighlights = highlighter.getHighlights();
+		
+		for (int i = 0; i < currHighlights.length; i++) {
+			if (currHighlights[i].getPainter() instanceof TabHighlightPainter)
+				highlighter.removeHighlight(currHighlights[i]);
+		}
+	}
+	
+	/** 
+	 * This method highlights all the invalid input and scrolls to the first occurrence.
+	 * 
+	 * @param errors a collection of errors form the Validation process.
+	 */
+	protected final void highlightErrors(SortedSet< ? extends ErrorToken> errors) {
+		if (errors == null)
+			return;
+		if (errors.isEmpty())
+			return;
+		
+		ErrorToken firstError = errors.first();
+		try {
+			Rectangle2D rec = this.getInput().modelToView2D(firstError.getStart());
+			this.getInput().scrollRectToVisible(rec.getBounds());
+		} catch(BadLocationException e) {
+			System.err.format("BadLocation: %s%n", e);
+			e.printStackTrace();
+		}
+		// remove all highlights before update
+		removeAllHighlights();
+		// highlight position of each error token
+		errors.forEach(token -> highlightToken(token,
+				this.getInput().getHighlighter(), ERROR_PAINTER));
+	}
+	
+	/**
+	 * Sets up the undo manager for the given input document.
+	 */
+	protected final void setUpUndoManager() {
+		this.undoManager.setLimit(UNDO_LIMIT);
+		this.getInput().getDocument().addUndoableEditListener(new UndoableEditListener() {
+
+			@Override
+			public void undoableEditHappened(UndoableEditEvent e) {
+				undoManager.addEdit(e.getEdit());
+			}
+		});
+		
+		this.getInput().getActionMap().put("Redo", new AbstractAction() {
+			private static final long serialVersionUID = -2412630467987603551L;
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (AbstractSwingView.this.undoManager.canRedo()) {
+						AbstractSwingView.this.undoManager.redo();
+					}
+				} catch (final CannotUndoException ex) {
+					System.err.format("CannotUndoException: %s%n", ex);
+				}
+			}
+		});
+		
+		this.getInput().getInputMap()
+				.put(KeyStroke.getKeyStroke("control shift Z"), "Redo");
+	}
+	
+	/**
+	 * Sets up the redo manager for the given input document.
+	 */
+	protected final void setUpRedoManager() {
+		this.getInput().getActionMap().put("Redo", new AbstractAction() {
+			private static final long serialVersionUID = -2412630467987603551L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (AbstractSwingView.this.undoManager.canUndo()) {
+						AbstractSwingView.this.undoManager.undo();
+					}
+				} catch (final CannotUndoException ex) {
+					System.err.format("CannotUndoException: %s%n", ex);
+				}
+			}
+		});
+		
+		this.getInput().getInputMap().put(KeyStroke.getKeyStroke("control Z"),
+				"Undo");
 	}
 	
 	/**

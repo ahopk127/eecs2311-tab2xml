@@ -2,6 +2,7 @@ package tab2xml.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -24,11 +25,25 @@ import tab2xml.model.drum.DrumLine;
 import tab2xml.model.drum.DrumNote;
 import tab2xml.model.drum.DrumType;
 
+/**
+ * Extract drum line items from a drum {@code ParseTree}. This visitor class is
+ * generalized to the drum line scope in the list of rules.
+ * 
+ * @author amir
+ */
 public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 	private DrumLine line;
 	@SuppressWarnings("unused")
 	private final ArrayList<ErrorToken> semanticErrors;
 
+	/**
+	 * Construct a {@code ExtractLineItems} {@code ParseTree} visitor from a
+	 * specified {@code DrumLine} and {@code DrumLineContext}. When this constructor
+	 * is called, the line in the staff is a drum line.
+	 * 
+	 * @param line the drum line model
+	 * @param lc   the corresponding drum line context
+	 */
 	public ExtractLineItems(DrumLine line, DrumLineContext lc) {
 		this.line = line;
 		List<LineItem> visited = new ArrayList<>();
@@ -54,6 +69,14 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 		}
 	}
 
+	/**
+	 * Construct a {@code ExtractLineItems} {@code ParseTree} visitor from a
+	 * specified {@code DrumLine} and {@code CymbalLineContext}. When this
+	 * constructor is called, the line in the staff is a cymbal line.
+	 * 
+	 * @param line the drum line model
+	 * @param lc   the corresponding cymbal line context
+	 */
 	public ExtractLineItems(DrumLine line, CymbalLineContext lc) {
 		this.line = line;
 		List<LineItem> visited = new ArrayList<>();
@@ -133,9 +156,6 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 					break;
 				}
 			}
-			if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(43).get(0))) { // closed hi-hats
-				note = new DrumNote(line.drumtype());
-			}
 
 			if (note == null) { // add to errors
 
@@ -174,8 +194,12 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			}
 
 		} else if (value.equals("#")) { // choke cymbal
-			if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(43).get(0)))
-				note = new DrumNote(line.drumtype());
+			for (int ID : DrumType.cymbalIDs) { // cymbals 
+				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
+					note = new DrumNote(line.drumtype());
+					break;
+				}
+			}
 
 			if (note == null) { // add to errors
 
@@ -227,14 +251,18 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 		DrumNote note = null;
 
 		if (value.equals("o")) { // strike
-			for (int ID : DrumType.drumIDs) {
-				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
-					note = new DrumNote(line.drumtype());
-					break;
+			if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(47).get(0)))
+				note = new DrumNote(line.drumtype());
+			else {
+				for (int ID : DrumType.drumIDs) {
+					if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
+						note = new DrumNote(line.drumtype());
+						break;
+					}
 				}
-			}
-			if (note == null) { // add to errors
+				if (note == null) { // add to errors
 
+				}
 			}
 
 		} else if (value.equals("O")) { // accent
@@ -263,13 +291,14 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
+					note.setGrace(true);
 					break;
 				}
 			}
 			if (note == null) { // add to errors
 
 			}
-		} else if (value.equals("d")) {
+		} else if (value.equals("d")) { // drag
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
@@ -279,7 +308,7 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			if (note == null) { // add to errors
 
 			}
-		} else if (value.equals("b")) {
+		} else if (value.equals("b")) { // soft-one-hand
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
@@ -289,7 +318,7 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			if (note == null) { // add to errors
 
 			}
-		} else if (value.equals("B")) {
+		} else if (value.equals("B")) { // accented one-hand roll
 			for (int ID : DrumType.drumIDs) {
 				if (line.drumtype().getDrumType().matches(DrumType.drumSet.get(ID).get(0))) {
 					note = new DrumNote(line.drumtype());
@@ -316,7 +345,6 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			note.setColumn(column);
 			note.setPosition(position);
 		}
-
 		return note;
 	}
 
@@ -328,8 +356,9 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 			return null;
 
 		String value = token.getText();
-		//String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine() + value.length() - 1;
+		String start = value.substring(0, value.indexOf("|"));
+
+		int column = token.getCharPositionInLine();
 
 		Bar bar = new Bar();
 		bar.setDrumType(line.drumtype());
@@ -339,9 +368,44 @@ public class ExtractLineItems extends DrumTabBaseVisitor<LineItem> {
 		bar.setRightPos(token.getTokenIndex() + value.length() - 1);
 		bar.setLeftPos(token.getTokenIndex());
 
+		// end repeat *||
+		if (start.equals("*")) {
+			bar.setDoubleBar(true);
+			bar.setRepeat(true);
+			bar.setStop(true);
+		}
+
+		// start repeat: ||*
+		if (value.charAt(value.length() - 1) == '*') {
+			bar.setDoubleBar(true);
+			bar.setRepeat(true);
+			bar.setStart(true);
+		}
+
+		// n|
+		if (isNumeric(start)) {
+			bar.setColumn(column - start.length());
+			bar.setPosition(token.getTokenIndex() - start.length());
+			bar.setLeftPos(bar.getPosition());
+			bar.setRightPos(bar.getPosition() + value.substring(start.length()).length());
+
+			bar.setRepeatCount(Integer.parseInt(start));
+			bar.setRepeat(true);
+			bar.setStop(true);
+
+			// n||
+			if (value.substring(value.indexOf("|"), value.length()).equals("||")) {
+				bar.setDoubleBar(true);
+			}
+		}
+
 		if (value.equals("||"))
 			bar.setDoubleBar(true);
 
 		return bar;
+	}
+
+	private static boolean isNumeric(String s) {
+		return Pattern.matches("\\d+", s);
 	}
 }

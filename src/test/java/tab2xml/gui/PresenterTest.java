@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static tab2xml.ResourceLoading.TEST_FILES;
+import static tab2xml.ResourceLoading.loadTestTab;
+import static tab2xml.ResourceLoading.loadTextResource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,17 +31,6 @@ import tab2xml.xmlconversion.XMLMetadata;
  */
 class PresenterTest {
 	private static final String TEST_STRING = "Testing text.";
-	private static final Path TEST_FILES = Path.of("src", "test", "resources");
-	
-	/**
-	 * Reads a string from the provided file, handling any errors that occur and
-	 * replacing all newlines with the standard \n.
-	 *
-	 * @since 2021-03-17
-	 */
-	private static final String readStringHandleErrors(Path path) {
-		return readStringHandleErrors(path, true);
-	}
 	
 	/**
 	 * Reads a string from the provided file, handling any errors that occur.
@@ -76,8 +68,7 @@ class PresenterTest {
 	@Test
 	final void testConvert() {
 		// SETUP - get input and expected output text
-		final String input = readStringHandleErrors(
-				TEST_FILES.resolve("example-e-major.txt"));
+		final String input = loadTestTab("example-e-major");
 		final String expectedOutput;
 		final Instrument instrument = Instrument.GUITAR;
 		
@@ -115,8 +106,7 @@ class PresenterTest {
 	@ValueSource(booleans = { true, false })
 	final void testConvertAndSave(boolean showInView) {
 		// SETUP - get input and expected output text
-		final String input = readStringHandleErrors(
-				TEST_FILES.resolve("example-e-major.txt"));
+		final String input = loadTestTab("example-e-major.txt");
 		final String expectedOutput;
 		final Instrument instrument = Instrument.GUITAR;
 		
@@ -168,8 +158,8 @@ class PresenterTest {
 		
 		// set input text & instrument so that parsing doesn't cause an error
 		view.setSelectedInstrument(Instrument.GUITAR);
-		view.setInputText(
-				readStringHandleErrors(TEST_FILES.resolve("example-e-major.txt")));
+		view.setInputText(loadTestTab("example-e-major"));
+		
 		// set output text to avoid errors
 		view.setOutputText("Testing text");
 		
@@ -221,7 +211,7 @@ class PresenterTest {
 		final ViewBot view = View.createViewBot();
 		final Presenter presenter = new Presenter(view);
 		final Path TEST_FILE = TEST_FILES.resolve("test-read.txt");
-		final String expected = readStringHandleErrors(TEST_FILE);
+		final String expected = loadTextResource("test-read.txt");
 		
 		view.setSelectedFile(TEST_FILE);
 		presenter.loadInput();
@@ -247,7 +237,7 @@ class PresenterTest {
 		presenter.saveInput();
 		
 		// get result of saving
-		final String actual = readStringHandleErrors(TEST_FILE);
+		final String actual = loadTextResource("test-write.txt");
 		
 		assertEquals(TEST_STRING, actual);
 	}
@@ -277,7 +267,7 @@ class PresenterTest {
 		view.setOkPromptResult(Optional.of(true));
 		presenter.saveOutput();
 		
-		assertEquals(TEST_STRING, readStringHandleErrors(TEST_FILE));
+		assertEquals(TEST_STRING, loadTextResource("test-write.txt"));
 	}
 	
 }

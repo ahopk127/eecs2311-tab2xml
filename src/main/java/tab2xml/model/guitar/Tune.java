@@ -2,8 +2,15 @@ package tab2xml.model.guitar;
 
 import tab2xml.model.LineItem;
 
+/**
+ * A tune representation.
+ * 
+ * @author amir
+ */
 public class Tune extends LineItem {
 	private static final long serialVersionUID = 7283815230989809053L;
+
+	/** A list of standard tuning for guitar */
 	public static String standardTuning[][] = { { "E", "4" }, { "B", "3" }, { "G", "3" }, { "D", "3" }, { "A", "2" },
 			{ "E", "2" } };
 

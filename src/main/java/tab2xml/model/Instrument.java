@@ -1,7 +1,7 @@
 package tab2xml.model;
 
 /**
- * List of supported instruments.
+ * A custom {@code Enum} of supported instruments.
  * 
  * @author amir
  */
@@ -15,9 +15,9 @@ public enum Instrument {
 	}
 
 	/**
-	 * Return the string value of this note type.
+	 * Return the string value of this instrument.
 	 * 
-	 * @return the string representation of this note type
+	 * @return the string representation of this instrument
 	 */
 	public String getName() {
 		return name;

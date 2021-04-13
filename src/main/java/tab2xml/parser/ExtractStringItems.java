@@ -32,18 +32,18 @@ import tab2xml.model.guitar.Slide;
 import tab2xml.model.guitar.Tune;
 
 /**
- * Extract string contents from parse tree.
+ * Extract string items from a guitar {@code ParseTree}. This visitor class is
+ * generalized to the string scope in the list of rules.
  * 
  * @author amir
- *
  */
 public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 	private GuitarString s;
 	private final static double EPSILON = 0.001;
 
 	/**
-	 * Construct a sample parse tree visitor from a specified {@code GuitarString}
-	 * and {@code StringContext}.
+	 * Construct a {@code ExtractStringItems} {@code ParseTree} visitor from a
+	 * specified {@code GuitarString} and {@code StringContext}.
 	 * 
 	 * @param string the guitar string model
 	 * @param sc     the corresponding string context
@@ -216,7 +216,6 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 		note.setColumn(column);
 		note.setPosition(token.getTokenIndex() - 1);
 		note.setLineNum(s.getStringNum());
-		note.setOctave(s.getOctave());
 		return note;
 	}
 
@@ -229,7 +228,8 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 		String value = token.getText();
 		String start = value.substring(0, value.indexOf("|"));
-		int column = token.getCharPositionInLine() + value.length() - 1;
+
+		int column = token.getCharPositionInLine();
 
 		Bar bar = new Bar();
 		bar.setTune(s.tune());
@@ -255,6 +255,11 @@ public class ExtractStringItems extends GuitarTabBaseVisitor<LineItem> {
 
 		// n|
 		if (isNumeric(start)) {
+			bar.setColumn(column - start.length());
+			bar.setPosition(token.getTokenIndex() - start.length());
+			bar.setLeftPos(bar.getPosition());
+			bar.setRightPos(bar.getPosition() + value.substring(start.length()).length());
+
 			bar.setRepeatCount(Integer.parseInt(start));
 			bar.setRepeat(true);
 			bar.setStop(true);

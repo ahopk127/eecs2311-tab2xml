@@ -6,6 +6,11 @@ import java.util.List;
 
 import tab2xml.model.LineItem;
 
+/**
+ * A slide representation.
+ * 
+ * @author amir
+ */
 public class Slide extends LineItem {
 	private static final long serialVersionUID = 328697200069305169L;
 	private GuitarNote start;

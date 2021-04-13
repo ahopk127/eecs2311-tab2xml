@@ -16,7 +16,6 @@ string
 	: SPACE* tune SPACE* stringItems SPACE* NEWLINE?
 	;
 
-
 stringItems
 	:(fret
 	| harmonic 

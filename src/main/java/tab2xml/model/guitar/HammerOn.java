@@ -6,8 +6,14 @@ import java.util.List;
 
 import tab2xml.model.LineItem;
 
+/**
+ * A hammer-on representation.
+ * 
+ * @author amir
+ */
 public class HammerOn extends LineItem {
 	private static final long serialVersionUID = 1578840013025953896L;
+
 	private GuitarNote start;
 	private GuitarNote stop;
 

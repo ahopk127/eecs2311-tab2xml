@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * An abstract object that is within a staff.
+ * An abstract object that is within a {@code Score} object.
  * 
  * @author amir
  */
@@ -15,10 +15,10 @@ public abstract class ScoreItem implements Serializable {
 	private static final long serialVersionUID = -2287885769489399982L;
 
 	/**
-	 * Construct a deep copy clone of a {@code StaffItem} using serialization.
+	 * Construct a deep copy clone of a {@code ScoreItem} using serialization.
 	 * 
-	 * @param object the object of type {@code StaffItem} to deep copy
-	 * @return
+	 * @param object the object of type {@code ScoreItem} to deep copy
+	 * @return a deep copy of the given <b>object</b>
 	 */
 	public static Object deepClone(Object object) {
 		try {
@@ -34,8 +34,6 @@ public abstract class ScoreItem implements Serializable {
 		}
 	}
 
-	/**
-	 * @return get the total notes in this staff item.
-	 */
+	/** @return the total number of notes in this {@code ScoreItem} item */
 	public abstract int getNoteCount();
 }

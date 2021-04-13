@@ -6,8 +6,14 @@ import java.util.List;
 
 import tab2xml.model.LineItem;
 
+/**
+ * A hammer-on/pull-off chain representation.
+ * 
+ * @author amir
+ */
 public class HammerPull extends LineItem {
 	private static final long serialVersionUID = -1117048664217523691L;
+
 	private GuitarNote start;
 	private GuitarNote stop;
 	private List<GuitarNote> middle;

@@ -61,7 +61,7 @@ public class Transform<T extends Staff<? extends Line>> {
 		this.musicSheet = new MusicSheet(doc, dBuilder, dbFactory);
 		this.instrument = instrument;
 		this.metadata = metadata;
-		metadata.getTimeSignatures();
+		metadata.timeSignatures();
 		switch (instrument) {
 		case GUITAR:
 		case BASS:
@@ -107,17 +107,38 @@ public class Transform<T extends Staff<? extends Line>> {
 		GuitarStaff staff = (GuitarStaff) sheet.getStaffs().get(0);
 		setGuitarBassStaffAttributes(staff, measures.get(0));
 
-		Map<IntRange, TimeSignature> map = metadata.getTimeSignatureRanges();
+		Map<IntRange, TimeSignature> map = metadata.timeSignatureRanges();
+		map.keySet().stream().filter(r -> map.get(r) == null)
+				.forEach(r -> map.put(r, TimeSignature.valueOf(staff.getBeats(), staff.getBeatType())));
 
 		// all time signatures are set here before appending any notes.
 		for (IntRange range : map.keySet()) {
+			int count = 0;
 			for (int i = 0; i < measureCount; i++) {
 				XMLElement attributes = null;
 				TimeSignature ts = map.get(range);
+				if (ts == null)
+					continue;
 				// skip first measure, set the other ranges with set time signatures.
 				if (!range.contains(1) && range.contains(i + 1) && staff.time() != ts.toString()) {
 					attributes = new XMLElement("attributes", musicSheet);
 					XMLElement time = new XMLElement("time", musicSheet);
+					if (count == 0)
+						time.setAttribute("print-object", "yes");
+					else
+						time.setAttribute("print-object", "no");
+					XMLElement beats = new XMLElement("beats", musicSheet);
+					beats.setText(String.valueOf(ts.upperNumeral()));
+					XMLElement beatType = new XMLElement("beat-type", musicSheet);
+					beatType.setText(String.valueOf(ts.lowerNumeral()));
+					time.append(beats, beatType);
+					attributes.append(time);
+					measures.get(i).append(attributes);
+					count++;
+				} else if (count != 0 && !range.contains(1) && range.contains(i + 1) && staff.time() == ts.toString()) {
+					attributes = new XMLElement("attributes", musicSheet);
+					XMLElement time = new XMLElement("time", musicSheet);
+					time.setAttribute("print-object", "yes");
 					XMLElement beats = new XMLElement("beats", musicSheet);
 					beats.setText(String.valueOf(ts.upperNumeral()));
 					XMLElement beatType = new XMLElement("beat-type", musicSheet);
@@ -278,6 +299,8 @@ public class Transform<T extends Staff<? extends Line>> {
 				harmonic.setAttribute("default-y", "24");
 				harmonic.setAttribute("placement", "above");
 				harmonic.setAttribute("print-object", "yes");
+				XMLElement natural = new XMLElement("natural", musicSheet);
+				harmonic.append(natural);
 				technical.append(harmonic);
 			}
 
@@ -309,7 +332,6 @@ public class Transform<T extends Staff<? extends Line>> {
 				direction.append(directionType);
 
 				measures.get(currMeasure).append(barline, direction);
-
 			}
 
 			measures.get(currMeasure).append(note);
@@ -321,6 +343,7 @@ public class Transform<T extends Staff<? extends Line>> {
 				barStyle.setText("light-heavy");
 				XMLElement repeat = new XMLElement("repeat", musicSheet);
 				repeat.setAttribute("direction", "backward");
+				repeat.setAttribute("times", String.valueOf(currNote.getRepeatCount()));
 				barline.append(barStyle, repeat);
 				measures.get(currMeasure).append(barline);
 			}
@@ -455,6 +478,7 @@ public class Transform<T extends Staff<? extends Line>> {
 
 			//	XMLElement beam = null;
 			note.append(unPitched, duration, instrument, voice, type, stem, notehead);
+
 			if (currNote.isRepeatedStart()) {
 				XMLElement barline = new XMLElement("barline", musicSheet);
 				barline.setAttribute("location", "left");
@@ -510,17 +534,17 @@ public class Transform<T extends Staff<? extends Line>> {
 		musicSheet.append(root);
 		XMLElement work = new XMLElement("work", musicSheet);
 		XMLElement workTitle = new XMLElement("work-title", musicSheet);
-		workTitle.setText(metadata.getTitle());
+		workTitle.setText(metadata.title());
 		work.append(workTitle);
 
-		XMLElement identification = null;
-		if (metadata.getComposer().orElse(null) != null) {
-			identification = new XMLElement("identification", musicSheet);
+		XMLElement identification = metadata.composer().map(composer -> {
+			XMLElement element = new XMLElement("identification", musicSheet);
 			XMLElement creator = new XMLElement("creator", musicSheet);
 			creator.setAttribute("type", "composer");
-			creator.setText(metadata.getComposer().get());
-			identification.append(creator);
-		}
+			creator.setText(composer);
+			element.append(creator);
+			return element;
+		}).orElse(null);
 
 		XMLElement partList = new XMLElement("part-list", musicSheet);
 		XMLElement scorePart = new XMLElement("score-part", musicSheet);
@@ -530,65 +554,65 @@ public class Transform<T extends Staff<? extends Line>> {
 		scorePart.append(partName);
 
 		switch (instrument) {
-		case GUITAR:
-			XMLElement scoreInstrumentG = new XMLElement("score-instrument", musicSheet);
-			scoreInstrumentG.setAttribute("id", String.format("P1-I%d", 1));
-			XMLElement instrumentNameG = new XMLElement("instrument-name", musicSheet);
-			instrumentNameG.setText("Classical Guitar (Tablature)");
-			scoreInstrumentG.append(instrumentNameG);
-			scorePart.append(scoreInstrumentG);
+		case GUITAR: {
+			XMLElement scoreInstrument = new XMLElement("score-instrument", musicSheet);
+			scoreInstrument.setAttribute("id", String.format("P1-I%d", 1));
+			XMLElement instrumentName = new XMLElement("instrument-name", musicSheet);
+			instrumentName.setText("Classical Guitar (Tablature)");
+			scoreInstrument.append(instrumentName);
+			scorePart.append(scoreInstrument);
 
-			XMLElement midiDeviceG = new XMLElement("midi-device", musicSheet);
-			midiDeviceG.setText("");
-			midiDeviceG.setAttribute("id", String.format("P1-I%d", 1));
-			midiDeviceG.setAttribute("port", "1");
-			scorePart.append(midiDeviceG);
-			XMLElement midiInstrumentG = midiInstrument(String.format("P1-I%d", 1), "1", "25", "", "78.7402", "0");
-			scorePart.append(midiInstrumentG);
-
+			XMLElement midiDevice = new XMLElement("midi-device", musicSheet);
+			midiDevice.setText("");
+			midiDevice.setAttribute("id", String.format("P1-I%d", 1));
+			midiDevice.setAttribute("port", "1");
+			scorePart.append(midiDevice);
+			XMLElement midiInstrument = midiInstrument(String.format("P1-I%d", 1), "1", "25", "", "78.7402", "0");
+			scorePart.append(midiInstrument);
 			break;
-		case BASS:
-			XMLElement scoreInstrumentB = new XMLElement("score-instrument", musicSheet);
-			scoreInstrumentB.setAttribute("id", String.format("P1-I%d", 1));
-			XMLElement instrumentNameB = new XMLElement("instrument-name", musicSheet);
-			instrumentNameB.setText("Bass Guitar (Tablature)");
-			scoreInstrumentB.append(instrumentNameB);
-			scorePart.append(scoreInstrumentB);
+		}
+		case BASS: {
+			XMLElement scoreInstrument = new XMLElement("score-instrument", musicSheet);
+			scoreInstrument.setAttribute("id", String.format("P1-I%d", 1));
+			XMLElement instrumentName = new XMLElement("instrument-name", musicSheet);
+			instrumentName.setText("Bass Guitar (Tablature)");
+			scoreInstrument.append(instrumentName);
+			scorePart.append(scoreInstrument);
 
-			XMLElement midiDeviceB = new XMLElement("midi-device", musicSheet);
-			midiDeviceB.setText("");
-			midiDeviceB.setAttribute("id", String.format("P1-I%d", 1));
-			midiDeviceB.setAttribute("port", "1");
-			scorePart.append(midiDeviceB);
-			XMLElement midiInstrumentB = midiInstrument(String.format("P1-I%d", 1), "1", "35", "", "78.7402", "0");
-			scorePart.append(midiInstrumentB);
-
+			XMLElement midiDevice = new XMLElement("midi-device", musicSheet);
+			midiDevice.setText("");
+			midiDevice.setAttribute("id", String.format("P1-I%d", 1));
+			midiDevice.setAttribute("port", "1");
+			scorePart.append(midiDevice);
+			XMLElement midiInstrument = midiInstrument(String.format("P1-I%d", 1), "1", "35", "", "78.7402", "0");
+			scorePart.append(midiInstrument);
 			break;
-		case DRUM:
+		}
+		case DRUM: {
 			for (int i = 36; i <= 65; i++) {
 				if (i == 40 || i == 59 || i == 61 || i == 62 || i == 63)
 					continue;
-				XMLElement scoreInstrumentD = new XMLElement("score-instrument", musicSheet);
-				scoreInstrumentD.setAttribute("id", String.format("P1-I%d", i));
-				XMLElement instrumentNameD = new XMLElement("instrument-name", musicSheet);
-				instrumentNameD.setText(DrumType.drumSet.get(i).get(1));
-				scoreInstrumentD.append(instrumentNameD);
-				scorePart.append(scoreInstrumentD);
+				XMLElement scoreInstrument = new XMLElement("score-instrument", musicSheet);
+				scoreInstrument.setAttribute("id", String.format("P1-I%d", i));
+				XMLElement instrumentName = new XMLElement("instrument-name", musicSheet);
+				instrumentName.setText(DrumType.drumSet.get(i).get(1));
+				scoreInstrument.append(instrumentName);
+				scorePart.append(scoreInstrument);
 			}
 
-			XMLElement midiDeviceD = new XMLElement("midi-device", musicSheet);
-			midiDeviceD.setAttribute("port", "1");
-			midiDeviceD.setText(" ");
-			scorePart.append(midiDeviceD);
+			XMLElement midiDevice = new XMLElement("midi-device", musicSheet);
+			midiDevice.setAttribute("port", "1");
+			midiDevice.setText(" ");
+			scorePart.append(midiDevice);
 			for (int i = 36; i <= 65; i++) {
 				if (i == 40 || i == 59 || i == 61 || i == 62 || i == 63)
 					continue;
-				XMLElement midiInstrumentD = midiInstrument(String.format("P1-I%d", i), "10", "1", String.valueOf(i),
+				XMLElement midiInstrument = midiInstrument(String.format("P1-I%d", i), "10", "1", String.valueOf(i),
 						"78.7402", "0");
-				scorePart.append(midiInstrumentD);
+				scorePart.append(midiInstrument);
 			}
-
 			break;
+		}
 		default:
 			break;
 		}

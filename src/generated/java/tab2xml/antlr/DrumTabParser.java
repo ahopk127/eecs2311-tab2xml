@@ -19,8 +19,8 @@ public class DrumTabParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		DRUMS=1, CYMBALS=2, DRUMTYPE=3, CYMBALTYPE=4, BAR=5, HYPHEN=6, SPACE=7, 
-		NEWLINE=8, MULTI_COMMENT=9, LINE_COMMENT=10;
+		DRUMS=1, CYMBALS=2, DRUMTYPE=3, CYMBALTYPE=4, DOUBLEBAR=5, BAR=6, HYPHEN=7, 
+		SPACE=8, NEWLINE=9, MULTI_COMMENT=10, LINE_COMMENT=11;
 	public static final int
 		RULE_sheet = 0, RULE_staff = 1, RULE_drumLine = 2, RULE_cymbalLine = 3, 
 		RULE_drumActions = 4, RULE_cymbalActions = 5, RULE_drumType = 6, RULE_cymbalType = 7, 
@@ -35,14 +35,14 @@ public class DrumTabParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, null, null, null, null, "'|'", "'-'"
+			null, null, null, null, null, null, "'|'", "'-'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "DRUMS", "CYMBALS", "DRUMTYPE", "CYMBALTYPE", "BAR", "HYPHEN", 
-			"SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
+			null, "DRUMS", "CYMBALS", "DRUMTYPE", "CYMBALTYPE", "DOUBLEBAR", "BAR", 
+			"HYPHEN", "SPACE", "NEWLINE", "MULTI_COMMENT", "LINE_COMMENT"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -503,6 +503,10 @@ public class DrumTabParser extends Parser {
 		public TerminalNode BAR(int i) {
 			return getToken(DrumTabParser.BAR, i);
 		}
+		public List<TerminalNode> DOUBLEBAR() { return getTokens(DrumTabParser.DOUBLEBAR); }
+		public TerminalNode DOUBLEBAR(int i) {
+			return getToken(DrumTabParser.DOUBLEBAR, i);
+		}
 		public List<DrumContext> drum() {
 			return getRuleContexts(DrumContext.class);
 		}
@@ -535,17 +539,18 @@ public class DrumTabParser extends Parser {
 	public final DrumActionsContext drumActions() throws RecognitionException {
 		DrumActionsContext _localctx = new DrumActionsContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_drumActions);
+		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(97);
+			setState(98);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
-					setState(95);
+					setState(96);
 					_errHandler.sync(this);
 					switch (_input.LA(1)) {
 					case DRUMS:
@@ -560,9 +565,15 @@ public class DrumTabParser extends Parser {
 						match(BAR);
 						}
 						break;
-					case HYPHEN:
+					case DOUBLEBAR:
 						{
 						setState(94);
+						match(DOUBLEBAR);
+						}
+						break;
+					case HYPHEN:
+						{
+						setState(95);
 						match(HYPHEN);
 						}
 						break;
@@ -571,12 +582,20 @@ public class DrumTabParser extends Parser {
 					}
 					} 
 				}
-				setState(99);
+				setState(100);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,14,_ctx);
 			}
-			setState(100);
-			match(BAR);
+			setState(101);
+			_la = _input.LA(1);
+			if ( !(_la==DOUBLEBAR || _la==BAR) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -594,6 +613,10 @@ public class DrumTabParser extends Parser {
 		public List<TerminalNode> BAR() { return getTokens(DrumTabParser.BAR); }
 		public TerminalNode BAR(int i) {
 			return getToken(DrumTabParser.BAR, i);
+		}
+		public List<TerminalNode> DOUBLEBAR() { return getTokens(DrumTabParser.DOUBLEBAR); }
+		public TerminalNode DOUBLEBAR(int i) {
+			return getToken(DrumTabParser.DOUBLEBAR, i);
 		}
 		public List<CymbalContext> cymbal() {
 			return getRuleContexts(CymbalContext.class);
@@ -627,34 +650,41 @@ public class DrumTabParser extends Parser {
 	public final CymbalActionsContext cymbalActions() throws RecognitionException {
 		CymbalActionsContext _localctx = new CymbalActionsContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_cymbalActions);
+		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(107);
+			setState(109);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
-					setState(105);
+					setState(107);
 					_errHandler.sync(this);
 					switch (_input.LA(1)) {
 					case CYMBALS:
 						{
-						setState(102);
+						setState(103);
 						cymbal();
 						}
 						break;
 					case BAR:
 						{
-						setState(103);
+						setState(104);
 						match(BAR);
+						}
+						break;
+					case DOUBLEBAR:
+						{
+						setState(105);
+						match(DOUBLEBAR);
 						}
 						break;
 					case HYPHEN:
 						{
-						setState(104);
+						setState(106);
 						match(HYPHEN);
 						}
 						break;
@@ -663,12 +693,20 @@ public class DrumTabParser extends Parser {
 					}
 					} 
 				}
-				setState(109);
+				setState(111);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,16,_ctx);
 			}
-			setState(110);
-			match(BAR);
+			setState(112);
+			_la = _input.LA(1);
+			if ( !(_la==DOUBLEBAR || _la==BAR) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -715,39 +753,39 @@ public class DrumTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(112);
-			match(DRUMTYPE);
 			setState(114);
+			match(DRUMTYPE);
+			setState(116);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
 			case 1:
 				{
-				setState(113);
+				setState(115);
 				match(SPACE);
 				}
 				break;
 			}
-			setState(117);
+			setState(119);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
 			case 1:
 				{
-				setState(116);
+				setState(118);
 				match(SPACE);
 				}
 				break;
 			}
-			setState(120);
+			setState(122);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SPACE) {
 				{
-				setState(119);
+				setState(121);
 				match(SPACE);
 				}
 			}
 
-			setState(122);
+			setState(124);
 			match(BAR);
 			}
 		}
@@ -795,39 +833,39 @@ public class DrumTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(124);
-			match(CYMBALTYPE);
 			setState(126);
+			match(CYMBALTYPE);
+			setState(128);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,20,_ctx) ) {
 			case 1:
 				{
-				setState(125);
+				setState(127);
 				match(SPACE);
 				}
 				break;
 			}
-			setState(129);
+			setState(131);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,21,_ctx) ) {
 			case 1:
 				{
-				setState(128);
+				setState(130);
 				match(SPACE);
 				}
 				break;
 			}
-			setState(132);
+			setState(134);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SPACE) {
 				{
-				setState(131);
+				setState(133);
 				match(SPACE);
 				}
 			}
 
-			setState(134);
+			setState(136);
 			match(BAR);
 			}
 		}
@@ -869,7 +907,7 @@ public class DrumTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(136);
+			setState(138);
 			match(DRUMS);
 			}
 		}
@@ -911,7 +949,7 @@ public class DrumTabParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(138);
+			setState(140);
 			match(CYMBALS);
 			}
 		}
@@ -927,44 +965,45 @@ public class DrumTabParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\f\u008f\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\r\u0091\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\3\2\7\2\30\n\2\f\2\16\2\33\13\2\3\2\3\2\3\3\7\3 \n\3\f\3\16\3#\13"+
 		"\3\3\3\3\3\6\3\'\n\3\r\3\16\3(\3\3\7\3,\n\3\f\3\16\3/\13\3\3\4\7\4\62"+
 		"\n\4\f\4\16\4\65\13\4\3\4\3\4\7\49\n\4\f\4\16\4<\13\4\3\4\3\4\7\4@\n\4"+
 		"\f\4\16\4C\13\4\3\4\5\4F\n\4\3\5\7\5I\n\5\f\5\16\5L\13\5\3\5\3\5\7\5P"+
 		"\n\5\f\5\16\5S\13\5\3\5\3\5\7\5W\n\5\f\5\16\5Z\13\5\3\5\5\5]\n\5\3\6\3"+
-		"\6\3\6\7\6b\n\6\f\6\16\6e\13\6\3\6\3\6\3\7\3\7\3\7\7\7l\n\7\f\7\16\7o"+
-		"\13\7\3\7\3\7\3\b\3\b\5\bu\n\b\3\b\5\bx\n\b\3\b\5\b{\n\b\3\b\3\b\3\t\3"+
-		"\t\5\t\u0081\n\t\3\t\5\t\u0084\n\t\3\t\5\t\u0087\n\t\3\t\3\t\3\n\3\n\3"+
-		"\13\3\13\3\13\2\2\f\2\4\6\b\n\f\16\20\22\24\2\2\2\u009d\2\31\3\2\2\2\4"+
-		"!\3\2\2\2\6\63\3\2\2\2\bJ\3\2\2\2\nc\3\2\2\2\fm\3\2\2\2\16r\3\2\2\2\20"+
-		"~\3\2\2\2\22\u008a\3\2\2\2\24\u008c\3\2\2\2\26\30\5\4\3\2\27\26\3\2\2"+
-		"\2\30\33\3\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2\32\34\3\2\2\2\33\31\3\2\2"+
-		"\2\34\35\7\2\2\3\35\3\3\2\2\2\36 \7\n\2\2\37\36\3\2\2\2 #\3\2\2\2!\37"+
-		"\3\2\2\2!\"\3\2\2\2\"&\3\2\2\2#!\3\2\2\2$\'\5\b\5\2%\'\5\6\4\2&$\3\2\2"+
-		"\2&%\3\2\2\2\'(\3\2\2\2(&\3\2\2\2()\3\2\2\2)-\3\2\2\2*,\7\n\2\2+*\3\2"+
-		"\2\2,/\3\2\2\2-+\3\2\2\2-.\3\2\2\2.\5\3\2\2\2/-\3\2\2\2\60\62\7\t\2\2"+
-		"\61\60\3\2\2\2\62\65\3\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\66\3\2\2\2"+
-		"\65\63\3\2\2\2\66:\5\16\b\2\679\7\t\2\28\67\3\2\2\29<\3\2\2\2:8\3\2\2"+
-		"\2:;\3\2\2\2;=\3\2\2\2<:\3\2\2\2=A\5\n\6\2>@\7\t\2\2?>\3\2\2\2@C\3\2\2"+
-		"\2A?\3\2\2\2AB\3\2\2\2BE\3\2\2\2CA\3\2\2\2DF\7\n\2\2ED\3\2\2\2EF\3\2\2"+
-		"\2F\7\3\2\2\2GI\7\t\2\2HG\3\2\2\2IL\3\2\2\2JH\3\2\2\2JK\3\2\2\2KM\3\2"+
-		"\2\2LJ\3\2\2\2MQ\5\20\t\2NP\7\t\2\2ON\3\2\2\2PS\3\2\2\2QO\3\2\2\2QR\3"+
-		"\2\2\2RT\3\2\2\2SQ\3\2\2\2TX\5\f\7\2UW\7\t\2\2VU\3\2\2\2WZ\3\2\2\2XV\3"+
-		"\2\2\2XY\3\2\2\2Y\\\3\2\2\2ZX\3\2\2\2[]\7\n\2\2\\[\3\2\2\2\\]\3\2\2\2"+
-		"]\t\3\2\2\2^b\5\22\n\2_b\7\7\2\2`b\7\b\2\2a^\3\2\2\2a_\3\2\2\2a`\3\2\2"+
-		"\2be\3\2\2\2ca\3\2\2\2cd\3\2\2\2df\3\2\2\2ec\3\2\2\2fg\7\7\2\2g\13\3\2"+
-		"\2\2hl\5\24\13\2il\7\7\2\2jl\7\b\2\2kh\3\2\2\2ki\3\2\2\2kj\3\2\2\2lo\3"+
-		"\2\2\2mk\3\2\2\2mn\3\2\2\2np\3\2\2\2om\3\2\2\2pq\7\7\2\2q\r\3\2\2\2rt"+
-		"\7\5\2\2su\7\t\2\2ts\3\2\2\2tu\3\2\2\2uw\3\2\2\2vx\7\t\2\2wv\3\2\2\2w"+
-		"x\3\2\2\2xz\3\2\2\2y{\7\t\2\2zy\3\2\2\2z{\3\2\2\2{|\3\2\2\2|}\7\7\2\2"+
-		"}\17\3\2\2\2~\u0080\7\6\2\2\177\u0081\7\t\2\2\u0080\177\3\2\2\2\u0080"+
-		"\u0081\3\2\2\2\u0081\u0083\3\2\2\2\u0082\u0084\7\t\2\2\u0083\u0082\3\2"+
-		"\2\2\u0083\u0084\3\2\2\2\u0084\u0086\3\2\2\2\u0085\u0087\7\t\2\2\u0086"+
-		"\u0085\3\2\2\2\u0086\u0087\3\2\2\2\u0087\u0088\3\2\2\2\u0088\u0089\7\7"+
-		"\2\2\u0089\21\3\2\2\2\u008a\u008b\7\3\2\2\u008b\23\3\2\2\2\u008c\u008d"+
-		"\7\4\2\2\u008d\25\3\2\2\2\31\31!&(-\63:AEJQX\\ackmtwz\u0080\u0083\u0086";
+		"\6\3\6\3\6\7\6c\n\6\f\6\16\6f\13\6\3\6\3\6\3\7\3\7\3\7\3\7\7\7n\n\7\f"+
+		"\7\16\7q\13\7\3\7\3\7\3\b\3\b\5\bw\n\b\3\b\5\bz\n\b\3\b\5\b}\n\b\3\b\3"+
+		"\b\3\t\3\t\5\t\u0083\n\t\3\t\5\t\u0086\n\t\3\t\5\t\u0089\n\t\3\t\3\t\3"+
+		"\n\3\n\3\13\3\13\3\13\2\2\f\2\4\6\b\n\f\16\20\22\24\2\3\3\2\7\b\2\u00a1"+
+		"\2\31\3\2\2\2\4!\3\2\2\2\6\63\3\2\2\2\bJ\3\2\2\2\nd\3\2\2\2\fo\3\2\2\2"+
+		"\16t\3\2\2\2\20\u0080\3\2\2\2\22\u008c\3\2\2\2\24\u008e\3\2\2\2\26\30"+
+		"\5\4\3\2\27\26\3\2\2\2\30\33\3\2\2\2\31\27\3\2\2\2\31\32\3\2\2\2\32\34"+
+		"\3\2\2\2\33\31\3\2\2\2\34\35\7\2\2\3\35\3\3\2\2\2\36 \7\13\2\2\37\36\3"+
+		"\2\2\2 #\3\2\2\2!\37\3\2\2\2!\"\3\2\2\2\"&\3\2\2\2#!\3\2\2\2$\'\5\b\5"+
+		"\2%\'\5\6\4\2&$\3\2\2\2&%\3\2\2\2\'(\3\2\2\2(&\3\2\2\2()\3\2\2\2)-\3\2"+
+		"\2\2*,\7\13\2\2+*\3\2\2\2,/\3\2\2\2-+\3\2\2\2-.\3\2\2\2.\5\3\2\2\2/-\3"+
+		"\2\2\2\60\62\7\n\2\2\61\60\3\2\2\2\62\65\3\2\2\2\63\61\3\2\2\2\63\64\3"+
+		"\2\2\2\64\66\3\2\2\2\65\63\3\2\2\2\66:\5\16\b\2\679\7\n\2\28\67\3\2\2"+
+		"\29<\3\2\2\2:8\3\2\2\2:;\3\2\2\2;=\3\2\2\2<:\3\2\2\2=A\5\n\6\2>@\7\n\2"+
+		"\2?>\3\2\2\2@C\3\2\2\2A?\3\2\2\2AB\3\2\2\2BE\3\2\2\2CA\3\2\2\2DF\7\13"+
+		"\2\2ED\3\2\2\2EF\3\2\2\2F\7\3\2\2\2GI\7\n\2\2HG\3\2\2\2IL\3\2\2\2JH\3"+
+		"\2\2\2JK\3\2\2\2KM\3\2\2\2LJ\3\2\2\2MQ\5\20\t\2NP\7\n\2\2ON\3\2\2\2PS"+
+		"\3\2\2\2QO\3\2\2\2QR\3\2\2\2RT\3\2\2\2SQ\3\2\2\2TX\5\f\7\2UW\7\n\2\2V"+
+		"U\3\2\2\2WZ\3\2\2\2XV\3\2\2\2XY\3\2\2\2Y\\\3\2\2\2ZX\3\2\2\2[]\7\13\2"+
+		"\2\\[\3\2\2\2\\]\3\2\2\2]\t\3\2\2\2^c\5\22\n\2_c\7\b\2\2`c\7\7\2\2ac\7"+
+		"\t\2\2b^\3\2\2\2b_\3\2\2\2b`\3\2\2\2ba\3\2\2\2cf\3\2\2\2db\3\2\2\2de\3"+
+		"\2\2\2eg\3\2\2\2fd\3\2\2\2gh\t\2\2\2h\13\3\2\2\2in\5\24\13\2jn\7\b\2\2"+
+		"kn\7\7\2\2ln\7\t\2\2mi\3\2\2\2mj\3\2\2\2mk\3\2\2\2ml\3\2\2\2nq\3\2\2\2"+
+		"om\3\2\2\2op\3\2\2\2pr\3\2\2\2qo\3\2\2\2rs\t\2\2\2s\r\3\2\2\2tv\7\5\2"+
+		"\2uw\7\n\2\2vu\3\2\2\2vw\3\2\2\2wy\3\2\2\2xz\7\n\2\2yx\3\2\2\2yz\3\2\2"+
+		"\2z|\3\2\2\2{}\7\n\2\2|{\3\2\2\2|}\3\2\2\2}~\3\2\2\2~\177\7\b\2\2\177"+
+		"\17\3\2\2\2\u0080\u0082\7\6\2\2\u0081\u0083\7\n\2\2\u0082\u0081\3\2\2"+
+		"\2\u0082\u0083\3\2\2\2\u0083\u0085\3\2\2\2\u0084\u0086\7\n\2\2\u0085\u0084"+
+		"\3\2\2\2\u0085\u0086\3\2\2\2\u0086\u0088\3\2\2\2\u0087\u0089\7\n\2\2\u0088"+
+		"\u0087\3\2\2\2\u0088\u0089\3\2\2\2\u0089\u008a\3\2\2\2\u008a\u008b\7\b"+
+		"\2\2\u008b\21\3\2\2\2\u008c\u008d\7\3\2\2\u008d\23\3\2\2\2\u008e\u008f"+
+		"\7\4\2\2\u008f\25\3\2\2\2\31\31!&(-\63:AEJQX\\bdmovy|\u0082\u0085\u0088";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

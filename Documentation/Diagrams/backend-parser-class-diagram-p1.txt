@@ -1,0 +1,48 @@
+@startuml
+class Parser {
+  +{static} String COMMENTS
+  +{static} String OUTLIER_G
+  +{static} String OUTLIER_B
+  +{static} String OUTLIER_D
+  +{static} String OUTLIER_GUITAR
+  +{static} String OUTLIER_DRUM
+  +{static} String STRING
+  +{static} String STRING_UNBOUND
+  +{static} String GP
+  +{static} String BP
+  +{static} String DP
+  +{static} Pattern outlierPlucked
+  +{static} Pattern outlierPercussion
+  +{static} Pattern guitarPattern
+  +{static} Pattern guitarPatternGreedy
+  +{static} Pattern bassPattern
+  +{static} Pattern drumPattern
+
+  -Processor processor
+  -Instrument instrument
+  -Score<?> sheet
+  
+  +Parser(String, Instrument)
+  +parse() : ImmutablePair<String, Collection<ParsingWarning>>
+  +parse(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  +getDetectedInstrument(String) : Optional<Insturment>
+  +getDetectedInsturment() : Instrument
+  -parseGuitar(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  -parseBass(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+  -parseDrum(XMLMetadata) : ImmutablePair<String, Collection<ParsingWarning>>
+}
+
+class SerializeGuitarScore {}
+class SerializeDrumScore {}
+enum Instrument{}
+class Transform<T extends Staff<? extends Line>>{}
+class Score<E extends Staff<? extends Line>> {}
+
+Parser "1" o-- Processor
+Processor "1" o-- SerializeGuitarScore
+Processor "1" o-- SerializeDrumScore
+Processor "1" o-right- Instrument
+Parser "1" o-right- Instrument
+Parser "1" o-left- Score
+Parser --- Transform
+@enduml

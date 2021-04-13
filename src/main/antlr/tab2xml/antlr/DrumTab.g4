@@ -23,13 +23,15 @@ cymbalLine
 drumActions
 	:(drum
 	| BAR
-	| HYPHEN )*	BAR		
+	| DOUBLEBAR 
+	| HYPHEN)*	(BAR | DOUBLEBAR)	
 	;	
 
 cymbalActions
 	:(cymbal
 	| BAR
-	| HYPHEN )*	BAR		
+	| DOUBLEBAR 
+	| HYPHEN)*	(BAR | DOUBLEBAR)	
 	;	
 
 drumType: DRUMTYPE SPACE? SPACE? SPACE? BAR;
@@ -92,6 +94,10 @@ CYMBALTYPE
 	)
 	;
 	
+DOUBLEBAR
+	: '*'? (BAR | [0-9]+) '|''|'?'*'?
+	;
+
 BAR
 	: '|'
 	;

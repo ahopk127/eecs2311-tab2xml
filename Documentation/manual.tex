@@ -1,4 +1,4 @@
-% Created 2021-04-05 Mon 10:48
+% Created 2021-04-13 Tue 15:14
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,9 +14,10 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\date{2021 March 29}
+\usepackage[a4paper, lmargin=25mm, rmargin=25mm, tmargin=25mm, bmargin=25mm]{geometry}
+\date{2021 April 13}
 \title{TAB2XML User Manual\\\medskip
-\large For Version 0.4.0}
+\large For Version 1.0.0}
 \hypersetup{
  pdfauthor={},
  pdftitle={TAB2XML User Manual},
@@ -32,18 +33,18 @@
 \newpage
 
 \section{Introduction and Purpose}
-\label{sec:org2ad446e}
-The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system in many use cases.
+\label{sec:orgc9c39dd}
+The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system for many common use cases.
 \section{System Requirements}
-\label{sec:orgcd93cfc}
+\label{sec:org6a97bd7}
 \begin{itemize}
 \item Works on all major operating systems
 \item Java version 11-15 required
 \end{itemize}
 \section{How to Install TAB2XML}
-\label{sec:org0d2808c}
+\label{sec:org37b9dd5}
 \subsection{Eclipse}
-\label{sec:orgafdb439}
+\label{sec:orgdf832a3}
 \begin{enumerate}
 \item Open Eclipse, and press \texttt{File > Import} in the menus.
 \begin{center}
@@ -79,62 +80,94 @@ The TAB2XML system can be used to convert text tablature into MusicXML.  This do
 \end{center}
 \end{enumerate}
 \subsection{Commandline}
-\label{sec:org8b0ead3}
+\label{sec:org76c299e}
 \begin{enumerate}
 \item Use the command \texttt{git clone https://github.com/ahopk127/eecs2311-tab2xml.git} to clone the project to the directory of your choice
-\item Change directory to the directory where you installed the project, then use \texttt{./gradlew build} to build the project.
+\item Change directory to the directory where you installed the project, then use Gradle (\texttt{./gradlew build}; if that doesn't work try running \texttt{chmod +x ./gradlew} then \texttt{./gradlew build}) to build the project.
 \end{enumerate}
 \newpage
 
 \section{How to Use TAB2XML}
-\label{sec:orgae6ac8d}
+\label{sec:org58cd7b5}
 \subsection{Convert Text Tab}
-\label{sec:org9a6f23a}
+\label{sec:org344bde6}
 \begin{enumerate}
-\item Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command \texttt{./gradlew run}.\\
+\item Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command \texttt{./gradlew run} in the program directory.\\
 You should see a window like this:
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/main-interface-tabbedview-0.3.0.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/main-interface-tabbedview-1.0.0.png}
 \end{center}
 \item Input your text tab into the application.  There are multiple ways of doing this:
 \begin{itemize}
 \item Type or copy-and-paste your text tab into the text box.
 \item Press the "Load from File" button then choose a file to load your text tab from a file.
 \item Drag and drop a text tab file into the input box
+\item Drag and drop text into the input box
 \end{itemize}
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/sample-inputs-tabbedview-0.3.0.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/sample-inputs-tabbedview-1.0.0.png}
 \end{center}
-\item Press the "Convert" button.  The text tab will be replaced with the corresponding MusicXML.
+\item Press the "Convert" button (If there are any errors in your tab, you will not be able to do this; fix any errors first).  The text tab will be replaced with the corresponding MusicXML.
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/converted-20210317-tabbedview.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/converted-20210413-tabbedview.png}
+\end{center}
+Here is what it will look like if your input tab has errors:
+\begin{center}
+\includegraphics[width=.9\linewidth]{../Screenshots/sample-invalid-input-tabbedview.png}
 \end{center}
 \item You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button. \\
-Here is a screenshot of the produced MusicXML, rendered using \href{https://opensheetmusicdisplay.github.io/demo/}{OpenSheetMusicDisplay}:
+Here is a screenshot of the produced MusicXML, rendered using \href{https://musescore.org/en/download}{MuseScore 3.6.2}:
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/converted-20210317-opensheetmusicdisplay.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/converted-20210413-musescore.png}
 \end{center}
 \end{enumerate}
 \subsection{Editing Text Tabs}
-\label{sec:org1b31e9f}
+\label{sec:orgaefa973}
 After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
 
 You can use the "Input Editing" tab for more precise editing of the input.  This view also allows you to set metadata such as the title of the output score.  The view should look like this:
 \begin{center}
-\includegraphics[width=.9\linewidth]{../Screenshots/input-editing-tabbedview-0.4.0.png}
+\includegraphics[width=.9\linewidth]{../Screenshots/input-editing-tabbedview-1.0.0.png}
 \end{center}
-The primary feature of this view is editing a single measure or a range of measures from the input tab.  To do this, select the range of measures to edit in the text boxes provided, then click "Edit".  The measure(s) will appear in the large text box.  Edit the measure(s), then press the "Done" button to apply the changes to the input text.
+\subsubsection{Editing Measures}
+\label{sec:orgaa7660e}
+One thing you can do with this editing view is editing a single measure or a range of measures from the input tablature.  To do this, follow the following steps:
+\begin{enumerate}
+\item Input your text tablature in the "Input" tab if it isn't already there.
+\item Navigate to the "Input Editing" tab.
+\item Input the desired range of measures in the "Measure Range" boxes on the bottom left.
+\item Press the "Edit" button.  The selected measure(s) will be copied into the text box.  You should see something like this:
+\begin{center}
+\includegraphics[width=.9\linewidth]{../Screenshots/sample-input-editing-tabbedview.png}
+\end{center}
+\item Edit the tablature in the text box, then click "Done".  The text box will be cleared, and your changes will be applied to the input tab.
+\end{enumerate}
 
-Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again.
+Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again. \\
 \textbf{Warning}: Editing a measure region then saving it will remove any decorations from the tab.
+\subsubsection{Editing Metadata}
+\label{sec:org56836be}
+You can also use the Input Editing tab to edit metadata.  To edit the title and/or composer, simply enter them into the text boxes on the bottom right.  There is no need to press any "Edit" or "Save" buttons, they will simply be entered in the score when it is converted.
+
+Editing the time signature of a measure range is a bit more complicated:
+\begin{enumerate}
+\item Select the measure range as if you were editing it (follow \hyperref[sec:orgaa7660e]{these steps} up to step 4).
+\item Input the time signature in the text boxes on the bottom-left.
+\item Press the "Set Time Signature" button.
+\begin{center}
+\includegraphics[width=.9\linewidth]{../Screenshots/sample-input-editing-timesignature-tabbedview.png}
+\end{center}
+\end{enumerate}
+
+Note: If no time signature range was selected, the "Set Time Signature" button will still work - it will ask you if you want to set the time signature for the whole score.
 \subsection{Other Use Cases}
-\label{sec:org583a7d3}
+\label{sec:org2c9b1de}
 \begin{itemize}
 \item You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
-\item To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" to load another text tab.
+\item To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" or drag and drop to load another text tab.
 \end{itemize}
 \subsection{How to Use in Code}
-\label{sec:org4a80d61}
+\label{sec:org6c20d9f}
 If you would like to use this project in your own program, the following code can be used to convert tab to MusicXML:
 
 \begin{verbatim}
@@ -148,4 +181,54 @@ Notes:
 \item INSTRUMENT is the instrument the tab is for.  It should be an instance of \texttt{tab2xml.parser.Instrument}.
 \item You will need to add a try-catch statement to handle the checked exceptions thrown by \texttt{Parser.parse()}.
 \end{itemize}
+
+\section{Supported Tabs}
+\label{sec:org554e997}
+You can find a sample of supported tabs \href{https://github.com/ahopk127/eecs2311-tab2xml/tree/develop/src/test/resources/test-tabs}{here}.
+\subsection{Guitar/Bass}
+\label{sec:org1ce29ec}
+\subsubsection{supported features}
+\label{sec:orgdb356ec}
+\begin{enumerate}
+\item hammer-on notations
+\item pull-off notations
+\item grace notes
+\item repeated measures
+\item hammer-on/pull-off combination sequences
+\item chords
+\item in-line comments
+\item multiline comments
+\end{enumerate}
+
+\subsection{Drum}
+\label{sec:org3128ab8}
+\subsubsection{supported drum types notation}
+\label{sec:org115e922}
+\begin{enumerate}
+\item \texttt{BD} - Bass Drum 1
+\item \texttt{Bd} - Bass Drum 2
+\item \texttt{SS} - Side Stick
+\item \texttt{SD} - Snare
+\item \texttt{ES} - Electric Snare
+\item \texttt{FT} - Low Floor Tom
+\item \texttt{HH} - Closed Hi-Hat
+\item \texttt{Ft} - High Floor Tom
+\item \texttt{PH} - Pedal Hi-Hat
+\item \texttt{LT} - Low Tom
+\item \texttt{OH} - Open Hi-Hat
+\item \texttt{LM} - Low-Mid Tom
+\item \texttt{MT} - Hi-Mid Tom
+\item \texttt{CC} - Crash Cymbal 1
+\item \texttt{HT} - High Tom
+\item \texttt{RD} - Ride Cymbal 1
+\item \texttt{Ch} - Chinese Cymbal
+\item \texttt{RB} - Ride Bell
+\item \texttt{TA} - Tambourine
+\item \texttt{SC} - Splash Cymbal
+\item \texttt{CB} - Cowbell
+\item \texttt{Cc} - Crash Cymbal 2
+\item \texttt{Rd} - Ride Cymbal 2
+\item \texttt{HC} - Open Hi Conga
+\item \texttt{LC} - Low Conga
+\end{enumerate}
 \end{document}
