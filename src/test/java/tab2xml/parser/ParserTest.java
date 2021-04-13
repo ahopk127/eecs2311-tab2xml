@@ -55,7 +55,7 @@ class ParserTest {
 	 * </pre>
 	 */
 	@Test
-	void testConversionGuitar_0() {
+	void testGuitarConversion_0() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 

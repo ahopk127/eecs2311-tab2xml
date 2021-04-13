@@ -108,8 +108,13 @@
    - ~testDrumsConversion()~: Tests that Drum conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct octaves for each note, correct number of lines, and correct number of measures. 
    This test was created by taking an input of a drum tab via text file, manually recording all of the expected information in an array and comparing that expected information with the information produced by the respective functions that are used in the xml conversion process.
    - ~testGuitarScore()~: Tests that a guitar score object can be made successfully and have string and note objects assigned to it.
+    This test was created by initializing a Score object, as well as GuitarString and GuitarNote objects, and adding the former two into the Score object. The purpose of this is to make sure that these objects are correctly created as they are the core of the xml conversion process.
+   - ~testBassScore()~:Tests that a bass score object can be made successfully and have string and note objects assigned to it.
+    This test was created by initializing a Score object, as well as GuitarString and GuitarNote objects, and adding the former two into the Score object. The purpose of this is to make sure that these objects are correctly created as they are the core of the xml conversion process. Tested with the common attributes of a bass score as opposed to the test above.
    This test was created by initializing a Score object, as well as GuitarString and GuitarNote objects, and adding the former two into the Score object. The purpose of this is to make sure that these objects are correctly created as they are the core of the xml conversion process.
+   
    This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Different cases are handled by these tests to make sure that all the different types of notes are handled by the system.
+   
 ** NoteTest
    These tests were derived to make sure that note objects, which contain valuable information about notes that can be used in the xml conversion process, can be properly created. 
    - ~noteTest()~: Tests that notes have the correct name and index.
@@ -118,7 +123,9 @@
    There are 2 testTonote. The first was created by passing the string input(/"tune + fret"/) and the string this note is on, and checks if this was a valid note and if it was converted correctly by comparing it to an expected note. The 2nd one was created just by passing string input(/"tune + fret"/) and checks if an invalid note was entered by using exceptions.
    - ~stringItemCompareTo()~: Tests that the parser reads the notes in the correct order that they appear in the text tab.
    This test was created by hard coding an array of different notes, with different positions in the tab, and adding them to an array, then comparing each note in the array to an array of each note in the order they are expected.
+   
    This is sufficient testing because it checks that our system properly handles creating Note objects, which is a very important step in translating the information from text tabs to xml because notes are the main focus of learning songs through text tab. By testing the correctness and validity of these note objects, we can be sure that the notes that appear in a text tab will have the necessary information used in xml.
+   
 ** MeasureNarrowingTest
    These were derived by considering the operations of ~MeasureNarrowing~ (including private methods) as well as the possible text tabs that could cause problems.
    Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.
