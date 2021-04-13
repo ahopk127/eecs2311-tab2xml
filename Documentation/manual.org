@@ -61,9 +61,9 @@
     1. Input your text tablature in the "Input" tab if it isn't already there.
     2. Navigate to the "Input Editing" tab.
     3. Input the desired range of measures in the "Measure Range" boxes on the bottom left.
-    4. Press the "Edit" button.  You should see something like this:
+    4. Press the "Edit" button.  The selected measure(s) will be copied into the text box.  You should see something like this:
        [[../Screenshots/sample-input-editing-tabbedview.png]]
-    5. Edit the tablature in the text box, then click "Done".
+    5. Edit the tablature in the text box, then click "Done".  The text box will be cleared, and your changes will be applied to the input tab.
 
     Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again. \\
     *Warning*: Editing a measure region then saving it will remove any decorations from the tab.
