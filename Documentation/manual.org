@@ -74,6 +74,7 @@
    - You will need to add a try-catch statement to handle the checked exceptions thrown by ~Parser.parse()~.
    
 * Supported Tabs
+[[https://github.com/ahopk127/eecs2311-tab2xml/tree/develop/src/test/resources][sample tabs]]
 ** Guitar/Bass
 *** supported features
   1. hammer-on notations
