@@ -30,29 +30,29 @@
       [[../Screenshots/eclipse-build.png]]
 ** Commandline
    1. Use the command ~git clone https://github.com/ahopk127/eecs2311-tab2xml.git~ to clone the project to the directory of your choice
-   2. Change directory to the directory where you installed the project, then use ~./gradlew build~ to build the project.
-   #+LaTeX: \newpage
-   
+   2. Change directory to the directory where you installed the project, then use Gradle (~./gradlew build~, if that doesn't work try running ~chmod +x ./gradlew~ then ~./gradlew build~) to build the project.
+#+LaTeX: \newpage
+
 * How to Use TAB2XML
 ** Convert Text Tab
-   1. Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command ~./gradlew run~.\\
+   1. Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command ~./gradlew run~ in the program directory.\\
       You should see a window like this:
-      [[../Screenshots/main-interface-tabbedview-0.3.0.png]]
+      [[../Screenshots/main-interface-tabbedview-1.0.0.png]]
    2. Input your text tab into the application.  There are multiple ways of doing this:
       - Type or copy-and-paste your text tab into the text box.  
       - Press the "Load from File" button then choose a file to load your text tab from a file.  
       - Drag and drop a text tab file into the input box
-      [[../Screenshots/sample-inputs-tabbedview-0.3.0.png]]
+      [[../Screenshots/sample-inputs-tabbedview-1.0.0.png]]
    3. Press the "Convert" button.  The text tab will be replaced with the corresponding MusicXML.
-      [[../Screenshots/converted-20210317-tabbedview.png]]
+      [[../Screenshots/converted-20210413-tabbedview.png]]
    4. You can now copy-and-paste the MusicXML, or save it to a file using the "Save to File" button. \\
-      Here is a screenshot of the produced MusicXML, rendered using [[https://opensheetmusicdisplay.github.io/demo/][OpenSheetMusicDisplay]]:
-      [[../Screenshots/converted-20210317-opensheetmusicdisplay.png]]
+      Here is a screenshot of the produced MusicXML, rendered using [[https://musescore.org/en/download][MuseScore 3.6.2]]:
+      [[../Screenshots/converted-20210413-musescore.png]]
 ** Editing Text Tabs
    After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
    
    You can use the "Input Editing" tab for more precise editing of the input.  This view also allows you to set metadata such as the title of the output score.  The view should look like this:
-   [[../Screenshots/input-editing-tabbedview-0.4.0.png]]
+   [[../Screenshots/input-editing-tabbedview-1.0.0.png]]
    The primary feature of this view is editing a single measure or a range of measures from the input tab.  To do this, select the range of measures to edit in the text boxes provided, then click "Edit".  The measure(s) will appear in the large text box.  Edit the measure(s), then press the "Done" button to apply the changes to the input text.
 
    Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again.
