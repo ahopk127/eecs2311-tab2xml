@@ -161,7 +161,7 @@
   Sample Maintenance for Adding Bend notation:
    1. Open ~guitarTab.g4~.
    2. Edit line 25 and add a rule ~bend~.
-   3. Define the rule at after the location the ~hampullchain~ rule is defined.
+   3. Define the rule after the location the ~hampullchain~ rule is defined.
    4. ie. ~bend~ : ~fret~'b'~fret?~ is a sample rule.
    5. Add any data model classes as needed.
    6. Add a corresponding ~visit()~ method in ~ExtractStringItems~ to collect the bend notes.
