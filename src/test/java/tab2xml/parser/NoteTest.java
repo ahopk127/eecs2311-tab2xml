@@ -22,7 +22,7 @@ import tab2xml.model.guitar.GuitarNote;
 import tab2xml.model.guitar.GuitarString;
 
 /**
- * Tests related to the Presenter.
+ * Tests related to the {@code Note} object.
  *
  * @author Sayed, Edward
  */

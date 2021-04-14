@@ -47,11 +47,11 @@ public class Parser {
 			+ "|(^(?![ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|][^\s]*[-|]\r?\n?).+\r?\n?))";
 	private static final String OUTLIER_GUITAR = "(" + OUTLIER_G + "+)";
 	private static final String OUTLIER_DRUM = "(" + OUTLIER_D + "+)";
-	private static final String STRING = "(^(?!((^(?!([ \t]*([a-gA-G]#?)?[ \t]*[|-])[^\s]*[-|]).*$))).+\r?\n?)";
+	private static final String STRING = "(^[ \t]*([a-zA-Z0-9_]{1,5}#?)[ \t]*[|-][-*|[0-9][^\r\n]]*[-|]$\r?\n?)";
 	private static final String STRING_UNBOUND = "(" + STRING + "+)";
 	private static final String GP = STRING + "{6,}";
 	private static final String BP = OUTLIER_B + "(" + STRING + "{4,5})" + OUTLIER_B;
-	private static final String DP = "(^(?!((^(?!([ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|])[^\s]*[-|]).*)+)).*\r?\n?)+";
+	private static final String DP = "(^[ \t]*([a-zA-Z0-9_]{2,})[ \t]*[|-][-*xo|[^0123456789\r\n]]*[-|]$\r?\n?)+";
 
 	/** A pattern to match comments. */
 	public static final Pattern comments = Pattern.compile(COMMENTS, Pattern.MULTILINE);
@@ -163,7 +163,7 @@ public class Parser {
 		} else {
 			ins = Instrument.DRUM;
 		}
-		System.out.println(ins);
+
 		if (max == 0)
 			return Optional.empty();
 		return Optional.of(ins);
