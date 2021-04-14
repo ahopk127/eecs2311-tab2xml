@@ -36,6 +36,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.JTextComponent;
+import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
@@ -559,32 +560,9 @@ public abstract class AbstractSwingView implements View {
 			}
 		});
 		
-		this.getInput().getActionMap().put("Redo", new AbstractAction() {
+		this.getInput().getActionMap().put("Undo", new AbstractAction() {
 			private static final long serialVersionUID = -2412630467987603551L;
 			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					if (AbstractSwingView.this.undoManager.canRedo()) {
-						AbstractSwingView.this.undoManager.redo();
-					}
-				} catch (final CannotUndoException ex) {
-					System.err.format("CannotUndoException: %s%n", ex);
-				}
-			}
-		});
-		
-		this.getInput().getInputMap()
-				.put(KeyStroke.getKeyStroke("control shift Z"), "Redo");
-	}
-	
-	/**
-	 * Sets up the redo manager for the given input document.
-	 */
-	protected final void setUpRedoManager() {
-		this.getInput().getActionMap().put("Redo", new AbstractAction() {
-			private static final long serialVersionUID = -2412630467987603551L;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -597,8 +575,31 @@ public abstract class AbstractSwingView implements View {
 			}
 		});
 		
-		this.getInput().getInputMap().put(KeyStroke.getKeyStroke("control Z"),
-				"Undo");
+		this.getInput().getInputMap()
+				.put(KeyStroke.getKeyStroke("control Z"), "Undo");
+	}
+	
+	/**
+	 * Sets up the redo manager for the given input document.
+	 */
+	protected final void setUpRedoManager() {
+		this.getInput().getActionMap().put("Redo", new AbstractAction() {
+			private static final long serialVersionUID = -2412630467987603551L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (AbstractSwingView.this.undoManager.canRedo()) {
+						AbstractSwingView.this.undoManager.redo();
+					}
+				} catch (final CannotRedoException ex) {
+					System.err.format("CannotRedoException: %s%n", ex);
+				}
+			}
+		});
+		
+		this.getInput().getInputMap().put(KeyStroke.getKeyStroke("control shift Z"),
+				"Redo");
 	}
 	
 	/**

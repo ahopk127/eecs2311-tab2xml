@@ -1,4 +1,4 @@
-* About TAB2XML Release 1.0.0-beta.1
+* About TAB2XML Release 1.0.0
   This is an application that converts text tablature to MusicXML, created as a project for EECS 2311 at York University in 2021 Winter.
 
   It is fairly easy to use, but a full user manual can be found at [[./Documentation/manual.pdf]].
@@ -7,6 +7,7 @@
   - Java version 11-15
 * Tools Used
   - antlr4 *version 4.9.1*
+  - FlatLaF Look and Feel for Swing
 * Basic Usage
   For full instructions as well as installation instructions, please see the [[./Documentation/manual.pdf][user manual]].
 
@@ -24,15 +25,53 @@
 
   *The above MusicXML rendered in [[https://musescore.org/en/download][MuseScore 3.6.2]]* \\
   [[./Screenshots/converted-20210413-musescore.png]]
-* Supported features
-  - hammer-on notations
-  - pull-off notations
-  - grace notes
-  - repeated measures
-  - hammer-on/pull-off combination sequences
-  - chords
-  - in-line comments (~// this is a comment~)
-  - multiline comments (~/* this is a multiline comment */~)
+* Supported Features
+  You can find a sample of supported tabs [[https://github.com/ahopk127/eecs2311-tab2xml/tree/develop/src/test/resources/test-tabs][here]].
+** General
+   - Conversion of tabs
+   - Input and output to file (including saving the input)
+   - Ability to edit input
+   - Ability to narrow down input to one or more measures (for editing)
+   - Ability to set metadata such as title and time signature (the latter is on a per-measure basis)
+   - Ability to view the converted output XML before saving
+** Guitar/Bass Tabs
+*** supported features
+  1. hammer-on notations
+  2. pull-off notations
+  3. grace notes
+  4. repeated measures
+  5. hammer-on/pull-off combination sequences
+  6. chords
+  7. in-line comments
+  8. multiline comments 
+** Drum Tabs
+*** supported drum types notation
+  1. ~BD~ - Bass Drum 1
+  2. ~Bd~ - Bass Drum 2
+  3. ~SS~ - Side Stick
+  4. ~SD~ - Snare
+  5. ~ES~ - Electric Snare
+  6. ~FT~ - Low Floor Tom 
+  7. ~HH~ - Closed Hi-Hat
+  8. ~Ft~ - High Floor Tom
+  9. ~PH~ - Pedal Hi-Hat
+  10. ~LT~ - Low Tom
+  11. ~OH~ - Open Hi-Hat
+  12. ~LM~ - Low-Mid Tom
+  13. ~MT~ - Hi-Mid Tom
+  14. ~CC~ - Crash Cymbal 1
+  15. ~HT~ - High Tom
+  16. ~RD~ - Ride Cymbal 1
+  17. ~Ch~ - Chinese Cymbal
+  18. ~RB~ - Ride Bell
+  19. ~TA~ - Tambourine
+  20. ~SC~ - Splash Cymbal
+  21. ~CB~ - Cowbell
+  22. ~Cc~ - Crash Cymbal 2
+  23. ~Rd~ - Ride Cymbal 2
+  24. ~HC~ - Open Hi Conga
+  25. ~LC~ - Low Conga
+  
 * Sample Tabs
   - chords:
 

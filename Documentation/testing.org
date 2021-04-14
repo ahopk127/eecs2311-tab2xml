@@ -15,7 +15,7 @@
    #+CAPTION: Code coverage for the ~tab2xml.gui~ package, where the GUI code is located.  This report, and all statistics in the Front-End Tests section, are as of 2021-04-13.
    [[../Screenshots/test-coverage-20210413-gui.png]]
 
-   Testing GUI code is a unique challenge, so it is unrealistic to get high code coverage of in GUI tests.  However, TAB2XML's GUI have a coverage of 74 %, which is high for GUI tests.  All of the code not tested in ~tab2xml.gui~ is very hard or impossible to test automatically.  However, since almost all of these features are related to user interaction, errors can be found easily by manually running the application.  In addition, most of the uncovered code is simple enough that it may not need testing.  Much of the un-covered code involves prompting the user with a dialog box, which cannot be tested automatically.  Since each GUI functionality of TAB2XML that can be tested has a test, this testing is sufficient.
+   Testing GUI code is a unique challenge, so it is unrealistic to get high code coverage of in GUI tests.  However, TAB2XML's GUI has a coverage of 74 %, which is high for GUI tests.  All of the code not tested in ~tab2xml.gui~ is very hard or impossible to test automatically.  However, since almost all of these features are related to user interaction, errors can be found easily by manually running the application.  In addition, most of the uncovered code is simple enough that it may not need testing.  Much of the un-covered code involves prompting the user with a dialog box, which cannot be tested automatically.  Since each GUI functionality of TAB2XML that can be tested has a test, this testing is sufficient.
 ** EditingPanelTest
    This test tests the functionality of the ~EditingPanel~, a custom ~JPanel~ that is used to edit XML metadata (by creating instances of the ~XMLMetadata~ class).  These test cases were derived by making one test for each important functionality of the ~EditingPanel~.
    - ~testCancel()~: Tests that the "Cancel" button works properly.  It is implemented by inputting a text tab, setting a measure range, clicking Edit, editing the tab, then clicking Cancel.  The test then ensures that the input text tab was not changed.
@@ -94,6 +94,19 @@
 #+LaTeX: \newpage
 
 * Back-End Tests
+
+** Code Coverage and Test Sufficiency
+   Testing the Back-End is a very important part of ensuring that the system is working as intended. The coverage for the Back-End is solid overall except for areas which are either no longer used, have unimportant information, or have the testing covered by a different part of the system in their place. For example, many parts related to drums are either not used or were tested by a different part of the system since drums were implemented last, and are also simpler in comparison to guitar. The testing done for the Back-End was sufficient because many example combinations of different text tabs were tested and each example was different enough to cover all possibilities required to be converted by the system.
+   
+   Code coverage reports for backend code (all as of 2021-04-13, as with all statistics in the Back-End Tests section): \\
+   #+CAPTION: Code coverage for ~tab2xml.model~
+   [[../Screenshots/test-coverage-20210413-model.png]]
+   #+CAPTION: Code coverage for ~tab2xml.model.guitar~
+   [[../Screenshots/test-coverage-20210413-model-guitar.png]]
+   #+CAPTION: Code coverage for ~tab2xml.parser~
+   [[../Screenshots/test-coverage-20210413-parser.png]]
+   #+CAPTION: Code coverage for ~tab2xml.xmlConversion~
+   [[../Screenshots/test-coverage-20210413-xmlconversion.png]]
 ** ParserTest
    These tests were derived by making sure that the parser was correctly interpreting the information provided through a text tab.
    - ~testGuitarConversion()~: Tests that Guitar conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct number of strings, and correct number of measures. There is 5 versions of this test, as shown below, and each one includes different input files that handle different text tab cases.
@@ -108,8 +121,13 @@
    - ~testDrumsConversion()~: Tests that Drum conversion is handled as expected. This includes checking for the correct notes + amount of notes, correct octaves for each note, correct number of lines, and correct number of measures. 
    This test was created by taking an input of a drum tab via text file, manually recording all of the expected information in an array and comparing that expected information with the information produced by the respective functions that are used in the xml conversion process.
    - ~testGuitarScore()~: Tests that a guitar score object can be made successfully and have string and note objects assigned to it.
+    This test was created by initializing a Score object, as well as GuitarString and GuitarNote objects, and adding the former two into the Score object. The purpose of this is to make sure that these objects are correctly created as they are the core of the xml conversion process.
+   - ~testBassScore()~:Tests that a bass score object can be made successfully and have string and note objects assigned to it.
+    This test was created by initializing a Score object, as well as GuitarString and GuitarNote objects, and adding the former two into the Score object. The purpose of this is to make sure that these objects are correctly created as they are the core of the xml conversion process. Tested with the common attributes of a bass score as opposed to the test above.
    This test was created by initializing a Score object, as well as GuitarString and GuitarNote objects, and adding the former two into the Score object. The purpose of this is to make sure that these objects are correctly created as they are the core of the xml conversion process.
+   
    This testing is sufficient because there are tests for each basic component of a text tab (for example, measures or strings), and ensures that the parser is able to accurately interpret and store the information. Different cases are handled by these tests to make sure that all the different types of notes are handled by the system.
+   
 ** NoteTest
    These tests were derived to make sure that note objects, which contain valuable information about notes that can be used in the xml conversion process, can be properly created. 
    - ~noteTest()~: Tests that notes have the correct name and index.
@@ -118,7 +136,18 @@
    There are 2 testTonote. The first was created by passing the string input(/"tune + fret"/) and the string this note is on, and checks if this was a valid note and if it was converted correctly by comparing it to an expected note. The 2nd one was created just by passing string input(/"tune + fret"/) and checks if an invalid note was entered by using exceptions.
    - ~stringItemCompareTo()~: Tests that the parser reads the notes in the correct order that they appear in the text tab.
    This test was created by hard coding an array of different notes, with different positions in the tab, and adding them to an array, then comparing each note in the array to an array of each note in the order they are expected.
+   
    This is sufficient testing because it checks that our system properly handles creating Note objects, which is a very important step in translating the information from text tabs to xml because notes are the main focus of learning songs through text tab. By testing the correctness and validity of these note objects, we can be sure that the notes that appear in a text tab will have the necessary information used in xml.
+   
+   ** TestArea
+   These tests were derived to make sure that the octaves of notes in a Guitar or Bass tab are converted correctly.
+   - ~testGuitarOctaves_0()~: Tests that guitar octaves are correct.
+   This test was created by calling the getOctave() method for every fret on the guitar.
+   - ~testBassOctaves_0()~: Tests that bass octaves are correct.
+   This test was created by calling the getOctave() method for every fret on the bass.
+   
+   This is sufficient because every single fret on the instrument is tested.
+   
 ** MeasureNarrowingTest
    These were derived by considering the operations of ~MeasureNarrowing~ (including private methods) as well as the possible text tabs that could cause problems.
    Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.

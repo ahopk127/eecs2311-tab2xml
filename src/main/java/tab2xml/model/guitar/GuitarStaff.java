@@ -1,5 +1,6 @@
 package tab2xml.model.guitar;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -138,13 +139,13 @@ public class GuitarStaff extends Staff<GuitarString> {
 		private int stopPosition = 1;
 
 		public MeasureIterator(GuitarStaff staff) {
-			notes = staff.getNotes();
+			notes = new TreeSet<>(staff.getNotes());
 			this.staff = staff.toList();
 		}
 
 		@Override
 		public boolean hasNext() {
-			return notes != null && !notes.isEmpty() && notes.first().getMeasure() == Score.getAccumulateMeasureScore();
+			return notes != null && !notes.isEmpty();
 		}
 
 		@Override
@@ -170,17 +171,13 @@ public class GuitarStaff extends Staff<GuitarString> {
 		}
 	}
 
-	/**
-	 * Iterator over the lines in this staff.
-	 * 
-	 * @author amir
-	 */
+	/** Iterator over the lines in this staff. */
 	public static class LineIterator implements Iterator<GuitarString> {
 		List<GuitarString> lines;
 		int index = 0;
 
 		public LineIterator(GuitarStaff staff) {
-			lines = staff.getLines();
+			lines = new ArrayList<>(staff.getLines());
 		}
 
 		@Override
@@ -202,7 +199,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 		private TreeSet<Note> notes;
 
 		public NoteIterator(GuitarStaff staff) {
-			notes = staff.getNotes();
+			notes = new TreeSet<>(staff.getNotes());
 		}
 
 		@Override
@@ -233,6 +230,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 		private boolean remaining;
 		private boolean setFirstRepeatNote;
 		private GuitarNote previousNote = null;
+		private Bar[] bars = null;
 
 		/**
 		 * Construct a guitar staff iterator.
@@ -262,12 +260,20 @@ public class GuitarStaff extends Staff<GuitarString> {
 		 */
 		@Override
 		public boolean hasNext() {
+			if (pq.isEmpty() && totalNotesInCurrMeasure == 0 && !remaining) {
+				do {
+					bars = getFirstBarsAt(X, notes);
+					notes.stream().filter(l -> l.size() > 1).forEach(l -> l.remove(X));
+					totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
+					Score.setAccumulateMeasure(Score.getAccumulateMeasure() + 1);
+				} while (totalNotesInCurrMeasure == 0 && totalNotesInStaff != 0);
+			}
 			return totalNotesInStaff-- > 0 || totalNotesInCurrMeasure != 0;
 		}
 
 		/**
 		 * Return the next chronological note within a specified staff (defined by a
-		 * {@code LineItem} objects natural ordering.
+		 * {@code LineItem} objects natural ordering).
 		 * 
 		 * @return the next note within a specified staff.
 		 */
@@ -318,7 +324,7 @@ public class GuitarStaff extends Staff<GuitarString> {
 
 			GuitarNote note = (GuitarNote) pq.poll();
 			if (note == null)
-				return null;
+				throw new AssertionError("Note should note be null.");
 
 			// by this point note is not null, we have either remaining notes or we are at
 			// last pass
@@ -341,8 +347,6 @@ public class GuitarStaff extends Staff<GuitarString> {
 
 			// if there are no notes in queue
 			if (pq.isEmpty()) {
-				Bar[] bars = getFirstBarsAt(X, notes);
-
 				if (isFretEndBars(bars)) {
 					for (int i = 0; i < bars.length; i++) {
 						if (!bars[i].isFretEndBar() && !bars[i].isFretEndDoubleBar())
@@ -375,7 +379,6 @@ public class GuitarStaff extends Staff<GuitarString> {
 					setFirstRepeatNote = true;
 				}
 
-				// last note passes
 				if (isRepeatEnd(bars)) {
 					if (!repeatNoteStack.isEmpty()) {
 						int c = bars[0].getRepeatCount();
@@ -388,12 +391,6 @@ public class GuitarStaff extends Staff<GuitarString> {
 
 				if (isJustDoubleBars(bars)) {
 					note.setDoubleBar(true);
-				}
-
-				if (totalNotesInCurrMeasure == 0 && !remaining) {
-					notes.stream().filter(l -> l.size() > 0).forEach(l -> l.remove(X));
-					totalNotesInCurrMeasure = setNotesInCurrMeasure(lengths);
-					Score.setAccumulateMeasure(Score.getAccumulateMeasure() + 1);
 				}
 			}
 

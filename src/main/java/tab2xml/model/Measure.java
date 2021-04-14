@@ -52,7 +52,7 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	 */
 	private Range columnRange;
 	/** A list of notes in this measure. */
-	private TreeSet<E> notes = new TreeSet<>();
+	private TreeSet<E> notes;
 
 	/**
 	 * Construct a {@code Measure} with a 2d range.
@@ -61,6 +61,7 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	 */
 	public Measure(ImmutablePair<Range, Range> range) {
 		this.range = range;
+		this.notes = new TreeSet<>();
 	}
 
 	/**
@@ -73,10 +74,12 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	public Measure(int measure, ImmutablePair<Range, Range> range) {
 		this.measure = measure;
 		this.range = range;
+		this.notes = new TreeSet<>();
 	}
 
 	public Measure(int measure, ImmutablePair<Range, Range> range, Collection<E> notes) {
 		this.measure = measure;
+		this.notes = new TreeSet<>(notes);
 		this.notes.addAll(notes);
 		this.range = range;
 	}
@@ -177,6 +180,11 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 	/** @return the list of notes in this measure */
 	public TreeSet<E> getNotes() {
 		return notes;
+	}
+
+	/** @return the number of notes in this measure */
+	public int size() {
+		return notes.size();
 	}
 
 	/** @return the width of this measure (excluding the bars) */
@@ -315,7 +323,7 @@ public class Measure<E extends Note> implements Comparable<Measure<E>>, Iterable
 		TreeSet<E> notes;
 
 		public MeasureIterator(Measure<E> measure) {
-			notes = measure.getNotes();
+			notes = new TreeSet<>(measure.getNotes());
 		}
 
 		@Override

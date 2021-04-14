@@ -11,8 +11,9 @@ import tab2xml.exceptions.InvalidTokenException;
  */
 public enum DrumTokens {
 	// expandable along with grammar
-	BAR("\\*?(\\||[^-\r\n]+)?\\|\\|?\\*?"), DRUMTYPE("[ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|]"), DRUMS("[oOgfdbB@]"),
-	CYMBALS("[xXo#scbp]");
+	BAR("\\*?(\\||[^-\r\n]+)?\\|\\|?\\*?"),
+	DRUMPART("[ \t]*(BD|Bd|SS|SD|ES|FT|HH|Ft|PH|LT|OH|LM|MT|CC|HT|RD|Ch|RB|TA|SC|CB|Cc|Rd|HC|LC)[ \t]*"),
+	DRUMTYPE("[ \t]*([ABCcDdEFHhLMOPRSTt]{2})[ \t]*[|]"), DRUMS("[oOgfdbB@]"), CYMBALS("[xXo#scbp]");
 
 	public final Pattern pattern;
 

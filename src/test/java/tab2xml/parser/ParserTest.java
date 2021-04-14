@@ -4,9 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static tab2xml.ResourceLoading.TEST_FILES;
 import static tab2xml.ResourceLoading.TEST_TABS;
 
-
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
@@ -55,7 +53,7 @@ class ParserTest {
 	 * </pre>
 	 */
 	@Test
-	void testConversionGuitar_0() {
+	void testGuitarConversion_0() {
 		final String input;
 		final Instrument instrument = Instrument.GUITAR;
 
@@ -909,7 +907,7 @@ class ParserTest {
 
 	@Test
 	void testGuitarScore() {
-		Score<GuitarStaff> score = new Score<GuitarStaff>();
+		Score<GuitarStaff> score = new Score<>();
 		GuitarStaff staff = new GuitarStaff();
 
 		for (int i = 0; i < 6; i++) {
@@ -930,12 +928,12 @@ class ParserTest {
 		// next process the duration of each note.
 		score.getMeasures().forEach(m -> m.processDuration());
 
-		System.out.println(score.toString());
+		//		System.out.println(score.toString());
 	}
 
 	@Test
 	void testBassScore() {
-		Score<GuitarStaff> score = new Score<GuitarStaff>();
+		Score<GuitarStaff> score = new Score<>();
 		GuitarStaff staff = new GuitarStaff();
 
 		for (int i = 0; i < 4; i++) {
@@ -956,7 +954,7 @@ class ParserTest {
 		// next process the duration of each note.
 		score.getMeasures().forEach(m -> m.processDuration());
 
-		System.out.println(score.toString());
+		//		System.out.println(score.toString());
 	}
 	//	@Test
 	//	void testDrumScore() {
@@ -1030,10 +1028,10 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final DrumNote note = (DrumNote) item;
-					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
-					System.out.println("exOctaves[j]: " + exNoteData[j][1] + "--------------------");
-					System.out.println("note.getStep(): " + note.getStep() + "--------------------");
-					System.out.println("exNote: " + exNoteData[j][0] + "--------------------");
+					//					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
+					//					System.out.println("exOctaves[j]: " + exNoteData[j][1] + "--------------------");
+					//					System.out.println("note.getStep(): " + note.getStep() + "--------------------");
+					//					System.out.println("exNote: " + exNoteData[j][0] + "--------------------");
 					assertEquals(exNoteData[j][1], note.getOctave());
 
 					assertEquals(exNoteData[j][0], note.getStep());
@@ -1053,7 +1051,7 @@ class ParserTest {
 			return;
 		}
 	}
-	
+
 	@Test
 	void testDrumsConversion_1() {
 		final String input;
@@ -1064,15 +1062,15 @@ class ParserTest {
 
 		// fret, step, ...
 		final String[][] exNoteData = { { "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" },
-				{ "F", "4" }, { "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" }, 
-				
-				{ "F", "4" },{ "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" }, { "F", "4" }, { "G", "5" },
-				{ "G", "5" }, { "C", "5" }, { "G", "5" }, { "F", "4" }, { "G", "5"}};
+				{ "F", "4" }, { "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" },
+
+				{ "F", "4" }, { "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "G", "5" }, { "F", "4" },
+				{ "G", "5" }, { "G", "5" }, { "C", "5" }, { "G", "5" }, { "F", "4" }, { "G", "5" } };
 
 		final int exTotalNotes = sumColumn(0, exStaffData);
 
 		try {
-			final Path TEST_INPUT_FILE = TEST_FILES.resolve("test1-Drum.txt");
+			final Path TEST_INPUT_FILE = TEST_TABS.resolve("test1-Drum.txt");
 			input = Files.readString(TEST_INPUT_FILE);
 			final Processor processor = new Processor(input, instrument, null);
 
@@ -1098,10 +1096,10 @@ class ParserTest {
 					if (item == null)
 						continue;
 					final DrumNote note = (DrumNote) item;
-					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
-					System.out.println("exOctaves[j]: " + exNoteData[j][1] + "--------------------");
-					System.out.println("note.getStep(): " + note.getStep() + "--------------------");
-					System.out.println("exNote: " + exNoteData[j][0] + "--------------------");
+					//					System.out.println("note.getOctave(): " + note.getOctave() + "--------------------");
+					//					System.out.println("exOctaves[j]: " + exNoteData[j][1] + "--------------------");
+					//					System.out.println("note.getStep(): " + note.getStep() + "--------------------");
+					//					System.out.println("exNote: " + exNoteData[j][0] + "--------------------");
 					assertEquals(exNoteData[j][1], note.getOctave());
 
 					assertEquals(exNoteData[j][0], note.getStep());
@@ -1129,34 +1127,34 @@ class ParserTest {
 		return sum;
 	}
 
-	/**
-	 * Write XML to a file for testing.
-	 * 
-	 * @param file the path to output the file to
-	 * @param xml  the XML to write
-	 * @return {@code true} if the file was written successfully
-	 */
-	private boolean saveToFile(Path file, String xml) {
-		try {
-			Files.writeString(file, xml);
-			return true;
-		} catch (final IOException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a file after done testing.
-	 * 
-	 * @param file the path to delete
-	 * @return {@code true} if the file was deleted successfully
-	 */
-	private boolean deleteFile(Path file) {
-		try {
-			Files.delete(file);
-			return true;
-		} catch (final IOException e) {
-			return false;
-		}
-	}
+//	/**
+//	 * Write XML to a file for testing.
+//	 * 
+//	 * @param file the path to output the file to
+//	 * @param xml  the XML to write
+//	 * @return {@code true} if the file was written successfully
+//	 */
+//	private boolean saveToFile(Path file, String xml) {
+//		try {
+//			Files.writeString(file, xml);
+//			return true;
+//		} catch (final IOException e) {
+//			return false;
+//		}
+//	}
+//
+//	/**
+//	 * Delete a file after done testing.
+//	 * 
+//	 * @param file the path to delete
+//	 * @return {@code true} if the file was deleted successfully
+//	 */
+//	private boolean deleteFile(Path file) {
+//		try {
+//			Files.delete(file);
+//			return true;
+//		} catch (final IOException e) {
+//			return false;
+//		}
+//	}
 }

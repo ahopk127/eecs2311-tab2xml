@@ -31,11 +31,11 @@ public final class InputValidation {
 
 	/** A pattern for a general guitar item in a staff. */
 	private static final Pattern GUITAR_ITEM = Pattern
-			.compile("[ \t]*([a-gA-G]#?)?[ \t]*\\*?(\\||\\d+)?\\|\\|?\\*?|[ \t]*(-?([^-|*\r\n]+)-?)[ \t]*");
+			.compile("[ \t]*([a-zA-Z0-9_]+#?)?[ \t]*\\*?(\\||\\d+)?\\|\\|?\\*?|[ \t]*(-?([^-|*\r\n]+)-?)[ \t]*");
 
 	/** A pattern for a general drum item in a staff. */
 	private static final Pattern DRUM_ITEM = Pattern.compile(
-			"\\*?(\\||[^-\r\n]+)?\\|\\|?\\*?|[ \t]*[ABCcDdEFHhLMOPRSTt]{2}[ \t]*[|]|[ \t]*(-?([^-|*\r\n]+)-)[ \t]*");
+			"\\*?(\\||[^-\r\n]+)?\\|\\|?\\*?|[ \t]*[a-zA-Z0-9_]+[ \t]*[|]|[ \t]*(-?([^-|*\r\n]+)-)[ \t]*");
 
 	/** The original input to validate. */
 	private String input;
@@ -99,8 +99,16 @@ public final class InputValidation {
 
 			for (MatchResult res : staffItems) {
 				String item = res.group(4);
-				if (item == null)
+				if (item == null) {
 					item = res.group(0);
+					if (res.group(1) != null) {
+						// tune validation
+						if (!GuitarTokens.isValid(res.group(1))) {
+							scoreErrors.add(new ErrorToken("Invalid tuning", res.group(1), res.start(1), res.end(1)));
+							continue;
+						}
+					}
+				}
 				if (GuitarTokens.isValid(item))
 					continue;
 				scoreErrors.add(new ErrorToken(String.format("Invalid sequence: '%s' in staff %d", item, staffNum),
@@ -136,6 +144,14 @@ public final class InputValidation {
 				String item = res.group(3);
 				if (item == null) {
 					item = res.group(0);
+					if (res.group(1) != null) {
+						// drum type validation
+						if (!DrumTokens.isValid(res.group(1))) {
+							scoreErrors
+									.add(new ErrorToken("Invalid drum part: see manual", res.group(1), res.start(1), res.end(1)));
+							continue;
+						}
+					}
 					if (DrumTokens.isValid(item))
 						continue;
 					scoreErrors.add(new ErrorToken(String.format("Invalid sequence: '%s' in staff %d", item, staffNum),

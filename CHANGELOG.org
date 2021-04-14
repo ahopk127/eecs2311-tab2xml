@@ -1,4 +1,13 @@
 * Changelog
+** [1.0.0] - [2021-04-13 Tue]
+*** Added
+    - Added warnings (with a popup, not highlighting)
+*** Changed
+    - Finished testing document
+    - Moved the section on supported features to the README
+*** Fixed
+    - Fixed the problem with the too-large design document image
+    - Fixed a few more issues
 ** [1.0.0-beta.1] - [2021-04-13 Tue]
 *** Added
     - Now prevents the user from converting text tabs with errors
