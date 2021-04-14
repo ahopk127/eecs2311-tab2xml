@@ -5,7 +5,6 @@ import static tab2xml.ResourceLoading.TEST_FILES;
 import static tab2xml.ResourceLoading.TEST_TABS;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
@@ -908,7 +907,7 @@ class ParserTest {
 
 	@Test
 	void testGuitarScore() {
-		Score<GuitarStaff> score = new Score<GuitarStaff>();
+		Score<GuitarStaff> score = new Score<>();
 		GuitarStaff staff = new GuitarStaff();
 
 		for (int i = 0; i < 6; i++) {
@@ -934,7 +933,7 @@ class ParserTest {
 
 	@Test
 	void testBassScore() {
-		Score<GuitarStaff> score = new Score<GuitarStaff>();
+		Score<GuitarStaff> score = new Score<>();
 		GuitarStaff staff = new GuitarStaff();
 
 		for (int i = 0; i < 4; i++) {
@@ -1128,34 +1127,34 @@ class ParserTest {
 		return sum;
 	}
 
-	/**
-	 * Write XML to a file for testing.
-	 * 
-	 * @param file the path to output the file to
-	 * @param xml  the XML to write
-	 * @return {@code true} if the file was written successfully
-	 */
-	private boolean saveToFile(Path file, String xml) {
-		try {
-			Files.writeString(file, xml);
-			return true;
-		} catch (final IOException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * Delete a file after done testing.
-	 * 
-	 * @param file the path to delete
-	 * @return {@code true} if the file was deleted successfully
-	 */
-	private boolean deleteFile(Path file) {
-		try {
-			Files.delete(file);
-			return true;
-		} catch (final IOException e) {
-			return false;
-		}
-	}
+//	/**
+//	 * Write XML to a file for testing.
+//	 * 
+//	 * @param file the path to output the file to
+//	 * @param xml  the XML to write
+//	 * @return {@code true} if the file was written successfully
+//	 */
+//	private boolean saveToFile(Path file, String xml) {
+//		try {
+//			Files.writeString(file, xml);
+//			return true;
+//		} catch (final IOException e) {
+//			return false;
+//		}
+//	}
+//
+//	/**
+//	 * Delete a file after done testing.
+//	 * 
+//	 * @param file the path to delete
+//	 * @return {@code true} if the file was deleted successfully
+//	 */
+//	private boolean deleteFile(Path file) {
+//		try {
+//			Files.delete(file);
+//			return true;
+//		} catch (final IOException e) {
+//			return false;
+//		}
+//	}
 }
