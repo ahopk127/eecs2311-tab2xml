@@ -139,6 +139,15 @@
    
    This is sufficient testing because it checks that our system properly handles creating Note objects, which is a very important step in translating the information from text tabs to xml because notes are the main focus of learning songs through text tab. By testing the correctness and validity of these note objects, we can be sure that the notes that appear in a text tab will have the necessary information used in xml.
    
+   ** TestArea
+   These tests were derived to make sure that the octaves of notes in a Guitar or Bass tab are converted correctly.
+   - ~testGuitarOctaves_0()~: Tests that guitar octaves are correct.
+   This test was created by calling the getOctave() method for every fret on the guitar.
+   - ~testBassOctaves_0()~: Tests that bass octaves are correct.
+   This test was created by calling the getOctave() method for every fret on the bass.
+   
+   This is sufficient because every single fret on the instrument is tested.
+   
 ** MeasureNarrowingTest
    These were derived by considering the operations of ~MeasureNarrowing~ (including private methods) as well as the possible text tabs that could cause problems.
    Each was implemented by loading a text tab from a file, then performing an operation on the loaded text tab, then checking the resulting tab against an output string.  Some tests do this twice for more confidence.
