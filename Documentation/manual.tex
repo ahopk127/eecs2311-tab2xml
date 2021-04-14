@@ -1,4 +1,4 @@
-% Created 2021-04-13 Tue 15:14
+% Created 2021-04-13 Tue 20:31
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -33,18 +33,18 @@
 \newpage
 
 \section{Introduction and Purpose}
-\label{sec:orgc9c39dd}
+\label{sec:orgdaf8c21}
 The TAB2XML system can be used to convert text tablature into MusicXML.  This document outlines how to install and use the system for many common use cases.
 \section{System Requirements}
-\label{sec:org6a97bd7}
+\label{sec:orgce6c782}
 \begin{itemize}
 \item Works on all major operating systems
 \item Java version 11-15 required
 \end{itemize}
 \section{How to Install TAB2XML}
-\label{sec:org37b9dd5}
+\label{sec:orgb04cbaf}
 \subsection{Eclipse}
-\label{sec:orgdf832a3}
+\label{sec:orgaff392c}
 \begin{enumerate}
 \item Open Eclipse, and press \texttt{File > Import} in the menus.
 \begin{center}
@@ -80,7 +80,7 @@ The TAB2XML system can be used to convert text tablature into MusicXML.  This do
 \end{center}
 \end{enumerate}
 \subsection{Commandline}
-\label{sec:org76c299e}
+\label{sec:orge883009}
 \begin{enumerate}
 \item Use the command \texttt{git clone https://github.com/ahopk127/eecs2311-tab2xml.git} to clone the project to the directory of your choice
 \item Change directory to the directory where you installed the project, then use Gradle (\texttt{./gradlew build}; if that doesn't work try running \texttt{chmod +x ./gradlew} then \texttt{./gradlew build}) to build the project.
@@ -88,9 +88,9 @@ The TAB2XML system can be used to convert text tablature into MusicXML.  This do
 \newpage
 
 \section{How to Use TAB2XML}
-\label{sec:org58cd7b5}
+\label{sec:orgf141b93}
 \subsection{Convert Text Tab}
-\label{sec:org344bde6}
+\label{sec:org0b6b340}
 \begin{enumerate}
 \item Run the application.  In Eclipse, double-click the green "run" item in the "application" folder.  In commandline, use the command \texttt{./gradlew run} in the program directory.\\
 You should see a window like this:
@@ -122,7 +122,7 @@ Here is a screenshot of the produced MusicXML, rendered using \href{https://muse
 \end{center}
 \end{enumerate}
 \subsection{Editing Text Tabs}
-\label{sec:orgaefa973}
+\label{sec:org19180a8}
 After converting text tab with the "Convert" button, you can switch to the "Input" tab to edit the input text tab.  Use "Save Input" to save the (edited) input to a file.
 
 You can use the "Input Editing" tab for more precise editing of the input.  This view also allows you to set metadata such as the title of the output score.  The view should look like this:
@@ -130,7 +130,7 @@ You can use the "Input Editing" tab for more precise editing of the input.  This
 \includegraphics[width=.9\linewidth]{../Screenshots/input-editing-tabbedview-1.0.0.png}
 \end{center}
 \subsubsection{Editing Measures}
-\label{sec:orgaa7660e}
+\label{sec:org89c04d5}
 One thing you can do with this editing view is editing a single measure or a range of measures from the input tablature.  To do this, follow the following steps:
 \begin{enumerate}
 \item Input your text tablature in the "Input" tab if it isn't already there.
@@ -146,12 +146,12 @@ One thing you can do with this editing view is editing a single measure or a ran
 Note: This system is not as sophisticated as the parser, and can occasionally fail when exposed to tabs with complex "decorations" that aren't part of the measure text.  If this system fails, try removing decorations then trying again. \\
 \textbf{Warning}: Editing a measure region then saving it will remove any decorations from the tab.
 \subsubsection{Editing Metadata}
-\label{sec:org56836be}
+\label{sec:org7f28270}
 You can also use the Input Editing tab to edit metadata.  To edit the title and/or composer, simply enter them into the text boxes on the bottom right.  There is no need to press any "Edit" or "Save" buttons, they will simply be entered in the score when it is converted.
 
 Editing the time signature of a measure range is a bit more complicated:
 \begin{enumerate}
-\item Select the measure range as if you were editing it (follow \hyperref[sec:orgaa7660e]{these steps} up to step 4).
+\item Select the measure range as if you were editing it (follow \hyperref[sec:org89c04d5]{these steps} up to step 4).
 \item Input the time signature in the text boxes on the bottom-left.
 \item Press the "Set Time Signature" button.
 \begin{center}
@@ -161,13 +161,13 @@ Editing the time signature of a measure range is a bit more complicated:
 
 Note: If no time signature range was selected, the "Set Time Signature" button will still work - it will ask you if you want to set the time signature for the whole score.
 \subsection{Other Use Cases}
-\label{sec:org2c9b1de}
+\label{sec:org951f8a8}
 \begin{itemize}
 \item You can use the "Convert and Save" button to convert a text tab and save it to a file in one step.
 \item To clear the text box, press Ctrl-A then Delete.  If you want to load in another text tab, you don't need to do this.  Simply press "Load from File" or drag and drop to load another text tab.
 \end{itemize}
 \subsection{How to Use in Code}
-\label{sec:org6c20d9f}
+\label{sec:orgd7a8037}
 If you would like to use this project in your own program, the following code can be used to convert tab to MusicXML:
 
 \begin{verbatim}
@@ -183,12 +183,12 @@ Notes:
 \end{itemize}
 
 \section{Supported Tabs}
-\label{sec:org554e997}
+\label{sec:org7948583}
 You can find a sample of supported tabs \href{https://github.com/ahopk127/eecs2311-tab2xml/tree/develop/src/test/resources/test-tabs}{here}.
 \subsection{Guitar/Bass}
-\label{sec:org1ce29ec}
+\label{sec:org16b80c1}
 \subsubsection{supported features}
-\label{sec:orgdb356ec}
+\label{sec:org79a08a6}
 \begin{enumerate}
 \item hammer-on notations
 \item pull-off notations
@@ -201,9 +201,9 @@ You can find a sample of supported tabs \href{https://github.com/ahopk127/eecs23
 \end{enumerate}
 
 \subsection{Drum}
-\label{sec:org3128ab8}
+\label{sec:orgc9e2097}
 \subsubsection{supported drum types notation}
-\label{sec:org115e922}
+\label{sec:org5de2d0f}
 \begin{enumerate}
 \item \texttt{BD} - Bass Drum 1
 \item \texttt{Bd} - Bass Drum 2
